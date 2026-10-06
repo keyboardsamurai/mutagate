@@ -607,7 +607,7 @@ async function pit(c, t, dir, opts) {
     const wrapper = path.join(c.repo, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew'),
       cmd = exists(wrapper) ? wrapper : 'gradle',
       task = t.module ? ':' + t.module.replaceAll('/', ':') + ':mutagatePrintClasspath' : 'mutagatePrintClasspath';
-    const result = await command(cmd, ['--console=plain', '--init-script', init, task], { ...opts, cwd: c.repo });
+    const result = await command(cmd, ['--console=plain', ...(process.platform === 'win32' ? ['--no-daemon'] : []), '--init-script', init, task], { ...opts, cwd: c.repo });
     const data = JSON.parse(result.output.match(/MUTAGATE_CP=(.+)/)?.[1] || 'null');
     if (!data) throw Error('Gradle classpath task returned no data');
     ({ cp, main, source, testClasses } = data);

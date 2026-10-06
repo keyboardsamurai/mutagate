@@ -13,7 +13,7 @@ for(const name of selected)test(name+' weak and strong actual mutation runs',{ti
   if(fs.existsSync(path.join(original,'node_modules')))fs.cpSync(path.join(original,'node_modules'),path.join(repo,'node_modules'),{recursive:true});
   if(fs.existsSync(path.join(original,'.venv')))fs.symlinkSync(path.join(original,'.venv'),path.join(repo,'.venv'),'junction');
   const expected=JSON.parse(fs.readFileSync(path.join(repo,'expected.json'))), ext=path.extname(expected.test),stem=path.basename(expected.test,ext),prefix=name==='java-gradle-multimodule'?'service/':'';
-  const env={...process.env,MUTAGATE_RUN_BUDGET_SEC:'600',MUTAGATE_SESSION:'integration-'+name};
+  const env={...process.env,MUTAGATE_RUN_BUDGET_SEC:'540',MUTAGATE_SESSION:'integration-'+name};
   if(name.startsWith('python')){const py=path.join(root,'test/.cache',name==='python-pip'?'py2':'py3');if(fs.existsSync(py))env.VIRTUAL_ENV=py;}
   if(name==='python-uv-src'){delete env.VIRTUAL_ENV;env.UV_PROJECT_ENVIRONMENT=path.join(repo,'.venv');const setup=spawnSync('uv',['sync','--project',repo,'--locked'],{env,encoding:'utf8',timeout:120000});assert.equal(setup.status,0,setup.stderr);}
   const buildFile=expected.manifest||(fs.existsSync(path.join(repo,'pom.xml'))?'pom.xml':fs.existsSync(path.join(repo,'build.gradle'))?'build.gradle':fs.existsSync(path.join(repo,'package.json'))?'package.json':'pyproject.toml'),before=fs.readFileSync(path.join(repo,buildFile),'utf8');
