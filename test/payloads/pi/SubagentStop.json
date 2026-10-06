@@ -1,0 +1,7 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "pi",
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false
+}

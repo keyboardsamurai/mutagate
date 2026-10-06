@@ -1,0 +1,136 @@
+{
+  "harness": "codex",
+  "scenario": "continuation",
+  "passed": true,
+  "attempts": [
+    {
+      "attempt": 0,
+      "scenario": "continuation",
+      "ok": true,
+      "check": {
+        "sessionStart": true,
+        "testWrite": true,
+        "result": true,
+        "block": true,
+        "allowAfterBlock": true,
+        "canary": true,
+        "noInternalErrors": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 54896,
+      "finalResponse": "Added eligibility and discount boundary assertions to `UserServiceTest`. The targeted JUnit tests pass. Mutation validation remains with the completion hook.\n",
+      "transcript_sha256": "7cda1d6a653a233420681513a695b22d66062ac4bf312f1d10009f97ab690cec",
+      "trace": [
+        {
+          "ts": "2026-09-12T16:00:02.079Z",
+          "harness": "codex",
+          "event": "SessionStart",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:23.130Z",
+          "harness": "codex",
+          "event": "PreToolUse",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-2GnM79/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:23.211Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-2GnM79/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:26.824Z",
+          "harness": "codex",
+          "event": "Result",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "target": "acme.UserService",
+          "score": 0,
+          "decision": "below",
+          "duration_ms": 1074,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:26.826Z",
+          "harness": "codex",
+          "event": "Stop",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 1088,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:44.028Z",
+          "harness": "codex",
+          "event": "PreToolUse",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-2GnM79/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:44.109Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-2GnM79/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:54.206Z",
+          "harness": "codex",
+          "event": "Result",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "target": "acme.UserService",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1082,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:00:54.206Z",
+          "harness": "codex",
+          "event": "Stop",
+          "session": "01a09658-d94e-7c11-81c2-2fd59fcc5524",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 1093,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "checked_at": "2026-09-12T16:05:38.540Z",
+  "version": "0.154.0",
+  "authentication": "existing ChatGPT login; no credentials copied",
+  "method": "Installed native hooks; async PostToolUse disabled only in this scenario to isolate the real Stop continuation. Model asked to write a smoke test, try to finish, and act on subsequent hook feedback."
+}

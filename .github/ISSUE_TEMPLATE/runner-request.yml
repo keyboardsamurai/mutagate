@@ -1,0 +1,24 @@
+name: Runner or harness request
+description: Ask for a new language, build tool, test framework, mutation engine or harness.
+labels: [runner-request]
+body:
+  - type: input
+    id: what
+    attributes:
+      label: Language, build tool or harness
+      description: For example "Rust with cargo-mutants" or "Gradle with Spock".
+    validations:
+      required: true
+  - type: input
+    id: engine
+    attributes:
+      label: Mutation engine you suggest, with version and license
+  - type: textarea
+    id: project
+    attributes:
+      label: A public example project
+      description: A repo or a minimal layout that shows the build and test commands.
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters to you

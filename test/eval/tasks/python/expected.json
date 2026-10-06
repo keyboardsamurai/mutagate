@@ -1,0 +1,19 @@
+{
+  "lang": "python",
+  "targets": [
+    {"file": "matrix/service.py", "target": "matrix/service.py"},
+    {"file": "matrix/api.py", "target": "matrix/api.py"},
+    {"file": "matrix/page.py", "target": "matrix/page.py"},
+    {"file": "matrix/main.py", "target": "matrix/main.py"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["matrix/**"],
+  "expectedProdEdits": ["matrix/api.py", "matrix/service.py"],
+  "testFiles": ["**/test_*.py", "**/*_test.py", "**/tests/**/*.py"],
+  "setup": [
+    ["uv", "sync"]
+  ],
+  "testCommand": ["uv", "run", "pytest", "-q"],
+  "toolchain": ["uv"],
+  "notes": "multi-class-it: the prompt names tests/test_matrix_api.py; its stem matrix_api matches no module and tests/ holds no production siblings, so mutagate reports it unresolved with no candidates while it exercises matrix/api.py, matrix/page.py, matrix/service.py and matrix/main.create_app over HTTP. boundary: service.reset (dimensions >= 1 and <= MAX_SIZE 1000), service._index bounds (row/col < 0, >= rows/cols), service._checked 32-bit overflow (INT_MIN/INT_MAX) in put and add; page sign classes (value < 0, == 0); main size parsing (len(parts) != 2). equivalent-bait: service._index second check `index >= len(_cells)` is unreachable after the bounds check (its >= -> > and IndexError(None) mutants are equivalent), service.snapshot() copies each row again with list() after building a fresh grid, and main.create_app's default \"3x3\" -> \"3X3\" mutant is equivalent because of .lower(). entrypoint: matrix/main.py create_app reads MATRIX_SIZE (RxC) and MATRIX_FILL, fills every cell and rejects malformed sizes; main() calls uvicorn.run with HOST/PORT; an HTTP-only test leaves the env parsing, fill loop, malformed-size branch and main() untested. idiom: module-level functions over module-level state (no classes); route and error handlers are plain functions registered with add_api_route/add_exception_handler because mutmut 3 skips decorated functions (a decorated handler the agent adds gets no mutants). layout constraints from the engine: matrix/ is a namespace package (no __init__.py) installed editable by uv_build, because mutagate copies only the target file into mutmut 3's mutants/ dir, so sibling modules must resolve from the editable install; an agent-added matrix/__init__.py or root conftest.py fixture makes targets unscored. forced-weak: the shared forced prompt asks for an assertion-free service smoke test first. staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing matrix/api.py (and usually matrix/service.py), so scored targets go stale and must re-run."
+}

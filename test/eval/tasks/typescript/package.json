@@ -1,0 +1,26 @@
+{
+  "name": "matrix-app",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types -e \"import('./src/app.ts').then((app) => app.start(process.env))\"",
+    "test": "vitest run",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "9.1.1",
+    "@stryker-mutator/vitest-runner": "9.1.1",
+    "@types/express": "5.0.6",
+    "@types/node": "22.20.2",
+    "@types/supertest": "7.2.1",
+    "supertest": "7.2.2",
+    "typescript": "5.8.3",
+    "vitest": "3.2.4"
+  }
+}

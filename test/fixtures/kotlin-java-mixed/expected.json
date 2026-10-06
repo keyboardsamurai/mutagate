@@ -1,0 +1,1 @@
+{"test":"src/test/kotlin/acme/UserServiceTest.kt","weak":[0,0.5],"strong":[0.8,1],"must_report":["isEligible"]}

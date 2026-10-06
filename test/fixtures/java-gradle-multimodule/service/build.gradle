@@ -1,0 +1,5 @@
+plugins { id 'java' }
+repositories { mavenCentral() }
+dependencies { testImplementation 'junit:junit:4.13.2' ; implementation project(':library') }
+java { sourceCompatibility = JavaVersion.VERSION_11; targetCompatibility = JavaVersion.VERSION_11 }
+

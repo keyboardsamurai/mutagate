@@ -1,0 +1,13 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "claude",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "src/test/java/acme/UserServiceTest.java"
+  },
+  "tool_response": {
+    "success": true
+  }
+}

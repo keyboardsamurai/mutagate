@@ -1,0 +1,6 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "opencode",
+  "hook_event_name": "SessionStart"
+}

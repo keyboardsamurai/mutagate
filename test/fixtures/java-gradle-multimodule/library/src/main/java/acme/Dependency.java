@@ -1,0 +1,1 @@
+package acme; public class Dependency { public int value(int n) { return n + 1; } }

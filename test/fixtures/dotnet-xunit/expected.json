@@ -1,0 +1,14 @@
+{
+  "test": "Acme.Tests/PricingTests.cs",
+  "weak": [
+    0,
+    0.5
+  ],
+  "strong": [
+    0.8,
+    1
+  ],
+  "must_report": [],
+  "manifest": "Acme.Tests/Acme.Tests.csproj",
+  "file": "Acme/Pricing.cs"
+}

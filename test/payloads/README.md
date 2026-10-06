@@ -1,0 +1,1 @@
+These payloads are synthetic protocol examples, not live recordings. Live drift runs retain recordings in the opt-in cache. Replace examples only after scrubbing repository paths and session identifiers.

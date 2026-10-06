@@ -1,0 +1,7 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "codex",
+  "hook_event_name": "Stop",
+  "stop_hook_active": false
+}

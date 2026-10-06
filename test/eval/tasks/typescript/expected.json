@@ -1,0 +1,17 @@
+{
+  "lang": "typescript",
+  "targets": [
+    {"file": "src/matrixService.ts", "target": "src/matrixService.ts"},
+    {"file": "src/matrixController.ts", "target": "src/matrixController.ts"},
+    {"file": "src/matrixPage.ts", "target": "src/matrixPage.ts"},
+    {"file": "src/app.ts", "target": "src/app.ts"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["src/**"],
+  "expectedProdEdits": ["src/matrixController.ts", "src/matrixService.ts"],
+  "testFiles": ["**/*.{test,spec}.ts"],
+  "setup": [["npm", "ci", "--no-audit", "--no-fund"]],
+  "testCommand": ["npm", "test"],
+  "toolchain": ["node", "npm"],
+  "notes": "Targets are repo-relative files (Stryker 9.1.1 + vitest-runner, mutating only the target file). multi-class-it: the prompt names matrixApi.test.ts; its stem matrixApi matches no module, while it drives createApp (app.ts), matrixController.ts, matrixPage.ts and matrixService.ts over HTTP, so mutagate leaves it unresolved (candidates are the src/ siblings when it sits in src/, none when it sits elsewhere). boundary: createMatrix dimensions (integer, >= 1, <= MAX_SIZE 1000), cellIndex bounds (row/col < 0, >= rows/cols, non-integer), requireInt 32-bit range for value/delta, addToCell overflow in both directions (next < INT_MIN, next > INT_MAX); matrixController parseInteger regex /^-?\\d+$/; matrixPage cellClass (value < 0, === 0). Out-of-range indexes that slip past a mutated check still throw a RangeError from Atomics, so only message assertions kill those mutants. equivalent-bait: matrixService cellIndex second check `index >= matrix.cells.length` is unreachable after the bounds check (its >, false, block and message mutants survive) and snapshot() copies every freshly built row again with row.slice() (the removed-slice mutant survives); app.ts `app.get('/', ...)` -> `''` is also equivalent because Express 5 matches '' as '/'. Reference tests score matrixService 0.96, matrixController 1, matrixPage 1, app 0.97. entrypoint: app.ts wiring createApp, matrixFromEnv parsing MATRIX_SIZE (RxC, case-insensitive) and MATRIX_FILL, and start() listening on PORT with a log callback; a test that only hits one route leaves the fill loop, the malformed-size branch and start() untested. The npm start script imports app.ts and calls start(process.env), so there is no untestable bootstrap file. idiom: every module exports module-level functions over a plain Matrix record (SharedArrayBuffer Int32Array with Atomics) instead of classes, and the controller exports a router factory plus a four-argument Express error middleware; test file stems must match module file names to resolve. forced-weak: the shared forced prompt asks for an assertion-free matrix service smoke test first. staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing matrixController.ts (and usually matrixService.ts), so scored targets go stale and must re-run."
+}

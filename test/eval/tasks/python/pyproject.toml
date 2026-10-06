@@ -1,0 +1,20 @@
+[project]
+name = "matrix"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi==0.141.1", "uvicorn==0.53.0"]
+
+[dependency-groups]
+dev = ["httpx==0.28.1", "hypothesis==6.168.3", "mutmut==3.8.0", "pytest==8.4.2"]
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "matrix"
+module-root = ""
+namespace = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

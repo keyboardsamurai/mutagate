@@ -1,0 +1,2741 @@
+{
+  "harness": "pi",
+  "version": "0.73.1",
+  "model": "deepseek/deepseek-v4-flash",
+  "lang": "typescript",
+  "task": "small",
+  "scenario": "forced",
+  "passed": true,
+  "checked_at": "2026-09-15T19:47:33.882Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 282102,
+      "finalResponse": "All 101 tests pass across 4 test files. The mutation gate should now see improved scores for both `src/matrixController.ts` (string literal + typeof check survivors addressed) and `src/app.ts` (error message checks + `start()` coverage + `ROOT_PATH` constant test).",
+      "transcript_sha256": "374c114c1c930f18b726dbef1b0685823edef08b0d69c7f9b94d8501e9391e42",
+      "trace": [
+        {
+          "ts": "2026-09-15T19:39:05.465Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:39:17.192Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:39:17.223Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:39:22.242Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.07377049180327869,
+          "decision": "below",
+          "duration_ms": 3709,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:39:22.246Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 3761,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:39:23.366Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6119,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:39:58.078Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:39:58.112Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:05.405Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:05.441Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:08.134Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:08.170Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:09.145Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8442622950819673,
+          "decision": "stale",
+          "duration_ms": 4834,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:40:09.145Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11008,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:11.514Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6045,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:12.743Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:12.773Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:14.239Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6042,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:16.221Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:16.250Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:18.824Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:20.189Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:24.852Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2435,
+          "error": "node failed (1): Error: Transform failed with 1 error: | ~/.cache/mutagate/repos/d62363e486077dc6aa5a536a35c93106b0066a11/reports/97604684-4888-41bf-ab5a-3638f382c01c/sandbox/sandbox-ZyQEum/src/matrixService.test.ts:347:33: ERROR: Unexpected \"\\b\" |  [91m21:40:24 (498) ERROR Stryker [39m Unexpected error occurred while running Stryker Error: Something went wrong in the initial test run; log: ~/.cache/mutagate/repos/d62363e486077dc6aa5a536a35c93106b0066a11/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:40:24.860Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8587,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:27.041Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:27.072Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:37.562Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 4298,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:40:37.563Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 10467,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:45.932Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:45.965Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:52.123Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:52.152Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:54.581Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "stale",
+          "duration_ms": 2431,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:40:54.581Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8593,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:57.870Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:57.900Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:58.205Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:07.405Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 3327,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:19.999Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixController.ts",
+          "score": 0.782608695652174,
+          "decision": "below",
+          "duration_ms": 12529,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:22.313Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 2253,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:25.113Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/app.ts",
+          "score": 0.7037037037037037,
+          "decision": "below",
+          "duration_ms": 2731,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:25.115Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 27191,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:25.189Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 14473,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:02.436Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:02.470Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:08.616Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:08.647Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:12.129Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 3481,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:12.131Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 9636,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:42:15.625Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:24.542Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:24.572Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:27.191Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixController.ts",
+          "score": 0.8260869565217391,
+          "decision": "stale",
+          "duration_ms": 12344,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:27.192Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 18520,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:42:36.806Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:36.840Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:37.309Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 6568,
+          "error": "node failed (1):  [91m21:42:37 (20354) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:42:37 (20354) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/d62363e486077dc6aa5a536a35c93106b0066a11/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:42:37.310Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12714,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:42:47.066Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 3842,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:48.757Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixController.ts",
+          "score": 0.8260869565217391,
+          "decision": "pass",
+          "duration_ms": 1619,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:50.274Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1456,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:57.694Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 7358,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:57.695Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 20831,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:42:59.676Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:59.728Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:01.904Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:01.935Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:04.226Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:04.268Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:05.806Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6043,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:07.995Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:14.654Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 4190,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:16.383Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixController.ts",
+          "score": 0.8260869565217391,
+          "decision": "pass",
+          "duration_ms": 1668,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:18.051Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1651,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:26.204Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "target": "src/app.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 8138,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:26.205Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 12367,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:26.222Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 21923,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:46.977Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:43:47.109Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a694-8135-73df-a6d6-0bab8aba4cc5",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 465176,
+      "finalResponse": "All files are above the 0.80 mutation testing threshold with exit code 0. The remaining survivors are either equivalent mutants (like the `'/'` to `''` route path which Express 5 normalizes) or unreachable code (like the `index >= matrix.cells.length` guard that's guaranteed by earlier bounds checks).\n\nHere's a summary of the final state:\n\n**Production changes made:**\n- Added `sumMatrix()` function to `src/matrixService.ts`\n- Added `GET /api/matrix/sum` endpoint to `src/matrixController.ts`\n\n**Test files added/updated (101 total tests, all green):**\n| Test file | Tests | Mutation score |\n|---|---|---|\n| `src/matrixService.test.ts` | 50 | 0.91 ✅ |\n| `src/matrixController.test.ts` | 30 | 1.00 ✅ |\n| `src/matrixPage.test.ts` | 10 | 1.00 ✅ |\n| `src/app.test.ts` | 11 | 0.96 ✅ |",
+      "transcript_sha256": "b1278c344fd9dbdf343be11d3c7891242a22ca591cb9890a0fa215d157354218",
+      "trace": [
+        {
+          "ts": "2026-09-15T19:39:49.312Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:01.398Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:01.465Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:06.039Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.07377049180327869,
+          "decision": "below",
+          "duration_ms": 3331,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:40:06.041Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 3357,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:07.643Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6147,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:39.016Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:39.047Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:45.627Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:45.657Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:49.524Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.7984496124031008,
+          "decision": "stale",
+          "duration_ms": 4299,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:40:49.524Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 10453,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:51.550Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:51.581Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:51.712Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:40:54.452Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:54.483Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:40:57.629Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6024,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:02.547Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1878,
+          "error": "node failed (1):  [91m21:41:02 (6867) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:41:02 (6867) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:41:02.548Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8040,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:09.377Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:09.405Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:13.991Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:14.024Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:15.456Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6027,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:23.933Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:23.980Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:26.543Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8604651162790697,
+          "decision": "stale",
+          "duration_ms": 6347,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:26.543Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12494,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:31.760Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:31.793Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:41:33.370Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8604651162790697,
+          "decision": "stale",
+          "duration_ms": 3071,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:33.370Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 9355,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:41.058Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8604651162790697,
+          "decision": "pass",
+          "duration_ms": 3073,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:54.545Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 0.7021276595744681,
+          "decision": "below",
+          "duration_ms": 13427,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:56.694Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 2089,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:59.198Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": 0.7777777777777778,
+          "decision": "below",
+          "duration_ms": 2442,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:41:59.199Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 27376,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:41:59.223Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 18893,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:38.384Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:38.415Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:46.522Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1940,
+          "error": "node failed (1):  [91m21:42:46 (21764) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:42:46 (21764) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:42:48.217Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1628,
+          "error": "node failed (1):  [91m21:42:47 (22462) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:42:47 (22462) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/571bd8f8f83883097a9e1bd08887ca229918374f.log"
+        },
+        {
+          "ts": "2026-09-15T19:42:49.799Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1513,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:50.649Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:50.680Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:42:51.312Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": 0.7777777777777778,
+          "decision": "stale",
+          "duration_ms": 1451,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:42:51.313Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12874,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:42:58.339Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1499,
+          "error": "node failed (1):  [91m21:42:58 (25653) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:42:58 (25653) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:00.214Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1820,
+          "error": "node failed (1):  [91m21:43:00 (26218) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:43:00 (26218) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/571bd8f8f83883097a9e1bd08887ca229918374f.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:01.729Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1447,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:03.326Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1541,
+          "error": "node failed (1):  [91m21:43:03 (27088) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:43:03 (27088) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/216381173f187cf4c2baf119193855699f4bc616.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:03.327Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12624,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:04.220Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:04.261Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:12.475Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2046,
+          "error": "node failed (1):  [91m21:43:12 (28565) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:43:12 (28565) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:14.170Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1630,
+          "error": "node failed (1):  [91m21:43:14 (29015) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:43:14 (29015) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/571bd8f8f83883097a9e1bd08887ca229918374f.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:15.304Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:15.337Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:15.924Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "stale",
+          "duration_ms": 1684,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:15.926Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11627,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:18.348Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:18.396Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:21.392Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Write",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:26.255Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1672,
+          "error": "node failed (1):  [91m21:43:26 (31754) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:43:26 (31754) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:26.521Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:26.552Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:43:27.742Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 1432,
+          "error": "node failed (1):  [91m21:43:27 (32334) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: | matrixRouter PUT /api/matrix/cells/:row/:col returns 400 with error for missing value |  [91m21:43:27 (32334) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/571bd8f8f83883097a9e1bd08887ca229918374f.log"
+        },
+        {
+          "ts": "2026-09-15T19:43:27.743Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 9321,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:43:36.288Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:43:36.543Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8527131782945736,
+          "decision": "pass",
+          "duration_ms": 3804,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:38.180Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:43:50.191Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 0.9148936170212766,
+          "decision": "pass",
+          "duration_ms": 13586,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:51.918Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1665,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:59.517Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 7551,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:43:59.545Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 32969,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:44:51.745Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:44:59.027Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:44:59.067Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:02.683Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:02.715Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:05.120Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:11.066Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:11.096Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:12.430Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8604651162790697,
+          "decision": "stale",
+          "duration_ms": 3523,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:12.431Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 9693,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:21.283Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.8604651162790697,
+          "decision": "pass",
+          "duration_ms": 3996,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:23.328Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:23.372Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:32.982Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:33.013Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:35.484Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 14136,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:35.484Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 24363,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:36.757Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:36.792Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:36.827Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.875968992248062,
+          "decision": "stale",
+          "duration_ms": 7260,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:36.828Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 13430,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:39.066Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:43.386Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:43.416Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:45:48.129Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:45:49.121Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.9147286821705426,
+          "decision": "stale",
+          "duration_ms": 6077,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:49.129Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12311,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:45:51.045Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.9147286821705426,
+          "decision": "pass",
+          "duration_ms": 1878,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:52.525Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1469,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:45:59.360Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 6823,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:00.808Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1436,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:00.825Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 17385,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:46:20.343Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:20.373Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:28.917Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2375,
+          "error": "node failed (1): Error: Transform failed with 1 error: | ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/reports/cc9ca8fd-af95-49f0-8a23-7d6a938c6b39/sandbox/sandbox-dtHuPJ/src/app.test.ts:113:3: ERROR: Unexpected end of file |  [91m21:46:28 (46854) ERROR Stryker [39m Unexpected error occurred while running Stryker Error: Something went wrong in the initial test run; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:46:30.477Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1492,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:31.957Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1415,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:32.598Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:32.628Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:34.186Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 2173,
+          "error": "node failed (1): Error: Transform failed with 1 error: | ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/reports/31b42ea9-1bae-4b65-9bc0-ea136aeaabf6/sandbox/sandbox-Fva7kj/src/app.test.ts:113:3: ERROR: Unexpected end of file |  [91m21:46:34 (48180) ERROR Stryker [39m Unexpected error occurred while running Stryker Error: Something went wrong in the initial test run; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/216381173f187cf4c2baf119193855699f4bc616.log"
+        },
+        {
+          "ts": "2026-09-15T19:46:34.187Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 13791,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:46:40.254Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1462,
+          "error": "node failed (1):  [91m21:46:40 (49100) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:46:40 (49100) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T19:46:41.716Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1398,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:43.201Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1423,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:44.717Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1457,
+          "error": "node failed (1):  [91m21:46:44 (50192) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m21:46:44 (50192) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/c672951e577d2d25b22716def89e9a1592e42c38/logs/216381173f187cf4c2baf119193855699f4bc616.log"
+        },
+        {
+          "ts": "2026-09-15T19:46:44.718Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12067,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:46:45.921Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:45.950Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:46:51.792Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:46:53.689Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixService.ts",
+          "score": 0.9147286821705426,
+          "decision": "pass",
+          "duration_ms": 1872,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:55.165Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1464,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:56.547Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1372,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:57.919Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1362,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:46:57.942Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "tool": "Edit",
+          "file": [
+            "src/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11968,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:47:07.729Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:47:13.625Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 84,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:47:33.908Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:47:34.023Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a695-2c75-7284-90c0-dd3ec73d2ba4",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

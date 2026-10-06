@@ -1,0 +1,1 @@
+package acme; public class JavaLogic { public int invokeSuspend(int value) { return value + 1; } }

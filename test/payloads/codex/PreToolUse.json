@@ -1,0 +1,13 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "codex",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "apply_patch",
+  "tool_input": {
+    "command": "*** Add File: src/test/java/acme/UserServiceTest.java\n+package acme;"
+  },
+  "tool_response": {
+    "success": true
+  }
+}

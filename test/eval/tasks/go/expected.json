@@ -1,0 +1,16 @@
+{
+  "lang": "go",
+  "targets": [
+    {"file": "internal/matrix/service.go", "target": "internal/matrix/service.go"},
+    {"file": "internal/api/controller.go", "target": "internal/api/controller.go"},
+    {"file": "internal/api/page.go", "target": "internal/api/page.go"},
+    {"file": "cmd/matrixd/main.go", "target": "cmd/matrixd/main.go"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["go.mod", "**/*.go"],
+  "expectedProdEdits": ["internal/api/controller.go", "internal/matrix/service.go"],
+  "testFiles": ["**/*_test.go"],
+  "testCommand": ["go", "test", "./..."],
+  "toolchain": ["go"],
+  "notes": "Go target ids are repo-relative file paths; a *_test.go resolves by basename (service_test.go -> service.go), else to the lone non-test file in its directory, else unresolved. multi-class-it: the prompt names cmd/matrixd/matrix_api_test.go; stem matrix_api matches no file, so it silently resolves to the lone sibling cmd/matrixd/main.go while exercising internal/api/controller.go, internal/api/page.go and internal/matrix/service.go over HTTP. idiom: handlers live in package internal/api, not main, so integration tests under cmd/ leave them unscored with no warning (springtest Go finding); a package-level internal/api/api_test.go or handlers_test.go is unresolved (candidates controller.go, page.go). boundary: matrix.New (rows/cols < 1, > MaxSize 1000), Service.cell bounds (row/col < 0, >= rows/cols), Service.Add int64 overflow check against math.MaxInt32/MinInt32, parse() ParseInt bitSize 32 in controller.go and main.go, page.go kind() (< 0, == 0). equivalent-bait: Service.cell second check `index >= len(s.cells)` is unreachable after the bounds check (4 equivalent mutants: boundary, empty-if and two uncovered), Snapshot copies each row again with slices.Clone after building a fresh grid, and page.go's explicit Content-Type header equals what net/http sniffs (1 equivalent mutant). entrypoint: cmd/matrixd/main.go main() (uncovered; env MATRIX_SIZE/MATRIX_FILL/MATRIX_ADDR, ListenAndServe) plus newHandler route wiring and newService parsing <rows>x<cols> and the fill loop; an HTTP-only test leaves the size/fill parse errors and main() unkilled. forced-weak: the shared forced prompt asks for an assertion-free matrix service smoke test first (internal/matrix/service_test.go). staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing internal/api/controller.go (and usually internal/matrix/service.go), so scored targets go stale and must re-run. Reference scores (gomutants 0.6.1): service.go 94/98, controller.go 34/34, page.go 21/22, main.go 36/40. prodFiles globs every .go file; the prod-changed warning subtracts testFiles, so new production files an agent adds are flagged."
+}

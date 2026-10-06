@@ -1,0 +1,152 @@
+{
+  "harness": "codex",
+  "scenario": "async",
+  "passed": true,
+  "attempts": [
+    {
+      "attempt": 0,
+      "scenario": "async",
+      "ok": true,
+      "check": {
+        "sessionStart": true,
+        "testWrite": true,
+        "result": true,
+        "canary": true,
+        "noInternalErrors": true,
+        "asyncReceipt": true,
+        "repairAfterFeedback": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 58388,
+      "finalResponse": "Strengthened eligibility and discount boundary assertions after receiving asynchronous mutation feedback. `./gradlew test` passes. No updated mutation score received.\n\nMUTAGATE_ASYNC_RECEIPT_682196d9-39a3-4d17-93dc-6beca1b315da\n",
+      "transcript_sha256": "1eeb182741a989113da377f9b159a4ddf3f5ae5431f885231c6f436c275d930d",
+      "trace": [
+        {
+          "ts": "2026-09-12T16:02:24.812Z",
+          "harness": "codex",
+          "event": "SessionStart",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:02:42.361Z",
+          "harness": "codex",
+          "event": "PreToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:02:42.442Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:02:46.508Z",
+          "harness": "codex",
+          "event": "Result",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "target": "acme.UserService",
+          "score": 0,
+          "decision": "below",
+          "duration_ms": 1052,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:02:46.509Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 4002,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:03:12.921Z",
+          "harness": "codex",
+          "event": "PreToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:03:13.003Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:03:19.596Z",
+          "harness": "codex",
+          "event": "Result",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "target": "acme.UserService",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3583,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:03:19.596Z",
+          "harness": "codex",
+          "event": "PostToolUse",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "tool": "apply_patch",
+          "file": [
+            "/tmp/mutagate-live-4upTXF/src/test/java/acme/UserServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6528,
+          "error": null
+        },
+        {
+          "ts": "2026-09-12T16:03:20.007Z",
+          "harness": "codex",
+          "event": "Stop",
+          "session": "01a0965b-077c-7063-96b7-944e31e6b70b",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "checked_at": "2026-09-12T16:05:38.541Z",
+  "version": "0.154.0",
+  "authentication": "existing ChatGPT login; no credentials copied",
+  "method": "Installed native hooks; a transparent async wrapper appends a random receipt request to actual PIT feedback. Receipt echoed by model; source repairs and passing mutation result observed. No fake hook events or mutants."
+}

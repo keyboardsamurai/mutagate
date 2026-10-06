@@ -1,0 +1,5 @@
+{
+  "stdout": "{\"systemMessage\":\"mutagate 0.9.0 active. runner=unavailable (none, unknown). threshold 0.80. mode gate.\"}\n",
+  "stderr_contains": "",
+  "exit_code": 0
+}

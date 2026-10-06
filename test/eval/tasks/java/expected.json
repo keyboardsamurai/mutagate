@@ -1,0 +1,16 @@
+{
+  "lang": "java",
+  "targets": [
+    {"file": "src/main/java/com/example/matrix/MatrixService.java", "target": "com.example.matrix.MatrixService"},
+    {"file": "src/main/java/com/example/matrix/MatrixController.java", "target": "com.example.matrix.MatrixController"},
+    {"file": "src/main/java/com/example/matrix/MatrixPageController.java", "target": "com.example.matrix.MatrixPageController"},
+    {"file": "src/main/java/com/example/matrix/MatrixApplication.java", "target": "com.example.matrix.MatrixApplication"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["src/main/**"],
+  "expectedProdEdits": ["src/main/java/com/example/matrix/MatrixController.java", "src/main/java/com/example/matrix/MatrixService.java"],
+  "testFiles": ["src/test/**/*.java"],
+  "testCommand": ["mvn", "-q", "test"],
+  "toolchain": ["java", "mvn"],
+  "notes": "multi-class-it: the prompt names MatrixApiIntegrationTest; its stem MatrixApi matches no class, while it exercises MatrixController, MatrixPageController and MatrixService over HTTP. boundary: MatrixService constructor (dimensions >= 1 and <= MAX_SIZE 1000), cell() bounds (row/col < 0, >= rows/cols), add() Math.addExact overflow; MatrixPageController sign classes (value < 0, == 0). equivalent-bait: MatrixService.cell() second check `index >= cells.length` is unreachable after the bounds check (its boundary and remove-conditional mutants are equivalent), and snapshot() copies each row again via clone() after building a fresh grid. entrypoint: MatrixApplication main() plus the @Bean matrixService factory parsing matrix.size (RxC) and matrix.fill; a context-loads test leaves the fill loop and the malformed-size branch untested. idiom: Spring @Bean wiring on the @SpringBootApplication class, and the lambda in AtomicInteger.updateAndGet that PIT mutates as the synthetic lambda$add$0. forced-weak: the shared forced prompt asks for an assertion-free MatrixService smoke test first. staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing MatrixController (and usually MatrixService), so scored targets go stale and must re-run."
+}

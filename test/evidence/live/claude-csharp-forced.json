@@ -1,0 +1,1814 @@
+{
+  "harness": "claude",
+  "version": "2.1.270",
+  "model": "claude-sonnet-5",
+  "lang": "csharp",
+  "task": "small",
+  "scenario": "forced",
+  "passed": true,
+  "checked_at": "2026-09-15T18:04:20.686Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 783196,
+      "finalResponse": "Added GET /api/matrix/sum endpoint + tests, and unit tests for all 4 production files (MatrixService, MatrixEndpoints, MatrixPage, Program). 54 tests pass.",
+      "transcript_sha256": "c28dde3da4cf22c6efdb65012a1e0dd11af30768fc37f31855971078f6fbeaa7",
+      "trace": [
+        {
+          "ts": "2026-09-15T17:47:17.806Z",
+          "harness": "claude",
+          "event": "SessionStart",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:47:27.135Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:47:27.203Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:47:44.545Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.10909090909090909,
+          "decision": "below",
+          "duration_ms": 11135,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:47:44.547Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 17376,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:47:46.607Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 35,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:00.938Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:01.018Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 34,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:26.434Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8727272727272727,
+          "decision": "pass",
+          "duration_ms": 19145,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:26.436Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 25452,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:48:50.454Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:50.499Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:17.496Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 20659,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:17.498Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 27005,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:49:20.394Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:20.462Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:29.846Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3200,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/9a2f0e0d054a61bf1d00209b17af8e72a07b3537/dotnet/e5d6c66f40fa5f5e/Matrix/MatrixEndpoints.cs(20,28): error CS0103: The name 'Sum' does not exist in the current context [~/.cache/mutagate/repos/9a2f0e0d054a61bf1d00209b17af8e72a07b3537/dotnet/e5d6c66f40fa5f5e/Ma; log: ~/.cache/mutagate/repos/9a2f0e0d054a61bf1d00209b17af8e72a07b3537/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-09-15T17:49:29.848Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 9417,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:49:33.037Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:33.100Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:57.858Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 18582,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:57.859Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 24789,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:50:02.513Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:02.596Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 33,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:29.535Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 20736,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:50:29.536Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 26972,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:50:34.963Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:35.026Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:59.172Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 17981,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:08.472Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 9233,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:08.473Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 33477,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:53:47.014Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:47.085Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 33,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:11.709Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 18409,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:54:21.593Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 9752,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:54:33.011Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 11319,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:54:33.013Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 45962,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:54:57.847Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:57.959Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:55:23.691Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 19501,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:55:32.497Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8735,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:55:47.809Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.6,
+          "decision": "below",
+          "duration_ms": 15239,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:55:47.810Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 49872,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:58:01.181Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:58:01.225Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:58:26.473Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 19039,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:35.569Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 9027,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:47.025Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 11357,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:47.026Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 45807,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:59:11.549Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:59:11.620Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 34,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:59:37.190Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8666666666666667,
+          "decision": "pass",
+          "duration_ms": 19358,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:59:48.310Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 11043,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:01.507Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 13125,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:11.795Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "target": "Matrix/Program.cs",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 10213,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:11.796Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 60209,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:00:20.065Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 89,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:00:20.130Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:00:20.245Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "6623b7af-ecef-49a0-8635-75f14c2edf4c",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 709838,
+      "finalResponse": "All 47 tests pass. I'll finish the turn now and let the hook re-evaluate.\n\nAdded a `TestServer`-backed test in `MatrixEndpointsTests.cs` that exercises `MapMatrixApi` route wiring and the exception-to-BadRequest filter end-to-end, alongside the earlier per-handler and `Sum` tests.",
+      "transcript_sha256": "741b27a82f7024a8e87be7e7b2284431324cda393e68aae672a7739d9d8e20eb",
+      "trace": [
+        {
+          "ts": "2026-09-15T17:52:31.607Z",
+          "harness": "claude",
+          "event": "SessionStart",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:52:47.169Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:52:47.229Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:06.265Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.23636363636363636,
+          "decision": "below",
+          "duration_ms": 12750,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:53:06.268Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 19054,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:53:07.869Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 116,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:20.816Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:20.907Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 38,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:45.819Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8909090909090909,
+          "decision": "pass",
+          "duration_ms": 18651,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:53:45.819Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 24950,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:53:54.127Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:53:54.196Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:18.886Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8305084745762712,
+          "decision": "pass",
+          "duration_ms": 18503,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:54:18.887Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 24722,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:54:22.407Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:22.476Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:33.049Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 4377,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix/MatrixEndpoints.cs(20,28): error CS0103: The name 'Sum' does not exist in the current context [~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Ma; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-09-15T17:54:33.050Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 10604,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:54:36.992Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:54:37.059Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:55:01.805Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8305084745762712,
+          "decision": "pass",
+          "duration_ms": 18393,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:55:01.806Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 24778,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:55:21.284Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:55:21.336Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:55:47.914Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 20372,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:55:47.915Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 26586,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:55:53.833Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:55:53.887Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:56:18.986Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18874,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:56:28.012Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8944,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:56:28.014Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 34135,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:56:58.242Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:56:58.308Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:57:22.871Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18393,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:57:31.875Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8912,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:57:36.874Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 4939,
+          "error": "dotnet-stryker failed (1): System.ArgumentNullException : Value cannot be null. (Parameter 'provider') | System.ArgumentNullException : Value cannot be null. (Parameter 'provider') | System.ArgumentNullException : Value cannot be null. (Parameter 'provider'); Initial testrun has more than 50% failing tests.; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/1de3dd4402f35d43a369912f996ad580042da97c.log"
+        },
+        {
+          "ts": "2026-09-15T17:57:36.877Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 38601,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:57:48.476Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:57:48.547Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:58:13.218Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18482,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:26.434Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 13136,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:34.490Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 7986,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:58:34.492Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 45976,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:58:59.665Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:58:59.703Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:59:09.284Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3381,
+          "error": "dotnet-stryker failed (1): 2 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/ProgramTests.cs(104,61): error CS0246: The type or namespace name 'JsonElement' could not be found (are you missing a using directive or an assembly reference?) [~/.cache/mutagate/; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-09-15T17:59:12.606Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3254,
+          "error": "dotnet-stryker failed (1): 2 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/ProgramTests.cs(104,61): error CS0246: The type or namespace name 'JsonElement' could not be found (are you missing a using directive or an assembly reference?) [~/.cache/mutagate/; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/9c61900c817d223d039ed7e4a584f7ffa5d8af6d.log"
+        },
+        {
+          "ts": "2026-09-15T17:59:15.793Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3118,
+          "error": "dotnet-stryker failed (1): 2 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/ProgramTests.cs(104,61): error CS0246: The type or namespace name 'JsonElement' could not be found (are you missing a using directive or an assembly reference?) [~/.cache/mutagate/; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/1de3dd4402f35d43a369912f996ad580042da97c.log"
+        },
+        {
+          "ts": "2026-09-15T17:59:19.288Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/Program.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3432,
+          "error": "dotnet-stryker failed (1): 2 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/ProgramTests.cs(104,61): error CS0246: The type or namespace name 'JsonElement' could not be found (are you missing a using directive or an assembly reference?) [~/.cache/mutagate/; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/7d5892f204490dd1d7b9b3d8b6934a94a8489f3a.log"
+        },
+        {
+          "ts": "2026-09-15T17:59:19.289Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 19592,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:59:23.268Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:59:23.324Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 10,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:59:48.786Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 19158,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:59:57.968Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 9077,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:05.773Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 7665,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:17.093Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/Program.cs",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 11246,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:00:17.094Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 53779,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:00:31.689Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 249,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:01:53.223Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:01:53.287Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:02:17.817Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18342,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:02:26.451Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8549,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:02:33.756Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 7234,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:02:47.789Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/Program.cs",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 13960,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:02:47.790Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 54534,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:02:55.636Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:02:55.704Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:03:05.304Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3434,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(160,26): error CS1929: 'HttpContent' does not contain a definition for 'ReadFromJsonAsync' and the best extension method overload 'HttpRequestJsonExtensions.ReadFrom; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-09-15T18:03:09.604Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 4228,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(160,26): error CS1929: 'HttpContent' does not contain a definition for 'ReadFromJsonAsync' and the best extension method overload 'HttpRequestJsonExtensions.ReadFrom; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/9c61900c817d223d039ed7e4a584f7ffa5d8af6d.log"
+        },
+        {
+          "ts": "2026-09-15T18:03:14.202Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 4482,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(160,26): error CS1929: 'HttpContent' does not contain a definition for 'ReadFromJsonAsync' and the best extension method overload 'HttpRequestJsonExtensions.ReadFrom; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/1de3dd4402f35d43a369912f996ad580042da97c.log"
+        },
+        {
+          "ts": "2026-09-15T18:03:17.676Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/Program.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3373,
+          "error": "dotnet-stryker failed (1): 1 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(160,26): error CS1929: 'HttpContent' does not contain a definition for 'ReadFromJsonAsync' and the best extension method overload 'HttpRequestJsonExtensions.ReadFrom; log: ~/.cache/mutagate/repos/62dc7f4e39b1c9ea72d4c3174518c097bd3bd218/logs/7d5892f204490dd1d7b9b3d8b6934a94a8489f3a.log"
+        },
+        {
+          "ts": "2026-09-15T18:03:17.677Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "block",
+          "duration_ms": 22005,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:03:21.612Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:03:21.655Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:03:46.441Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18581,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:03:54.994Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8481,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:04:04.462Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 9387,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:04:14.541Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "target": "Matrix/Program.cs",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 10011,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:04:14.541Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "duration_ms": 52895,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:04:20.668Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 92,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:04:20.711Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:04:20.826Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "698f0b51-f1ee-4283-9223-8fe4d3ed81f2",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

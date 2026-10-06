@@ -1,0 +1,71 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK SessionStart",
+            "timeout": 30,
+            "additionalContextLimit": 2500
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK PreToolUse",
+            "timeout": 30,
+            "additionalContextLimit": 2500
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK PostToolUse",
+            "timeout": 30,
+            "additionalContextLimit": 2500
+          },
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK PostToolUse --mutate",
+            "timeout": 900,
+            "additionalContextLimit": 2500,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK Stop",
+            "timeout": 600
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "MUTAGATE_HOOK SubagentStop",
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  }
+}

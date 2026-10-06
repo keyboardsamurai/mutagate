@@ -1,0 +1,4062 @@
+{
+  "harness": "claude",
+  "version": "2.1.270",
+  "model": "claude-sonnet-5",
+  "lang": "go",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-15T17:52:25.201Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 1331829,
+      "finalResponse": "Everything is complete:\n\n- Added comprehensive unit tests: `internal/matrix/service_test.go`, `internal/api/controller_test.go`, `internal/api/page_test.go`, `cmd/matrixd/main_test.go`.\n- Added the HTTP-level integration suite in `cmd/matrixd/matrix_api_test.go` covering the REST API and HTML page together (invalid cells, overflow, out-of-bounds, size limits, method-not-allowed).\n- Added `GET /api/matrix/sum` (new `Service.Sum() int64` + controller handler/route) with unit and integration test coverage.\n- `go build`, `go vet`, `go test ./...`, and `go test ./... -race` all pass.\n- Mutation-testing gate (mutagate) passes for every production file (0.85–1.00, threshold 0.80). The handful of remaining survivors are a provably-unreachable defensive bounds check in `service.go` and a Content-Type mutation that's genuinely equivalent under Go's response-writer content sniffing, plus `main()`'s `log.Fatal`/`ListenAndServe` lines which can't be exercised without exiting the test binary or leaking a live listener — I proposed waivers with reasoning for all of these (pending human approval) rather than distorting tests or weakening code.\n\nNo production logic was changed except adding the `Sum` method/endpoint you asked for.",
+      "transcript_sha256": "4ce41007e0299ccbc9ab9623eeac6f73b42941181868127d8bec91c343c948d1",
+      "trace": [
+        {
+          "ts": "2026-09-15T17:25:01.835Z",
+          "harness": "claude",
+          "event": "SessionStart",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:06.645Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:06.687Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:26:06.688Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:10.334Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:10.379Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:26:10.380Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:13.800Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:13.836Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:26:13.837Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:42.246Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:42.311Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:27:26.051Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 37523,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:27:26.051Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 43770,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:28:00.583Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:00.657Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:07.669Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 847,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:28:22.907Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 15172,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:28:22.908Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 22281,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:28:34.095Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:34.160Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 28,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:43.646Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 3313,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:09.439Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 25724,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:35.535Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 26031,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:35.536Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 61405,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:29:48.250Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:29:48.287Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:29:55.269Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 795,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:56.630Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1274,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:57.984Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1270,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:18.787Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.675,
+          "decision": "below",
+          "duration_ms": 20727,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:18.790Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 30508,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:31:33.642Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:31:33.705Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:31:42.706Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 2779,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:44.099Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1274,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:45.402Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1235,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:45.771Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 306,
+          "error": "gomutants failed (1): FAIL | gomutants: coverage run failed: exit status 1 | cmd/matrixd/main_test.go:4:2: \"errors\" imported and not used; log: ~/.cache/mutagate/repos/713ff5c3a37b332e8f022b69f89896b87fe95088/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:31:45.773Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 12098,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:31:54.209Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:31:54.273Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:32:01.715Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 1253,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:03.221Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1439,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:04.516Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1229,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:04.872Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 301,
+          "error": "gomutants failed (1): FAIL | gomutants: coverage run failed: exit status 1 | cmd/matrixd/main_test.go:4:2: \"errors\" imported and not used; log: ~/.cache/mutagate/repos/713ff5c3a37b332e8f022b69f89896b87fe95088/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:32:04.873Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 10630,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:32:12.446Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:32:12.511Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:32:19.489Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 818,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:20.745Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1192,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:22.080Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1268,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:34.048Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 11898,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:34.048Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 21567,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:33:03.349Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:03.413Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:12.182Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 2559,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:15.387Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3074,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:18.705Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 3247,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:21.019Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2253,
+          "error": "gomutants failed (1): FAIL example.com/matrix/cmd/matrixd 1.729s | FAIL | gomutants: coverage run failed: exit status 1; --- FAIL: TestRESTMatrixLifecycle (0.00s); log: ~/.cache/mutagate/repos/713ff5c3a37b332e8f022b69f89896b87fe95088/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:33:21.020Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 17637,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:33:35.108Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:35.174Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:46.899Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 5532,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:50.920Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3953,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:53.963Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 2977,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:55.722Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1700,
+          "error": "gomutants failed (1): FAIL example.com/matrix/cmd/matrixd 1.221s | FAIL | gomutants: coverage run failed: exit status 1; --- FAIL: TestRESTOverflow (0.00s); log: ~/.cache/mutagate/repos/713ff5c3a37b332e8f022b69f89896b87fe95088/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:33:55.724Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 20581,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:34:00.220Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:34:00.258Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:34:08.112Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 1664,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:34:09.622Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1441,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:34:10.925Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1237,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:34:27.291Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 16289,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:34:27.292Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 27039,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:34:34.360Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:35:43.631Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:35:43.669Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:37:03.486Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8725490196078431,
+          "decision": "pass",
+          "duration_ms": 73620,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:37:05.082Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1580,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:37:06.758Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1665,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:37:11.919Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 5146,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:37:11.920Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 88256,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:37:16.162Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:37:16.230Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:38:37.771Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.8725490196078431,
+          "decision": "pass",
+          "duration_ms": 75364,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:42.566Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 4781,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:47.461Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 4883,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:52.155Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 4681,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:52.156Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 95957,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:39:02.179Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:02.219Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:08.558Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 153,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/matrix [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/matrix/service_test.go:111:15: undefined: strings; log: ~/.cache/mutagate/repos/713ff5c3a37b332e8f022b69f89896b87fe95088/logs/8ef6f7bd2eca4922da9c5e77a8b0e40f3fcbe8ea.log"
+        },
+        {
+          "ts": "2026-09-15T17:39:14.020Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 5390,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:17.557Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 3465,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:20.151Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2528,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:20.152Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 17938,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:39:23.669Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:23.706Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:40:28.284Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9313725490196079,
+          "decision": "pass",
+          "duration_ms": 58389,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:31.994Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3695,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:34.657Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 2651,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:37.342Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2674,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:37.343Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 73641,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:40:47.569Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:40:47.611Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:41:38.150Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9411764705882353,
+          "decision": "pass",
+          "duration_ms": 44342,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:42.762Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 4537,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:45.791Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 2962,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:48.788Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2934,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:48.789Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 61183,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:41:57.393Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:41:57.461Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:42:56.980Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 53340,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:00.415Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3366,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:02.277Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 1850,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:03.685Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1395,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:03.686Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 66255,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:43:07.610Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:43:07.677Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:43:59.882Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 46039,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:03.230Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3279,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:06.203Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.8636363636363636,
+          "decision": "pass",
+          "duration_ms": 2906,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:09.252Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2983,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:09.253Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 61607,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:44:15.464Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:44:15.527Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:44:24.024Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 2325,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:37.570Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 13476,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:45.419Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 7781,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:47.214Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1726,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:47.214Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31717,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:44:54.615Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:45:24.673Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:14.841Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:17.990Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:19.424Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 1409,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:20.968Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1529,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:22.342Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1356,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:23.879Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1525,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:27.676Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:41.363Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:41.518Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:41.667Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:41.868Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.022Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.121Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.232Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.406Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.534Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:03.693Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:13.036Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 125,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:47:13.083Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:13.225Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "f8a192be-7051-451c-b38a-592f161b2461",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 1577560,
+      "finalResponse": "`go test ./...` and `go vet ./...` are green. Summary:\n\n- Added unit tests for every production file: `internal/matrix/service_test.go`, `internal/api/controller_test.go`, `internal/api/page_test.go`, `cmd/matrixd/main_test.go`.\n- Added `cmd/matrixd/matrix_api_test.go` for HTTP-level integration tests (REST API + HTML page against the fully wired app), covering invalid cells, overflow/underflow, size limits, and clearing.\n- Added `Service.Sum()` (`internal/matrix/service.go`) and wired `GET /api/matrix/sum` in the controller, with unit and integration tests.\n- Ran mutation testing (mutagate) throughout; all four files pass the 0.80 threshold (0.96–1.00). Proposed waivers for a handful of genuinely equivalent/unreachable mutants (a redundant defensive bounds-check in `cell()`, and an HTTP content-type auto-detection quirk in `page.go`) — these are pending your approval via `mutagate` since I can't apply waivers myself.",
+      "transcript_sha256": "eb98e63923b55a6ac70e9d0ffe8853e1e7c7013882da99dc2e16cb612721b920",
+      "trace": [
+        {
+          "ts": "2026-09-15T17:26:08.243Z",
+          "harness": "claude",
+          "event": "SessionStart",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:59.253Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:26:59.321Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:27:52.050Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 46549,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:27:52.050Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 52760,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:28:25.184Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:25.247Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 29,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:28:32.327Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 906,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:28:47.002Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 14602,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:28:47.002Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 21785,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:28:59.958Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:29:00.019Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 29,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:29:10.821Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 4615,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:43.640Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 32745,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:52.037Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 8329,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:29:52.037Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 52047,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:29:55.956Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:29:56.006Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:30:06.896Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 4681,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:07.197Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 242,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/page_test.go:6:2: \"strconv\" imported and not used; log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-09-15T17:30:07.497Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 242,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/page_test.go:6:2: \"strconv\" imported and not used; log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/a09a127fd0023f20ff670dea7b722ae3f1af9673.log"
+        },
+        {
+          "ts": "2026-09-15T17:30:07.498Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 11497,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:30:12.435Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:30:12.495Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 28,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:30:21.385Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 2718,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:43.821Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 22367,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:51.677Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 7791,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:30:51.678Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 39211,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:31:10.517Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:31:10.586Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 33,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:31:19.471Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 2698,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:22.495Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 2948,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:25.469Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 2905,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:42.740Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.675,
+          "decision": "below",
+          "duration_ms": 17186,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:31:42.742Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 32189,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:32:37.355Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:32:37.421Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:32:46.584Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 3004,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:48.198Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 1546,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:49.550Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 1285,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:32:49.903Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 297,
+          "error": "gomutants failed (1): FAIL | gomutants: coverage run failed: exit status 1 | cmd/matrixd/main_test.go:4:2: \"errors\" imported and not used; log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:32:49.904Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 12514,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:33:00.421Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:00.459Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:33:09.696Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 2852,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:13.016Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 3247,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:16.053Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 2973,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:48.092Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 31972,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:33:48.093Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 47638,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:33:56.726Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:35:29.018Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:35:29.059Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:36:30.381Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 55092,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:36:38.307Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 7910,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:36:47.363Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 9040,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:36:50.738Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 3362,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:36:50.739Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 81685,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:37:08.311Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:37:08.352Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:37:20.446Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 5886,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:03.590Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.8823529411764706,
+          "decision": "pass",
+          "duration_ms": 43072,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:24.271Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 20614,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:27.557Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 3272,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:38:27.558Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 79213,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:38:37.573Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:38:37.646Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 33,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:38:48.702Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 4891,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:14.996Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.9117647058823529,
+          "decision": "pass",
+          "duration_ms": 26224,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:24.549Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 9487,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:25.878Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 1265,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:25.879Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 48264,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:39:32.314Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:32.355Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:41.589Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 2982,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:41.894Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 236,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller_test.go:339:10: undefined: fmt; log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-09-15T17:39:42.256Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 304,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller_test.go:339:10: undefined: fmt; log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/a09a127fd0023f20ff670dea7b722ae3f1af9673.log"
+        },
+        {
+          "ts": "2026-09-15T17:39:46.177Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 3847,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:39:46.178Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "block",
+          "duration_ms": 13828,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:39:52.606Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:39:52.675Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:40:07.366Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 8520,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:36.790Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 29354,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:44.644Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 7789,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:46.001Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 1296,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:40:46.002Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 53359,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:40:51.762Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:40:51.827Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:41:00.574Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 2578,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:23.694Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 23052,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:42.207Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 18445,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:45.216Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 2942,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:41:45.216Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 53419,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:42:17.105Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:42:17.169Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:42:27.697Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 4359,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:42:31.632Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3867,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:42:34.961Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 3263,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:01.376Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 26349,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:43:01.377Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 44240,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:43:06.838Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:43:42.564Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:43:42.606Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:44:26.128Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9387755102040817,
+          "decision": "pass",
+          "duration_ms": 37266,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:27.419Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1220,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:30.302Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 2810,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:32.980Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2610,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:44:32.980Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 50379,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:44:40.614Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:44:40.677Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:45:14.023Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9591836734693877,
+          "decision": "pass",
+          "duration_ms": 27183,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:45:15.493Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1402,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:45:16.770Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1211,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:45:18.167Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1335,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:45:18.167Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 37520,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:45:25.522Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:45:25.563Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:46:00.799Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9591836734693877,
+          "decision": "pass",
+          "duration_ms": 28872,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:02.494Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1626,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:03.772Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1212,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:05.174Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1333,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:05.175Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 39617,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:46:11.521Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:46:42.755Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:46:42.801Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:46:49.930Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9591836734693877,
+          "decision": "pass",
+          "duration_ms": 919,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:51.567Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1567,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:46:52.839Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1195,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:47:10.772Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 17832,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:47:10.773Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 27980,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:47:24.554Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:28.142Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:37.672Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:37.797Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:37.947Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:38.108Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:38.231Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:47:49.090Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:47:49.127Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:22.887Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9215686274509803,
+          "decision": "pass",
+          "duration_ms": 27546,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:25.231Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2236,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:26.918Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1594,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:29.051Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2054,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:29.052Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 39928,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:48:32.848Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:32.918Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:40.479Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9215686274509803,
+          "decision": "pass",
+          "duration_ms": 1343,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:48:40.791Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 257,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller.go:23:42: c.sum undefined (type *Controller has no field or method sum); log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-09-15T17:48:41.085Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 237,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller.go:23:42: c.sum undefined (type *Controller has no field or method sum); log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/a09a127fd0023f20ff670dea7b722ae3f1af9673.log"
+        },
+        {
+          "ts": "2026-09-15T17:48:41.685Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 536,
+          "error": "gomutants failed (1): gomutants: baseline test failed: exit status 1; internal/api/controller.go:23:42: c.sum undefined (type *Controller has no field or method sum); log: ~/.cache/mutagate/repos/f6927499f5b3d2de192c2ed304d9bce327c36715/logs/72406655266845aeeb668c4406ea8b0298f5e5a8.log"
+        },
+        {
+          "ts": "2026-09-15T17:48:41.686Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "block",
+          "duration_ms": 8771,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:48:45.476Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:45.538Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:48:53.484Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9215686274509803,
+          "decision": "pass",
+          "duration_ms": 1736,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:06.713Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.9444444444444444,
+          "decision": "pass",
+          "duration_ms": 13153,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:16.194Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 9357,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:18.607Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2329,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:49:18.608Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 33099,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:49:36.389Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:49:36.453Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:19.990Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 37301,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:50:23.002Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 0.9444444444444444,
+          "decision": "pass",
+          "duration_ms": 2843,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:50:24.968Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 1841,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:50:27.613Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2523,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:50:27.615Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 51194,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:50:42.215Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:42.282Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:50:50.350Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 1841,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:03.318Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 12886,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:11.363Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 7929,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:13.766Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2287,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:13.768Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31517,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:51:22.588Z",
+          "harness": "claude",
+          "event": "PreToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:51:22.656Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:51:30.944Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/matrix/service.go",
+          "score": 0.9607843137254902,
+          "decision": "pass",
+          "duration_ms": 2067,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:33.498Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2412,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:35.781Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "internal/api/page.go",
+          "score": 0.9545454545454546,
+          "decision": "pass",
+          "duration_ms": 2099,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:50.544Z",
+          "harness": "claude",
+          "event": "Result",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "target": "cmd/matrixd/main.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 14675,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T17:51:50.545Z",
+          "harness": "claude",
+          "event": "PostToolUse",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 27920,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T17:51:56.589Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:02.019Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:12.341Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:12.481Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:12.575Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:12.675Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:25.174Z",
+          "harness": "claude",
+          "event": "Stop",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 157,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T17:52:25.228Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T17:52:25.359Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "a0445468-c7f0-4d9d-ba2c-61c9f9d539f2",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

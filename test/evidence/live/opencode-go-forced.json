@@ -1,0 +1,1590 @@
+{
+  "harness": "opencode",
+  "version": "1.18.30",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "lang": "go",
+  "task": "small",
+  "scenario": "forced",
+  "passed": true,
+  "checked_at": "2026-09-15T18:57:52.134Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 486267,
+      "finalResponse": "All files now meet the 0.80 gate:\n\n| File | Score |\n|---|---|\n| `internal/matrix/service.go` | 0.85 |\n| `internal/api/controller.go` | 1.00 |\n| `internal/api/page.go` | 1.00 |\n| `cmd/matrixd/main.go` | 0.90 |\n\nChanges in this round (tests only, no production code touched):\n- `internal/api/page_test.go`: assert row headers `<th>1</th>`/`<th>2</th>` and the `</tr>` closing tag; added a `spyWriter` that does not sniff Content-Type so the explicit `text/html; charset=utf-8` header must be set by `page.go`.\n- `cmd/matrixd/main_test.go`: assert errors wrap `strconv.ErrSyntax` (kills `%w`→`%v`), and exercise fill parsing base 10 and the signed 32-bit range boundaries.\n\nRemaining survivors are lines inside `main()` (needs a live listener to cover) and defensive zero-returns in `service.go`; all files remain above threshold. No production code was weakened for the gate. The only production change remains the previously reported `Sum()` + `/api/matrix/sum` endpoint required by step 3.",
+      "transcript_sha256": "b6182a0237f3dec341b25f684e729be6370d6bde871997563d80feb68e9e8abf",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:49:03.341Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:49:17.467Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:49:17.524Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:49:58.574Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/matrix/service.go",
+          "score": 0.08163265306122448,
+          "decision": "below",
+          "duration_ms": 38118,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:49:58.578Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 38160,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:49:58.616Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 41051,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:50:17.192Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:17.226Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:29.579Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:29.609Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:29.929Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:29.961Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:30.391Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:30.421Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:35.664Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:50:36.019Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6032,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:50:44.458Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:44.491Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:05.987Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:06.029Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:09.427Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:09.459Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:12.083Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6027,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:51:13.812Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:13.843Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:15.516Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:51:19.911Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:19.941Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:19.952Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6082,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:52:16.128Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "stale",
+          "duration_ms": 112707,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:52:16.128Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 118878,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:53:16.966Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 43671,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:53:32.970Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/api/page.go",
+          "decision": "killed",
+          "error": "gomutants failed (SIGKILL)"
+        },
+        {
+          "ts": "2026-09-15T18:53:33.268Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "cmd/matrixd/main.go",
+          "decision": "killed",
+          "error": "gomutants failed (SIGKILL)"
+        },
+        {
+          "ts": "2026-09-15T18:53:33.269Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 120005,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:53:39.664Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:53:48.938Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 92781,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:53:48.976Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 198531,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:53:49.008Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 184491,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:54:21.225Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/api/page.go",
+          "score": 0.7727272727272727,
+          "decision": "below",
+          "duration_ms": 32265,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:55:21.950Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.675,
+          "decision": "below",
+          "duration_ms": 60710,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:55:21.952Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 241988,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:43.703Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:43.738Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:47.156Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:47.205Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:49.795Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6032,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:51.204Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:51.237Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:53.252Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6017,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:59.902Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:56:00.723Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/matrix/service.go",
+          "score": 0.8529411764705882,
+          "decision": "pass",
+          "duration_ms": 3291,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:19.095Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 18304,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:28.530Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "internal/api/page.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 9368,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:40.746Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 12149,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:40.746Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 49484,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:56:45.941Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 112,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:57:07.145Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:57:07.321Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59994dc0ffemdSnYVehMi01JO",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 483421,
+      "finalResponse": "All green (`go test ./...`, `go vet`, `gofmt` clean).\n\nProduction change for the gate: refactored `cmd/matrixd/main.go` so `main` delegates to a new `run(getenv func(string) string, listen func(string, http.Handler) error) error`. Behavior is unchanged (`MATRIX_SIZE`/`MATRIX_FILL`/`MATRIX_ADDR`, default `:8080`), but the startup path is now unit-testable without binding a port or calling `os.Exit`.\n\nTests added to kill the reported survivors:\n- `%w` wrap checks via `errors.Is(err, strconv.ErrSyntax/ErrRange)` for rows, cols, and fill.\n- Base/bit-size: `\"19\"` (kills base 10→9/11), `\"2000000000\"` and `\"3000000000\"` (kills bitSize 32→31/33).\n- `run` tests: default addr, `MATRIX_ADDR` override, handler-construction error short-circuit, and listen-error propagation.",
+      "transcript_sha256": "28d8c2f255580a91f2a3feca21da006f0650d89d42533f4ca000b642bc45f4be",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:49:52.413Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:06.702Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:50:06.736Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:41.016Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/matrix/service.go",
+          "score": 0.07142857142857142,
+          "decision": "below",
+          "duration_ms": 91032,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:51:41.018Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 91059,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:41.059Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 94298,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:51:56.397Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:56.429Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:56.889Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:51:56.919Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:00.330Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:00.364Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:02.485Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:52:02.976Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:52:10.400Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:10.436Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:20.309Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:20.341Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:25.971Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:26.003Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:26.442Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6077,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:52:33.036Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:33.065Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:50.105Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:50.137Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:54.606Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:54.644Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:52:56.193Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:53:20.641Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/matrix/service.go",
+          "score": 0.696078431372549,
+          "decision": "stale",
+          "duration_ms": 74087,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:53:20.642Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 80252,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:06.186Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/controller.go",
+          "decision": "killed",
+          "error": "gomutants failed (SIGKILL)"
+        },
+        {
+          "ts": "2026-09-15T18:55:07.171Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/page.go",
+          "decision": "killed",
+          "error": "gomutants failed (SIGKILL)"
+        },
+        {
+          "ts": "2026-09-15T18:55:07.174Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 120008,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:55:11.795Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/matrix/service.go",
+          "score": 0.8627450980392157,
+          "decision": "pass",
+          "duration_ms": 111116,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:55:11.797Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 165770,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:11.820Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 158730,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:11.874Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 181405,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:55:27.307Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/controller.go",
+          "score": 0.9166666666666666,
+          "decision": "pass",
+          "duration_ms": 15383,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:55:44.092Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 16773,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:06.840Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.675,
+          "decision": "below",
+          "duration_ms": 22735,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:06.842Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 192171,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:56:06.961Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "file": [],
+          "decision": "block",
+          "duration_ms": 51255,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:35.310Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:35.343Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:38.997Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:39.029Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:41.400Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:56:46.034Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:46.300Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/matrix/service.go",
+          "score": 0.8627450980392157,
+          "decision": "pass",
+          "duration_ms": 1058,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:49.455Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/controller.go",
+          "score": 0.9166666666666666,
+          "decision": "pass",
+          "duration_ms": 3070,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:51.514Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:51.549Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:56:52.017Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "stale",
+          "duration_ms": 2497,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:56:52.018Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 12964,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:56:58.717Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/matrix/service.go",
+          "score": 0.8627450980392157,
+          "decision": "pass",
+          "duration_ms": 957,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:57:01.902Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/controller.go",
+          "score": 0.9166666666666666,
+          "decision": "pass",
+          "duration_ms": 3103,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:57:04.994Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "internal/api/page.go",
+          "score": 0.9090909090909091,
+          "decision": "pass",
+          "duration_ms": 3025,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:57:32.398Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 27356,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:57:32.399Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 30589,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:57:32.427Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main_test.go"
+          ],
+          "decision": "allow",
+          "duration_ms": 40855,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:57:52.162Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:57:52.304Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59988e11ffe5N6L691n7X0gbv",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

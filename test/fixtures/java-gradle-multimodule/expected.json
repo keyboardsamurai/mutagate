@@ -1,0 +1,1 @@
+{"test":"service/src/test/java/acme/UserServiceTest.java","weak":[0,0.5],"strong":[0.8,1],"must_report":["isEligible"]}

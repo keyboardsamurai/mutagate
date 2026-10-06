@@ -1,0 +1,6 @@
+#!/bin/sh
+d=$(dirname "$0")
+# MUTAGATE_NODE, then the Node recorded by install, then PATH.
+n=${MUTAGATE_NODE:-$(cat "$d/.node-path" 2>/dev/null)}
+[ -x "$n" ] || n=node
+exec "$n" "$d/mutagate-hook.cjs" hook "$@"

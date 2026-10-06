@@ -1,0 +1,2166 @@
+{
+  "harness": "opencode",
+  "version": "1.18.30",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "lang": "typescript",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-15T18:49:44.739Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 467028,
+      "finalResponse": "Done. Summary:\n\n**Tests added** (all in `test/`, 155 tests, `npm test` green):\n- `matrixService.test.ts` — createMatrix/get/set/add/clear/snapshot/sum, INT32 boundaries, overflow, size limits, out-of-bounds, defensive `cellIndex` guard.\n- `matrixController.test.ts` — `parseInteger`, `badRequest` (including empty-message fallback and `next` forwarding).\n- `matrixPage.test.ts` — `cellClass`, exact `renderPage` output, handler content type/body.\n- `app.test.ts` — `createApp`, `matrixFromEnv` (defaults, case, fills, bad size/fill), `start` on port 0.\n- `matrixApi.test.ts` — all HTTP integration against the assembled app (REST + HTML), including invalid cells, non-integer params, overflow, 204 clear, 404, and the sum endpoint.\n\n**Production change**: added `sumMatrix` in `src/matrixService.ts:40` and `GET /api/matrix/sum` in `src/matrixController.ts:11`.\n\n**Mutation gate** (`mutagate check`, exit 0): matrixService 0.99, matrixController 1.00, matrixPage 1.00, app 0.96. The two remaining survivors are equivalent mutants (`row.slice()` vs `row`; Express treating `''` route path as `/`), for which I proposed waivers for human approval. No production code was weakened for the gate.\n\nOne tooling note: because there is no production module named `matrixApi`, mutagate could not auto-scope `test/matrixApi.test.ts`; I registered it via `mutagate run test/matrixApi.test.ts --target src/matrixController.ts`, which also pulls in `app.ts`/`matrixService.ts` as secondaries.",
+      "transcript_sha256": "f01d5dc46fc15b1e6ff6f6cc85be844a1d639486ed911bdd8430bbcd25a24d55",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:42:00.321Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:42:15.850Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:44:12.028Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:12.129Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:12.290Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:12.299Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:12.422Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 44,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:22.898Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:23.047Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:23.109Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:23.179Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:23.301Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 41,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:44.094Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:44.214Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:48.317Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9836065573770492,
+          "decision": "stale",
+          "duration_ms": 29469,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:44:48.318Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 35940,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:59.667Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 11343,
+          "error": "node failed (1):  [91m20:44:58 (63684) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:44:58 (63684) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/af160ed05707adcf908c6b2bdde021b450ee17bd/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:44:59.678Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 36367,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:10.796Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 11081,
+          "error": "node failed (1):  [91m20:45:10 (64787) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:45:10 (64787) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/af160ed05707adcf908c6b2bdde021b450ee17bd/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:45:13.618Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.654Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 10,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.688Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.832Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.866Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.883Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:13.968Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:13.987Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:19.981Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.232Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.238Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.433Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 24,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.584Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.569Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 42,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:20.611Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 134,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:20.778Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 52,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:24.694Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixController.ts",
+          "score": 0.5217391304347826,
+          "decision": "stale",
+          "duration_ms": 13644,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:24.695Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 40412,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:26.786Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:26.855Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:27.023Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6196,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:27.903Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:28.003Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:29.226Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9302325581395349,
+          "decision": "stale",
+          "duration_ms": 8471,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:29.227Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 15205,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:33.001Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6085,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:49.339Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:45:53.784Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:45:58.837Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9844961240310077,
+          "decision": "pass",
+          "duration_ms": 24185,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:01.985Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixController.ts",
+          "score": 0.5217391304347826,
+          "decision": "below",
+          "duration_ms": 2999,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:08.138Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 6009,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:22.225Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "pass",
+          "duration_ms": 14024,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:22.266Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 54197,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:46:43.446Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:47:07.224Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:07.652Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:10.555Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:10.647Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 25,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:13.849Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6101,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:47:32.488Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:47:37.094Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:47:44.376Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9922480620155039,
+          "decision": "stale",
+          "duration_ms": 27100,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:47:55.130Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9922480620155039,
+          "decision": "pass",
+          "duration_ms": 10560,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:47:57.285Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 21652,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:47:59.745Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixController.ts",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 24119,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:03.909Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 4023,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:04.012Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 53303,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:48:12.437Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:17.114Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:22.966Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:28.513Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:48:28.556Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:48:29.519Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:48:29.558Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:48:34.612Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:48:38.239Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixService.ts",
+          "score": 0.9922480620155039,
+          "decision": "pass",
+          "duration_ms": 2495,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:48.586Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:48.705Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:50.508Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:50.990Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 12684,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:53.183Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2126,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:55.308Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 2083,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:55.326Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 25744,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:49:09.400Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:49:11.045Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:49:23.320Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 92,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:49:44.767Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:49:44.884Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599fc222ffeDwgqmoGNPmcKcF",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 383522,
+      "finalResponse": "Done. Summary:\n\n**Tests (103 passing, `npm test` green)**\n- `test/matrixService.test.ts` — matrix creation, size limits (MAX_SIZE=1000), 32-bit bounds, overflow, indexing, clear, snapshot copy semantics, sum.\n- `test/matrixController.test.ts` — `parseInteger`, `badRequest` (RangeError/TypeError/fallthrough), and all router endpoints incl. error naming.\n- `test/matrixPage.test.ts` — `cellClass`, `renderPage` markup, HTML handler.\n- `test/app.test.ts` — `createApp`, `matrixFromEnv` (defaults, size parsing, fill), `start` (port + logging).\n- `test/matrixApi.test.ts` — HTTP integration against the assembled app: REST CRUD, invalid cells/values, overflow, size limits, 404s, and the HTML page (all in one file).\n\n**Production change for the feature**\n- `src/matrixService.ts:47` added `sumMatrix(matrix)`.\n- `src/matrixController.ts:11` added `GET /api/matrix/sum` returning `{ sum }`, with unit + integration tests.\n\n**Mutation gate (`mutagate check`, exit 0)**\n- `matrixController.ts` 1.00, `matrixPage.ts` 1.00, `matrixService.ts` 0.96, `app.ts` 0.96 — all above 0.80.\n- Remaining survivors are equivalent mutants; I proposed waivers (pending human approval) for the dead `cellIndex` bounds check, the redundant `row.slice()`, and Express treating `''` like `/`. No production code was weakened or changed for the gate.",
+      "transcript_sha256": "3954541eec590be1c3e63d0fe37dc5b950a671023dd1a42ba35ebfc2688cbfe5",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:42:36.029Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:43:48.309Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:43:48.414Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:43:59.445Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:43:59.852Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 67,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:07.844Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:08.172Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:16.618Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:16.698Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:19.915Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": 0.9590163934426229,
+          "decision": "stale",
+          "duration_ms": 24675,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:44:19.915Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 31449,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:25.934Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 6012,
+          "error": "node failed (1):  [91m20:44:25 (61706) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:44:25 (61706) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/7c92e4f76c8d118e574c95de1797873bc8cd783e/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:44:25.944Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 17635,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:29.972Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:30.789Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 274,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:42.638Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 16672,
+          "error": "node failed (1):  [91m20:44:41 (62276) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:44:41 (62276) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/7c92e4f76c8d118e574c95de1797873bc8cd783e/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:44:42.640Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 25880,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:44:53.235Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 10576,
+          "error": "node failed (1):  [91m20:44:52 (63174) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:44:52 (63174) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/7c92e4f76c8d118e574c95de1797873bc8cd783e/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:44:59.088Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:44:59.491Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:05.075Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:05.413Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 12127,
+          "error": "node failed (1):  [91m20:45:04 (64199) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:45:04 (64199) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/7c92e4f76c8d118e574c95de1797873bc8cd783e/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:45:05.413Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 65319,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:05.486Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:05.834Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6221,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:22.387Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixController.ts",
+          "score": 0.8409090909090909,
+          "decision": "stale",
+          "duration_ms": 28751,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:22.389Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 51378,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:26.230Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": 0.9590163934426229,
+          "decision": "pass",
+          "duration_ms": 13728,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:30.518Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixController.ts",
+          "score": 0.8409090909090909,
+          "decision": "pass",
+          "duration_ms": 4126,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:44.532Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 13883,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:47.020Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:47.095Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:50.796Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:50.948Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:53.268Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6112,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:54.155Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:54.235Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:55.294Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "stale",
+          "duration_ms": 10548,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:45:55.294Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 49570,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:57.240Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6196,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:45:57.337Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:45:57.417Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:00.514Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6118,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:46:00.534Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:02.258Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:02.362Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:03.548Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6067,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:46:04.010Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:04.103Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:06.046Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:06.130Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:46:08.488Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6069,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:46:10.227Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6074,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:46:16.665Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:46:20.647Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:46:30.213Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": 0.9612403100775194,
+          "decision": "pass",
+          "duration_ms": 17577,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:49.386Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixController.ts",
+          "score": 0.851063829787234,
+          "decision": "pass",
+          "duration_ms": 19040,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:46:57.480Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 8032,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:47:04.703Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 7162,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:47:04.797Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 58610,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:47:19.617Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:19.796Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 49,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:22.781Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:23.191Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:26.017Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 6041,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:47:40.378Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 10622,
+          "error": "node failed (1):  [91m20:47:39 (81728) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m20:47:39 (81728) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/7c92e4f76c8d118e574c95de1797873bc8cd783e/logs/250c9b8a4aab394445f5c634c5ade2bd95d9e49b.log"
+        },
+        {
+          "ts": "2026-09-15T18:47:53.516Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:53.601Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:47:58.793Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:03.082Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 22342,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:03.084Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 39704,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:48:05.688Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixService.ts",
+          "score": 0.9612403100775194,
+          "decision": "pass",
+          "duration_ms": 6863,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:07.410Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1708,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:08.884Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1462,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:11.836Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 2938,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:48:11.859Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "duration_ms": 18199,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:48:16.260Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:17.991Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.023Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.133Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.231Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.328Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.427Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:23.516Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:26.220Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:36.551Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 99,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:48:57.256Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:48:57.404Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f599f36a4ffesvyr2bQyxrXWvX",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

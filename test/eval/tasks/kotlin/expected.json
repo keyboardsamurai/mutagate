@@ -1,0 +1,16 @@
+{
+  "lang": "kotlin",
+  "targets": [
+    {"file": "src/main/kotlin/com/example/matrix/MatrixService.kt", "target": "com.example.matrix.MatrixService"},
+    {"file": "src/main/kotlin/com/example/matrix/MatrixController.kt", "target": "com.example.matrix.MatrixController"},
+    {"file": "src/main/kotlin/com/example/matrix/MatrixPageController.kt", "target": "com.example.matrix.MatrixPageController"},
+    {"file": "src/main/kotlin/com/example/matrix/MatrixApplication.kt", "target": "com.example.matrix.MatrixApplication"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["src/main/**"],
+  "expectedProdEdits": ["src/main/kotlin/com/example/matrix/MatrixController.kt", "src/main/kotlin/com/example/matrix/MatrixService.kt"],
+  "testFiles": ["src/test/**/*.kt"],
+  "testCommand": ["./gradlew", "--console=plain", "test"],
+  "toolchain": ["java"],
+  "notes": "Gradle 8.14.3 wrapper (as in test/fixtures/kotlin-gradle), Kotlin 2.3.21 with plugin.spring, Spring Boot 4.1.1 (JUnit Jupiter 6 via the BOM), Tier B filter. multi-class-it: the prompt names MatrixApiIntegrationTest; its stem MatrixApi matches no class (not even by prefix: MatrixApplication), while it exercises MatrixController, MatrixPageController and MatrixService over HTTP. boundary: MatrixService init (dimensions >= 1 and <= MAX_SIZE 1000), cell() bounds (row/col < 0, >= rows/cols), add() Math.addExact overflow; cellClass sign checks (value < 0, == 0). equivalent-bait: MatrixService.cell() second check `index >= cells.size` is unreachable after the bounds check (its boundary and remove-conditional mutants on line 43 are equivalent), and snapshot() copies each row again via copyOf() after building a fresh grid. entrypoint: MatrixApplication @Bean matrixService (fill loop) plus the top-level main() and parseSize() in the MatrixApplicationKt facade; a context-loads test leaves the fill loop and the malformed-size branch untested; main's inline runApplication maps to a line past the end of the file. idiom: top-level functions compile to <File>Kt facades (MatrixApplicationKt: parseSize/main; MatrixPageControllerKt: cellClass) that mutagate mutates inside the MatrixApplication and MatrixPageController targets, so status reports the class id, never the facade id; a test named after a top-level function or the facade (ParseSizeTest, CellClassTest, MatrixApplicationKtTest) resolves to no target. The Elvis fallback `e.message ?: e.javaClass.simpleName` in MatrixController.badRequest leaves a survivor unless both a messaged and a message-less exception are tested. Kotlin Intrinsics.checkNotNull* call removals are filtered as junk (filtered_junk > 0 on every target). forced-weak: the shared forced prompt asks for an assertion-free MatrixService smoke test first. staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing MatrixController (and usually MatrixService), so scored targets go stale and must re-run."
+}

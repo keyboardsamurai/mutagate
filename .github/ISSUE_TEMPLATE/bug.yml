@@ -1,0 +1,52 @@
+name: Bug
+description: mutagate does something wrong (crash, wrong score, hook not running).
+labels: [bug]
+body:
+  - type: input
+    id: harness
+    attributes:
+      label: Harness and version
+      description: For example "Claude Code 2.1.289" or "Codex CLI 0.154.0".
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Java, Kotlin, Python, TypeScript / JavaScript, Go, C#, other]
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: For example "macOS 15.4", "Ubuntu 24.04", "Windows 11".
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: doctor --json
+      description: Run `<skill dir>/scripts/mutagate doctor --json` in the project root. Remove secrets and private paths.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: status --json
+      description: Run `<skill dir>/scripts/mutagate status --json` in the same session (or with the same `MUTAGATE_SESSION`).
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Trace or runner log (optional)
+      description: Rerun with `MUTAGATE_TRACE=1` and attach `trace.jsonl`, or attach `logs/<target>.log` from the data dir (README, Troubleshooting).

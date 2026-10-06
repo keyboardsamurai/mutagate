@@ -1,0 +1,14 @@
+{
+  "test": "mod/pricing/pricing_test.go",
+  "weak": [
+    0,
+    0.5
+  ],
+  "strong": [
+    0.8,
+    1
+  ],
+  "must_report": [],
+  "manifest": "mod/go.mod",
+  "file": "mod/pricing/pricing.go"
+}

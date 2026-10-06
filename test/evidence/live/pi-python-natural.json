@@ -1,0 +1,4332 @@
+{
+  "harness": "pi",
+  "version": "0.73.1",
+  "model": "deepseek/deepseek-v4-flash",
+  "lang": "python",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-16T09:54:11.948Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 1040819,
+      "finalResponse": "",
+      "transcript_sha256": "c26c12843ca0d43fbb4fcb80a994f168fd808d7971092bf0c682329c2087ca96",
+      "trace": [
+        {
+          "ts": "2026-09-16T09:36:51.855Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:38:16.150Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/__init__.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:16.177Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:16.207Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/__init__.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:16.211Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:16.262Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/__init__.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 28,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:24.622Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9666666666666667,
+          "decision": "pass",
+          "duration_ms": 2227,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:38:24.624Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8390,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.021Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.049Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.091Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.114Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.126Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:56.793Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1499,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:58.205Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1308,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:38:59.265Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1001,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:59.266Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10125,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:39:04.138Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:04.195Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:11.525Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1159,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:12.777Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1179,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:13.769Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 933,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:14.772Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 944,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/6b0dec235b1f3958fda76220a4f811a6ad59c5dd.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:14.773Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10551,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:39:19.467Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:19.504Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:26.904Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1206,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:27.976Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:28.005Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:28.183Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "stale",
+          "duration_ms": 1203,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:28.184Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8651,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:35.623Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1422,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:39.325Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 3573,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:41.802Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2217,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:42.976Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1106,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/6b0dec235b1f3958fda76220a4f811a6ad59c5dd.log"
+        },
+        {
+          "ts": "2026-09-16T09:39:42.977Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 14947,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:00.638Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:00.672Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:08.795Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9666666666666667,
+          "decision": "pass",
+          "duration_ms": 1923,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:10.188Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1319,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:11.616Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1336,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:13.767Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1866,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:13.768Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 13072,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:40:59.025Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:59.057Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:41:07.606Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9666666666666667,
+          "decision": "pass",
+          "duration_ms": 2244,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:08.988Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1313,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:10.485Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1423,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:12.174Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1618,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:12.175Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 13094,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:21.540Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:21.588Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:29.617Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9666666666666667,
+          "decision": "pass",
+          "duration_ms": 1821,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:30.943Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1238,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:32.270Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1261,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:33.882Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1538,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:33.883Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12267,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:44.591Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:44.622Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:53.015Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 2039,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:54.392Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1310,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:55.431Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:55.461Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:55.785Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "stale",
+          "duration_ms": 1326,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:55.787Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11139,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:03.481Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 1780,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:04.852Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1305,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:06.232Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1309,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:07.337Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:07.373Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:07.975Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "stale",
+          "duration_ms": 1673,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:07.975Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12487,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:15.659Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2085,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:17.215Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1487,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:18.523Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1235,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:18.663Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:18.695Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:20.277Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "stale",
+          "duration_ms": 1686,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:20.277Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12878,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:26.852Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1903,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:28.138Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1215,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:29.572Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1358,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:31.349Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1674,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:31.349Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12628,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:36.024Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:36.063Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:44.197Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1934,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:45.190Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:43:45.560Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1290,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:46.915Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1283,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:48.676Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1691,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:48.676Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12587,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:43.841Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:44:50.709Z",
+          "harness": "pi",
+          "event": "status",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:44:54.096Z",
+          "harness": "pi",
+          "event": "status",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:45:22.561Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:45:22.598Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:45:30.568Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1748,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:45:31.968Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1317,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:33.405Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1356,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:35.025Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:45:35.057Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:45:35.119Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "stale",
+          "duration_ms": 1620,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:35.120Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12497,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:45:42.351Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1098,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:45:43.683Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1257,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:45.411Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1654,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:47.528Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1986,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:45:47.529Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12446,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:02.316Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:02.349Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:10.645Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2094,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:11.968Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1253,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:13.312Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1272,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:15.008Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1626,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:15.009Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12635,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:28.332Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:28.367Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:36.579Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2017,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:37.969Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1324,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:39.311Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1271,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:40.118Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:40.149Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:41.001Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "stale",
+          "duration_ms": 1618,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:41.001Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12611,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:47.507Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1168,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:46:48.827Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1244,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:49.836Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 950,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:46:51.488Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1581,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:46:51.489Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11311,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:46:52.569Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:46:52.601Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:47:00.030Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1237,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:47:01.759Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1580,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:02.780Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 949,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/96db3f7d62a21f32c035bc69edce44bfcc9e44c7/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:47:04.503Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 1649,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:04.504Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11878,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:47:10.400Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:47:10.435Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:47:18.549Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1911,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:19.953Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1326,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:20.896Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:47:21.310Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1282,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:23.053Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 1671,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:47:23.054Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12593,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:17.235Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:17.268Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:25.851Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2377,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:26.737Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:26.776Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:27.289Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1363,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:27.291Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9998,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:35.454Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2409,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:35.489Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:35.522Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:37.139Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1608,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:37.141Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10303,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:43.994Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2130,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:45.499Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1426,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:47.210Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 1621,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:48:47.210Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11665,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:48:56.017Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:49:28.426Z",
+          "harness": "pi",
+          "event": "run",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:49:48.306Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:49:48.306Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:49:48.306Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:09.466Z",
+          "harness": "pi",
+          "event": "status",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:24.805Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:24.889Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:24.966Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.042Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.117Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.193Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.268Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.344Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.422Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.499Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.574Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.645Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.717Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.788Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.863Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:25.938Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:26.044Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:26.121Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:26.195Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:26.292Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:26.384Z",
+          "harness": "pi",
+          "event": "waive",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:50:31.736Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:51:06.950Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:51:06.985Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:51:15.153Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1870,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:51:16.378Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1158,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:51:17.852Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1401,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:51:19.713Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.974025974025974,
+          "decision": "pass",
+          "duration_ms": 1794,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:51:19.714Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12704,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:51:25.078Z",
+          "harness": "pi",
+          "event": "run",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:52:14.489Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:14.521Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:22.788Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 2061,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:24.045Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1185,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:25.342Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1230,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:27.058Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 1645,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:27.059Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12513,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:27.593Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:27.621Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:35.619Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1797,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:36.849Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1166,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:38.294Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1378,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:40.047Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 0.9753086419753086,
+          "decision": "pass",
+          "duration_ms": 1682,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:40.047Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12400,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:41.602Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:41.630Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:46.000Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:46.030Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:47.687Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:52:54.017Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 0.9672131147540983,
+          "decision": "pass",
+          "duration_ms": 1792,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:55.306Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1225,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:56.053Z",
+          "harness": "pi",
+          "event": "run",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:52:56.764Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1390,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:57.810Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1741,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:52:57.848Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11793,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:53:16.708Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:53:16.738Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:53:24.842Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1911,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:53:26.122Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1212,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:53:27.536Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1334,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:53:29.295Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "target": "matrix/main.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1680,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:53:29.295Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12533,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:53:51.054Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 86,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:54:11.978Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:54:12.093Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a993-822a-72ed-8e89-1bc429bdf98d",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": false,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": false,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 529758,
+      "finalResponse": "All 120 tests pass. Here's a summary of what was done:\n\n## Tests written\n\n| File | Type | Tests |\n|---|---|---|\n| `tests/test_service.py` | Unit | 31 tests — `reset`, `get`/`put`, `add`, `clear`, `snapshot`, `sum_cells`, `_checked`, `_index`, thread safety |\n| `tests/test_api.py` | Unit | 12 tests — `matrix`, `get_cell`, `put_cell`, `add_to_cell`, `clear`, `bad_request`, `install`, `sum_matrix` |\n| `tests/test_page.py` | Unit | 12 tests — HTML structure, CSS classes, element counts, join integrity |\n| `tests/test_matrix_api.py` | Integration | 35 tests — full HTTP round-trips via `TestClient` for all endpoints, edge cases (overflow, bounds, invalid inputs, size limits), the HTML page at `/`, and the new sum endpoint |\n\n## Endpoint added\n\n**`GET /api/matrix/sum`** — returns `{\"sum\": <int>}` with the sum of all matrix cells. Implemented in:\n- `matrix/service.py`: `sum_cells()` function\n- `matrix/api.py`: `sum_matrix()` handler + route registration\n\n## Mutation scores\n\n| Module | Score | Threshold | Status |\n|---|---|---|---|\n| `matrix/service.py` | **0.95** (58/61) | 0.80 | ✅ |\n| `matrix/api.py` | **1.00** (42/42) | 0.80 | ✅ |\n| `matrix/page.py` | **1.00** (31/31) | 0.80 | ✅ |\n\nAll above the 0.80 threshold. The 3 remaining survivors in `service.py` are equivalent mutants (cosmetic exception messages) and a defensive bounds check that is unreachable due to the earlier guard — all scored above threshold.",
+      "transcript_sha256": "89da3812f759fff7bc2eec97a88e74b403e339a7442a0cf3a02ff47fca178d42",
+      "trace": [
+        {
+          "ts": "2026-09-16T09:36:51.862Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:37:31.749Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:37:31.778Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:37:37.898Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6094,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:13.235Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:13.265Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:22.658Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 3210,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:38:22.659Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9368,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:30.591Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:30.622Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:38.067Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1273,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:39.182Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1059,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:39.183Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8537,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:38:42.257Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:42.290Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:49.904Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1323,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:50.999Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1036,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T09:38:52.299Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1232,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:38:52.299Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9984,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:54.146Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:38:54.176Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:39:02.061Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 1684,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:03.500Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1374,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:04.969Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1397,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:39:04.969Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10769,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:04.718Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:04.751Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:40:13.247Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 2299,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:14.661Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1339,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:16.128Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1390,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:40:16.129Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Write",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11353,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:55.282Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:40:55.319Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:03.933Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 2306,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:05.935Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1862,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:07.481Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1475,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:07.482Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12139,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:33.816Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:33.852Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:39.373Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:39.406Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:39.915Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6038,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:41:47.587Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 1873,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:48.863Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1207,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:50.173Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1247,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:41:50.173Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10741,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:07.042Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:07.075Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:14.978Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 1713,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:16.516Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.975,
+          "decision": "pass",
+          "duration_ms": 1384,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:17.963Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1376,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:17.963Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10865,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:18.373Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:18.402Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:24.951Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:24.978Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:26.169Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9344262295081968,
+          "decision": "stale",
+          "duration_ms": 1573,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:26.170Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 7740,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:32.819Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9344262295081968,
+          "decision": "pass",
+          "duration_ms": 1644,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:34.199Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 1313,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:35.527Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1263,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:35.528Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10526,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:41.455Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:41.491Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:49.525Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9344262295081968,
+          "decision": "pass",
+          "duration_ms": 1765,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:49.566Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:49.599Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:51.342Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 1720,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:51.343Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9824,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:42:56.913Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1100,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:42:58.344Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1352,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:42:58.345Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8720,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:43:00.557Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:00.590Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:08.078Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1293,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/8679bd1d2b89f6c5547b2ef36f320b8266ef778a/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T09:43:09.392Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 1240,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:10.881Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1418,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:10.882Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10263,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:11.066Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:11.097Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:16.646Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:16.759Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:17.152Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:24.632Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 1656,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:25.748Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:43:26.103Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 0.9761904761904762,
+          "decision": "pass",
+          "duration_ms": 1403,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:27.511Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1339,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:27.512Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10724,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:43.476Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:43.512Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:51.816Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 2088,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:53.458Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1563,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:54.892Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.8709677419354839,
+          "decision": "pass",
+          "duration_ms": 1359,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:43:54.892Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11355,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:57.468Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:43:57.503Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:02.755Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:02.786Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:03.562Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6032,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:11.027Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 2009,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:12.607Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1510,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:14.011Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 0.9354838709677419,
+          "decision": "pass",
+          "duration_ms": 1338,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:14.012Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11201,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:14.679Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:44:39.648Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:39.682Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:44:43.898Z",
+          "harness": "pi",
+          "event": "status",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:44:47.893Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/service.py",
+          "score": 0.9508196721311475,
+          "decision": "pass",
+          "duration_ms": 1977,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:48.691Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:44:49.424Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1450,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:50.851Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1388,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T09:44:50.884Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "tool": "Edit",
+          "file": [
+            "tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11177,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T09:45:00.914Z",
+          "harness": "pi",
+          "event": "check",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:45:19.558Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 104,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T09:45:40.916Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T09:45:41.012Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a993-822b-761d-a1fe-9b1acf394b55",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

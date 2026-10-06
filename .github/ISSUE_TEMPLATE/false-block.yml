@@ -1,0 +1,50 @@
+name: False block
+description: The gate blocked although the tests are good, or the score is wrong.
+labels: [false-block]
+body:
+  - type: input
+    id: harness
+    attributes:
+      label: Harness and version
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Java, Kotlin, Python, TypeScript / JavaScript, Go, C#, other]
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+    validations:
+      required: true
+  - type: textarea
+    id: block
+    attributes:
+      label: Block message
+      description: The text the agent received.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why the block is wrong
+      description: For example an equivalent mutant, a generated file, a survivor the tests do kill, or a red baseline that is not the agent's.
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: status --json
+      description: Run `<skill dir>/scripts/mutagate status --json` in the same session.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: doctor --json
+      render: json

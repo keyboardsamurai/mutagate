@@ -1,0 +1,32 @@
+node_modules/
+.cache/
+.venv/
+build/
+target/
+.gradle/
+__pycache__/
+*.pyc
+*.log
+.env
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+/.agents/
+/.codex/
+# Local agent and editor config.
+/.claude/
+/.mcp.json
+/.ignore
+
+bin/
+obj/
+StrykerOutput/
+TestResults/
+dist/
+.DS_Store
+
+# Animation sources stay local; the published GIF is docs/img/mutagate.gif.
+/docs/anim/
+/.idea/
+*.iml
+/.junie/

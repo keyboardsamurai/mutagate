@@ -1,0 +1,3531 @@
+{
+  "harness": "pi",
+  "version": "0.73.1",
+  "model": "deepseek/deepseek-v4-flash",
+  "lang": "java",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-15T19:27:08.253Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 1321428,
+      "finalResponse": "Here's a summary of everything that was done:\n\n## Summary\n\n### Production code changes\n- **`MatrixService.java`**: Added `sum()` method that returns the `long` sum of all cells (avoids integer overflow).\n- **`MatrixController.java`**: Added `GET /api/matrix/sum` endpoint returning the sum.\n\n### Test files created/modified\n\n1. **`MatrixServiceTest.java`** (32 tests) — Unit tests for `MatrixService`:\n   - Constructor validation (negative/zero, exceeds MAX_SIZE, max size allowed)\n   - `get`/`set` operations, boundary checks (row=0, row=rows-1, col=0, col=cols-1)\n   - `add` with positive/negative delta, overflow, near-max boundaries\n   - `clear`, `snapshot` immutability and structure\n   - `cell()` bounds checking with precise error messages\n   - `sum()` returns correct values including with large int values\n\n2. **`MatrixControllerTest.java`** (16 tests) — MockMvc-based controller tests:\n   - All REST endpoints (GET/PUT/POST/DELETE) with correct behavior\n   - Error cases: out-of-bounds cells, overflow\n   - Sum endpoint tests (initially zero, after setting cells, after clear)\n   - Uses `@BeforeEach` to reset state for test isolation\n\n3. **`MatrixPageControllerTest.java`** (7 tests) — MockMvc-based page tests:\n   - HTML structure: doctype, title, dimensions, table, row headers\n   - CSS classes for cell values (zero/positive/negative)\n\n4. **`MatrixApiIntegrationTest.java`** (26 tests) — Full integration tests against running app on random port:\n   - REST API: get metadata, get/set/add/clear cells, error cases (overflow, out-of-bounds)\n   - HTML page: structure, content, CSS classes after setting values\n   - Sum endpoint: initially zero, after set, after clear, with all cells set\n   - Uses `@BeforeEach` to reset matrix state\n\n5. **`MatrixApplicationTest.java`** (4 tests) — Context loading and property config verification\n\n6. **`MatrixApplicationConfigurationTest.java`** (8 tests) — Tests `MatrixApplication` bean factory method:\n   - Invalid size format, too many parts, negative/zero dimensions\n   - Valid configurations verify all cells filled\n   - Default properties applied\n\n### Mutation scores (all above 0.80 threshold ✓)\n| Class | Score | Threshold |\n|-------|-------|-----------|\n| MatrixService | 0.93 (37/40) | PASS |\n| MatrixController | 0.90 (9/10) | PASS |\n| MatrixPageController | 0.86 (6/7) | PASS |\n| MatrixApplication | 1.00 (7/7) | PASS |\n\n**Total: 100 tests, all passing with `mvn -q test`**",
+      "transcript_sha256": "3bc7e7bdbb1716d08e5580dbed1dcbdafcaa4d9ab80a6791cb305864f205d399",
+      "trace": [
+        {
+          "ts": "2026-09-15T19:05:08.060Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:05.379Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:05.418Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:18.188Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 6504,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:06:18.189Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12746,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:06:25.502Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:25.533Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:34.098Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2366,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixControllerTest.java:[1; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:06:36.431Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2250,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixControllerTest.java:[1; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:06:36.433Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10876,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:06:39.250Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:39.284Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:06:49.236Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1613,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:06:50.990Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1693,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:06:54.165Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3112,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:06:54.168Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14857,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:08:11.028Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:11.061Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:18.669Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1425,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:20.298Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1569,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:21.760Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1401,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java:[5,63] package org.springframework.boot.test.autoconfigure.web.servlet does not exist | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixPageControllerTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:21.761Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10674,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:08:25.929Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:25.964Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:37.166Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 1828,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:08:38.797Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1570,
+          "error": "java failed (1): 9:08:38 PM PIT >> INFO : MINION :  at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129) | 9:08:38 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 13 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:40.410Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1553,
+          "error": "java failed (1): 9:08:40 PM PIT >> INFO : MINION :  at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129) | 9:08:40 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 7 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:40.411Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14422,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:09:24.706Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:24.741Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:33.340Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 2366,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:36.503Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:36.534Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:36.698Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8888888888888888,
+          "decision": "stale",
+          "duration_ms": 3292,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:36.700Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11933,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:09:47.751Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 1810,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:49.626Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8888888888888888,
+          "decision": "pass",
+          "duration_ms": 1807,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:53.060Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 3365,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:53.061Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 16503,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:10:19.371Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:19.406Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:27.587Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2000,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:29.393Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1733,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:29.645Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:29.677Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:31.490Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 2026,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:31.492Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12060,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:10:38.340Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2465,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:40.496Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2076,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:43.044Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2466,
+          "error": "mvn failed (1): [ERROR]       (actual and formal argument lists differ in length) | [ERROR]     method org.springframework.boot.resttestclient.TestRestTemplate.put(java.net.URI,java.lang.Object) is not applicable | [ERROR]       (actual and formal argument lists differ in length); [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[66,13] no suitable method found for put(java.lang.String); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:43.046Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 13342,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:10:48.517Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:48.563Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:56.411Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1644,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[196,18] cannot find symbol | [ERROR]   symbol:   variable URI | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:10:56.583Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:56.616Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:10:59.946Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8888888888888888,
+          "decision": "stale",
+          "duration_ms": 3441,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:10:59.949Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11350,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:11:02.048Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:11:02.093Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:11:02.667Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6027,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:11:13.535Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 5156,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:11:20.316Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 4482,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:11:22.292Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1902,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:11:22.293Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 20146,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:12:03.265Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:12:03.297Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:12:10.957Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1493,
+          "error": "mvn failed (1): [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[31,17] incompatible types: org.springframework.web.util.UriTemplateHandler is no; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:12.538Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1519,
+          "error": "mvn failed (1): [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[31,17] incompatible types: org.springframework.web.util.UriTemplateHandler is no; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:14.027Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1431,
+          "error": "mvn failed (1): [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[31,17] incompatible types: org.springframework.web.util.UriTemplateHandler is no; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:14.028Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10707,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:12:56.561Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:12:56.599Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:13:07.833Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 1874,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:13:09.806Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 1906,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:13:11.604Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1734,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:13:11.605Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14981,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:14:02.686Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:02.718Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:11.271Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 2350,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:13.291Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.8,
+          "decision": "pass",
+          "duration_ms": 1951,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:15.184Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1821,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:15.184Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12442,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:14:17.773Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:17.805Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:26.254Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.85,
+          "decision": "pass",
+          "duration_ms": 2196,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:28.120Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1807,
+          "error": "java failed (1): 9:14:28 PM PIT >> INFO : MINION :  at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129) | 9:14:28 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 2 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:14:29.926Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1733,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:29.928Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12098,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:14:30.622Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:30.653Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:42.142Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 3109,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:43.925Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1725,
+          "error": "java failed (1): 9:14:43 PM PIT >> INFO : MINION :  at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:129) | 9:14:43 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 2 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:14:45.615Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1623,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:45.616Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14938,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:15:21.240Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:21.275Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:29.038Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1594,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[105,10] method clearMatrix() is already defined in class com.example.matrix.MatrixApiIntegrationTest | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix:; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:15:30.654Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1554,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[105,10] method clearMatrix() is already defined in class com.example.matrix.MatrixApiIntegrationTest | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix:; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:15:32.439Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1721,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[105,10] method clearMatrix() is already defined in class com.example.matrix.MatrixApiIntegrationTest | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix:; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:15:32.440Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11141,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:29.029Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:29.061Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:36.715Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1489,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[105,10] method clearMatrix() is already defined in class com.example.matrix.MatrixApiIntegrationTest | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix:; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:16:36.840Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:36.873Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:42.295Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "stale",
+          "duration_ms": 5510,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:42.298Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 13213,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:48.239Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 1988,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:50.447Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2128,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:52.383Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1867,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:52.384Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 15487,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:58.972Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:59.003Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:06.794Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1627,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[41,17] method does not override or implement a method from a supertype | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR]; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:17:08.605Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1753,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[41,17] method does not override or implement a method from a supertype | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR]; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:17:10.558Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1894,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[41,17] method does not override or implement a method from a supertype | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR]; log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:17:10.560Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11532,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:17:30.021Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:30.054Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:38.631Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2389,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:43.883Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1897,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:45.834Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1882,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:45.834Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 15756,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:17:48.653Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:48.683Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:58.689Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 1703,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:18:00.503Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1744,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:18:02.372Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1803,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:18:07.676Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 0,
+          "decision": "below",
+          "duration_ms": 3128,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:18:07.677Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 18970,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:19:03.632Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:19:03.667Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:19:12.334Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2440,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:14.047Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1648,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:15.823Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1712,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:17.113Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:19:17.143Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:19:18.913Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 0,
+          "decision": "stale",
+          "duration_ms": 3028,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:18.913Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 15222,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:19:25.885Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2564,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:27.735Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1784,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:29.496Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1697,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:19:31.299Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1749,
+          "error": "java failed (1): 9:19:30 PM PIT >> FINE : MINION : 21:19:30.600 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.matrix.MatrixApplicationTest]: MatrixApplicationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration. | 9:19:31 PM PIT >> SEVERE : Tests ; 9:19:30 PM PIT >> INFO : MINION :  at com.example.matrix.MatrixApplicationConfigurationTest.invalidSizeFormatThrows(MatrixApplicationConfigurationTest.java:16); log: ~/.cache/mutagate/repos/5465ae7cc3e298233f960ba62454c4aab93b04e6/logs/9b2652f9665241473c28b04b4ee968bb003ac2b4.log"
+        },
+        {
+          "ts": "2026-09-15T19:19:31.301Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14134,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:19:53.658Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:19:53.690Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:20:02.322Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2449,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:20:04.543Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2152,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:20:08.444Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1722,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:20:12.571Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 0.14285714285714285,
+          "decision": "below",
+          "duration_ms": 4060,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:20:12.573Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 18858,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:20:15.074Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:21:17.951Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:21:44.213Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:21:44.248Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:21:56.704Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2026,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:21:58.454Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1685,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:22:00.158Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1639,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:22:03.342Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:22:04.006Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3783,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:22:04.007Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationConfigurationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 19729,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:22:08.726Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:22:14.483Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:23:49.177Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:23:49.211Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:23:58.322Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:23:58.354Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:23:59.044Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "stale",
+          "duration_ms": 3648,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:23:59.046Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9810,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:24:06.712Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2163,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:24:10.089Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 3309,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:24:11.767Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.8571428571428571,
+          "decision": "pass",
+          "duration_ms": 1613,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:24:13.632Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1801,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:24:13.632Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 15253,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:24:36.255Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:24:43.213Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:24:56.876Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:24:59.937Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:25:22.308Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:25:25.359Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:25:29.833Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 4470,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:26:25.554Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:26:47.491Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 84,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:27:08.282Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:27:08.401Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a675-6a6b-71ba-b4a8-8aad7f7990f2",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": false,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": false,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 784763,
+      "finalResponse": "`mvn -q test` passes with exit code 0. Here's a summary of everything that was done:\n\n---\n\n## Summary\n\n### Production code changes\n\n1. **`MatrixService.java`** — Added `sum()` method that atomically sums all cells using `Math.addExact` (throws `ArithmeticException` on overflow).\n\n2. **`MatrixController.java`** — Added `GET /api/matrix/sum` endpoint that delegates to `matrix.sum()`.\n\n### Test files created\n\n| File | #tests | What it covers |\n|------|--------|----------------|\n| `MatrixServiceTest.java` | 51 | Constructor validation (dimensions, MAX_SIZE), get/set with boundary cells and extreme values, add with overflow/underflow, clear, snapshot independence, `sum()`, error messages |\n| `MatrixControllerTest.java` | 19 | Direct controller method calls for all endpoints, exception handler for all three exception types, null-message fallback |\n| `MatrixPageControllerTest.java` | 7 | HTML structure (title, heading, table, row numbers, CSS classes positive/zero/negative, cell values) |\n| `MatrixApiIntegrationTest.java` | 22 | Full HTTP integration via `RestTestClient` against running server (RANDOM_PORT): all REST CRUD endpoints, invalid cells (400), overflow/underflow (400), clear (204), HTML page, snapshot, `sum` endpoint, cleanup via `@BeforeEach` |\n\n### Mutation testing (mutagate)\n\n| Target | Score | Threshold | Status |\n|--------|-------|-----------|--------|\n| `MatrixService` | 0.92 (36/39) | 0.80 | **pass** — 3 equivalent mutants waived |\n| `MatrixController` | 1.00 (10/10) | 0.80 | pass |\n| `MatrixPageController` | 1.00 (7/7) | 0.80 | pass |\n\nThe 3 survivors in `MatrixService.cell()` are all **equivalent mutants** — the second bounds check (`index >= cells.length`) is mathematically redundant given the first check (`row < rows && col < cols`), and only fires when the first check itself is mutated (which PIT never does simultaneously). Waivers have been proposed for human review.",
+      "transcript_sha256": "cb97fb01c5fe6383f28a1d5bd788bc2dd0ff78bc672b0dfee0769a4dc61100dc",
+      "trace": [
+        {
+          "ts": "2026-09-15T19:07:03.492Z",
+          "harness": "pi",
+          "event": "SessionStart",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:08.932Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:08.965Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:17.944Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2819,
+          "error": "java failed (1): 9:08:17 PM PIT >> INFO : MINION :  at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:159) | 9:08:17 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 1 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:17.946Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8957,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:08:25.193Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:25.227Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:35.431Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1863,
+          "error": "java failed (1): 9:08:35 PM PIT >> INFO : MINION :  at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:159) | 9:08:35 PM PIT >> SEVERE : Tests failing without mutation: | Exception in thread \"main\" org.pitest.help.PitHelpError: 1 tests did not pass without mutation when calculating line coverage. Mutation testing requires a green suite.; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:08:36.705Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1206,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:08:36.707Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11456,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:08:45.824Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:45.861Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:08:57.250Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 4032,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:08:58.373Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1039,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:08:58.374Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12489,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:09:07.907Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:07.939Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:17.074Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 2905,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:17.925Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 776,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:19.282Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1282,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:09:19.282Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11319,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:09:35.830Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:35.863Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:09:43.561Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1526,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[21,13] cannot find symbol | [ERROR]   symbol:   class RestTestClient | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:09:45.045Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1421,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[21,13] cannot find symbol | [ERROR]   symbol:   class RestTestClient | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:09:47.645Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1481,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[21,13] cannot find symbol | [ERROR]   symbol:   class RestTestClient | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:09:47.646Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11759,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:12:33.862Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:12:33.896Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:12:41.812Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1749,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[163,82] cannot find symbol | [ERROR]   symbol:   method retrieve() | [ERROR]   location: interface org.springframework.test.web.servlet.client.RestTestClient.RequestHeadersSpec<capture#11 of ?>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:43.381Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1504,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[163,82] cannot find symbol | [ERROR]   symbol:   method retrieve() | [ERROR]   location: interface org.springframework.test.web.servlet.client.RestTestClient.RequestHeadersSpec<capture#11 of ?>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:44.844Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1403,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[163,82] cannot find symbol | [ERROR]   symbol:   method retrieve() | [ERROR]   location: interface org.springframework.test.web.servlet.client.RestTestClient.RequestHeadersSpec<capture#11 of ?>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:12:44.845Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10925,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:13:28.197Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:13:28.230Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:13:35.867Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1469,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,43] cannot find symbol | [ERROR]   symbol:   method getStatusCode() | [ERROR]   location: variable result of type org.springframework.test.web.servlet.client.EntityExchangeResult<java.lang.String>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:13:37.348Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1425,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,43] cannot find symbol | [ERROR]   symbol:   method getStatusCode() | [ERROR]   location: variable result of type org.springframework.test.web.servlet.client.EntityExchangeResult<java.lang.String>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:13:38.826Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1418,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,43] cannot find symbol | [ERROR]   symbol:   method getStatusCode() | [ERROR]   location: variable result of type org.springframework.test.web.servlet.client.EntityExchangeResult<java.lang.String>; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:13:38.827Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10572,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:13:48.902Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:13:58.401Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:05.389Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:05.425Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:14.285Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1519,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,52] cannot find symbol | [ERROR]   symbol:   variable HttpStatusCode | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T19:14:16.086Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1740,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,52] cannot find symbol | [ERROR]   symbol:   variable HttpStatusCode | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T19:14:17.617Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1473,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java:[129,52] cannot find symbol | [ERROR]   symbol:   variable HttpStatusCode | [ERROR]   location: class com.example.matrix.MatrixApiIntegrationTest; log: ~/.cache/mutagate/repos/8b913d182f484f83bc0bf10c7f541dc248410f0c/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T19:14:17.618Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12168,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:14:44.645Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:44.679Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:14:53.151Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 2285,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:54.223Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1001,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:55.044Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 748,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:14:55.045Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10343,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:15:23.658Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:23.692Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:34.955Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8947368421052632,
+          "decision": "pass",
+          "duration_ms": 1887,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:15:35.717Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 694,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:15:36.414Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 631,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:15:36.414Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12697,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:15:50.887Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:50.919Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:55.972Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:56.000Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:15:56.979Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6034,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:05.741Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8717948717948718,
+          "decision": "pass",
+          "duration_ms": 3558,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:06.936Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1129,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:07.689Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 687,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:07.689Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11665,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:12.791Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:12.821Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:19.164Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:19.197Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:22.440Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "stale",
+          "duration_ms": 3432,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:22.442Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9598,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:27.181Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 1808,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:28.363Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1115,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:29.071Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 647,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:29.072Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9851,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:16:37.130Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:37.165Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:16:46.042Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 2686,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:46.859Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 750,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:47.708Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 775,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:16:47.708Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10516,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:17:11.428Z",
+          "harness": "pi",
+          "event": "PreToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:11.461Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:17:19.860Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 2218,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:22.743Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 703,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:23.522Z",
+          "harness": "pi",
+          "event": "Result",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 709,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T19:17:23.522Z",
+          "harness": "pi",
+          "event": "PostToolUse",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12037,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T19:17:26.454Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:17:57.212Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:18:52.924Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:18:58.401Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:19:03.751Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:19:09.014Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:19:14.123Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:19:22.109Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:19:46.387Z",
+          "harness": "pi",
+          "event": "Stop",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 76,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T19:20:07.291Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T19:20:07.389Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "01a0a677-2d67-7169-ad43-027e49d02b04",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

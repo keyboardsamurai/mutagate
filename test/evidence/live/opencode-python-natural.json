@@ -1,0 +1,2192 @@
+{
+  "harness": "opencode",
+  "version": "1.18.30",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "lang": "python",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-16T13:40:52.418Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 303090,
+      "finalResponse": "Done. `uv run pytest -q` passes (147 passed). Mutation scores all clear the 0.80 gate: service 1.00, api 1.00, page 1.00, main 0.99.\n\nTests added:\n- `tests/test_service.py` — reset/size bounds, get/put/add, overflow at INT_MIN/INT_MAX, invalid indices, snapshot copy, clear, `total`.\n- `tests/test_api.py` — route handlers, exception handler mapping, registered routes.\n- `tests/test_page.py` — HTML markup, cell classification, exact output.\n- `tests/test_main.py` — `create_app` env/args, size parsing/limits, `main` host/port.\n- `tests/test_matrix_api.py` — REST + HTML integration: CRUD, clear, invalid cells (400), overflow (400), 422s, page rendering, custom sizes, size limits.\n\nProduction changes (only the requested endpoint):\n- `matrix/service.py`: added `total()`.\n- `matrix/api.py`: added `matrix_sum()` and `GET /api/matrix/sum`.\n\nThe one surviving mutant (`\"3x3\"` → `\"3X3\"`) is equivalent since `size.strip().lower()` normalizes it; I proposed a waiver (id `0784338d…`, pending human approval) rather than weakening code.",
+      "transcript_sha256": "10cc3d647a828e935fb455c8f9b3b92d0935ca823a2f86fa30d46434ca5064f6",
+      "trace": [
+        {
+          "ts": "2026-09-16T13:35:55.206Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:36:25.639Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:37:38.605Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:38.641Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:45.970Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:46.001Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:47.195Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 2328,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:37:47.195Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8529,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:51.662Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:51.697Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:52.062Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6035,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:59.090Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1200,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:00.176Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1027,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:01.466Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/page.py",
+          "score": 0.9032258064516129,
+          "decision": "pass",
+          "duration_ms": 1222,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:01.467Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9744,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:38:03.546Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:03.577Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:10.873Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1124,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:11.988Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1050,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:12.160Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:12.199Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:38:13.374Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/page.py",
+          "score": 0.9032258064516129,
+          "decision": "stale",
+          "duration_ms": 1313,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:13.374Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9773,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:19.647Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1272,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:20.644Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 938,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/d1900b5494a6a1ae994532b8d9b2c461537a8baa/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:21.987Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/page.py",
+          "score": 0.9032258064516129,
+          "decision": "pass",
+          "duration_ms": 1271,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:24.230Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/main.py",
+          "score": 0.974025974025974,
+          "decision": "pass",
+          "duration_ms": 2150,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:24.231Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12007,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:32.103Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:32.148Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:39.330Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:40.484Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2125,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:42.702Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2124,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:44.797Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/page.py",
+          "score": 0.9032258064516129,
+          "decision": "pass",
+          "duration_ms": 1999,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:46.870Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/main.py",
+          "score": 0.974025974025974,
+          "decision": "pass",
+          "duration_ms": 2056,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:46.882Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 14707,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:16.867Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:16.904Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:20.282Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:20.314Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:22.966Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6037,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:23.005Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:23.035Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:26.373Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:27.373Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:27.406Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:29.092Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6032,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:31.266Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:31.303Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:33.464Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:35.473Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:35.505Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:37.358Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:40.703Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:40.735Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:41.560Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:44.215Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:44.249Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:46.788Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6028,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:48.228Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:48.264Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:50.366Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6093,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:53.144Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:53.180Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:54.318Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6025,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:58.776Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:58.810Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:59.235Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:40:07.334Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2273,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:40:08.651Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1250,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:40:08.790Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:40:09.921Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1203,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:40:12.065Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 2082,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:40:12.083Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 13249,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:40:15.178Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:40:19.211Z",
+          "harness": "opencode",
+          "event": "waive",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:40:25.810Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:40:30.793Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 95,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:40:52.457Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:40:52.682Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a0e2ffetgvnUbGTD8z5L7",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 229112,
+      "finalResponse": "Done.\n\nTests written under `tests/`:\n- `tests/test_service.py` — reset/size limits, get/put/add, 32-bit boundaries and overflow, clear, snapshot independence, row-major indexing, `total`.\n- `tests/test_api.py` — route callables, 204 clear, error handler fallback, router registration.\n- `tests/test_page.py` — exact HTML output and positive/zero/negative classification.\n- `tests/test_main.py` — env parsing, size validation, `main()` wiring.\n- `tests/test_matrix_api.py` — HTTP integration: summary, cell get/put/add, delete, invalid cells, overflow, validation (422), HTML page, 1000-row edge, and `GET /api/matrix/sum`.\n\nEndpoint added: `service.total()` + `api.total()` + `GET /api/matrix/sum`.\n\nVerification:\n- `uv run pytest -q` → **91 passed**\n- mutagate scores: service 1.00, api 1.00, page 1.00, main 0.99 (threshold 0.80), exit 0.\n\nOne equivalent mutant remains at `matrix/main.py:10` (default `\"3x3\"` → `\"3X3\"`); it is unobservable because `create_app` lowercases before splitting, so I filed a waiver (id `0784338d…`) for human approval rather than distorting a test.",
+      "transcript_sha256": "f72b7fa8aebe19984105419298b9d26cc7f89347da011b2a5df991c7b3a416d7",
+      "trace": [
+        {
+          "ts": "2026-09-16T13:35:55.151Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:36:26.960Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:37:07.619Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:07.651Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:13.783Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6106,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:20.269Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:20.309Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:25.437Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:25.470Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:26.367Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:29.268Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:29.303Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:31.535Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6039,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:35.078Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:35.195Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 77,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:35.362Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:43.689Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:43.837Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 26,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:37:44.453Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 3108,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/457039570dd52f7a048337c8c2452637d381c10c/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:37:44.453Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 9221,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:37:51.319Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1051,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/457039570dd52f7a048337c8c2452637d381c10c/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:37:52.386Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 949,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/457039570dd52f7a048337c8c2452637d381c10c/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-09-16T13:37:53.649Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1196,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:37:55.453Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/main.py",
+          "score": 0.974025974025974,
+          "decision": "pass",
+          "duration_ms": 1735,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:37:55.454Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11486,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:38:04.409Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:04.444Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:10.950Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:12.360Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1730,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:13.743Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1336,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:15.106Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1350,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:17.167Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/main.py",
+          "score": 0.974025974025974,
+          "decision": "pass",
+          "duration_ms": 2046,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:17.184Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 12716,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:23.404Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:23.452Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:28.413Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:31.017Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1368,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; log: ~/.cache/mutagate/repos/457039570dd52f7a048337c8c2452637d381c10c/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-09-16T13:38:32.639Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1543,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:33.613Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:33.668Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:34.111Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1393,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:34.113Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 10625,
+          "error": null,
+          "mutate": true,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:38:41.251Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:42.572Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2644,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:43.054Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:44.854Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2110,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:46.344Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1403,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:48.209Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 1822,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:38:48.239Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 14543,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:49.020Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:50.005Z",
+          "harness": "opencode",
+          "event": "waive",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:38:53.954Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:53.985Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:54.276Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:54.312Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:54.665Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:54.696Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:56.137Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:38:56.170Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:00.043Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6032,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:00.342Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:00.376Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:00.384Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:00.756Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6036,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:01.923Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:01.957Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:02.224Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:02.428Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:02.460Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:03.198Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:03.232Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:05.586Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:39:06.438Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6037,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:07.269Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1661,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:39:08.019Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6038,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:08.523Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 6037,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:08.567Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1286,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:39:09.752Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1175,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:39:11.540Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 1775,
+          "error": null
+        },
+        {
+          "ts": "2026-09-16T13:39:11.575Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "duration_ms": 8319,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-09-16T13:39:14.057Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:39:16.997Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 85,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-09-16T13:39:38.472Z",
+          "harness": "opencode",
+          "event": "check",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-16T13:39:38.597Z",
+          "harness": "opencode",
+          "event": "status",
+          "session": "ses_f5591a11dffe09pJqALmhcoY5D",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

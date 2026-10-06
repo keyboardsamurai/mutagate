@@ -1,0 +1,2027 @@
+{
+  "harness": "opencode",
+  "version": "1.18.30",
+  "model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "lang": "java",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-09-15T18:35:52.545Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 390225,
+      "finalResponse": "Done. `mvn -q test` passes (56 tests) and the mutation gate is green.\n\nTests added (all JUnit 5):\n- `MatrixServiceTest` (22) – dimensions, constructor limits (zero/negative/`MAX_SIZE`/over-limit), per-cell get/set/add, integer overflow via `Math.addExact`, clear, out-of-bounds cells, snapshot, `sum` (including totals beyond int range).\n- `MatrixControllerTest` (8) – all endpoints, 204 clear, error-handler message/fallback, `sum`.\n- `MatrixPageControllerTest` (4) – HTML scaffolding, 1-based row headers, sign classes, live reflection.\n- `MatrixApplicationTest` (8) – size parsing (`2x3`, `2X4`, whitespace), fill, malformed/non-numeric/out-of-range sizes.\n- `MatrixApiIntegrationTest` (14) – `@SpringBootTest(RANDOM_PORT)` against the live server via HTTP; REST get/put/add/clear, invalid cells, missing params, overflow, HTML page content/classes, and `sum`.\n\nFeature added:\n- `MatrixService.sum()` (returns `long`) and `MatrixController` `GET /api/matrix/sum`.\n\nMutation results (`mutagate check`, exit 0): MatrixService 0.95, MatrixController 1.00, MatrixPageController 1.00, MatrixApplication 1.00 (threshold 0.80). The two remaining MatrixService survivors are the provably unreachable `index >= cells.length` guard at `MatrixService.java:81` (the preceding bounds check already guarantees the index is in range); I proposed waivers for both rather than deleting defensive code. No production code was weakened for the gate.",
+      "transcript_sha256": "b6b685b299b768215807f07603bd9528f0eaa658b2812dde5bc20060ad3f04c0",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:29:26.730Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:11.723Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:11.763Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:16.592Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:16.623Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:17.818Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:20.573Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:20.605Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:22.675Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:25.211Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:25.244Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:26.665Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6035,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:35.354Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 3904,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:36.562Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1122,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:37.685Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1057,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:38.818Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1070,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:38.818Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 13549,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:48.521Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:48.574Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:56.594Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 1794,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:57.323Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 664,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:58.059Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 669,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:58.762Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 639,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:58.762Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10163,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:47.565Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:47.598Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:52.396Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:52.434Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:53.651Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:56.089Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:56.132Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:58.488Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:59.167Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:59.199Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:02.202Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6046,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:04.130Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:04.165Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:05.252Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:12.545Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 2184,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:13.299Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 685,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:13.994Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 627,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:14.730Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 669,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:14.730Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10541,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:16.081Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:16.116Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:19.711Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:19.742Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:22.170Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:27.593Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 1673,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:28.286Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 624,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:28.985Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 629,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:29.657Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 609,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:33:29.657Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9892,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:48.065Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:48.095Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:52.072Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:52.105Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:54.156Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6037,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:33:55.098Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:55.132Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:33:58.175Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6043,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:34:02.691Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1389,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixServiceTest.java:[189,48] reached end of file while parsing | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] ~/.cache/mutagate-ev; log: ~/.cache/mutagate/repos/34566e7b26f4ccc65d040faf0c92e81f7d9d8590/logs/41b0f091bb649afbb5acbf8566e960512c65837d.log"
+        },
+        {
+          "ts": "2026-09-15T18:34:03.990Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1240,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixServiceTest.java:[189,48] reached end of file while parsing | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] ~/.cache/mutagate-ev; log: ~/.cache/mutagate/repos/34566e7b26f4ccc65d040faf0c92e81f7d9d8590/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-09-15T18:34:05.211Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1158,
+          "error": "mvn failed (1): [ERROR] <repo>/src/test/java/com/example/matrix/MatrixServiceTest.java:[189,48] reached end of file while parsing | [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.15.0:testCompile (default-testCompile) on project matrix: Compilation failure | [ERROR] ~/.cache/mutagate-ev; log: ~/.cache/mutagate/repos/34566e7b26f4ccc65d040faf0c92e81f7d9d8590/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-09-15T18:34:05.764Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:05.797Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:07.427Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 2145,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:34:07.427Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12273,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:34:09.693Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:09.724Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:11.852Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6029,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:34:13.413Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:13.448Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:15.780Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:34:22.476Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:34:23.359Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.95,
+          "decision": "pass",
+          "duration_ms": 2662,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:34:24.658Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1231,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:34:25.430Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 707,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:34:26.138Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:34:26.158Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 661,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:34:26.159Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12687,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:34:30.406Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:34:40.386Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:06.451Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:06.526Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:09.428Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:11.502Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:13.464Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1922,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:35:31.289Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 74,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:35:52.573Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:35:52.691Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59ab41d9ffeczDS0WeIOdhN8I",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 286336,
+      "finalResponse": "Done. `mvn -q test` is green (exit 0), and the mutation gate passes (exit 0).\n\n**Tests added** (`src/test/java/com/example/matrix/`):\n- `MatrixServiceTest` – construction/size limits, get/set/add, overflow, clear, snapshot independence, index bounds, sum.\n- `MatrixApplicationTest` – `matrixService` size parsing, fill, malformed/invalid dimensions.\n- `MatrixControllerTest` – standalone MockMvc over all REST endpoints plus error-handler null-message fallback.\n- `MatrixPageControllerTest` – HTML rendering, value classes, content type.\n- `MatrixApiIntegrationTest` – `@SpringBootTest(RANDOM_PORT)` + `RestTestClient` exercising REST and `GET /` against the running server (lifecycle, invalid cells, overflow, clear, sum, HTML).\n\n**Feature added**: `MatrixService.sum()` and `GET /api/matrix/sum` (returns total, `ArithmeticException` on overflow → 400). Covered by unit, controller, and integration tests.\n\n**Mutagate result** (threshold 0.80): `MatrixService` 0.95, `MatrixApplication`/`MatrixController`/`MatrixPageController` 1.00. The only 2 survivors are the unreachable defensive `index >= cells.length` guard (`MatrixService.java:81`); no reachable production code was changed for the gate, and I proposed waivers with equivalence reasons (awaiting human approval).",
+      "transcript_sha256": "445526c0dcfabdd4457f7fa1f2c26eb0e916c83a9684ea78bfd3bd98e0132649",
+      "trace": [
+        {
+          "ts": "2026-09-15T18:29:31.765Z",
+          "harness": "opencode",
+          "event": "SessionStart",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:41.661Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:41.707Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:45.555Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:45.588Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:47.751Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:30:56.149Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:56.194Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:57.520Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:57.576Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:58.563Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "stale",
+          "duration_ms": 6646,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:30:58.563Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12949,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:30:58.977Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:30:59.026Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:02.254Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:02.369Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:02.403Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:03.642Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6038,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:05.097Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:11.397Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 2761,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:12.576Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1116,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:14.447Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1808,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:16.064Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1553,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:16.064Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 13637,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:31:40.167Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:40.200Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:31:48.670Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9473684210526315,
+          "decision": "pass",
+          "duration_ms": 2287,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:49.414Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 676,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:50.462Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 977,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:55.758Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 928,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:31:55.759Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 15535,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:02.881Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:02.915Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:12.411Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:12.417Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "stale",
+          "duration_ms": 3255,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:12.439Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:14.728Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 2245,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:14.730Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 11785,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:19.271Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 623,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:21.010Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1670,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:21.936Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:21.970Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:21.978Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 902,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:21.979Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 9516,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:25.896Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:25.935Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:28.023Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6028,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:28.997Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:29.043Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:31.991Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6031,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:38.168Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9487179487179487,
+          "decision": "pass",
+          "duration_ms": 2930,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:38.889Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 656,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:40.700Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1746,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:41.077Z",
+          "harness": "opencode",
+          "event": "PreToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:41.110Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:32:41.702Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 872,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:41.702Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 12635,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:48.962Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9487179487179487,
+          "decision": "pass",
+          "duration_ms": 1672,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:49.686Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 662,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:50.677Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 927,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:51.620Z",
+          "harness": "opencode",
+          "event": "Result",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 874,
+          "error": null
+        },
+        {
+          "ts": "2026-09-15T18:32:51.620Z",
+          "harness": "opencode",
+          "event": "PostToolUse",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApiIntegrationTest.java"
+          ],
+          "decision": "allow",
+          "duration_ms": 10486,
+          "error": null,
+          "mutate": true
+        },
+        {
+          "ts": "2026-09-15T18:32:55.864Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:33:21.468Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:33:21.547Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:33:25.770Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:33:54.882Z",
+          "harness": "opencode",
+          "event": "Stop",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "file": [],
+          "decision": "allow",
+          "duration_ms": 80,
+          "error": null,
+          "mutate": false
+        },
+        {
+          "ts": "2026-09-15T18:34:15.812Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-09-15T18:34:15.927Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "ses_f59ab2e2bffeH37fSa5SqaWmEl",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

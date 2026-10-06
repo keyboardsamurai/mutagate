@@ -1,0 +1,59 @@
+{
+  "Stop": {
+    "top": [
+      "cwd",
+      "harness",
+      "hook_event_name",
+      "session_id",
+      "stop_hook_active"
+    ],
+    "tool_input": []
+  },
+  "PostToolUse": {
+    "top": [
+      "cwd",
+      "harness",
+      "hook_event_name",
+      "session_id",
+      "tool_input",
+      "tool_name"
+    ],
+    "tool_input": [
+      "filePath",
+      "file_path"
+    ]
+  },
+  "SubagentStop": {
+    "top": [
+      "cwd",
+      "harness",
+      "hook_event_name",
+      "session_id",
+      "stop_hook_active"
+    ],
+    "tool_input": []
+  },
+  "PreToolUse": {
+    "top": [
+      "cwd",
+      "harness",
+      "hook_event_name",
+      "session_id",
+      "tool_input",
+      "tool_name"
+    ],
+    "tool_input": [
+      "filePath",
+      "file_path"
+    ]
+  },
+  "SessionStart": {
+    "top": [
+      "cwd",
+      "harness",
+      "hook_event_name",
+      "session_id"
+    ],
+    "tool_input": []
+  }
+}

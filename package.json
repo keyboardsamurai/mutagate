@@ -1,0 +1,34 @@
+{
+  "name": "mutagate",
+  "version": "0.9.0",
+  "private": true,
+  "description": "Scoped mutation testing gate for coding agents (Claude Code, Codex, OpenCode, Pi).",
+  "license": "MIT",
+  "author": "Antonio Agudo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keyboardsamurai/mutagate.git"
+  },
+  "homepage": "https://github.com/keyboardsamurai/mutagate#readme",
+  "bugs": {
+    "url": "https://github.com/keyboardsamurai/mutagate/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs test/adapters/*.test.mjs",
+    "test:integration": "node --test test/integration/*.test.mjs",
+    "test:performance": "node test/performance.mjs",
+    "test:live": "node test/eval/run.mjs",
+    "eval": "node test/eval/run.mjs",
+    "test:drift": "node test/drift.mjs",
+    "test:installer": "node test/installer.mjs",
+    "test:driver": "node test/drivers.mjs",
+    "test:opencode-discovery": "node test/opencode-discovery.mjs",
+    "generate:hooks": "node test/generate-hooks.mjs --write",
+    "generate:runtime": "node test/generate-hook-runtime.mjs",
+    "test:clipped": "node test/clipped.mjs"
+  }
+}

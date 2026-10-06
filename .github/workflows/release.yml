@@ -1,0 +1,96 @@
+name: release
+# A maintainer pushes a vX.Y.Z tag by hand (docs/releasing.md). This workflow
+# tests it, publishes the generated skill branch (ADR-0014) and the GitHub Release.
+on:
+  push:
+    tags: ['v*.*.*']
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Tag matches package.json and VERSION
+        run: |
+          pkg="$(node -p "require('./package.json').version")"
+          engine="$(sed -nE "s/^export const VERSION = '([^']+)';.*/\1/p" scripts/mutagate.mjs)"
+          echo "tag=$TAG package.json=$pkg VERSION=$engine"
+          if [ "$TAG" != "v$pkg" ] || [ "$TAG" != "v$engine" ]; then
+            echo "::error::tag $TAG does not match package.json ($pkg) and VERSION ($engine)"; exit 1
+          fi
+      - run: npm test
+      - run: npm run test:installer
+      - run: npm run test:performance
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Build skill package
+        run: node test/package.mjs out
+      - name: Publish skill branch and skill tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The git dir stays outside out/, so out/ holds only the package.
+          # The commit date is the tag commit date, so a re-run makes the same commit.
+          # Read the date before GIT_DIR is set: GIT_DIR overrides git -C.
+          d="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%cI "$GITHUB_SHA")"
+          [ -n "$d" ] || { echo "no commit date for $GITHUB_SHA" >&2; exit 1; }
+          export GIT_AUTHOR_DATE="$d" GIT_COMMITTER_DATE="$d"
+          export GIT_DIR="$RUNNER_TEMP/skill.git" GIT_WORK_TREE="$PWD/out"
+          git init -q -b skill
+          # Keep CRLF in scripts/*.cmd: the package carries no .gitattributes.
+          git config core.autocrlf false
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -q -m "mutagate $TAG skill package from $GITHUB_SHA"
+          git tag "skill-$TAG"
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force "$remote" HEAD:refs/heads/skill
+          git push "$remote" "refs/tags/skill-$TAG"
+      - name: Install from the skill tag
+        run: MUTAGATE_INSTALL_SOURCE="$GITHUB_REPOSITORY#skill-$TAG" npm run test:installer
+      - name: Build reproducible tarball and checksums
+        run: |
+          tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner --format=gnu -cf - -C out . | gzip -n -9 > "mutagate-$TAG.tgz"
+          sha256sum "mutagate-$TAG.tgz" > SHA256SUMS
+          cat SHA256SUMS
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: mutagate-${{ github.ref_name }}.tgz
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${TAG#v}"
+          awk -v h="## [$version]" 'index($0,"## [")==1{p=index($0,h)==1;next} /^\[[^]]+\]: /{next} p' CHANGELOG.md > release-notes.md
+          if ! grep -q '[^[:space:]]' release-notes.md; then
+            echo "::error::CHANGELOG.md has no '## [$version]' section"; exit 1
+          fi
+          flags=()
+          case "$version" in 0.*) flags+=(--prerelease);; esac
+          gh release create "$TAG" "mutagate-$TAG.tgz" SHA256SUMS --verify-tag --title "mutagate $TAG" --notes-file release-notes.md "${flags[@]}"

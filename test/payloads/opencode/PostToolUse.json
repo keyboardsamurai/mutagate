@@ -1,0 +1,11 @@
+{
+  "cwd": "/abs/repo",
+  "session_id": "sess_fixture",
+  "harness": "opencode",
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "src/test/java/acme/UserServiceTest.java",
+    "filePath": "src/test/java/acme/UserServiceTest.java"
+  }
+}

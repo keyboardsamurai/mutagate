@@ -1,0 +1,16 @@
+{
+  "name": "ts-jest",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "9.1.1",
+    "@stryker-mutator/jest-runner": "9.1.1",
+    "typescript": "5.8.3",
+    "jest": "29.7.0",
+    "ts-jest": "29.2.5",
+    "@types/jest": "29.5.14"
+  }
+}

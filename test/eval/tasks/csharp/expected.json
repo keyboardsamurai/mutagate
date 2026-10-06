@@ -1,0 +1,16 @@
+{
+  "lang": "csharp",
+  "targets": [
+    {"file": "Matrix/MatrixService.cs", "target": "Matrix/MatrixService.cs"},
+    {"file": "Matrix/MatrixEndpoints.cs", "target": "Matrix/MatrixEndpoints.cs"},
+    {"file": "Matrix/MatrixPage.cs", "target": "Matrix/MatrixPage.cs"},
+    {"file": "Matrix/Program.cs", "target": "Matrix/Program.cs"}
+  ],
+  "traps": ["multi-class-it", "boundary", "equivalent-bait", "entrypoint", "idiom", "forced-weak", "staleness"],
+  "prodFiles": ["Matrix/**"],
+  "expectedProdEdits": ["Matrix/MatrixEndpoints.cs", "Matrix/MatrixService.cs"],
+  "testFiles": ["Matrix.Tests/**/*.cs"],
+  "testCommand": ["dotnet", "test"],
+  "toolchain": ["dotnet", "dotnet-stryker"],
+  "notes": "multi-class-it: the prompt names MatrixApiIntegrationTests; its stem MatrixApi matches no source file and Matrix.Tests holds no production siblings, so it resolves to no candidates, while it exercises MatrixEndpoints, MatrixPage, MatrixService and Program over WebApplicationFactory<Program>. boundary: MatrixService constructor (dimensions >= 1 and <= MaxSize 1000), Index() bounds (row/col < 0, >= Rows/Cols), Add() checked(current + delta) overflow; MatrixPage sign classes (value < 0, == 0). equivalent-bait: MatrixService.Index() second check `index >= cells.Length` is unreachable after the bounds check (its boundary and block/statement mutants are equivalent), Snapshot() copies each row again via Clone() after building a fresh grid, and the Add() compare-exchange loop's equality mutant only shows up as a timeout. entrypoint: Program.cs top-level statements (service registration, MapGet page route, MapMatrixApi, app.Run) plus the static Program.CreateMatrix parsing Matrix:Size (RxC) and Matrix:Fill; a WebApplicationFactory smoke test leaves the fill loop and the malformed-size branch untested. idiom: Program.cs minimal API with top-level statements and `public partial class Program`, only reachable through WebApplicationFactory<Program> or Program.CreateMatrix; MatrixEndpoints maps a route group with an endpoint filter whose exception pattern (`is ArgumentException or IndexOutOfRangeException or OverflowException`) turns errors into 400 {error}, falling back to the exception type name for an empty message. forced-weak: the shared forced prompt asks for an assertion-free MatrixService smoke test first. staleness: after tests exist the prompt asks for GET /api/matrix/sum, editing MatrixEndpoints.cs (and usually MatrixService.cs), so scored targets go stale and must re-run. Stryker.NET runs with the test class as a FullyQualifiedName~ substring filter and String mutations disabled; test file names must end in Test or Tests to count as tests."
+}

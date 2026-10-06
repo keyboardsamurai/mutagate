@@ -1,0 +1,114 @@
+{
+  "status": "development build; release qualification pending",
+  "checked_at": "2026-09-12T16:20:18.226Z",
+  "environment": {
+    "platform": "linux",
+    "arch": "arm64",
+    "node": "v22.22.1",
+    "jdk": "OpenJDK 21.0.12"
+  },
+  "checks": {
+    "deterministic_tests": 61,
+    "integration_tests": 11,
+    "runner_fixtures": 9,
+    "synthetic_doctor": "passed",
+    "scripted_harness": {
+      "passed": true,
+      "harnesses": [
+        "claude",
+        "codex",
+        "opencode",
+        "pi"
+      ],
+      "evidence": "CLI envelopes with actual PIT weak/strong runs; not live model sessions"
+    },
+    "skills_installer": {
+      "passed": true,
+      "agents": [
+        "claude-code",
+        "codex",
+        "opencode",
+        "pi"
+      ],
+      "bytes": 175839
+    },
+    "skill_validator": "passed",
+    "result_schema": "34 real result files validated",
+    "opencode_discovery": {
+      "version": "1.18.30",
+      "discovery": ".opencode/plugins/mutagate.js",
+      "occurrences": 1,
+      "passed": true
+    },
+    "kotlin_corpus": {
+      "total": 121,
+      "real": 42,
+      "junk": 79,
+      "flagged": 48,
+      "precision": 1,
+      "real_drop_rate": 0,
+      "recall": 0.6075949367088608,
+      "reproduced": true
+    },
+    "proxy_cache_setup": "Real curl download from repo.maven.apache.org, all manifest checksums verified",
+    "runtime_package_bytes": 176465,
+    "integration_entrypoint": "Generated CommonJS runtime (all nine runner fixtures plus doctor); corpus reproduction uses the shared ESM library",
+    "generated_runtime": "Strict CommonJS, generation equality and executable protocol parity passed",
+    "live_codex": {
+      "version": "0.154.0",
+      "authentication": "existing ChatGPT login",
+      "continuation": {
+        "passed": true,
+        "evidence": "test/evidence/codex-continuation.json"
+      },
+      "async_receipt": {
+        "passed": true,
+        "evidence": "test/evidence/codex-async.json"
+      }
+    },
+    "kotlin_marker_interfaces": "Same-file empty marker interfaces supported; explicit overrides and uncertain types remain eligible"
+  },
+  "performance": {
+    "hook": {
+      "entrypoint": "scripts/mutagate-hook.cjs (installed hook runtime)",
+      "samples": 1000,
+      "p95_ms": 76.6838749999988,
+      "budget_ms": 80,
+      "tolerance_ms": 80,
+      "pass": true
+    },
+    "measurements": [
+      {
+        "fixture": "java-gradle",
+        "cold_ms": 1502,
+        "warm_ms": 734,
+        "improvement": 0.511318242343542,
+        "report_ms": 0.0011437499999997272,
+        "history_present": true,
+        "pass": true
+      },
+      {
+        "fixture": "kotlin-gradle",
+        "cold_ms": 1713,
+        "warm_ms": 511,
+        "improvement": 0.7016929363689434,
+        "report_ms": 0.0006496669999996812,
+        "history_present": true,
+        "pass": true
+      }
+    ],
+    "previous_esm_hook": {
+      "samples": 1000,
+      "p95_ms": 85.09387499999866,
+      "budget_ms": 80,
+      "tolerance_ms": 80,
+      "pass": false
+    }
+  },
+  "remaining": [
+    "Live Claude, OpenCode and Pi qualification requires configured model access; authentication setup requested",
+    "Multi-night live qualification history across all four harnesses",
+    "Ubuntu/macOS CI and Windows smoke evidence",
+    "Broader Kotlin compiler-version coverage, uncertain inherited/nested classes, and licensed Tier A validation"
+  ]
+}

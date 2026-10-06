@@ -1,0 +1,9 @@
+[project]
+name = "python-uv-src"
+version = "0.0.0"
+requires-python = ">=3.12"
+dependencies = ["mutmut==3.8.0", "pytest==8.4.2"]
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
