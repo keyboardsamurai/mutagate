@@ -113,21 +113,9 @@ gh api -X PUT repos/$R/private-vulnerability-reporting
 for l in false-block runner-request; do gh label create $l --repo $R; done
 ```
 
-Rulesets: no protection on `main`. The `skill` branch and `skill-v*` tags are written only by `release.yml` (the GitHub Actions app, integration id 15368, is the bypass actor). `v*` tags are created by hand but never moved or deleted.
+Rulesets: no protection on `main`. `v*` tags are created by hand but never moved or deleted. The `skill` branch and `skill-v*` tags have no ruleset: on a personal-account repo GitHub refuses the GitHub Actions app as a bypass actor, and only the owner has write access. `release.yml` is the only writer by convention.
 
 ```sh
-gh api -X POST repos/$R/rulesets --input - <<'EOF'
-{"name":"skill branch","target":"branch","enforcement":"active",
- "conditions":{"ref_name":{"include":["refs/heads/skill"],"exclude":[]}},
- "rules":[{"type":"creation"},{"type":"update"},{"type":"deletion"}],
- "bypass_actors":[{"actor_id":15368,"actor_type":"Integration","bypass_mode":"always"}]}
-EOF
-gh api -X POST repos/$R/rulesets --input - <<'EOF'
-{"name":"skill tags","target":"tag","enforcement":"active",
- "conditions":{"ref_name":{"include":["refs/tags/skill-v*"],"exclude":[]}},
- "rules":[{"type":"creation"},{"type":"update"},{"type":"deletion"}],
- "bypass_actors":[{"actor_id":15368,"actor_type":"Integration","bypass_mode":"always"}]}
-EOF
 gh api -X POST repos/$R/rulesets --input - <<'EOF'
 {"name":"release tags","target":"tag","enforcement":"active",
  "conditions":{"ref_name":{"include":["refs/tags/v*"],"exclude":[]}},
@@ -135,8 +123,6 @@ gh api -X POST repos/$R/rulesets --input - <<'EOF'
 EOF
 gh api repos/$R/rulesets --jq '.[].name'
 ```
-
-If GitHub refuses the bypass actor, set it in Settings → Rules → Rulesets → Bypass list → "GitHub Actions".
 
 By hand in Settings → General → Social preview: upload a 1280×640 PNG (made from `docs/img/mutagate_banner.png`).
 
