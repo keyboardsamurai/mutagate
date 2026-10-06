@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate_banner.png" alt="mutagate" width="440">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate_banner.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate_banner_light.png">
+    <img src="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate_banner_light.png" alt="mutagate" width="440">
+  </picture>
 </p>
 
 <p align="center"><strong>Mutation testing as a hook, not a hope.</strong></p>
