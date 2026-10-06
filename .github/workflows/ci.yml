@@ -65,7 +65,7 @@ jobs:
       - run: |
           dotnet tool install dotnet-stryker --tool-path "$RUNNER_TEMP/dotnet-tools" --version 5.0.0
           echo "$RUNNER_TEMP/dotnet-tools" >> "$GITHUB_PATH"
-      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       - run: |
           uv venv test/.cache/py2 --python 3.12
           uv pip install --python test/.cache/py2/bin/python 'mutmut==2.5.1' 'pytest==8.4.2'
