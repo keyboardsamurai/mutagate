@@ -116,7 +116,7 @@ Phase 4: `20260916-093649-9c28` and `20260916-093649-9bb1` passed 2/4 runs, both
 | Risks (missing script must not be a silent no-op) | The command keeps `[ -f "$f" ] &&`: a missing script exits 1, which Claude Code and Codex report as a failed hook and do not block; without it dash exits 2, a block. |
 | Validation step 4 (`--repeat 1`, violates ADR-0011) | Forced java records re-recorded with `--repeat 2` (sweep `20261003-214323-0b96`, 8/8 passed, pinned harness versions). `test/eval.test.mjs` requires two attempts in every live record; `run.mjs` writes no record for a cell with fewer than two runs and says so. Evidence scrubs the home dir to `~` and the eval repo to `<repo>`. |
 
-### Red test cascade (2026-10-05, `docs/red_test_cascade_ticket.md`)
+### Red test cascade (2026-10-05, https://github.com/keyboardsamurai/mutagate/issues/6)
 
 | Finding | Change and evidence |
 |---|---|
