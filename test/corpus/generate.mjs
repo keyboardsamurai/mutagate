@@ -8,7 +8,7 @@ const root = path.resolve(import.meta.dirname, '../..');
 const output = process.argv[2];
 if (!output) throw Error('Provide an output directory for raw corpus evidence.');
 fs.mkdirSync(output, { recursive: true });
-const work = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-kotlin-corpus-'));
+const work = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-kotlin-corpus-'))); // macOS: Gradle reports /private/var, PIT matches paths literally
 try {
   const repo = path.join(work, 'fixture');
   fs.cpSync(path.join(root, 'test/fixtures/kotlin-gradle'), repo, {
