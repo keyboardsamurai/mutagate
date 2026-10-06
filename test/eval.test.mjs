@@ -202,7 +202,7 @@ test('report: matrix cells, run counts, wall time, warning groups and top 20 ano
 });
 
 test('scrub replaces every secret occurrence in text and binary files, skipping .git, node_modules and files over 5 MB', () => {
-  const token = 'sk-or-v1-' + crypto.randomBytes(16).toString('hex'), token2 = 'sk-ant-oat01-' + crypto.randomBytes(8).toString('hex');
+  const token = `sk-or-v1-${crypto.randomBytes(16).toString('hex')}`, token2 = `sk-ant-oat01-${crypto.randomBytes(8).toString('hex')}`;
   assert.equal(scrub(`a ${token} b ${token} ${token2}`, ['', token, token2]), 'a <redacted> b <redacted> <redacted>');
   assert.equal(scrub('nothing', []), 'nothing');
   const dir = runDir(f => { f['stdout.log'] += line({ env: token }); f['trace.jsonl'][3].error = `auth ${token}`; f['diff.patch'] += `+key=${token}\n`; f['status.json'][0].result.error = token2;
@@ -218,7 +218,7 @@ test('scrub replaces every secret occurrence in text and binary files, skipping 
 });
 
 test('evidenceRecord: harness, version, model, task, scenario, passed-if-any, attempts with checks and scrubbed normalized trace', () => {
-  const secret = 'sk-secret-' + crypto.randomBytes(6).toString('hex');
+  const secret = `sk-secret-${crypto.randomBytes(6).toString('hex')}`;
   const one = runDir(f => { f['final.txt'] = `done ${secret} ${os.homedir()}/x ${os.homedir()}XYZ`; f['stage/SKILL.md'] = 'skill'; f['stage/scripts/a.cjs'] = 'a'; }), two = runDir(f => { Object.assign(f['meta.json'], { n: 2, ended: 'killed', exitCode: null, endedAt: '2026-09-12T16:40:00.000Z' }); f['check.exit'] = '1\n'; });
   fs.appendFileSync(path.join(one, 'trace.jsonl'), line(ev('PostToolUse', 'allow', { file: [path.join(one, 'repo', T)], error: null, tool: secret })));
   for (const d of [one, two]) writeChecks(d, expected);

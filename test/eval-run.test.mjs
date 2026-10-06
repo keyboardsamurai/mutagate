@@ -68,7 +68,7 @@ test('stepTimeout: one deadline from run start covers setup and agent, collectio
 });
 
 test('diffSince shows new files without writing their content to .git, so scrubDir leaves no token anywhere', t => {
-  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-eval-diff-')), token = 'sk-or-v1-' + 'f00d'.repeat(8);
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-eval-diff-')), token = `sk-or-v1-${'f00d'.repeat(8)}`;
   t.after(() => fs.rmSync(repo, { recursive: true, force: true }));
   const git = (...args) => { const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.invalid', ...args], { cwd: repo, encoding: 'utf8' }); assert.equal(r.status, 0, r.stderr); return r.stdout; };
   fs.writeFileSync(path.join(repo, 'tracked.txt'), 'base\n');
