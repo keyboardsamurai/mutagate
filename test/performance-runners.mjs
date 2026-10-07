@@ -11,7 +11,7 @@ for(const name of ['java-gradle','kotlin-gradle']) {
   const expected=JSON.parse(fs.readFileSync(path.join(repo,'expected.json'))),extension=path.extname(expected.test),stem=path.basename(expected.test,extension);
   fs.copyFileSync(path.join(repo,'variants',stem+'.strong'+extension),path.join(repo,expected.test));
   const runs=[];let result;
-  for(let n=0;n<2;n++){const r=await command(process.execPath,[path.join(root,'scripts/mutagate.mjs'),'run',expected.test,'--repo',repo,'--sync','--json'],{timeout:300000,env:{...process.env,MUTAGATE_SESSION:'performance'}});result=JSON.parse(r.output);if(result.status!=='pass')throw Error(JSON.stringify(result));runs.push(result.duration_ms);}
+  for(let n=0;n<2;n++){if(n)fs.appendFileSync(path.join(repo,expected.test),'\n');const r=await command(process.execPath,[path.join(root,'scripts/mutagate.mjs'),'run',expected.test,'--repo',repo,'--sync','--json'],{timeout:300000,env:{...process.env,MUTAGATE_SESSION:'performance'}});result=JSON.parse(r.output);if(result.status!=='pass')throw Error(JSON.stringify(result));runs.push(result.duration_ms);}
   const start=performance.now();for(let n=0;n<1000;n++)report(result);const formatting=(performance.now()-start)/1000;
   const history=path.join(cacheRoot(),'repos',hash(fs.realpathSync(repo)),'history');
   const sample={fixture:name,cold_ms:runs[0],warm_ms:runs[1],improvement:1-runs[1]/runs[0],report_ms:formatting,history_present:fs.existsSync(history)&&fs.readdirSync(history).length>0};
