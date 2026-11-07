@@ -13,7 +13,7 @@ Live eval suite (macOS, `test/eval/`, spec `docs/eval_suite_spec.md`): Claude Co
 
 M7 (2026-09-15–16), after the M6 fix pass (`test/review-fixes.md`): small sweep `20260915-165619-cef8` passed 91/96 runs and 47/48 cells; Claude, Codex and OpenCode each passed 24/24 runs, Pi 19/24. At that stage, Pi C# natural was the only failing small cell (23/24 validated pairs). Pi C# forced later passed 2/2 (`20260916-134059-7e96`); a natural rerun (`20260916-143522-7602`) failed 0/2 on the model's omitted `Program` target, so Pi × C# was marked ⏳, not ❌. The C# candidate-hint fix then passed 1/2 natural repeats (`20260916-155402-b5c2`): run 1 explicitly selected Program and scored 1.00; run 2 still omitted it. With both scenarios evidenced, the README now has 24/24 validated pairs; this does not imply every repeat passed. Greenfield `20260915-202750-ef7f` passed 34/48 runs: Claude 8/12, Codex 10/12, OpenCode 9/12, Pi 7/12. These are original checker verdicts, including diagnosed false failures; they have not been relabelled after triage. One passing OpenCode TypeScript greenfield run has a red ordinary test-command warning. See `test/eval/TRIAGE.md`, "Found by M7", for engine and checker findings, upstream limitations and deadline/model failures. An earlier small sweep was superseded after concurrent README growth crossed the package-size limit during setup; all eight runs that launched passed, and the remaining 88 never launched.
 
-Still open before v1: remaining M7 findings (`test/eval/TRIAGE.md`), Ubuntu/macOS/Windows CI evidence, broader Kotlin compiler coverage, and licensed Tier A validation.
+Still open before v1: remaining M7 findings (`test/eval/TRIAGE.md`), Windows CI for the deterministic suite and driver E2E ([#27](https://github.com/keyboardsamurai/mutagate/issues/27)), broader Kotlin compiler coverage, and licensed Tier A validation.
 
 ```sh
 npm test                    # deterministic suites
@@ -46,7 +46,7 @@ gomutants also ships a Claude Code plugin that proposes Go tests for survivors; 
 |---|---|
 | Linux | ✅ full suite + Java/Kotlin/Python/TS runners (ARM64, JDK 21) |
 | macOS | ✅ deterministic suite + Go/C# runners (Node 22) |
-| Windows | 🟡 `scripts\mutagate.cmd`, no CI evidence · ❌ Go and C# unqualified |
+| Windows | 🟡 `scripts\mutagate.cmd`; CI runs only the `java-gradle` integration fixture (no `npm test`, installer or driver E2E) · ❌ Go and C# unqualified |
 
 Go: verified with a `go 1.22` module under Go 1.26.
 
@@ -79,3 +79,215 @@ Mean score is over the four targets of each run; every target has a numeric scor
 - Recommendation: no engine change.
 
 All six runs carry one `recovered-error` warning in `anomalies.json` (`mutmut failed (1): failed to collect stats`, superseded by a later scored result for the same target): 4, 5 and 10 such errors in the baseline runs, 8, 21 and 2 in the variant runs. No run crashed and no target is pending. Variant runs took about 1.6x the wall time of baseline runs.
+
+## Sample run: claude-java-forced-1
+
+The README demo quotes this run: sweep `20261003-214323-0b96`, run `claude-java-forced-1`, Claude Code 2.1.270 with `claude-sonnet-5`, Java task (`test/eval/tasks/java`), `forced` scenario (`test/eval/tasks/prompt.forced.md`), started 2026-10-03T21:43:24Z, wall time 164,997 ms (2.75 min). The session start line reports `mutagate 1.0.0-dev`, the working tree at that time. The run artifacts are under the gitignored `test/.cache/eval/`; the committed record is `test/evidence/live/claude-java-forced.json` (attempt 1, transcript sha256 `81281becb08503ffb1ff70347a5d09a8858deb3ee054f4ca109313bb9d874e54`; a later passing sweep of this cell can replace the record). The reports and tests below are copied from the run's `stdout.log`, `check.json` and final repo.
+
+Timeline from `trace.jsonl`: the smoke test is written at 21:43:37; the first result (score 0.26) arrives at 21:43:47 and the Stop hook blocks at 21:43:49. The rewritten test scores 0.92 (35/38) at 21:44:14. The agent then adds `MatrixService.sum()` (8 lines above `snapshot`, so later line numbers move down by 8) and two tests for it; MatrixService scores 0.925 (37/40) from 21:45:04 on. The Stop hook allows at 21:46:09.
+
+First block (Stop hook feedback, complete):
+
+```text
+mutagate: com.example.matrix.MatrixService score 0.26 (10/38), threshold 0.80. 16 survivors shown of 28.
+src/main/java/com/example/matrix/MatrixService.java:14 <init>: comparison boundary changed and no test noticed [boundary] ×2
+src/main/java/com/example/matrix/MatrixService.java:17 <init>: comparison boundary changed and no test noticed [boundary] ×2
+src/main/java/com/example/matrix/MatrixService.java:56 snapshot: line was not covered by the scoped tests [no coverage] ×2
+src/main/java/com/example/matrix/MatrixService.java:57 snapshot: line was not covered by the scoped tests [no coverage] ×2
+src/main/java/com/example/matrix/MatrixService.java:62 snapshot: line was not covered by the scoped tests [no coverage] ×2
+src/main/java/com/example/matrix/MatrixService.java:69 cell: comparison boundary changed and no test noticed [boundary] ×2
+src/main/java/com/example/matrix/MatrixService.java:73 cell: >= became > and no test noticed [boundary]
+src/main/java/com/example/matrix/MatrixService.java:14 <init>: condition changed and no test noticed [conditional]
+src/main/java/com/example/matrix/MatrixService.java:17 <init>: condition changed and no test noticed [conditional]
+src/main/java/com/example/matrix/MatrixService.java:69 cell: condition changed and no test noticed [conditional]
+Kill survivors with tests; don't weaken reachable code to pass, and tell the user about any production change made for the gate. Details: mutagate status. Playbook: references/survivor-playbook.md.
+```
+
+Final check (`check.json`, exit 0):
+
+```text
+mutagate: com.example.matrix.MatrixService score 0.93 (37/40), threshold 0.80. 3 survivors shown of 3.
+src/main/java/com/example/matrix/MatrixService.java:77 cell: comparison boundary changed and no test noticed [boundary]
+src/main/java/com/example/matrix/MatrixService.java:81 cell: >= became > and no test noticed [boundary]
+src/main/java/com/example/matrix/MatrixService.java:81 cell: condition changed and no test noticed [conditional]
+mutagate: com.example.matrix.MatrixController score 1.00 (10/10), threshold 0.80. 0 survivors shown of 0.
+mutagate: com.example.matrix.MatrixPageController score 1.00 (7/7), threshold 0.80. 0 survivors shown of 0.
+mutagate: com.example.matrix.MatrixApplication score 1.00 (7/7), threshold 0.80. 0 survivors shown of 0.
+Kill survivors with tests; don't weaken reachable code to pass, and tell the user about any production change made for the gate. Details: mutagate status. Playbook: references/survivor-playbook.md.
+```
+
+Before: the first `MatrixServiceTest.java` the agent wrote.
+
+```java
+package com.example.matrix;
+
+import org.junit.jupiter.api.Test;
+
+class MatrixServiceTest {
+
+    @Test
+    void smoke() {
+        MatrixService service = new MatrixService(2, 2);
+        service.get(0, 0);
+    }
+}
+```
+
+After: the final `MatrixServiceTest.java`.
+
+```java
+package com.example.matrix;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.Test;
+
+class MatrixServiceTest {
+
+    @Test
+    void smoke() {
+        MatrixService service = new MatrixService(2, 2);
+        service.get(0, 0);
+    }
+
+    @Test
+    void constructorAcceptsMinimumSize() {
+        MatrixService service = new MatrixService(1, 1);
+        assertThat(service.rows()).isEqualTo(1);
+        assertThat(service.cols()).isEqualTo(1);
+    }
+
+    @Test
+    void constructorAcceptsMaximumSize() {
+        MatrixService service = new MatrixService(MatrixService.MAX_SIZE, MatrixService.MAX_SIZE);
+        assertThat(service.rows()).isEqualTo(MatrixService.MAX_SIZE);
+        assertThat(service.cols()).isEqualTo(MatrixService.MAX_SIZE);
+    }
+
+    @Test
+    void constructorRejectsZeroRows() {
+        assertThatThrownBy(() -> new MatrixService(0, 2))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void constructorRejectsZeroCols() {
+        assertThatThrownBy(() -> new MatrixService(2, 0))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void constructorRejectsNegativeRows() {
+        assertThatThrownBy(() -> new MatrixService(-1, 2))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void constructorRejectsRowsAboveMax() {
+        assertThatThrownBy(() -> new MatrixService(MatrixService.MAX_SIZE + 1, 1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void constructorRejectsColsAboveMax() {
+        assertThatThrownBy(() -> new MatrixService(1, MatrixService.MAX_SIZE + 1))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void getAndSetRoundTrip() {
+        MatrixService service = new MatrixService(3, 3);
+        service.set(1, 2, 42);
+        assertThat(service.get(1, 2)).isEqualTo(42);
+    }
+
+    @Test
+    void addAccumulatesDelta() {
+        MatrixService service = new MatrixService(2, 2);
+        service.set(0, 0, 5);
+        int result = service.add(0, 0, 3);
+        assertThat(result).isEqualTo(8);
+        assertThat(service.get(0, 0)).isEqualTo(8);
+    }
+
+    @Test
+    void clearResetsAllCells() {
+        MatrixService service = new MatrixService(2, 2);
+        service.set(0, 0, 1);
+        service.set(1, 1, 2);
+        service.clear();
+        assertThat(service.get(0, 0)).isZero();
+        assertThat(service.get(1, 1)).isZero();
+    }
+
+    @Test
+    void snapshotReflectsCurrentValuesAndIsIndependentCopy() {
+        MatrixService service = new MatrixService(2, 3);
+        service.set(0, 0, 1);
+        service.set(0, 1, 2);
+        service.set(0, 2, 3);
+        service.set(1, 0, 4);
+        service.set(1, 1, 5);
+        service.set(1, 2, 6);
+
+        int[][] snapshot = service.snapshot();
+
+        assertThat(snapshot).isEqualTo(new int[][] {{1, 2, 3}, {4, 5, 6}});
+
+        snapshot[0][0] = 999;
+        assertThat(service.get(0, 0)).isEqualTo(1);
+    }
+
+    @Test
+    void getRejectsNegativeRow() {
+        MatrixService service = new MatrixService(2, 2);
+        assertThatThrownBy(() -> service.get(-1, 0))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getRejectsRowEqualToRowCount() {
+        MatrixService service = new MatrixService(2, 2);
+        assertThatThrownBy(() -> service.get(2, 0))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getRejectsNegativeCol() {
+        MatrixService service = new MatrixService(2, 2);
+        assertThatThrownBy(() -> service.get(0, -1))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void getRejectsColEqualToColCount() {
+        MatrixService service = new MatrixService(2, 2);
+        assertThatThrownBy(() -> service.get(0, 2))
+                .isInstanceOf(IndexOutOfBoundsException.class);
+    }
+
+    @Test
+    void sumAddsAllCells() {
+        MatrixService service = new MatrixService(2, 2);
+        service.set(0, 0, 1);
+        service.set(0, 1, 2);
+        service.set(1, 0, 3);
+        service.set(1, 1, 4);
+        assertThat(service.sum()).isEqualTo(10L);
+    }
+
+    @Test
+    void sumOfFreshMatrixIsZero() {
+        MatrixService service = new MatrixService(3, 3);
+        assertThat(service.sum()).isZero();
+    }
+
+    @Test
+    void getAcceptsLastValidIndex() {
+        MatrixService service = new MatrixService(2, 2);
+        service.set(1, 1, 7);
+        assertThat(service.get(1, 1)).isEqualTo(7);
+    }
+}
+```

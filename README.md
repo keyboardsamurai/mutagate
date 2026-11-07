@@ -6,19 +6,130 @@
   </picture>
 </p>
 
-<p align="center"><strong>Mutation testing as a hook, not a hope.</strong></p>
+## Your coding agent's tests pass. mutagate breaks the code to see if they notice.
 
-mutagate is for individual developers who let Claude Code or Codex write tests (OpenCode and Pi work too). Every time your agent writes a test, mutagate mutates the code under test in the background and tells the agent which bugs slipped through ("`>=` became `>`; no test noticed"). If the tests catch fewer than 80%, the agent can’t finish yet, for up to two retry rounds by default. Team leads: commit the skill dir and `.mutagate/config.json`, and every clone gets the same gate.
+mutagate makes small deliberate bugs (mutants) in the code under test, for example `>=` becomes `>`, and reruns the tests your agent (Claude Code, Codex, OpenCode or Pi) just wrote or edited with its edit tools. If the tests catch fewer than 80% of the mutants, the agent can't finish yet (OpenCode and Pi: the session continues with the survivors), for up to two rounds by default. The agent gets the surviving mutants (file, line, change) to fix the test against.
 
-Hooks run your build and tests outside the agent sandbox; see [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
+Java, Kotlin, Python, TS/JS, Go, C#. macOS and Linux (Windows experimental). MIT, beta 0.9.0: config keys and report text can change before 1.0.
+The first run downloads the mutation tool where needed (PIT jars, gomutants, Stryker.NET); `MUTAGATE_OFFLINE=1` stops these downloads (your build tool may still fetch dependencies). Hooks run your build and tests outside the agent sandbox; see [Security and privacy](#security-and-privacy).
 
-**Status:** 0.9.0 is a beta; config keys and report text can change before 1.0. **Platforms:** macOS and Linux supported; Windows experimental.
+## What happens
+
+In this eval run the prompt told the agent to write a weak test first: one smoke test for a Java `MatrixService`, with no assertions.
+
+```java
+@Test
+void smoke() {
+    MatrixService service = new MatrixService(2, 2);
+    service.get(0, 0);
+}
+```
+
+The test passed. When the agent tried to finish, mutagate blocked the agent from finishing and sent back:
+
+```text
+mutagate: com.example.matrix.MatrixService score 0.26 (10/38), threshold 0.80. 16 survivors shown of 28.
+src/main/java/com/example/matrix/MatrixService.java:14 <init>: comparison boundary changed and no test noticed [boundary] ×2
+src/main/java/com/example/matrix/MatrixService.java:56 snapshot: line was not covered by the scoped tests [no coverage] ×2
+src/main/java/com/example/matrix/MatrixService.java:69 cell: condition changed and no test noticed [conditional]
+…
+Kill survivors with tests; don't weaken reachable code to pass, and tell the user about any production change made for the gate. Details: mutagate status. Playbook: references/survivor-playbook.md.
+```
+
+The agent added 16 tests for the size limits, the index bounds and `snapshot`, for example:
+
+```java
+@Test
+void getRejectsRowEqualToRowCount() {
+    MatrixService service = new MatrixService(2, 2);
+    assertThatThrownBy(() -> service.get(2, 0))
+            .isInstanceOf(IndexOutOfBoundsException.class);
+}
+```
+
+The next run scored 0.92 (35/38). The prompt then had the agent add a `GET /api/matrix/sum` endpoint (`MatrixService.sum()`) with tests. The final check:
+
+```text
+mutagate: com.example.matrix.MatrixService score 0.93 (37/40), threshold 0.80. 3 survivors shown of 3.
+…
+```
+
+Recorded with Claude Code 2.1.270 (`claude-sonnet-5`) and a mutagate dev build after 0.9.0; the whole run took 2.75 min. Survivor lists shortened; the other three targets in the final check scored 1.00. Full reports and both versions of the test: [sample run](https://github.com/keyboardsamurai/mutagate/blob/main/docs/validation.md#sample-run-claude-java-forced-1).
 
 <p align="center">
-  <img src="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate.gif" alt="mutagate mutation-tests each test an agent writes and blocks completion until the score meets the threshold." width="960">
+  <img src="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutagate.gif" alt="Animation: an agent's smoke test for MatrixService passes, mutagate blocks completion with score 0.26 and the surviving mutants, the agent adds boundary tests, and the score reaches 0.93." width="480">
+  <br><sub>Re-enacted from the run above.</sub>
 </p>
 
-<p align="center"><a href="#quick-start">Get started</a></p>
+## Quick start
+
+You need Node 22+, Git and the toolchain for your language ([list](#whats-supported)). No npm dependencies or build step; your build files and mutation-tool configs stay untouched; `install` edits only the harness config. Run this in your project's Git root:
+
+```sh
+npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
+.claude/skills/mutagate/scripts/mutagate install --agent claude
+.claude/skills/mutagate/scripts/mutagate doctor
+```
+
+`npx skills` has its own telemetry; set `DISABLE_TELEMETRY=1` to turn it off.
+
+1. `doctor` checks config, toolchain, jars, adapter and one synthetic mutation. The first run downloads tools and does a cold build. Expect a few minutes the first time; C# cold builds take longer (see [Runners](#runners)). Its first line is `mutagate 0.9.0`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
+2. Restart Claude Code from the Git root. The session starts with a `mutagate 0.9.0 active. runner=…` line.
+3. Ask it to write a test for one production file. If the test is weak, the first block arrives with the survivors.
+4. For a team: commit the skill dir, your harness config ([Harnesses](#harnesses)) and `.mutagate/config.json`. Every clone then gets the same gate. Each teammate needs Node 22+ and the toolchain; without them the hooks fail open and do not block.
+
+Gate mode is the default. For reports without blocks, set `MUTAGATE_MODE=advise` or `"mode": "advise"` in `.mutagate/config.json`.
+
+### Other agents
+
+Codex, OpenCode and Pi use the same three steps with a different skill dir:
+
+<details>
+<summary>Codex, OpenCode and Pi commands</summary>
+
+```sh
+# Codex CLI (then open /hooks in Codex and trust mutagate, again after each install)
+npx skills add keyboardsamurai/mutagate#skill -a codex --copy
+.agents/skills/mutagate/scripts/mutagate install --agent codex
+.agents/skills/mutagate/scripts/mutagate doctor
+```
+
+```sh
+# OpenCode
+npx skills add keyboardsamurai/mutagate#skill -a opencode --copy
+.agents/skills/mutagate/scripts/mutagate install --agent opencode
+.agents/skills/mutagate/scripts/mutagate doctor
+```
+
+```sh
+# Pi
+npx skills add keyboardsamurai/mutagate#skill -a pi --copy
+.pi/skills/mutagate/scripts/mutagate install --agent pi
+.pi/skills/mutagate/scripts/mutagate doctor
+```
+
+OpenCode and Pi continue the session with the survivors instead of blocking natively; see [Harnesses](#harnesses).
+</details>
+
+Pinned version, upgrade, uninstall, `--agent auto`, user scope and Windows: [docs/install.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/install.md).
+
+## How it works
+
+1. The agent writes or edits a test file through its edit tools (a test written by a shell command is missed). The hook records which production code the test covers and returns in milliseconds (p95 28 ms on macOS, 77 ms on Linux ARM64; budget 80 ms).
+2. A background worker mutates only that code with an established mutation tool per language (PIT, mutmut, Stryker, gomutants, Stryker.NET).
+3. When the agent tries to finish and the score is below 0.80, mutagate blocks and lists the surviving mutants by file, line and kind.
+4. The agent strengthens the test. After `maxRounds` (default 2), completion warns and is allowed; a large value keeps blocking until it passes. Infrastructure errors never block; agent-caused red or non-compiling tests block once.
+
+In the eval (eval host, warm tool caches, median), the first mutation run per attempt took 2–4 s for Java, Kotlin, Python and TS, 18 s for C# and 31 s for Go.
+
+Some survivors change no behavior (equivalent mutants), so no test can kill them. Waive those; see [Waivers](#waivers). For Kotlin, a junk filter drops known compiler-generated mutants ([Kotlin](#kotlin)).
+
+## Eval results
+
+The eval suite runs Claude Code, Codex, OpenCode and Pi on one task repo per language, with harness and model versions pinned per sweep.
+In all 48 runs where the prompt asked for a weak test first, mutagate blocked and the agent then raised the first target's score: from 0.00–0.52 to 0.80–1.00.
+When the prompt asked for comprehensive tests and never mentioned mutagate, 46 of 49 first tests already scored 0.81–1.00, and completion was blocked in 1 of 49 attempts.
+Details and failures: [docs/validation.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/validation.md).
 
 ## What's supported
 
@@ -67,55 +178,9 @@ OpenCode forwards only write/edit/patch/apply_patch tools; Pi only write/edit.
 
 **One-shot caveats:** OpenCode/Pi need persistent sessions (interactive, `opencode serve`, `pi --mode rpc`); `opencode run`/`pi -p` cannot reprompt. Without streaming input, `claude -p` waits for the async hook on each test write.
 
-## Quick start
+## Security and privacy
 
-Needs Node 22+, Git and the language toolchain above; no npm dependencies or build step. Project build files/configs stay untouched. Older target frameworks need their runtime.
-Gate mode is the default. For reports without blocks, set `MUTAGATE_MODE=advise` or `"mode": "advise"` in `.mutagate/config.json`.
-
-Run one block in the project root (Git top level):
-
-```sh
-# Claude Code
-npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
-.claude/skills/mutagate/scripts/mutagate install --agent claude
-.claude/skills/mutagate/scripts/mutagate doctor
-```
-
-```sh
-# Codex CLI (then open /hooks in Codex and trust mutagate)
-npx skills add keyboardsamurai/mutagate#skill -a codex --copy
-.agents/skills/mutagate/scripts/mutagate install --agent codex
-.agents/skills/mutagate/scripts/mutagate doctor
-```
-
-```sh
-# OpenCode
-npx skills add keyboardsamurai/mutagate#skill -a opencode --copy
-.agents/skills/mutagate/scripts/mutagate install --agent opencode
-.agents/skills/mutagate/scripts/mutagate doctor
-```
-
-```sh
-# Pi
-npx skills add keyboardsamurai/mutagate#skill -a pi --copy
-.pi/skills/mutagate/scripts/mutagate install --agent pi
-.pi/skills/mutagate/scripts/mutagate doctor
-```
-
-1. `doctor` checks config, toolchain, jars, adapter and one synthetic mutation. The first run can take 1–3 min (downloads, cold build). Its first line is `mutagate 0.9.0`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
-2. Restart the agent. Codex: open `/hooks` and trust mutagate. The session starts with a `mutagate 0.9.0 active. runner=…` line.
-3. Ask the agent to write a test for one production file. A weak test gets the first block, with the survivors.
-4. Commit the skill dir and the harness config. Project installs inside Git use repo-relative hook commands ([ADR-0013](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0013-project-hooks-use-repo-relative-paths.md)), so clones get the gate.
-
-A successful install ends with `Next: run <skill>/scripts/mutagate doctor, then restart your agent so it loads the hooks.` (Codex adds `In Codex, open /hooks and trust mutagate.`). Use an explicit `--agent`. `--agent auto` installs for the harness dirs it finds; if it finds none, it prints `no harness detected in <repo>; run one of:` and one `<skill>/scripts/mutagate install --agent <harness>` line per harness on stderr, and exits 2.
-
-- **Pinned:** replace `#skill` with `#skill-v0.9.0`.
-- **Upgrade:** run the same `npx skills add` line again, then `install --agent <harness>` again (Codex: trust again).
-- **Uninstall:** `<skill dir>/scripts/mutagate uninstall --agent <harness>`, then `npx skills remove mutagate -y`.
-
-All commands accept `--repo <directory>` (Windows: `scripts\mutagate.cmd`). Install keeps unrelated hooks. User scope (`--scope user`), a skill outside Git, and Windows write machine-local absolute paths: do not commit them. Claude started in a subdirectory may not load root settings.
-
-After `maxRounds`, completion warns/allows; a large value keeps blocking until it passes. Infrastructure errors never block; agent-caused red/non-compiling tests block once.
+mutagate sends no telemetry and uploads nothing. It downloads only when a tool is missing: SHA-pinned PIT (and licensed Arcmutate) jars from Maven Central, gomutants or gremlins through `go install`, Stryker.NET through `dotnet tool install`. `MUTAGATE_OFFLINE=1` disables these downloads ([proxy/offline setup](#runners)). `npx skills add` sends its own install telemetry; `DISABLE_TELEMETRY=1` turns it off. Hooks run your build and tests outside the agent sandbox. Details: [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
 
 ## Troubleshooting
 
@@ -204,6 +269,6 @@ Agents propose (`waive <id> --reason <text>`); humans approve (`--apply` or `.mu
 
 ## Links
 
-[Evidence, platforms and limitations](https://github.com/keyboardsamurai/mutagate/blob/main/docs/validation.md) · [Security](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md) · [Third-party tools](https://github.com/keyboardsamurai/mutagate/blob/main/THIRD_PARTY.md) · [Changelog](https://github.com/keyboardsamurai/mutagate/blob/main/CHANGELOG.md) · [Contributing](https://github.com/keyboardsamurai/mutagate/blob/main/CONTRIBUTING.md)
+[Evidence, platforms and limitations](https://github.com/keyboardsamurai/mutagate/blob/main/docs/validation.md) · [Sample run](https://github.com/keyboardsamurai/mutagate/blob/main/docs/validation.md#sample-run-claude-java-forced-1) · [Install details](https://github.com/keyboardsamurai/mutagate/blob/main/docs/install.md) · [Security](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md) · [Third-party tools](https://github.com/keyboardsamurai/mutagate/blob/main/THIRD_PARTY.md) · [Changelog](https://github.com/keyboardsamurai/mutagate/blob/main/CHANGELOG.md) · [Contributing](https://github.com/keyboardsamurai/mutagate/blob/main/CONTRIBUTING.md)
 
 <img src="https://github.com/keyboardsamurai/mutagate/raw/main/docs/img/mutie_mascot.png" alt="Mutie, the mutagate gatekeeper" width="80" align="center">
