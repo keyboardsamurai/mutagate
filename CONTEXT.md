@@ -156,6 +156,10 @@ _Avoid_: bundle, dist, artifact
 The generated Git branch `skill` that holds only the skill package for one release; users install from it (ADR-0014).
 _Avoid_: release branch, dist branch
 
+**Install stamp**:
+The mutagate version that `install` writes into the hook config or adapter. When it is missing or differs from the skill's version, SessionStart and `doctor` tell to run `install` again (ADR-0017).
+_Avoid_: installed version file, install marker
+
 **Machine-local**:
 Config that holds absolute paths of one machine. Do not commit it. Install warns when a project install is machine-local.
 _Avoid_: absolute install, local config

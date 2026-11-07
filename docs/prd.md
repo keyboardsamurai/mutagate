@@ -204,6 +204,7 @@ The CLI accepts one input shape on stdin and emits one output shape on stdout. I
   "cwd": "/abs/path",
   "hook_event_name": "PostToolUse",
   "harness": "claude|codex|opencode|pi",
+  "installed": "1.0.0",
   "tool_name": "Write",
   "tool_input": { "file_path": "src/test/kotlin/com/acme/UserServiceTest.kt" },
   "tool_response": {},
@@ -211,7 +212,7 @@ The CLI accepts one input shape on stdin and emits one output shape on stdout. I
 }
 ```
 
-`harness` is a mutagate extension. Claude Code and Codex do not send it. The CLI infers it: `CLAUDE_PLUGIN_ROOT` or `CLAUDE_PROJECT_DIR` set and no `CODEX_HOME` implies claude, `CODEX_HOME` or a `turn_id` field implies codex, adapters set it explicitly. `MUTAGATE_HARNESS` env var overrides.
+`harness` is a mutagate extension. Claude Code and Codex do not send it. The CLI infers it: `CLAUDE_PLUGIN_ROOT` or `CLAUDE_PROJECT_DIR` set and no `CODEX_HOME` implies claude, `CODEX_HOME` or a `turn_id` field implies codex, adapters set it explicitly. `MUTAGATE_HARNESS` env var overrides. `installed` is also a mutagate extension: the OpenCode and Pi adapters send the install stamp, the version of the `install` that wrote them (ADR-0017). Claude Code and Codex get the stamp from the `--installed <version>` flag of the SessionStart command.
 
 **Codex delta (FR-11.2):** file edits arrive as `tool_name: "apply_patch"` with the patch text in `tool_input.command`, not `file_path`. The CLI must extract paths from `*** Add File:`, `*** Update File:`, `*** Delete File:` and `*** Move to:` lines.
 
@@ -249,6 +250,7 @@ On Codex the CLI emits `"permissionDecision": "deny"` with the same reason plus 
 
 SessionStart: plain text on stdout, one line, for example
 `mutagate 1.0 active. runner=pitest (gradle, kotlin tier B). threshold 0.80. mode gate.`
+When the install stamp is missing or differs from the skill version, the line ends with `Hooks are from mutagate <stamp>, skill is <version>: rerun mutagate install --agent <harness> (add --scope user for a user install).` (`an older mutagate` when there is no stamp; ADR-0017).
 
 ### 8.4 Result schema
 
@@ -503,7 +505,7 @@ Common adapter contract: build the payload of 8.3, spawn `node <cli> hook <Event
 
 | Event | Handler | Notes |
 |---|---|---|
-| SessionStart | `hook SessionStart` | stdout banner becomes context |
+| SessionStart | `hook SessionStart --installed <version>` | stdout banner becomes context |
 | PostToolUse `Write\|Edit` | `hook PostToolUse` sync (invalidate) | under 80 ms |
 | PostToolUse `Write\|Edit` | `hook PostToolUse --mutate` with `asyncRewake: true` | exits 0 for non-test files immediately, exit 2 with report on survivors |
 | PreToolUse `Write\|Edit` with `if: Write(**/.mutagate/waivers.json)` and a second handler for `Edit(...)` | `hook PreToolUse` | `ask` |
@@ -787,14 +789,14 @@ Consulted for this document. Re-verify against pinned versions.
 
 ## Appendix A: shared `scripts/hooks.json` (Claude Code and Codex)
 
-Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with `f='<abs scripts dir>/hook' && [ -f "$f" ] && sh "$f"` (Windows: the absolute Node and runtime paths) (ADR-0013).
+Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with `f='<abs scripts dir>/hook' && [ -f "$f" ] && sh "$f"` (Windows: the absolute Node and runtime paths) (ADR-0013). `MUTAGATE_VERSION` is replaced with the skill version, the install stamp (ADR-0017).
 
 ```json
 {
   "description": "mutagate: mutation-score gate for agent-written tests",
   "hooks": {
     "SessionStart": [
-      { "hooks": [ { "type": "command", "command": "MUTAGATE_HOOK SessionStart", "timeout": 20 } ] }
+      { "hooks": [ { "type": "command", "command": "MUTAGATE_HOOK SessionStart --installed MUTAGATE_VERSION", "timeout": 20 } ] }
     ],
     "PostToolUse": [
       { "matcher": "Edit|Write", "hooks": [

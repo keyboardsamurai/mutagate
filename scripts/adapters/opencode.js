@@ -15,7 +15,7 @@ export const Mutagate = async ({ client, directory }) => {
     child.on('error', () => resolve({}));
     child.on('close', () => { try { resolve(JSON.parse(text)); } catch { resolve({}); } });
     child.stdin.on('error', () => {});
-    child.stdin.end(JSON.stringify({ cwd: directory, session_id: session, harness: 'opencode', hook_event_name: event, tool_name: tool === 'write' ? 'Write' : tool === 'edit' ? 'Edit' : tool, tool_input: args ? {...args, file_path: args.filePath} : undefined }));
+    child.stdin.end(JSON.stringify({ cwd: directory, session_id: session, harness: 'opencode', installed: "__MUTAGATE_VERSION__", hook_event_name: event, tool_name: tool === 'write' ? 'Write' : tool === 'edit' ? 'Edit' : tool, tool_input: args ? {...args, file_path: args.filePath} : undefined }));
   });
   const model = async (id) => { // keep the session's model on reprompts; fail open to the config default
     try { const m = (await client.session.messages({ path: { id } }))?.data?.findLast(x => x.info?.role === 'assistant' && x.info.providerID && x.info.modelID)?.info; return m && { model: { providerID: m.providerID, modelID: m.modelID } }; } catch { return undefined; }

@@ -45,3 +45,14 @@ test('doctor --json keeps its shape plus version; progress goes to stderr',t=>{
  assert.match(r.stderr,/^checking runner detected…$/m);
  const text=cli('mutagate.mjs',['doctor','--repo',repo],{env:{...env,PATH:path.dirname(process.execPath),CLAUDE_PLUGIN_DATA:path.join(repo,'.data')}});
  assert.equal(text.stdout.split('\n')[0],`mutagate ${m.VERSION}`);assert.doesNotMatch(text.stdout,/Tested versions/);assert.match(text.stdout,/^FAIL runner detected/m);});
+test('SessionStart and doctor tell to rerun install when the install stamp is missing or differs',t=>{
+ const repo=tmp(t),run=(args,p={})=>cli('mutagate.mjs',[...args,'--repo',repo],{env:{...env,PATH:path.dirname(process.execPath),CLAUDE_PLUGIN_DATA:path.join(repo,'.data')},input:JSON.stringify({cwd:repo,session_id:'s',...p})});
+ for(const a of ['claude','codex','opencode','pi'])assert.equal(run(['install','--agent',a]).status,0);
+ const settings=path.join(repo,'.claude/settings.json'),codex=path.join(repo,'.codex/hooks.json'),pi=path.join(repo,'.pi/extensions/mutagate.ts'),edit=(f,a,b)=>{const s=fs.readFileSync(f,'utf8');assert.ok(s.includes(a),f);fs.writeFileSync(f,s.replace(a,b));};
+ const warns=()=>JSON.parse(run(['doctor','--json']).stdout).checks.filter(x=>x.warn&&x.name.endsWith(' install')).map(x=>`${x.name}: ${x.note}`),fix=(from,a)=>`Hooks are from ${from}, skill is ${m.VERSION}: rerun mutagate install --agent ${a}`;
+ assert.deepEqual(warns(),[]);
+ edit(settings,` SessionStart --installed ${m.VERSION}`,' SessionStart --installed 0.8.0');edit(codex,` --installed ${m.VERSION}`,'');edit(pi,`installed: ${JSON.stringify(m.VERSION)}, `,'');
+ assert.deepEqual(warns(),[`claude install: ${fix('mutagate 0.8.0','claude')}`,`codex install: ${fix('an older mutagate','codex')}`,`pi install: ${fix('an older mutagate','pi')}`]);
+ assert.doesNotMatch(run(['hook','SessionStart','--installed',m.VERSION]).stdout,/rerun/);assert.doesNotMatch(run(['hook','SessionStart'],{harness:'pi',installed:m.VERSION}).stdout,/rerun/);
+ assert.ok(run(['hook','SessionStart','--installed','0.8.0']).stdout.includes(`${fix('mutagate 0.8.0','<harness>')} (add --scope user for a user install).`));
+ assert.ok(JSON.parse(run(['hook','SessionStart'],{harness:'pi'}).stdout).systemMessage.endsWith(`${fix('an older mutagate','pi')} (add --scope user for a user install).`));});

@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+
+- After the skill is updated and `install` is not run again, SessionStart says `Hooks are from mutagate X, skill is Y: rerun … install`, and `doctor` warns for a project install (`WARN <harness> install`). `install` now writes its version into the SessionStart hook command, and the OpenCode and Pi adapters send it in their payload; hooks from earlier versions have none, so run `install` again once after this upgrade (ADR-0017).
+
 ### Changed
 
 - The runners moved from `mutagate.mjs` to the lazily loaded `scripts/runners.cjs`, which is hashed into fingerprints.

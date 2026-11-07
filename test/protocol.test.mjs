@@ -9,7 +9,7 @@ const root=path.resolve(import.meta.dirname,'..');
 for(const executable of ['mutagate.mjs','mutagate-hook.cjs'])for(const harness of ['claude','codex','opencode','pi'])test(executable+' '+harness+' golden hook corpus',async t=>{
  const repo=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-protocol-')));t.after(()=>fs.rmSync(repo,{recursive:true,force:true}));
  const cache=path.join(repo,'.cache');
- const invoke=(event,p,input)=>spawnSync(process.execPath,[path.join(root,'scripts',executable),'hook',event],{input:input??JSON.stringify({cwd:repo,session_id:'sess_fixture',harness,...p}),env:{...process.env,CLAUDE_PLUGIN_DATA:cache,MUTAGATE_HARNESS:harness,MUTAGATE_TRACE:'1'},encoding:'utf8'});
+ const invoke=(event,p,input)=>spawnSync(process.execPath,[path.join(root,'scripts',executable),'hook',event,...(event==='SessionStart'?['--installed',m.VERSION]:[])],{input:input??JSON.stringify({cwd:repo,session_id:'sess_fixture',harness,...p}),env:{...process.env,CLAUDE_PLUGIN_DATA:cache,MUTAGATE_HARNESS:harness,MUTAGATE_TRACE:'1'},encoding:'utf8'});
  const corpus=path.join(root,'test/payloads',harness);
  for(const file of fs.readdirSync(corpus).filter(f=>f.endsWith('.json')&&!f.endsWith('.expected.json')&&f!=='schema-keys.json')){
   const payload=JSON.parse(fs.readFileSync(path.join(corpus,file))),expected=JSON.parse(fs.readFileSync(path.join(corpus,file.replace('.json','.expected.json'))));

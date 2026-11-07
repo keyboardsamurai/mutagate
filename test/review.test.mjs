@@ -279,7 +279,7 @@ test('portable hook identity survives skill relocation and Git failure', { skip:
     assert.equal(stop().length, 2);
     fs.renameSync(original, moved);
     const { default: helper } = await import(path.join(moved, 'scripts/install.cjs'));
-    assert.equal(helper.installed({ repo }, file), true);
+    assert.equal(helper.installed({ repo }, agent), m.VERSION);
     invoke(moved, 'install');
     assert.equal(stop().length, 2, 'relocation must replace the old command');
     assert.ok(stop()[1].command.includes('/tools/quality/scripts/hook'));

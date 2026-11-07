@@ -191,6 +191,7 @@ mutagate sends no telemetry and uploads nothing. It downloads only when a tool i
 | No `mutagate … active` line at session start | Hooks not installed, or agent not restarted | `<skill>/scripts/mutagate doctor`, then restart the agent |
 | Codex never runs the hooks | Codex does not trust new or changed hooks | Open `/hooks` in Codex, trust mutagate (after each install) |
 | Claude ignores the hooks | Claude started in a subdirectory, root `.claude/settings.json` not loaded | Start `claude` in the Git top level |
+| `Hooks are from mutagate X, skill is Y: rerun … install` at session start, or `WARN <harness> install` in doctor | The skill was updated after `install` wrote the hooks | Rerun `<skill>/scripts/mutagate install --agent <harness>` with the same `--scope`; Codex: trust mutagate in `/hooks` again |
 | `mutagate inactive: hooks run Node …; need 22+` | Hooks found Node < 22 | `MUTAGATE_NODE=/path/to/node22`, or rerun `install` under Node 22+ |
 | `jar download failed` / `offline: missing …` | No access to Maven Central (proxy, offline) | `node <skill>/scripts/cache-jars.mjs`, then `export MUTAGATE_OFFLINE=1` |
 | C# result: run budget exceeded | Cold `dotnet` builds take 2–5 min | `.mutagate/config.json`: `"runBudgetSec": 600` |
@@ -209,7 +210,7 @@ The data dir is `~/.cache/mutagate/repos/<sha1 of repo path>/` ([State](#configu
 | `check [--wait <sec>] [--json]` | Gate all session targets; `--wait` also raises the gate deadline. |
 | `status [--json]` | Scores, staleness, survivor/waiver ids, unresolved tests; JSON adds file/tests, block counts, Kotlin exclusions. |
 | `detect` | Harness, language, build tool, runner, Kotlin tier (JSON). |
-| `doctor [--json]` | First line `mutagate <version>`, then PASS/FAIL/WARN lines; `checking <x>…` progress on stderr. Config, toolchain, jars, adapter, synthetic mutation; failure `hint`, passing `note` fields. WARN (does not fail) when an installed claude/codex/opencode/pi differs from the tested pin. `--json`: `{version, checks, versions}`. |
+| `doctor [--json]` | First line `mutagate <version>`, then PASS/FAIL/WARN lines; `checking <x>…` progress on stderr. Config, toolchain, jars, adapter, synthetic mutation; failure `hint`, passing `note` fields. WARN (does not fail) when an installed claude/codex/opencode/pi differs from the tested pin, and when a project install has no install stamp or one from another mutagate version. `--json`: `{version, checks, versions}`. |
 | `waive <id> --reason <text>` | Propose; `--apply` is refused in agent sessions unless `allowAgentWaivers`. |
 | `install` / `uninstall` | Manage hooks/adapters (`--agent`, `--scope project\|user`). |
 | `--version` / `version` | Print `mutagate <version>`, exit 0. |

@@ -1,0 +1,8 @@
+# ADR-0017: The install stamp travels with each install
+Status: accepted 2026-11-07
+Concern: A user updates the skill dir (`npx skills add` again) but does not run `install` again. The harness config then keeps hook wiring from an older `install`, and nothing tells the user.
+Decision: `install` writes the mutagate version into the config that it installs. Claude and Codex: the SessionStart hook command ends with `--installed <version>`. OpenCode and Pi: `install` replaces a placeholder in the adapter, and the adapter sends the version as `installed` in each payload. When SessionStart gets no stamp, or a stamp that is not the version of the running skill, its banner tells to run `install` again. `doctor` gives a WARN for each project install with the same condition. The shipped `scripts/hooks.json` template has the placeholder `MUTAGATE_VERSION`.
+Rationale: The stamp is in the same file as the hook wiring, so it is correct for each harness and each scope. It also stays correct when a committed portable install is cloned. SessionStart reads the stamp from its arguments or payload and reads no file.
+Alternatives: A `scripts/.installed` file in the skill dir. One file cannot record more than one harness or scope, it is not in a clone, and `npx skills add` can replace or remove it. Rejected.
+Consequences: Hooks from 0.9.0 and earlier have no stamp, so each session tells to run `install` again until the user does. Each version changes the SessionStart command, so Codex asks for trust again after `install`. SessionStart does not know the scope, so its notice says to add `--scope user` for a user install. `doctor` reads project installs only.
+Related: ADR-0013 (hook commands and portable installs)

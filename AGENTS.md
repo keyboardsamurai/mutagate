@@ -80,6 +80,11 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `scripts/.node-path` (machine-local, untracked through `scripts/.gitignore`),
   then PATH. The wrapper runs `mutagate-hook.cjs hook <Event>`, which reads the
   JSON payload on stdin. Under Node < 22 hooks exit 0 and SessionStart says so.
+  `install` stamps its `VERSION` into the SessionStart command
+  (`--installed <VERSION>`) and replaces `__MUTAGATE_VERSION__` in the
+  adapters, which send it as payload `installed`; a missing or other stamp adds
+  a rerun-install notice to SessionStart and a doctor WARN (`installed`,
+  ADR-0017). `scripts/hooks.json` carries `MUTAGATE_VERSION` instead.
   PostToolUse on a test file registers targets. `schedule` then spawns a detached
   `worker` process that calls `runTarget` while holding a per-target lock.
   The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s

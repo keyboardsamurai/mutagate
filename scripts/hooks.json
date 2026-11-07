@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "MUTAGATE_HOOK SessionStart",
+            "command": "MUTAGATE_HOOK SessionStart --installed MUTAGATE_VERSION",
             "timeout": 30,
             "additionalContextLimit": 2500
           }
