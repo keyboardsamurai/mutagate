@@ -103,7 +103,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   and `waivers.json` are unchanged. Writes do not fsync, so state,
   result and classpath files are read through `cacheJson`: torn JSON reads as
   missing (a result reruns, state starts blank with a stderr note). Every lock
-  (state, target, tool install, .NET project) is a `wx` file from `lock` with
+  (state, target, tool install, .NET project, JVM compile) is a `wx` file from `lock` with
   the pid and a random token. The holder touches it
   every 10 s; `abandoned` (also used by `inFlight`) is true when the mtime is
   over 60 s old or the pid is dead. One waiter takes it over under

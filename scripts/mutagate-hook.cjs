@@ -37,14 +37,13 @@ function atomic(p, data) {
 }
 function safePath(repo, input) {
   if (typeof input !== 'string' || !input || input.includes('\0')) return null;
-  const p = path.resolve(repo, input),
-    rel = path.relative(repo, p);
-  if (rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel)) return null;
+  // repo is a realpath: resolve the deepest existing ancestor before the containment check, so an alias (macOS /tmp) still matches.
+  const p = path.resolve(repo, input);
   let ancestor = p;
   while (!exists(ancestor) && ancestor !== path.dirname(ancestor)) ancestor = path.dirname(ancestor);
-  const real = fs.realpathSync(ancestor),
-    rr = path.relative(repo, real);
-  return rr === '..' || rr.startsWith('..' + path.sep) || path.isAbsolute(rr) ? null : path.join(real, path.relative(ancestor, p));
+  let real; try { real = path.join(fs.realpathSync(ancestor), path.relative(ancestor, p)); } catch { return null; } // Windows: an unmapped drive or share root
+  const rel = path.relative(repo, real);
+  return rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel) ? null : real;
 }
 function parseArgs(args) {
   const out = { _: [] };
@@ -86,7 +85,10 @@ function configFor(repo, root, args = {}, env = process.env) {
   return { config: errors.length ? structuredClone(DEFAULTS) : cfg, errors: [...new Set(errors)] };
 }
 function context(args = {}, payload = {}) {
-  let repo = fs.realpathSync(path.resolve(args.repo || payload.cwd || process.cwd()));
+  const real = p => fs.realpathSync(path.resolve(p));
+  let repo;
+  // A deleted hook cwd (cd build/x, then a clean) must not skip every hook, Stop included.
+  try { repo = real(args.repo || payload.cwd || process.cwd()); } catch (e) { if (args.repo || !payload.cwd || e.code !== 'ENOENT') throw e; repo = real(process.env.CLAUDE_PROJECT_DIR || process.cwd()); }
   // Claude cwd follows `cd`; project dir stays fixed.
   if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
   const root = cacheRoot();

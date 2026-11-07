@@ -7,6 +7,8 @@ const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), ex
 const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
 let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };
 module.exports = ({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements }) => {
+// Waits for a lock until the run deadline; mutagate.mjs reads "budget exceeded" as a clipped run.
+const waitLock = async (p, opts, what) => { const release = await lock(p, Math.max(0, opts.deadline - Date.now())); if (!release) throw Error('budget exceeded waiting ' + what); return release; };
 async function command(exe, args, opts = {}) {
   return new Promise((resolve, reject) => {
     let output = '',
@@ -101,6 +103,8 @@ async function pit(c, t, dir, opts) {
     const stat = fs.statSync(p);
     return [p, stat.mtimeMs, stat.size];
   })));
+  // Maven and Gradle builds of different targets write the same outputs (Gradle builds dependency modules from the root): one compile per repo.
+  const compile = async (exe, args, o) => { const release = await waitLock(path.join(c.data, 'locks', 'jvm-compile.lock'), opts, 'for another Maven or Gradle compile in this repo'); try { return await command(exe, args, o); } finally { release(); } };
   const outputsPresent = cached?.main?.some(exists) && cached?.testClasses?.some(exists),
     mvnw = path.join(c.repo, process.platform === 'win32' ? 'mvnw.cmd' : 'mvnw'), mvn = exists(mvnw) ? mvnw : 'mvn';
   if (cacheValid && cached.compiledFingerprint === compiledFingerprint && outputsPresent && cached.cpStamp === stamp(cached.cp)) {
@@ -113,13 +117,13 @@ async function pit(c, t, dir, opts) {
     const wrapper = path.join(c.repo, process.platform === 'win32' ? 'gradlew.bat' : 'gradlew'),
       cmd = exists(wrapper) ? wrapper : 'gradle',
       task = t.module ? ':' + t.module.replaceAll('/', ':') + ':mutagatePrintClasspath' : 'mutagatePrintClasspath';
-    const result = await command(cmd, ['--console=plain', ...(process.platform === 'win32' ? ['--no-daemon'] : []), '--init-script', init, task], { ...opts, cwd: c.repo });
+    const result = await compile(cmd, ['--console=plain', ...(process.platform === 'win32' ? ['--no-daemon'] : []), '--init-script', init, task], { ...opts, cwd: c.repo });
     const data = JSON.parse(result.output.match(/MUTAGATE_CP=(.+)/)?.[1] || 'null');
     if (!data) throw Error('Gradle classpath task returned no data');
     ({ cp, main, source, testClasses } = data);
   } else if (exists(path.join(module, 'pom.xml'))) {
     testClasses=[path.join(module,'target/test-classes')];const out = path.join(dir, 'classpath.txt');
-    await command(mvn, cacheValid ? ['-q', 'test-compile'] : ['-q', 'test-compile', 'dependency:build-classpath', '-Dmdep.outputFile=' + out], {
+    await compile(mvn, cacheValid ? ['-q', 'test-compile'] : ['-q', 'test-compile', 'dependency:build-classpath', '-Dmdep.outputFile=' + out], {
       ...opts, cwd: module
     });
     if (cacheValid)({ cp, main, source } = cached);
@@ -214,7 +218,7 @@ async function python(c, t, dir, opts) {
   }
   const cfg = path.join(work, 'setup.cfg');
   atomic(cfg, readIf(cfg).replace(/\[mutmut\][\s\S]*?(?=\n\[|$)/g, '') +
-    `\n[mutmut]\npaths_to_mutate=${t.file}\ntests_dir=${t.tests.map(f=>path.dirname(f)).join(',')}\nrunner=${py} -m pytest -x -q ${t.tests.map(f=>JSON.stringify(f)).join(' ')}\n`
+    `\n[mutmut]\npaths_to_mutate=${t.file}\ntests_dir=${t.tests.map(f=>path.dirname(f)).join(',')}\nrunner="${py}" -m pytest -x -q ${t.tests.map(f=>JSON.stringify(f)).join(' ')}\n`
   );
   const toml = path.join(work, 'pyproject.toml');
   if (major === 3) atomic(toml, readIf(toml).replace(/\[tool\.mutmut\][\s\S]*?(?=\n\[|$)/g, '') + mm.tomlConfig(major, minor, t, inputs));
@@ -248,8 +252,7 @@ async function tool(c, name, install, opts = {}) {
   const probe = name === 'dotnet-stryker' ? '--help' : '--version'; // Stryker.NET 5 --version requires a value.
   const checkBudget = () => { if (Date.now() >= opts.deadline) throw Error('budget exceeded locating ' + name); };
   checkBudget();
-  const release = await lock(dir + '.lock', Math.max(0, opts.deadline - Date.now()));
-  if (!release) throw Error('budget exceeded waiting to install ' + name);
+  const release = await waitLock(dir + '.lock', opts, 'to install ' + name);
   try {
     checkBudget();
     if (exists(exe)) return exe;
@@ -319,7 +322,7 @@ async function dotnetRunner(c, t, dir, opts) {
   // Serialize Stryker.NET builds to protect outputs.
   const releases = []; let root;
   try {
-    for (const p of net.projectLocks(c.repo, [test, target])) { const release = await lock(path.join(c.data, 'locks', 'dotnet-' + hash(p) + '.lock'), Math.max(0, opts.deadline - Date.now())); if (!release) throw Error('budget exceeded waiting for another Stryker.NET run on ' + p); releases.push(release); }
+    for (const p of net.projectLocks(c.repo, [test, target])) { releases.push(await waitLock(path.join(c.data, 'locks', 'dotnet-' + hash(p) + '.lock'), opts, 'for another Stryker.NET run on ' + p)); }
     root = net.scratch(c, t, require('./inputs.cjs').inputFiles);
     await command(exe, ['--config-file', cfg, '--output', out, '--skip-version-check'], { ...opts, cwd: path.join(root, path.relative(c.repo, test.dir)), env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: '1', DOTNET_NOLOGO: '1' } });
   } finally { releases.forEach(r => r()); }
