@@ -37,7 +37,7 @@ npm run test:integration                          # real mutation runs on test/f
 MUTAGATE_FIXTURES=go-module,java-maven npm run test:integration   # select fixtures
 MUTAGATE_TEST_ENTRY=mutagate-hook.cjs npm run test:integration    # run through the generated CJS runtime (CI does this)
 npm run test:driver                               # scripted gate E2E for all four harness envelopes
-npm run test:performance                          # hook p95 must be <= 80 ms (MUTAGATE_PERF_COUNT sets samples)
+npm run test:performance                          # hook p95 <= 80 ms; 15k-file Git repo: SessionStart, test edit <= 300 ms (MUTAGATE_PERF_COUNT sets samples, max 100 there)
 npm run test:installer
 npm run generate:runtime                          # regenerate scripts/mutagate-hook.cjs
 npm run generate:hooks                            # regenerate scripts/hooks.json
@@ -90,7 +90,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`
   exit 3). Session state is JSON under `cacheRoot()`, written through
-  `updateState` with a lock and atomic writes. Writes do not fsync, so state,
+  `updateState` with a lock and atomic writes; compute `fingerprint` before
+  `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
+  keeps normalized results per process while the result file, the fingerprint
+  and `waivers.json` are unchanged. Writes do not fsync, so state,
   result and classpath files are read through `cacheJson`: torn JSON reads as
   missing (a result reruns, state starts blank with a stderr note). Every lock
   (state, target, tool install, .NET project) is a `wx` file from `lock` with
@@ -113,12 +116,14 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `__MUTAGATE_CLI__` in these adapters with the runtime path, relative to the
   adapter file when portable, else absolute; adapters pick Node like `scripts/hook`.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
-  keep hook latency low. `inputs.cjs` scopes project inputs and computes digests
+  keep hook latency low. `inputs.cjs` lists repo files (`files`, for detect and
+  resolution: the Git file list in a Git repo, else a walk, with the same name
+  rules; ADR-0016), scopes project inputs and computes digests
   for fingerprints; its `dirEntries` reads a directory for both repo walks
   (`files` and `inputFiles`) and skips unreadable directories, venvs and noise
   names; its `read` and `fileDigest` treat a file it cannot read as empty. `kotlin-source.cjs` provides the source-aware part of the
   Kotlin Tier B filter, and `references/kotlin-junk.yaml` holds its pattern
-  rules. `glob.cjs` does glob matching. `mutmut-bridge.cjs` writes the mutmut
+  rules. `glob.cjs` compiles globs, cached per process. `mutmut-bridge.cjs` writes the mutmut
   config and result bridge per mutmut version (2, 3.0–3.5, 3.6+). `errors.cjs`
   (`agentCause`) finds the line that makes an error agent-caused (a failing
   command naming any session test, a glob-matched test or edited production file,

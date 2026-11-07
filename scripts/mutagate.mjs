@@ -162,26 +162,9 @@ export function trace(c, event, fields = {}) {
 const TESTS = ['**/src/test/**/*.{java,kt}', '**/*{Test,Tests,Spec,IT}.{java,kt,cs}', '**/*_test.go', '**/test_*.py', '**/*_test.py', '**/tests/**/*.py',
   '**/*.{test,spec}.{ts,tsx,js,jsx}', '**/__tests__/**'
 ];
-export function isTest(file, cfg = DEFAULTS) { return (cfg.testGlobs.length ? cfg.testGlobs : TESTS).some(g => glob(g).test(slash(file))); }
+export function isTest(file, cfg = DEFAULTS) { file = slash(file); return (cfg.testGlobs.length ? cfg.testGlobs : TESTS).some(g => glob(g).test(file)); }
 const SUPPORT = /(^|\/)(conftest|__init__)\.py$/; // never registered as runnable tests
-export function files(repo, cfg = DEFAULTS) {
-  const out = [], { dirEntries } = runtimeRequire('./inputs.cjs');
-
-  function visit(dir) {
-    const entries = dirEntries(dir, dir === repo), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
-    for (const e of entries) {
-      if (dotnet && e.isDirectory() && ['bin', 'obj'].includes(e.name)) continue;
-      if (e.isSymbolicLink() || e.name.startsWith('.') || e.name === 'dist') continue;
-      const p = path.join(dir, e.name),
-        r = slash(path.relative(repo, p));
-      if (cfg.exclude.some(g => glob(g).test(r))) continue;
-      if (e.isDirectory()) visit(p);
-      else out.push(r);
-    }
-  }
-  visit(repo);
-  return out;
-}
+export const files = (repo, cfg = DEFAULTS) => runtimeRequire('./inputs.cjs').files(repo, cfg.exclude);
 export const language = (p) => p.endsWith('.kt') ? 'kotlin' : p.endsWith('.java') ? 'java' : p.endsWith('.py') ? 'python' : p.endsWith('.go') ? 'go' : p.endsWith('.cs') ? 'csharp' : 'typescript';
 export const RUNNER = { java: 'pitest', kotlin: 'pitest', python: 'mutmut', typescript: 'stryker', go: 'gomutants', csharp: 'stryker-net' };
 const CONFIG = /(^|\/)(?:[\w.-]+\.config\.[cm]?[jt]sx?|(?:Global)?Usings\.cs|jest\.setup\.[jt]s)$/;
@@ -204,11 +187,11 @@ export function resolveTargets(c, test, explicit) {
   if (!isTest(test, c.config) || SUPPORT.test(test)) throw usageError(`${test} is not a test file; run it on the test, and name the production target with --target`);
   const lang = language(test),
     src = read(abs), inTestProject = lang === 'csharp' ? runtimeRequire('./dotnet.cjs').inTestProject(c.repo) : () => false, // never a test project file as the target
-    all = files(c.repo, c.config).filter(f => !isTest(f, c.config) && !GENERATED.test(f) && !inTestProject(f)), source = runtimeRequire('./inputs.cjs').read; // '' for a file mutagate cannot read
+    all = files(c.repo, c.config).filter(f => (language(f) === lang || ['java', 'kotlin'].includes(lang) && /\.(java|kt)$/.test(f)) && !isTest(f, c.config) && !GENERATED.test(f) && !inTestProject(f)), source = runtimeRequire('./inputs.cjs').read; // '' for a file mutagate cannot read
   const mod = moduleRoot(c.repo, test),
     stem = path.basename(test).replace(/\.(java|kt|py|tsx?|jsx?|go|cs)$/, '').replace(/(?:Integration)?(?:Tests?|Spec|IT)$/, '').replace(/^test_/, '').replace(/_test$/, '').replace(
       /\.(test|spec)$/, '');
-  const candidates = all.filter(f => language(f) === lang || ['java', 'kotlin'].includes(lang) && /\.(java|kt)$/.test(f)).flatMap(file => {
+  const candidates = all.flatMap(file => {
     if (!['java', 'kotlin'].includes(lang)) return [{ file, target: file }];
     const body = source(path.join(c.repo, file)),
       names = [...body.matchAll(/\b(?:class|interface|object)\s+([A-Za-z_$][\w$]*)/g)].map(m => m[1]);
@@ -570,9 +553,10 @@ export async function runTarget(c, key, runner) {
         };
       }
       let published = false;
+      const now = fingerprint(c, t); // hash the inputs outside the state lock, which hooks wait at most 5 s for; one generation keeps its tests
       await updateState(c, s => {
         const latest = s.targets[key];
-        if (latest && latest.generation === t.generation && fingerprint(c, latest) === fp) {
+        if (latest && latest.generation === t.generation && now === fp) {
           atomic(
             resultFile(c, key), result);
           latest.lastRunMs = Math.max(result.duration_ms, latest.lastRunMs || 0);
@@ -593,12 +577,15 @@ export async function runTarget(c, key, runner) {
 }
 // Retry errors once (e.g. concurrent builds).
 const retryable = r => r?.status === 'error' && (r.attempts ?? 1) < 2;
+const normalized = new Map(), stamp = p => { try { return runtimeRequire('./inputs.cjs').stamp(p); } catch { return ''; } };
 export function loadResult(c, key, t, expectedFingerprint) {
-  const r = cacheJson(resultFile(c, key));
+  // Normalize once per process while the result file, the fingerprint and waivers.json are unchanged; stamps are taken before the reads.
+  const file = resultFile(c, key), at = [stamp(file), t?.fingerprint, stamp(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
   if (!t || !r || t.resultGeneration !== t.generation || t.fingerprint !==
     (expectedFingerprint ?? fingerprint(c, t))) return null;
-  return r.raw ? normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) :
-    r;
+  if (!r.raw) return r;
+  if (normalized.get(file)?.at !== at) normalized.set(file, { at, r: normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) });
+  return normalized.get(file).r;
 }
 
 export function schedule(c, key, run = spawn) {

@@ -18,6 +18,10 @@ _Avoid_: dependency target, imported target, extra target
 The session record that binds a test file to its targets. A PostToolUse on a test or `mutagate run <test>` creates it.
 _Avoid_: tracking, scheduling, enrolment
 
+**Repo file list**:
+The repo files that detection and target resolution use. In a Git repo, it holds only the files that Git lists.
+_Avoid_: file index, scan result
+
 **Result**:
 The normalized outcome of one mutation run for a target: status `pass`, `below`, `unscored` or `error`, with score and survivors.
 _Avoid_: report, score file, outcome

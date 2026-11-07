@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { spawnSync } = require('node:child_process');
 const { glob } = require('./glob.cjs');
 
 // Names both walks skip: tool output, then editor, OS and coverage noise.
@@ -13,23 +14,66 @@ const inside = (root, file) => file === root || file.startsWith(root + path.sep)
 // A file or directory mutagate cannot read counts as empty: '' here, no entries in dirEntries, a fixed digest in fileDigest.
 const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) { if (unreadable.has(e.code)) return ''; throw e; } };
 
+// The stat values that change when a file changes; fileDigest and the loadResult memo compare them.
+const stamp = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
 function fileDigest(file) {
   try {
-    const stat = fs.statSync(file, { bigint: true });
-    const stamp = `${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}`;
-    const previous = digestCache.get(file);
-    if (previous?.stamp === stamp) return previous.digest;
-    const entry = { stamp, digest: digest(fs.readFileSync(file)) };
+    const at = stamp(file), previous = digestCache.get(file);
+    if (previous?.stamp === at) return previous.digest;
+    const entry = { stamp: at, digest: digest(fs.readFileSync(file)) };
     digestCache.set(file, entry);
     return entry.digest;
   } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; }
 }
 
+const scanned = name => !ignored.has(name) && !noise.test(name);
 // Directory entries for the files() and inputFiles walks, without ignored and noise names; none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
 function dirEntries(dir, root = false) {
   let entries;
   try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (unreadable.has(e.code)) return []; throw e; }
-  return !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => !ignored.has(e.name) && !noise.test(e.name));
+  return !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => scanned(e.name));
+}
+
+// The files Git lists below repo (tracked and unignored untracked), or null outside Git or when it lists none (repo inside an
+// ignored directory). Deleted tracked files, tracked symlinks, submodules and nested repositories are left out.
+function gitFiles(repo) {
+  const git = spawnSync('git', ['ls-files', '-z', '-s', '-t', '-c', '-o', '--exclude-standard'], { cwd: repo, encoding: 'utf8', maxBuffer: 2 ** 28, timeout: 10000 });
+  if (git.error || git.status !== 0 || !git.stdout) return null;
+  const found = new Set();
+  for (const entry of git.stdout.split('\0')) {
+    const file = entry[0] === '?' ? entry.slice(2) : entry.slice(entry.indexOf('\t') + 1);
+    // A deleted tracked file stays in the index until staged; existsSync drops it at less cost than ls-files -d.
+    if (entry[0] === '?' ? !file.endsWith('/') : entry && !/^. 1[26]0000 /.test(entry) && fs.existsSync(path.join(repo, file))) found.add(file);
+  }
+  return [...found];
+}
+
+// Files for detect, registration and resolution: in a Git repo the files Git lists (ADR-0016), else a walk. Both drop ignored and
+// noise names, hidden names, dist, venvs below the root, bin and obj beside a .csproj, exclude globs and symlinks (Git: tracked ones only).
+function files(repo, exclude) {
+  const kept = (relative, name, dir, dotnet) => !(dir && dotnet && ['bin', 'obj'].includes(name)) && !name.startsWith('.') && name !== 'dist' && !exclude.some(g => glob(g).test(relative));
+  const listed = gitFiles(repo);
+  if (listed) {
+    const venvs = new Set(), dotnets = new Set(), dirs = new Map([['.', true]]);
+    for (const f of listed) if (f.endsWith('/pyvenv.cfg')) venvs.add(path.posix.dirname(f)); else if (f.endsWith('.csproj')) dotnets.add(path.posix.dirname(f));
+    const dirKept = d => {
+      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && kept(d, name, true, dotnets.has(parent))); }
+      return dirs.get(d);
+    };
+    return listed.filter(f => { const name = path.posix.basename(f); return dirKept(path.posix.dirname(f)) && scanned(name) && kept(f, name, false); });
+  }
+  const out = [];
+  function visit(dir) {
+    const entries = dirEntries(dir, dir === repo), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
+    for (const e of entries) {
+      const p = path.join(dir, e.name), relative = path.relative(repo, p).split(path.sep).join('/');
+      if (e.isSymbolicLink() || !kept(relative, e.name, e.isDirectory(), dotnet)) continue;
+      if (e.isDirectory()) visit(p);
+      else out.push(relative);
+    }
+  }
+  visit(repo);
+  return out;
 }
 const hasManifest = dir => manifests.some(name => fs.existsSync(path.join(dir, name))) || dirEntries(dir, true).some(e => /\.(cs|fs)proj$/.test(e.name));
 
@@ -118,8 +162,9 @@ function inputFiles(c, t) {
   return [...found].sort().map(file => path.relative(c.repo, file).split(path.sep).join('/'));
 }
 
+exports.files = files;
 exports.inputFiles = inputFiles;
 exports.fileDigest = fileDigest;
-exports.dirEntries = dirEntries;
+exports.stamp = stamp;
 exports.read = read;
 exports.unreadable = unreadable;

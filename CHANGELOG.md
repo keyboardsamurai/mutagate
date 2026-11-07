@@ -7,6 +7,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 ### Changed
 
 - The runners moved from `mutagate.mjs` to the lazily loaded `scripts/runners.cjs`, which is hashed into fingerprints.
+- In a Git repo, detection and target resolution use the files Git lists (`git ls-files -co --exclude-standard`) instead of a repo walk, so a file that Git ignores no longer counts for detection and is no longer a target, and files in submodules or nested repositories are no longer targets (ADR-0016). Fingerprints and Python and .NET copies still include ignored files.
 
 ### Fixed
 
@@ -19,6 +20,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - `status --json` and `run --sync --json` no longer report a gremlins result as `gomutants` after it is loaded back from the cache.
 - A directory that mutagate cannot read (such as a Docker volume owned by another user) no longer disables mutagate for the whole repo: detection, test registration and fingerprints skip it, and `run` no longer exits 3. A file that mutagate cannot read no longer does this either: it counts as empty, and Python and .NET runs do not copy it. Repo scans also skip virtual environments of any name (a subdirectory with `pyvenv.cfg`), `htmlcov/`, `test-results/`, and `.coverage` data, `.DS_Store`, `Thumbs.db` and editor swap and backup files, so these no longer make results stale or get copied for Python runs.
 - A backward clock jump no longer stretches the async hook's 6 s quiet wait or a worker's 3 s start delay.
+- Hooks on large repos are faster: test edits and SessionStart no longer compile each glob again for every repo file (target resolution on a 15,000-file repo took 300 ms), a finished run no longer hashes the project inputs while it holds the session state lock (other hooks waited up to 5 s, then dropped their update with "session state busy"), and a result loaded again in one process is not normalized again (per-mutant source reads and a `git diff`). `npm run test:performance` also measures a 15,000-file Git repo.
 
 ## [0.9.0] - 2026-10-06
 

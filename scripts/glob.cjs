@@ -1,4 +1,6 @@
+const compiled = new Map(); // pattern -> RegExp, for the life of the process
 function glob(pattern) {
+  if (compiled.has(pattern)) return compiled.get(pattern);
   let s = '', depth = 0;
   for (let i = 0; i < pattern.length; i++) {
     const ch = pattern[i];
@@ -17,7 +19,8 @@ function glob(pattern) {
     else s += ch.replace(/[|\\{}()[\]^$+?.]/g, '\\$&');
   }
   if (depth) throw Error('unbalanced glob braces');
-  return new RegExp('^' + s + '$');
+  compiled.set(pattern, new RegExp('^' + s + '$'));
+  return compiled.get(pattern);
 }
 
 exports.glob = glob;
