@@ -62,13 +62,13 @@ test('ignored MTE mutants do not count as infrastructure errors or alter scores'
 });
 
 test('tool pin changes use a new installation and ignore legacy unversioned cache', async t => {
-  const { c, put } = isolatedTools(t), old = m.TOOLS.gomutants;
-  t.after(() => { m.TOOLS.gomutants = old; }); put('.cache/tools/gomutants', 'legacy');
+  const { c, put } = isolatedTools(t), old = m.runners().TOOLS.gomutants;
+  t.after(() => { m.runners().TOOLS.gomutants = old; }); put('.cache/tools/gomutants', 'legacy');
   for (const version of ['0.0.1', '0.0.2']) {
-    m.TOOLS.gomutants = 'example.invalid/gomutants@v' + version;
+    m.runners().TOOLS.gomutants = 'example.invalid/gomutants@v' + version;
     const expected = path.join(c.root, 'tools', `gomutants@${version}`, 'gomutants');
-    assert.equal(await m.tool(c, 'gomutants', installer(c, version)), expected);
-    assert.equal(await m.tool(c, 'gomutants', installer(c, version)), expected);
+    assert.equal(await m.runners().tool(c, 'gomutants', installer(c, version)), expected);
+    assert.equal(await m.runners().tool(c, 'gomutants', installer(c, version)), expected);
   }
   assert.equal(fs.readFileSync(path.join(c.repo, 'installs'), 'utf8'), 'install\ninstall\n');
   assert.ok(fs.existsSync(path.join(c.root, 'tools/gomutants@0.0.1/gomutants')));
@@ -76,14 +76,14 @@ test('tool pin changes use a new installation and ignore legacy unversioned cach
 
 test('concurrent first-use workers install a tool once', async t => {
   const { c } = isolatedTools(t), install = installer(c, '0.6.1');
-  const results = await Promise.allSettled([m.tool(c, 'gomutants', install), m.tool(c, 'gomutants', install)]);
+  const results = await Promise.allSettled([m.runners().tool(c, 'gomutants', install), m.runners().tool(c, 'gomutants', install)]);
   assert.equal(fs.readFileSync(path.join(c.repo, 'installs'), 'utf8'), 'install\n');
   assert.ok(results.every(r => r.status === 'fulfilled')); assert.equal(results[0].value, results[1].value);
 });
 
 test('tool installation lock serializes separate worker processes', async t => {
   const { c } = isolatedTools(t), install = installer(c, '0.6.1');
-  const code = `import { tool } from ${JSON.stringify(new URL('../scripts/mutagate.mjs', import.meta.url).href)}; await tool(${JSON.stringify(c)}, 'gomutants', ${JSON.stringify(install)});`;
+  const code = `import { runners } from ${JSON.stringify(new URL('../scripts/mutagate.mjs', import.meta.url).href)}; await runners().tool(${JSON.stringify(c)}, 'gomutants', ${JSON.stringify(install)});`;
   const worker = () => new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['--input-type=module', '-e', code]);
     let error = ''; child.stderr.on('data', b => { error += b; });
@@ -96,7 +96,7 @@ test('tool installation lock serializes separate worker processes', async t => {
 test('waiting for another installer obeys the worker deadline and preserves its lock', async t => {
   const { c, put } = isolatedTools(t), lock = '.cache/tools/gomutants@0.6.1.lock';
   put(lock, JSON.stringify({ pid: process.pid, at: Date.now() }));
-  await assert.rejects(m.tool(c, 'gomutants', installer(c, '0.6.1'), { deadline: Date.now() + 75 }), /budget exceeded waiting/);
+  await assert.rejects(m.runners().tool(c, 'gomutants', installer(c, '0.6.1'), { deadline: Date.now() + 75 }), /budget exceeded waiting/);
   assert.ok(fs.existsSync(path.join(c.repo, lock)));
   assert.ok(!fs.existsSync(path.join(c.repo, 'installs')));
 });

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import {performance} from 'node:perf_hooks';
-import {command,report,cacheRoot,hash} from '../scripts/mutagate.mjs';
+import {runners,report,cacheRoot,hash} from '../scripts/mutagate.mjs';const {command}=runners();
 const root=path.resolve(import.meta.dirname,'..'),measurements=[];
 for(const name of ['java-gradle','kotlin-gradle']) {
  const repo=fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-runner-perf-'));

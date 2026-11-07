@@ -60,14 +60,16 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 
 ## Architecture
 
-- `scripts/mutagate.mjs` holds the entire engine and exports its functions, which
-  tests import directly:
+- `scripts/mutagate.mjs` holds the engine except the runners and exports its
+  functions, which tests import directly:
   - `main` handles CLI dispatch and `handleHook` handles hook events.
   - `configFor` merges config in this order: flags, env, project, user, `DEFAULTS`.
   - `resolveTargets` maps a test file to the production target it covers, and
     `fingerprint` invalidates stale results.
-  - Each language has a runner: `pit` (Java and Kotlin), `stryker`, `python`,
-    `goRunner`, and `dotnetRunner`.
+  - Each language has a runner in `scripts/runners.cjs`: `pit` (Java and
+    Kotlin), `stryker`, `python`, `goRunner`, and `dotnetRunner`. The
+    `runners()` accessor loads it lazily and injects the engine helpers it
+    needs; tests reach runner symbols through `m.runners().x`.
   - `normalize` converts runner output into the shared result shape, and
     `report` turns that result into survivor text.
   - `gate`, `install`, and `doctor` implement the matching commands.
@@ -106,7 +108,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   or a runner's red-baseline message; Python scoped-copy-only failures fail open).
   `dotnet.cjs` finds a file's `.csproj` and builds the Stryker.NET test filter,
   the per-project lock list, the test-project check and the persistent scoped
-  scratch copy. `install.cjs` holds `hookConfig` and `install`; it is not on the
+  scratch copy. `runners.cjs` drives the mutation tools (runners, `command`,
+  `tool`, `TOOLS`, `jars`) and returns raw mutants. `install.cjs` holds `hookConfig` and `install`; it is not on the
   hook path and not hashed into `fingerprint`. `doctor.cjs` renders the doctor
   text, writes `checking <name>…` progress to stderr and adds a WARN check when an
   installed harness differs from its pin; it is lazy, not on the hook path and not
@@ -149,6 +152,9 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   top-level single-line `import x from '...'` statements and
   `export function`/`export const`. Any other module syntax makes the generator
   throw.
+- Every `scripts/*.cjs` that affects results is in the `fingerprint` helper list;
+  helpers that do not (`install.cjs`, `doctor.cjs`) are listed as exceptions in
+  `test/protocol.test.mjs`.
 - `scripts/hooks.json` is generated from `hookConfig('codex')`. Regenerate it
   after changing hook wiring.
 - `scripts/mutagate.mjs` must stay under 1,400 lines

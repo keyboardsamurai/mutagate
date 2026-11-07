@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {command} from '../scripts/mutagate.mjs';
+import {runners} from '../scripts/mutagate.mjs';const {command}=runners();
 import {packageSkill} from './package.mjs';
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-installer-')),stage=path.join(dir,'package'),project=path.join(dir,'project'),linked=path.join(dir,'linked project'),moved=path.join(dir,'moved here','linked project 2');
 const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...env,CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir)};

@@ -402,7 +402,7 @@ first agent `run` or `check` CLI call passed: a `decision: "cli"` trace event,
 or in older run dirs a non-hook session event), errors superseded by a later
 scored or no-mutants result (`recovered-error`), and final `unscored` results carrying an
 `error` reason (`unscored-final`, evidence `<target>: <reason>`). Source-read
-detection includes `errors.cjs`, `dotnet.cjs` and `mutmut-bridge.cjs`; escaped
+detection includes `errors.cjs`, `dotnet.cjs`, `mutmut-bridge.cjs` and `runners.cjs`; escaped
 newlines end shell matches and reads redirected to `/dev/null` do not warn.
 
 Executed CLI commands come from Claude Bash tool uses, Codex command-execution

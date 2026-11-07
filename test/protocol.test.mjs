@@ -21,6 +21,10 @@ for(const executable of ['mutagate.mjs','mutagate-hook.cjs'])for(const harness o
  assert.equal(invoke('Stop',{},'{').status,0);
  const trace=fs.readFileSync(path.join(cache,'repos',m.hash(repo),'trace.jsonl'),'utf8').trim().split('\n').map(JSON.parse);assert.ok(trace.every(r=>r.harness===harness));
 });
+test('every result-affecting helper is hashed into fingerprint',()=>{
+ const list=JSON.parse(fs.readFileSync(path.join(root,'scripts/mutagate.mjs'),'utf8').match(/const implementation = (\[[^\]]*\])/)[1].replaceAll("'",'"'));
+ for(const f of fs.readdirSync(path.join(root,'scripts')).filter(f=>f.endsWith('.cjs')&&!['install.cjs','doctor.cjs','mutagate-hook.cjs'].includes(f)))assert.ok(list.includes(f),f);
+});
 test('size limits and Kotlin labeled-corpus precision',()=>{
  assert.ok(fs.readFileSync(path.join(root,'scripts/mutagate.mjs'),'utf8').split('\n').length<1400);
  const base=path.join(root,'test/fixtures/kotlin-gradle');
@@ -36,5 +40,5 @@ test('size limits and Kotlin labeled-corpus precision',()=>{
  for(const method of ['equals','hashCode','toString'])assert.ok(real.some(x=>x.class==='acme.OverrideProfile'&&x.method===method&&!classify(x)));
 
 });
-test('shipped version metadata matches CI pins',()=>{const versions=JSON.parse(fs.readFileSync(path.join(root,'references/versions.json')));for(const name of ['gomutants','gremlins'])assert.equal(m.TOOLS[name].split('@v')[1],versions[name]);assert.equal(m.TOOLS['dotnet-stryker'],versions['dotnet-stryker']);assert.deepEqual(JSON.parse(fs.readFileSync(path.join(root,'references/versions.json'))),JSON.parse(fs.readFileSync(path.join(root,'test/harness-versions.json'))));});
+test('shipped version metadata matches CI pins',()=>{const versions=JSON.parse(fs.readFileSync(path.join(root,'references/versions.json')));for(const name of ['gomutants','gremlins'])assert.equal(m.runners().TOOLS[name].split('@v')[1],versions[name]);assert.equal(m.runners().TOOLS['dotnet-stryker'],versions['dotnet-stryker']);assert.deepEqual(JSON.parse(fs.readFileSync(path.join(root,'references/versions.json'))),JSON.parse(fs.readFileSync(path.join(root,'test/harness-versions.json'))));});
 test('package.json version is the engine VERSION',()=>{assert.equal(JSON.parse(fs.readFileSync(path.join(root,'package.json'))).version,m.VERSION);});

@@ -82,6 +82,7 @@ const cases = {
   'source-read': [f => { f['stdout.log'] += line({ tool: 'Read', input: { file_path: '/r/.claude/skills/mutagate/scripts/mutagate.mjs' } }); }, [], ['source-read']],
   'source reads respect command boundaries and discarded output': [f => { f['stdout.log'] += line({ command: 'cat scripts/mutagate.mjs > /dev/null' }) + line({ command: 'mutagate check | tail\nscripts/mutagate.mjs' }); }, [], []],
   'source reads include runner helpers': [f => { f['stdout.log'] += line({ command: 'sed -n 1p scripts/errors.cjs' }); }, [], ['source-read']],
+  'source reads include runners.cjs': [f => { f['stdout.log'] += line({ command: 'cat .claude/skills/mutagate/scripts/runners.cjs' }); }, [], ['source-read']],
   'slow-hook': [f => { f['trace.jsonl'][2].duration_ms = 2500; f['trace.jsonl'].push({ ...f['trace.jsonl'][2], duration_ms: 6200, mutate: true }); }, [], ['slow-hook']],
   'slow async --mutate PostToolUse is exempt': [f => { f['trace.jsonl'].push({ ...f['trace.jsonl'][2], duration_ms: 6200, mutate: true }); }, [], []],
   'slow sync PostToolUse': [f => { f['trace.jsonl'].push({ ...f['trace.jsonl'][2], duration_ms: 6200 }); }, [], ['slow-hook']],
