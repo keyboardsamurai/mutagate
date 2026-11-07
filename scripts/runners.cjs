@@ -3,6 +3,9 @@
 const fs = require('node:fs'), path = require('node:path'), os = require('node:os'), crypto = require('node:crypto'), { spawn, spawnSync } = require('node:child_process'), { createRequire } = require('node:module');
 const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), exists = p => fs.existsSync(p), mkdir = p => fs.mkdirSync(p, { recursive: true }),
   slash = s => s.split(path.sep).join('/'), sha256 = s => crypto.createHash('sha256').update(s).digest('hex'), readIf = p => exists(p) ? read(p) : '';
+// Runner process groups die with mutagate: on exit, and on SIGINT/SIGTERM/SIGHUP (exit 128+signo). Handlers install on the first spawn.
+const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
+let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };
 module.exports = ({ lock, atomic, json, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements }) => {
 async function command(exe, args, opts = {}) {
   return new Promise((resolve, reject) => {
@@ -13,21 +16,17 @@ async function command(exe, args, opts = {}) {
     const child = spawn(win ? 'powershell.exe' : exe, win ? ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(ps, 'utf16le').toString( 'base64')] : args, {
         cwd: opts.cwd, env: opts.env || process.env, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, detached: process .platform !== 'win32'
       });
-    const timer = setTimeout(() => {
-      try {
-        if (process.platform !== 'win32') process.kill(-child.pid, 'SIGKILL');
-        else spawnSync('taskkill', ['/pid', String(child.pid), '/T', '/F']);
-      } catch {}
-    }, Math.max(1, opts.deadline ? opts.deadline - Date.now() :
+    reaper(); trees.add(child.pid);
+    const timer = setTimeout(() => killTree(child.pid), Math.max(1, opts.deadline ? opts.deadline - Date.now() :
       opts.timeout || 300000));
     child.stdout.on('data', b => { output = (output + b).slice(-4000000); });
     child.stderr.on('data', b => { error = (error + b).slice(-4000000); });
     child.on('error', e => {
-      clearTimeout(timer);
+      clearTimeout(timer); trees.delete(child.pid);
       reject(Error(`${path.basename(exe)} unavailable: ${e.message}`));
     });
     child.on('close', (code, signal) => {
-      clearTimeout(timer);
+      clearTimeout(timer); trees.delete(child.pid);
       try { if (opts.log) fs.appendFileSync(opts.log, JSON.stringify({ exe, args, code, signal, output, error }) + '\n'); } catch {} // logging must never mask the result
       if (code === 0 || opts.allowFailure) return resolve({ output, error, code, signal });
       // Keep causes, not PIT VM/Uptime or Maven/Gradle help footers.

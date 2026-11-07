@@ -109,7 +109,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `dotnet.cjs` finds a file's `.csproj` and builds the Stryker.NET test filter,
   the per-project lock list, the test-project check and the persistent scoped
   scratch copy. `runners.cjs` drives the mutation tools (runners, `command`,
-  `tool`, `TOOLS`, `jars`) and returns raw mutants. `install.cjs` holds `hookConfig` and `install`; it is not on the
+  `tool`, `TOOLS`, `jars`) and returns raw mutants. `command` starts each tool in
+  its own process group (Windows: a `taskkill /T` tree) and kills it at its deadline; on the first spawn it
+  installs handlers that kill all live groups on `exit` and exit 128+signo on
+  SIGINT, SIGTERM and SIGHUP. `install.cjs` holds `hookConfig` and `install`; it is not on the
   hook path and not hashed into `fingerprint`. `doctor.cjs` renders the doctor
   text, writes `checking <name>…` progress to stderr and adds a WARN check when an
   installed harness differs from its pin; it is lazy, not on the hook path and not
@@ -168,6 +171,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   for deliberate blocks and Claude async survivor delivery. CLI `run --sync` and
   `check` exit 0 on pass (including final unscored with no mutants to test),
   1 when below threshold or otherwise unscored, 2 on usage errors,
-  and 3 on error results and infrastructure errors. Usage errors (errors with
+  3 on error results and infrastructure errors, and 128+signo after a signal
+  once a tool was started. Usage errors (errors with
   `usage: true`) exit 2 and are not traced as errors, except under `hook` (traced, exit 0);
   `--help`/`-h` exits 0.

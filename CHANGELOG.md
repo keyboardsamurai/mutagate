@@ -8,6 +8,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 - The runners moved from `mutagate.mjs` to the lazily loaded `scripts/runners.cjs`, which is hashed into fingerprints.
 
+### Fixed
+
+- Mutation tool process trees (PIT, Stryker, mutmut, Stryker.NET, Go tools, Maven/Gradle builds) no longer outlive mutagate: it kills them when it exits, and after SIGINT, SIGTERM or SIGHUP (Ctrl-C on `run --sync`, a harness killing a hook at its timeout) it kills them and exits with 128+signal number.
+
 ## [0.9.0] - 2026-10-06
 
 First public release (beta).
