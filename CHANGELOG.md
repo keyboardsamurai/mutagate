@@ -15,6 +15,8 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - The async PostToolUse hook (`--mutate`) no longer runs past its 900 s timeout, where the harness killed it mid-run and lost the results: it ends within 850 s, starts a stale target only when its last run fits in the time left, and leaves skipped or cut targets pending for the gate.
 - A run cut at the gate deadline or the rerun deadline is no longer reported as exceeding `runBudgetSec` when it started with the full run budget (after a wait for the target lock or a rerun after edits).
 - A run killed at its deadline is no longer published as an `error` result when the tool closes with an exit code instead of a signal (on Windows, or when the tool exited but a child process kept its output open).
+- An invalid `.mutagate/waivers.json` no longer turns the gate off: it adds no waivers and the report warns about it. Corrupt cached JSON (a torn write after a crash) no longer does either: a corrupt result or classpath file counts as missing and reruns, and a corrupt session state file starts blank with a note on stderr. An unexpected error in one target skips only that target, with a warning, and `check` exits 3, as for an error result.
+- `status --json` and `run --sync --json` no longer report a gremlins result as `gomutants` after it is loaded back from the cache.
 - A backward clock jump no longer stretches the async hook's 6 s quiet wait or a worker's 3 s start delay.
 
 ## [0.9.0] - 2026-10-06

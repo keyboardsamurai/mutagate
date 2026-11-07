@@ -6,7 +6,7 @@ const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), ex
 // Runner process groups die with mutagate: on exit, and on SIGINT/SIGTERM/SIGHUP (exit 128+signo). Handlers install on the first spawn.
 const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
 let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };
-module.exports = ({ lock, atomic, json, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements }) => {
+module.exports = ({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements }) => {
 async function command(exe, args, opts = {}) {
   return new Promise((resolve, reject) => {
     let output = '',
@@ -94,7 +94,7 @@ async function pit(c, t, dir, opts) {
   const buildHash = hash(require('./inputs.cjs').inputFiles(c, t).filter(f =>
       /(?:build\.gradle(?:\.kts)?|settings\.gradle(?:\.kts)?|gradle\.properties|pom\.xml|libs\.versions\.toml)$/.test(f)).map(f => f + read(path.join(c.repo, f))).join('')),
     cacheFile = path.join(c.data, 'classpath', hash(module) + '.json'),
-    cached = json(cacheFile, null),
+    cached = cacheJson(cacheFile),
     cacheValid = cached?.hash === buildHash && cached.cp.filter(p=>p.endsWith('.jar')).every(exists);
   const compiledFingerprint = hash(fingerprint(c, { ...t, tests: [], testNames: [] }) + java + version.output + version.error);
   const stamp = paths => hash(JSON.stringify(paths.filter(exists).map(p => {

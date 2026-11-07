@@ -22,6 +22,8 @@ const hash = (s) => crypto.createHash('sha1').update(s).digest('hex');
 const read = (p) => fs.readFileSync(p, 'utf8');
 const exists = (p) => fs.existsSync(p);
 const json = (p, fallback = {}) => exists(p) ? JSON.parse(read(p)) : fallback;
+// atomic() does not fsync, so a crash can leave cache JSON torn; torn cache JSON reads as the fallback (missing).
+const cacheJson = (p, fallback = null) => { try { return json(p, fallback); } catch (e) { if (e instanceof SyntaxError) return fallback; throw e; } };
 const mkdir = (p) => fs.mkdirSync(p, { recursive: true });
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const slash = (s) => s.split(path.sep).join('/');
@@ -100,7 +102,14 @@ function context(args = {}, payload = {}) {
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
-const state = (c) => json(c.stateFile, blankState());
+let noted; // one note per corrupt state file
+function state(c) {
+  try { return json(c.stateFile, blankState()); } catch (e) {
+    if (!(e instanceof SyntaxError)) throw e;
+    if (noted !== c.stateFile) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); }
+    return blankState();
+  }
+}
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
 // Holders touch the lock every 10 s; a lock is abandoned when that heartbeat is over 60 s old or its pid is dead.
 const owner = p => { try { return json(p); } catch { return {}; } }, dead = o => !!o.pid && !alive(o.pid);
@@ -413,10 +422,12 @@ function plainMutation(m, c) {
 }
 const cliName = c => { const p = slash(path.relative(c.repo, path.join(HERE, 'mutagate'))); return p.startsWith('..') || path.isAbsolute(p) ? 'mutagate' : p; };
 const NO_MUTANTS = 'no mutants to test';
+const BAD_WAIVERS = '.mutagate/waivers.json is invalid, so no waivers apply; it must be JSON with a "waivers" array of {"id", "target", "reason"} objects';
 function normalize(raw, c, t, meta = {}) {
-  const rules = JSON.parse(read(path.join(ROOT, 'references/kotlin-junk.yaml'))),
-    waivers = json(path.join(c.repo, '.mutagate/waivers.json'), { waivers: [] }).waivers;
-  if (!Array.isArray(waivers)) throw Error('invalid waivers.json');
+  const rules = JSON.parse(read(path.join(ROOT, 'references/kotlin-junk.yaml')));
+  let waivers; try { waivers = json(path.join(c.repo, '.mutagate/waivers.json'), { waivers: [] }).waivers; } catch {}
+  const invalid = !Array.isArray(waivers) || !waivers.every(w => w?.constructor === Object && typeof w.reason === 'string');
+  if (invalid) waivers = []; // an invalid file adds no waivers; it must not turn the gate off
   const filtered = [],
     mutants = raw.map(m => ({ ...m, file: slash(m.file === path.basename(t.file) ? t.file : m.file) }));
   let killed = 0,
@@ -479,15 +490,17 @@ function normalize(raw, c, t, meta = {}) {
       'unscored' : score < c.config.threshold ? 'below' : mutants.some(m => m.status === 'PENDING') ? 'unscored' : 'pass',
     error: score !== null || mutants.some(m => m.status === 'PENDING') ? null : error_mutants ? `${no_coverage ? 'mutants' : 'every mutant'} errored (${error_mutants} of ${error_mutants + no_coverage}); the tests may not run against the mutated copy, see the runner log` : no_coverage ? 'no mutant is covered by the registered tests' : `${NO_MUTANTS} in ${t.file}${filtered.length ? ` (${filtered.length} filtered as junk)` : ''}`,
     survivors,
-    warnings: waivers.filter(w => w.target === t.target && !ids.has(w.id)).map(w => `waiver ${w.id} no longer matches`),
+    warnings: [...invalid ? [BAD_WAIVERS] : [],
+      ...waivers.filter(w => w.target === t.target && !ids.has(w.id)).map(w => `waiver ${w.id} no longer matches`)],
     ...meta
   };
 }
 const FOOTER = "Kill survivors with tests; don't weaken reachable code to pass, and tell the user about any production change made for the gate. Details: mutagate status. Playbook: references/survivor-playbook.md.";
-// One final footer avoids repeated-message noise.
+// One final footer and one first invalid-waivers line (a repo-wide fact) avoid repeated-message noise.
 function joinReports(list, max = Infinity) {
-  const bodies = list.map(s => s.endsWith('\n' + FOOTER) ? s.slice(0, -FOOTER.length - 1) : s), text = bodies.join('\n');
-  return bodies.some((b, i) => b !== list[i]) ? text.slice(0, max - FOOTER.length - 1) + '\n' + FOOTER : text.slice(0, max);
+  const footer = list.some(s => s.endsWith('\n' + FOOTER)), bad = list.some(s => s.includes('\n' + BAD_WAIVERS)),
+    text = [...bad ? [BAD_WAIVERS] : [], ...list.map(s => (s.endsWith('\n' + FOOTER) ? s.slice(0, -FOOTER.length - 1) : s).replace('\n' + BAD_WAIVERS, ''))].join('\n');
+  return footer ? text.slice(0, max - FOOTER.length - 1) + '\n' + FOOTER : text.slice(0, max);
 }
 function report(r, cfg = DEFAULTS) {
   if (r.status === 'unscored' && r.error) return `mutagate: ${clean(r.target)} unscored: ${clean(r.error)}`;
@@ -507,7 +520,7 @@ function report(r, cfg = DEFAULTS) {
 }
 // Runners live in runners.cjs, loaded on first use.
 let loaded;
-const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
+const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readIf = p => exists(p) ? read(p) : '';
 async function runTarget(c, key, runner) {
@@ -581,10 +594,10 @@ async function runTarget(c, key, runner) {
 // Retry errors once (e.g. concurrent builds).
 const retryable = r => r?.status === 'error' && (r.attempts ?? 1) < 2;
 function loadResult(c, key, t, expectedFingerprint) {
-  const r = json(resultFile(c, key), null);
+  const r = cacheJson(resultFile(c, key));
   if (!t || !r || t.resultGeneration !== t.generation || t.fingerprint !==
     (expectedFingerprint ?? fingerprint(c, t))) return null;
-  return r.raw ? normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier }) :
+  return r.raw ? normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) :
     r;
 }
 
@@ -612,7 +625,7 @@ async function gate(c, { wait, hook = false, runner } = {}) {
     blocks = [];
   let code = 0;
   if (!hook && !Object.values(state(c).targets).some(t => !t.secondary || c.config.gateSecondaries)) return { code: 1, block: false, reason: '', report: [`mutagate: no targets checked in this session. Run ${cliName(c)} run <test> first. The CLI joins the hook session automatically; MUTAGATE_SESSION is only for bare CLI use without hooks.`, untargeted(c)].filter(Boolean).join('\n'), warnings: [] };
-  for (const [key, original] of Object.entries(state(c).targets)) {
+  for (const [key, original] of Object.entries(state(c).targets)) try { // an exception skips only this target
     if (gone(c, original)) { await updateState(c, s => { if (s.targets[key] && gone(c, s.targets[key])) delete s.targets[key]; }); continue; }
     if (original.secondary && !c.config.gateSecondaries) continue;
     let t = state(c).targets[key]; if (!t) continue;
@@ -663,7 +676,7 @@ async function gate(c, { wait, hook = false, runner } = {}) {
       else if (hook) warnings.push(c.config.mode === 'advise' ? report(r, c.config) :
         `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}`);
     }
-  }
+  } catch (e) { if (!code) code = 3; warnings.push(`mutagate: ${clean(original.target)} skipped: ${clean(e.message)}`); trace(c, 'Result', { target: original.target, decision: 'skipped', error: clean(e.message) }); }
   const reason = joinReports([...blocks, ...warnings], 1800);
   return {
     code, block: c.config.mode === 'gate' && blocks.length > 0, reason,

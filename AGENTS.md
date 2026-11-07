@@ -87,10 +87,14 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
   target only when `gateAdvice` says its `lastRunMs` fits.
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
-  result once (`attempts`) and blocks once on an `agent_caused` one. Session
-  state is JSON under `cacheRoot()`, written through `updateState` with a lock
-  and atomic writes. Every lock (state, target, tool install, .NET project) is
-  a `wx` file from `lock` with the pid and a random token. The holder touches it
+  result once (`attempts`) and blocks once on an `agent_caused` one. An
+  exception in one target skips only that target, with a warning (`check`
+  exit 3). Session state is JSON under `cacheRoot()`, written through
+  `updateState` with a lock and atomic writes. Writes do not fsync, so state,
+  result and classpath files are read through `cacheJson`: torn JSON reads as
+  missing (a result reruns, state starts blank with a stderr note). Every lock
+  (state, target, tool install, .NET project) is a `wx` file from `lock` with
+  the pid and a random token. The holder touches it
   every 10 s; `abandoned` (also used by `inFlight`) is true when the mtime is
   over 60 s old or the pid is dead. One waiter takes it over under
   `<lock>.break`, a live pid's lock only after that waiter saw its mtime unchanged

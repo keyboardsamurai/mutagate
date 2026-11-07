@@ -216,7 +216,7 @@ The data dir is `~/.cache/mutagate/repos/<sha1 of repo path>/` ([State](#configu
 
 `run --sync`/`check` exits: 0 pass, 1 below threshold/unscored (no mutants to test passes), 2 usage error, 3 result/infrastructure error, 128+signal number after SIGINT/SIGTERM/SIGHUP once a run has started a tool (mutagate kills live tool process trees on such a signal and on exit). Zero-target `check`: exit 1, explained. Usage errors (missing/outside tests, bad wait/waive arguments, absent survivor ids, unknown commands) are not traced as errors. `<command> --help`/`-h`: usage, exit 0. Hooks fail open on exceptions; exit 2: block or Claude async delivery.
 
-**Errors:** Stop/`check`/`run --sync` retry once per fingerprint. Agent-caused errors name registered/glob-matched tests or edited production (Kotlin `e:` too) or report red baseline tests; reports ask for fixes, async delivery matches low scores. Stop blocks once/target within `maxRounds`, then warns/allows; other errors warn/allow. Python scoped-copy-only failures fail open; pytest exit 5 is no red baseline. Deleting every registered test: explained unscored target, blocked once like pending. Final unscored reports explain empty, errored, uncovered or budget-limited results. Gate-clipped kills stay pending.
+**Errors:** Stop/`check`/`run --sync` retry once per fingerprint. Agent-caused errors name registered/glob-matched tests or edited production (Kotlin `e:` too) or report red baseline tests; reports ask for fixes, async delivery matches low scores. Stop blocks once/target within `maxRounds`, then warns/allows; other errors warn/allow. Python scoped-copy-only failures fail open; pytest exit 5 is no red baseline. Deleting every registered test: explained unscored target, blocked once like pending. Final unscored reports explain empty, errored, uncovered or budget-limited results. Gate-clipped kills stay pending. An unexpected error in one target skips only that target, with a warning (`check` exit 3, as for an error result). A corrupt cached result reruns; a corrupt session state file starts blank (stderr note), so its registrations are lost.
 
 **Sessions:** Workers/OpenCode/Pi use `MUTAGATE_HOOK_SESSION`; Codex/Claude supply `CODEX_THREAD_ID`/`CLAUDE_CODE_SESSION_ID`. Hookless, export one `MUTAGATE_SESSION` for `run`/`check` across shells. Hook/harness ids win.
 
@@ -265,7 +265,7 @@ Tier A: `arcmutate-licence.txt`, `ARCMUTATE_LICENCE` or `kotlinTier: "A"` loads 
 
 ## Waivers
 
-Agents propose (`waive <id> --reason <text>`); humans approve (`--apply` or `.mutagate/waivers.json`). Workflow control, not a sandbox; `allowAgentWaivers: true` opts out. IDs bind file, line, method, operator, mutation identity. Moving a line invalidates the waiver; the gate reports it.
+Agents propose (`waive <id> --reason <text>`); humans approve (`--apply` or `.mutagate/waivers.json`). Workflow control, not a sandbox; `allowAgentWaivers: true` opts out. IDs bind file, line, method, operator, mutation identity. Moving a line invalidates the waiver; the gate reports it. An invalid `waivers.json` (bad JSON, or no `waivers` array of objects with string reasons) adds no waivers, and the report warns about it.
 
 ## Links
 
