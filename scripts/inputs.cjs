@@ -3,24 +3,35 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { glob } = require('./glob.cjs');
 
-const ignored = new Set(['node_modules', 'venv', 'build', 'target', 'state-data', '__pycache__', 'mutants', 'StrykerOutput', 'TestResults']);
+// Names both walks skip: tool output, then editor, OS and coverage noise.
+const ignored = new Set(['node_modules', 'venv', 'build', 'target', 'state-data', '__pycache__', 'mutants', 'StrykerOutput', 'TestResults', 'htmlcov', 'test-results', '.DS_Store', 'Thumbs.db']);
+const noise = /^\.coverage(?:\..+)?$|\.sw[po]$|~$/, unreadable = new Set(['EACCES', 'EPERM', 'ENOENT', 'ELOOP', 'ENOTDIR']);
 const manifests = ['build.gradle', 'build.gradle.kts', 'pom.xml', 'pyproject.toml', 'setup.cfg', 'package.json', 'go.mod'];
 const digestCache = new Map();
 const digest = value => crypto.createHash('sha1').update(value).digest('hex');
 const inside = (root, file) => file === root || file.startsWith(root + path.sep);
-const read = file => fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+// A file or directory mutagate cannot read counts as empty: '' here, no entries in dirEntries, a fixed digest in fileDigest.
+const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) { if (unreadable.has(e.code)) return ''; throw e; } };
 
 function fileDigest(file) {
-  const stat = fs.statSync(file, { bigint: true });
-  const stamp = `${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}`;
-  const previous = digestCache.get(file);
-  if (previous?.stamp === stamp) return previous.digest;
-  const entry = { stamp, digest: digest(fs.readFileSync(file)) };
-  digestCache.set(file, entry);
-  return entry.digest;
+  try {
+    const stat = fs.statSync(file, { bigint: true });
+    const stamp = `${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}`;
+    const previous = digestCache.get(file);
+    if (previous?.stamp === stamp) return previous.digest;
+    const entry = { stamp, digest: digest(fs.readFileSync(file)) };
+    digestCache.set(file, entry);
+    return entry.digest;
+  } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; }
 }
 
-const hasManifest = dir => fs.existsSync(dir) && (manifests.some(name => fs.existsSync(path.join(dir, name))) || fs.readdirSync(dir).some(name => /\.(cs|fs)proj$/.test(name)));
+// Directory entries for the files() and inputFiles walks, without ignored and noise names; none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
+function dirEntries(dir, root = false) {
+  let entries;
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (unreadable.has(e.code)) return []; throw e; }
+  return !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => !ignored.has(e.name) && !noise.test(e.name));
+}
+const hasManifest = dir => manifests.some(name => fs.existsSync(path.join(dir, name))) || dirEntries(dir, true).some(e => /\.(cs|fs)proj$/.test(e.name));
 
 function projectRoot(repo, file) {
   let dir = path.dirname(path.resolve(repo, file));
@@ -69,16 +80,15 @@ function inputFiles(c, t) {
   const found = new Set();
   const owned = ['repos', 'jars', 'recorded', 'tools'].map(name => path.resolve(c.root, name));
   function visit(dir, project) {
-    if (!fs.existsSync(dir)) return;
-    const entries = fs.readdirSync(dir, { withFileTypes: true }), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
-    const go = fs.existsSync(path.join(project, 'go.mod')), root = dir === project;
+    const root = dir === project, entries = dirEntries(dir, root), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
+    const go = fs.existsSync(path.join(project, 'go.mod'));
     for (const entry of entries) {
       if (dotnet && entry.isDirectory() && ['bin', 'obj'].includes(entry.name)) continue;
       if (go && root && (entry.isDirectory() ? entry.name === 'bin' : entry.name.endsWith('.out'))) continue;
       const file = path.join(dir, entry.name);
       // Go build output: go build -o, go test -c and extensionless executables from go build ./cmd/x.
       if (go && entry.isFile() && (/\.(?:test|exe)$/.test(entry.name) || !entry.name.includes('.') && fs.statSync(file).mode & 0o111)) continue;
-      if (entry.isSymbolicLink() || ignored.has(entry.name) || entry.isDirectory() && entry.name.startsWith('.') && !['.mvn', '.config'].includes(entry.name) || owned.some(root => inside(root, file))) continue;
+      if (entry.isSymbolicLink() || entry.isDirectory() && entry.name.startsWith('.') && !['.mvn', '.config'].includes(entry.name) || owned.some(root => inside(root, file))) continue;
       const relative = path.relative(c.repo, file).split(path.sep).join('/');
       if (c.config.exclude.some(pattern => glob(pattern).test(relative))) continue;
       if (entry.isDirectory()) {
@@ -110,3 +120,6 @@ function inputFiles(c, t) {
 
 exports.inputFiles = inputFiles;
 exports.fileDigest = fileDigest;
+exports.dirEntries = dirEntries;
+exports.read = read;
+exports.unreadable = unreadable;

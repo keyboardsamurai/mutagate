@@ -165,13 +165,13 @@ const TESTS = ['**/src/test/**/*.{java,kt}', '**/*{Test,Tests,Spec,IT}.{java,kt,
 export function isTest(file, cfg = DEFAULTS) { return (cfg.testGlobs.length ? cfg.testGlobs : TESTS).some(g => glob(g).test(slash(file))); }
 const SUPPORT = /(^|\/)(conftest|__init__)\.py$/; // never registered as runnable tests
 export function files(repo, cfg = DEFAULTS) {
-  const out = [];
+  const out = [], { dirEntries } = runtimeRequire('./inputs.cjs');
 
   function visit(dir) {
-    const entries = fs.readdirSync(dir, { withFileTypes: true }), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
+    const entries = dirEntries(dir, dir === repo), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
     for (const e of entries) {
       if (dotnet && e.isDirectory() && ['bin', 'obj'].includes(e.name)) continue;
-      if (e.isSymbolicLink() || e.name.startsWith('.') || ['node_modules', 'venv', 'build', 'target', 'state-data', '__pycache__', 'mutants', 'StrykerOutput', 'TestResults', 'dist'].includes(e.name)) continue;
+      if (e.isSymbolicLink() || e.name.startsWith('.') || e.name === 'dist') continue;
       const p = path.join(dir, e.name),
         r = slash(path.relative(repo, p));
       if (cfg.exclude.some(g => glob(g).test(r))) continue;
@@ -204,13 +204,13 @@ export function resolveTargets(c, test, explicit) {
   if (!isTest(test, c.config) || SUPPORT.test(test)) throw usageError(`${test} is not a test file; run it on the test, and name the production target with --target`);
   const lang = language(test),
     src = read(abs), inTestProject = lang === 'csharp' ? runtimeRequire('./dotnet.cjs').inTestProject(c.repo) : () => false, // never a test project file as the target
-    all = files(c.repo, c.config).filter(f => !isTest(f, c.config) && !GENERATED.test(f) && !inTestProject(f));
+    all = files(c.repo, c.config).filter(f => !isTest(f, c.config) && !GENERATED.test(f) && !inTestProject(f)), source = runtimeRequire('./inputs.cjs').read; // '' for a file mutagate cannot read
   const mod = moduleRoot(c.repo, test),
     stem = path.basename(test).replace(/\.(java|kt|py|tsx?|jsx?|go|cs)$/, '').replace(/(?:Integration)?(?:Tests?|Spec|IT)$/, '').replace(/^test_/, '').replace(/_test$/, '').replace(
       /\.(test|spec)$/, '');
   const candidates = all.filter(f => language(f) === lang || ['java', 'kotlin'].includes(lang) && /\.(java|kt)$/.test(f)).flatMap(file => {
     if (!['java', 'kotlin'].includes(lang)) return [{ file, target: file }];
-    const body = read(path.join(c.repo, file)),
+    const body = source(path.join(c.repo, file)),
       names = [...body.matchAll(/\b(?:class|interface|object)\s+([A-Za-z_$][\w$]*)/g)].map(m => m[1]);
     return [...new Set(names.length ? names : [path.basename(file).replace(/\.(java|kt)$/, '')])].map(name => ({
       file, target: [pkg(body), name].filter( Boolean).join('.')
@@ -220,7 +220,7 @@ export function resolveTargets(c, test, explicit) {
     .flatMap(m => m[2] ? [m[2], ...(m[3] ?? m[4]).split(',').map(n => n.trim().split(/\s+as\s+/)[0]).filter(Boolean).map(n => m[2] + '.' + n)] : [m[1] || m[5]]); // ponytail: relative from . import x stays unresolved
   const main = candidates.filter(x => ['java', 'kotlin'].includes(lang) ? /(^|\/)src\/main\//.test(x.file) || c.config.mainRoots.some(r => x.file.startsWith(r +
     '/')) : true);
-  const jvm = ['java', 'kotlin'].includes(lang), simple = x => jvm ? x.target.split('.').at(-1) : path.basename(x.file).replace(/\.\w+$/, ''), near = x => pkg(read(path.join(c.repo, x.file))) === pkg(src) && path.resolve(c.repo, x.file).startsWith(mod + path.sep),
+  const jvm = ['java', 'kotlin'].includes(lang), simple = x => jvm ? x.target.split('.').at(-1) : path.basename(x.file).replace(/\.\w+$/, ''), near = x => pkg(source(path.join(c.repo, x.file))) === pkg(src) && path.resolve(c.repo, x.file).startsWith(mod + path.sep),
     pre = main.filter(x => jvm ? stem.startsWith(simple(x)) : ['_', '.'].some(b => stem.startsWith(simple(x) + b))); // non-JVM: test_api_unit.py -> api.py at a word boundary
   let primary = main.filter(x => simple(x) === stem);
   if (!primary.length && jvm && stem) primary = main.filter(x => simple(x).startsWith(stem)); // ponytail: prefix guess; exact match still wins

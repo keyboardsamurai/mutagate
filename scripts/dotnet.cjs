@@ -52,7 +52,10 @@ function scratch(c, t, inputFiles) {
   const inputs = inputFiles(c, t), current = new Set(inputs); // inputFiles excludes project build outputs.
   let previous = []; try { previous = JSON.parse(fs.readFileSync(manifest, 'utf8')); } catch {}
   for (const f of previous) if (!current.has(f)) fs.rmSync(path.join(dir, f), { force: true });
-  for (const f of inputs) { const dest = path.join(dir, f); fs.mkdirSync(path.dirname(dest), { recursive: true }); fs.copyFileSync(path.join(c.repo, f), dest); }
+  for (const f of inputs) { // a file mutagate cannot read is not copied
+    const dest = path.join(dir, f); fs.mkdirSync(path.dirname(dest), { recursive: true });
+    try { fs.copyFileSync(path.join(c.repo, f), dest); } catch (e) { if (!require('./inputs.cjs').unreadable.has(e.code)) throw e; }
+  }
   const tmp = manifest + '.tmp';
   try { fs.writeFileSync(tmp, JSON.stringify(inputs)); fs.renameSync(tmp, manifest); } finally { fs.rmSync(tmp, { force: true }); }
   return dir;

@@ -205,12 +205,12 @@ async function python(c, t, dir, opts) {
   const prefix = uv ? ['run', '--project', project, '--no-sync', 'mutmut'] : ['-c',
     `from mutmut.__main__ import ${major===2?'climain':'cli'}; ${major===2?'climain':'cli'}()`
   ];
-  const work = path.join(dir, 'python'), inputs = require('./inputs.cjs').inputFiles(c, t);
+  const work = path.join(dir, 'python'), { inputFiles, unreadable } = require('./inputs.cjs'), inputs = inputFiles(c, t);
   mkdir(work);
   for (const f of inputs) {
     const dest = path.join(work, f);
     mkdir(path.dirname(dest));
-    fs.copyFileSync(path.join(c.repo, f), dest);
+    try { fs.copyFileSync(path.join(c.repo, f), dest); } catch (e) { if (!unreadable.has(e.code)) throw e; } // not copied: mutagate cannot read it
   }
   const cfg = path.join(work, 'setup.cfg');
   atomic(cfg, readIf(cfg).replace(/\[mutmut\][\s\S]*?(?=\n\[|$)/g, '') +

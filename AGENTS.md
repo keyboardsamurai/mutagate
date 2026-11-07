@@ -114,7 +114,9 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   adapter file when portable, else absolute; adapters pick Node like `scripts/hook`.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
   keep hook latency low. `inputs.cjs` scopes project inputs and computes digests
-  for fingerprints. `kotlin-source.cjs` provides the source-aware part of the
+  for fingerprints; its `dirEntries` reads a directory for both repo walks
+  (`files` and `inputFiles`) and skips unreadable directories, venvs and noise
+  names; its `read` and `fileDigest` treat a file it cannot read as empty. `kotlin-source.cjs` provides the source-aware part of the
   Kotlin Tier B filter, and `references/kotlin-junk.yaml` holds its pattern
   rules. `glob.cjs` does glob matching. `mutmut-bridge.cjs` writes the mutmut
   config and result bridge per mutmut version (2, 3.0–3.5, 3.6+). `errors.cjs`
