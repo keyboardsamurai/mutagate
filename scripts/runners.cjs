@@ -17,7 +17,8 @@ async function command(exe, args, opts = {}) {
         cwd: opts.cwd, env: opts.env || process.env, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, detached: process .platform !== 'win32'
       });
     reaper(); trees.add(child.pid);
-    const timer = setTimeout(() => killTree(child.pid), Math.max(1, opts.deadline ? opts.deadline - Date.now() :
+    let cut = false; // a deadline kill can close with a code, not a signal (Windows taskkill; a leader that exited while its group held stdout): report SIGKILL
+    const timer = setTimeout(() => { cut = true; killTree(child.pid); }, Math.max(1, opts.deadline ? opts.deadline - Date.now() :
       opts.timeout || 300000));
     child.stdout.on('data', b => { output = (output + b).slice(-4000000); });
     child.stderr.on('data', b => { error = (error + b).slice(-4000000); });
@@ -28,6 +29,7 @@ async function command(exe, args, opts = {}) {
     child.on('close', (code, signal) => {
       clearTimeout(timer); trees.delete(child.pid);
       try { if (opts.log) fs.appendFileSync(opts.log, JSON.stringify({ exe, args, code, signal, output, error }) + '\n'); } catch {} // logging must never mask the result
+      if (cut) signal = 'SIGKILL';
       if (code === 0 || opts.allowFailure) return resolve({ output, error, code, signal });
       // Keep causes, not PIT VM/Uptime or Maven/Gradle help footers.
       const cause = (error + '\n' + output).split('\n').filter(l => /error|exception|fail|not found|could not|^e: /i.test(l) && !/^\s*at |^\[ERROR\]\s*(?:$|->|To see|Re-run|For more|\[Help)|^FAILURE: Build failed|^BUILD FAILED|^Execution failed for task|^> Compilation failed; see/.test(l)).slice(-3).map(l => l.trim()).join(' | ').slice(0, 400);

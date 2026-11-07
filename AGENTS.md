@@ -82,6 +82,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   JSON payload on stdin. Under Node < 22 hooks exit 0 and SessionStart says so.
   PostToolUse on a test file registers targets. `schedule` then spawns a detached
   `worker` process that calls `runTarget` while holding a per-target lock.
+  The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s
+  quiet and ends by 850 s after its start (hook timeout 900 s): like `gate`, it
+  passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
+  target only when `gateAdvice` says its `lastRunMs` fits.
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. Session
   state is JSON under `cacheRoot()`, written through `updateState` with a lock

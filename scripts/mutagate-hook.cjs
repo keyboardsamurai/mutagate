@@ -543,7 +543,7 @@ async function runTarget(c, key, runner) {
         });
         result.raw = produced.raw;
       } catch (e) {
-        const killed = /SIGKILL|budget exceeded/.test(e.message), clipped = (c.budgetSec ?? c.config.runBudgetSec) < c.config.runBudgetSec;
+        const killed = /SIGKILL|budget exceeded/.test(e.message), clipped = (c.budgetSec ?? c.config.runBudgetSec) < c.config.runBudgetSec || c.deadline - start < c.config.runBudgetSec * 1000;
         if (killed && clipped) { await updateState(c, s => { const t = s.targets[key]; if (t) { t.resultGeneration = null; t.lastRunMs = Math.max(Date.now() - start, t.lastRunMs || 0); } }); trace(c, 'Result', { target: t.target, decision: 'killed', error: e.message }); if (process.env.MUTAGATE_DEBUG !== '1') fs.rmSync(dir, { recursive: true, force: true }); return null; }
         if (killed) e.message = `mutation run exceeded runBudgetSec (${c.config.runBudgetSec}s); raise runBudgetSec or split the test`;
         const kind = e.unscored || e.deleted || killed ? 'unscored' : 'error', cause = kind === 'error' && !e.scopedCopy && runtimeRequire('./errors.cjs').agentCause(e.message, [...new Set(Object.values(state(c).targets).flatMap(x => x.tests).concat(state(c).edited || []))], log, f => isTest(f, c.config));
@@ -743,12 +743,14 @@ async function handleHook(c, p, event) {
       // 6 s quiet (builds start 2-3 s after edits), then refreshes all; older handlers yield.
       // ponytail: reruns every stale session target; narrow to dependents if large sessions get slow.
       // Agent builds share output directories; wait for them,
-      // at most gateWaitSec total: `spring-boot:run` may never finish.
-      const newest = () => state(c).events.at(-1) === token, giveUp = Date.now() + c.config.gateWaitSec * 1000;
+      // at most gateWaitSec total and not past `end`: `spring-boot:run` may never finish.
+      // The handler ends by `end`, inside the 900 s async hook timeout (install.cjs).
+      const newest = () => state(c).events.at(-1) === token, end = Date.now() + 850000, giveUp = Math.min(end, Date.now() + c.config.gateWaitSec * 1000);
       const settle = async () => {
-        for (;;) {
+        // editedAt changes only with a newer event, which makes this handler yield: wait for quiet once, at most 6 s (clock jumps).
+        for (let quiet = Math.min(6000, 6000 - (Date.now() - (state(c).editedAt || 0))); ; quiet = 0) {
           if (!newest()) return false;
-          const due = Math.max(6000 - (Date.now() - (state(c).editedAt || 0)), Date.now() < giveUp && buildRunning(c) ? 1000 : 0);
+          const due = Math.max(quiet, Date.now() < giveUp && buildRunning(c) ? 1000 : 0);
           if (due <= 0) return true;
           await sleep(due);
         }
@@ -757,7 +759,11 @@ async function handleHook(c, p, event) {
       for (const [key, t] of Object.entries(state(c).targets)) {
         if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || loadResult(c, key, t)) continue;
         if (!await settle()) break;
-        const r = await runTarget({ ...c, settle }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
+        // Start a target only when its last run fits before `end`, like the gate; the gate runs the rest.
+        const budgetSec = Math.min(c.config.runBudgetSec, Math.floor((end - Date.now()) / 1000));
+        if (budgetSec < 1) break;
+        if (runtimeRequire('./errors.cjs').gateAdvice(budgetSec, c.config.runBudgetSec, t.lastRunMs)) continue;
+        const r = await runTarget({ ...c, settle, deadline: end, budgetSec }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
         // Redeliver changed results; a pass resets delivery.
         if (r && await updateState(c, s => { const t = s.targets[key], next = text && reportKey(text); if (!t || t.reported === next) return false; t.reported = next; return true; }) && text) {
           msgs.push(text);
@@ -942,7 +948,7 @@ async function main(argv = process.argv.slice(2)) {
       for (let n = 0; n < 2; n++) {
         const t = state(c).targets[key];
         if (!t) return 0;
-        const delay = 3000 - (Date.now() - t.changedAt);
+        const delay = Math.min(3000, 3000 - (Date.now() - t.changedAt)); // clock jumps
         if (delay > 0) await sleep(delay);
         if (loadResult(c, key, state(c).targets[key])) return 0;
         await runTarget(c, key);

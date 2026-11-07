@@ -106,8 +106,12 @@ _Avoid_: gate budget, hook budget, check budget
 The longest time the gate waits for a worker that is already running a target. It never enlarges a budget.
 _Avoid_: gate wait, poll timeout, in-flight budget
 
+**Rerun deadline**:
+The time, 850 s after the start of an async PostToolUse hook, by which its reruns of stale targets end. It keeps the hook inside its 900 s timeout. The hook starts no target whose last run does not fit before it; such targets stay pending for the gate.
+_Avoid_: hook deadline, handler timeout, mutate budget
+
 **Clipped run**:
-A run killed under a budget below the run budget. It is never published; the target stays pending.
+A run killed at a deadline or budget below the run budget. It is never published; the target stays pending.
 _Avoid_: budget kill, partial run, timed-out run
 
 **Usage error**:

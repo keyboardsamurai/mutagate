@@ -12,6 +12,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 - Mutation tool process trees (PIT, Stryker, mutmut, Stryker.NET, Go tools, Maven/Gradle builds) no longer outlive mutagate: it kills them when it exits, and after SIGINT, SIGTERM or SIGHUP (Ctrl-C on `run --sync`, a harness killing a hook at its timeout) it kills them and exits with 128+signal number.
 - A lock whose pid was reused by an unrelated process (after a reboot or crash) no longer keeps a target in flight: lock holders renew their lock every 10 s, and a lock whose holder is dead or has not renewed it for 60 s is abandoned. Only one waiter takes over an abandoned lock, and a process deletes only a lock it still holds.
+- The async PostToolUse hook (`--mutate`) no longer runs past its 900 s timeout, where the harness killed it mid-run and lost the results: it ends within 850 s, starts a stale target only when its last run fits in the time left, and leaves skipped or cut targets pending for the gate.
+- A run cut at the gate deadline or the rerun deadline is no longer reported as exceeding `runBudgetSec` when it started with the full run budget (after a wait for the target lock or a rerun after edits).
+- A run killed at its deadline is no longer published as an `error` result when the tool closes with an exit code instead of a signal (on Windows, or when the tool exited but a child process kept its output open).
+- A backward clock jump no longer stretches the async hook's 6 s quiet wait or a worker's 3 s start delay.
 
 ## [0.9.0] - 2026-10-06
 
