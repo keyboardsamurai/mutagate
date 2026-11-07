@@ -64,6 +64,10 @@ _Avoid_: engine, backend, driver
 The detached process that runs one target under its lock and publishes the result.
 _Avoid_: background job, runner process, daemon
 
+**Abandoned lock**:
+A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight.
+_Avoid_: stale lock, expired lock
+
 **Scoped copy** (Python):
 The per-run copy of the scoped project inputs that mutmut mutates. It is deleted after the result is normalized.
 _Avoid_: scratch copy (for Python), work dir, sandbox

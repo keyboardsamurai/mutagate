@@ -85,7 +85,14 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. Session
   state is JSON under `cacheRoot()`, written through `updateState` with a lock
-  and atomic writes.
+  and atomic writes. Every lock (state, target, tool install, .NET project) is
+  a `wx` file from `lock` with the pid and a random token. The holder touches it
+  every 10 s; `abandoned` (also used by `inFlight`) is true when the mtime is
+  over 60 s old or the pid is dead. One waiter takes it over under
+  `<lock>.break`, a live pid's lock only after that waiter saw its mtime unchanged
+  for 15 s of monotonic time, or half its wait budget if shorter (2.5 s for the
+  state lock; timers stop during system sleep); release deletes the file only
+  while it holds the holder's token.
 - Sessions: `context` takes the id from payload `agent_id`, then `session_id`,
   then env `MUTAGATE_HOOK_SESSION` (set by `schedule` for workers, by the OpenCode
   `shell.env` hook and by Pi at `session_start`), `CODEX_THREAD_ID`,

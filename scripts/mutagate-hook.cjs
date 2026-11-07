@@ -102,22 +102,29 @@ function context(args = {}, payload = {}) {
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
 const state = (c) => json(c.stateFile, blankState());
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
+// Holders touch the lock every 10 s; a lock is abandoned when that heartbeat is over 60 s old or its pid is dead.
+const owner = p => { try { return json(p); } catch { return {}; } }, dead = o => !!o.pid && !alive(o.pid);
+const abandoned = (p, o = owner(p), st = fs.statSync(p, { throwIfNoEntry: false })) => !!st && (Date.now() - st.mtimeMs > 60000 || dead(o));
 async function lock(p, budget = 5000) {
   mkdir(path.dirname(p));
-  const end = Date.now() + budget;
+  const end = Date.now() + budget, token = crypto.randomUUID();
+  let seen = {};
   while (true) {
     try {
       const fd = fs.openSync(p, 'wx', 0o600);
-      fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, at: Date.now() }));
+      fs.writeFileSync(fd, JSON.stringify({ pid: process.pid, token }));
       fs.closeSync(fd);
-      return () => { try { fs.unlinkSync(p); } catch {} };
+      const beat = setInterval(() => { try { fs.utimesSync(p, new Date(), new Date()); } catch {} }, 10000); beat.unref();
+      return () => { clearInterval(beat); try { if (owner(p).token === token) fs.unlinkSync(p); } catch {} };
     } catch (e) {
       if (e.code !== 'EEXIST') throw e;
-      try {
-        const owner = json(p);
-        if (
-          owner.pid && !alive(owner.pid)) { fs.unlinkSync(p); continue; }
-      } catch { const st = fs.statSync(p, { throwIfNoEntry: false }); if (st && Date.now() - st.mtimeMs > 10000) fs.rmSync(p, { force: true }); }
+      // Only the waiter holding <lock>.break removes an abandoned lock, and only while the lock still holds the token it saw.
+      // Timers do not count system sleep, so after a wake a live holder heartbeats up to 10 s late: break a live pid's
+      // lock only after this waiter saw its mtime unchanged for 15 s of monotonic time (half its budget if shorter).
+      const o = owner(p), st = fs.statSync(p, { throwIfNoEntry: false }), now = performance.now();
+      if (st?.mtimeMs !== seen.m) seen = { m: st?.mtimeMs, at: now };
+      const unbreak = abandoned(p, o, st) && (dead(o) || now - seen.at >= Math.min(15000, budget / 2)) && await lock(p + '.break', 0);
+      if (unbreak) { try { const n = owner(p); if (n.token === o.token && abandoned(p, n)) fs.rmSync(p, { force: true }); } finally { unbreak(); } continue; }
       if (
         Date.now() >= end) return null;
       await sleep(25);
@@ -254,7 +261,7 @@ const targetKey = t => hash([t.module, t.target].filter(Boolean).join(':'));
 const resultFile = (c, key) => path.join(c.data, 'results', c.session, key + '.json');
 const targetLock = (c, key) => path.join(c.data, 'locks', key + '.lock');
 
-function inFlight(c, key) { const p = targetLock(c, key); if (!exists(p)) return false; try { return alive(json(p).pid); } catch { return true; } }
+function inFlight(c, key) { const p = targetLock(c, key); return exists(p) && !abandoned(p); }
 // Find repo builds by their launcher command line.
 // ponytail: POSIX ps only; misses Windows, mvnd and a system gradle without the wrapper.
 function buildRunning(c) {
