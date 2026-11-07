@@ -12,7 +12,7 @@ import { createRequire } from 'node:module';
 const runtimeRequire = createRequire(import.meta.url);
 const HERE = path.dirname(fileURLToPath(import.meta.url)),
   ROOT = path.dirname(HERE);
-export const VERSION = '0.9.0';
+export const VERSION = '0.9.1';
 export const DEFAULTS = {
   schema: 1, mode: 'gate', threshold: .8, maxSurvivors: 10, maxRounds: 2, runBudgetSec: 300, gateBudgetSec: 120, gateWaitSec: 60,
   countNoCoverage: true, gateSecondaries: false, languages: ['java', 'kotlin', 'python', 'typescript', 'go', 'csharp'], testGlobs: [], mainRoots: [],

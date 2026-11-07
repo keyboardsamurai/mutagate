@@ -4,6 +4,8 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-07
+
 ### Added
 
 - After the skill is updated and `install` is not run again, SessionStart says `Hooks are from mutagate X, skill is Y: rerun … install`, and `doctor` warns for a project install (`WARN <harness> install`). `install` now writes its version into the SessionStart hook command, and the OpenCode and Pi adapters send it in their payload; hooks from earlier versions have none, so run `install` again once after this upgrade (ADR-0017).
@@ -61,5 +63,6 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/keyboardsamurai/mutagate/releases/tag/v0.9.0

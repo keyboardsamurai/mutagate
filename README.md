@@ -10,7 +10,7 @@
 
 mutagate makes small deliberate bugs (mutants) in the code under test, for example `>=` becomes `>`, and reruns the tests your agent (Claude Code, Codex, OpenCode or Pi) just wrote or edited with its edit tools. If the tests catch fewer than 80% of the mutants, the agent can't finish yet (OpenCode and Pi: the session continues with the survivors), for up to two rounds by default. The agent gets the surviving mutants (file, line, change) to fix the test against.
 
-Java, Kotlin, Python, TS/JS, Go, C#. macOS and Linux (Windows experimental). MIT, beta 0.9.0: config keys and report text can change before 1.0.
+Java, Kotlin, Python, TS/JS, Go, C#. macOS and Linux (Windows experimental). MIT, beta 0.9.1: config keys and report text can change before 1.0.
 The first run downloads the mutation tool where needed (PIT jars, gomutants, Stryker.NET); `MUTAGATE_OFFLINE=1` stops these downloads (your build tool may still fetch dependencies). Hooks run your build and tests outside the agent sandbox; see [Security and privacy](#security-and-privacy).
 
 ## What happens
@@ -73,8 +73,8 @@ npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
 
 `npx skills` has its own telemetry; set `DISABLE_TELEMETRY=1` to turn it off.
 
-1. `doctor` checks config, toolchain, jars, adapter and one synthetic mutation. The first run downloads tools and does a cold build. Expect a few minutes the first time; C# cold builds take longer (see [Runners](#runners)). Its first line is `mutagate 0.9.0`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
-2. Restart Claude Code from the Git root. The session starts with a `mutagate 0.9.0 active. runner=…` line.
+1. `doctor` checks config, toolchain, jars, adapter and one synthetic mutation. The first run downloads tools and does a cold build. Expect a few minutes the first time; C# cold builds take longer (see [Runners](#runners)). Its first line is `mutagate 0.9.1`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
+2. Restart Claude Code from the Git root. The session starts with a `mutagate 0.9.1 active. runner=…` line.
 3. Ask it to write a test for one production file. If the test is weak, the first block arrives with the survivors.
 4. For a team: commit the skill dir, your harness config ([Harnesses](#harnesses)) and `.mutagate/config.json`. Every clone then gets the same gate. Each teammate needs Node 22+ and the toolchain; without them the hooks fail open and do not block.
 
@@ -112,6 +112,8 @@ OpenCode and Pi continue the session with the survivors instead of blocking nati
 </details>
 
 Pinned version, upgrade, uninstall, `--agent auto`, user scope and Windows: [docs/install.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/install.md).
+
+Upgrading from 0.9.0: run the `npx skills add` line and `install --agent <harness>` again (Codex: trust the hooks in `/hooks` again). 0.9.1 changes the installed hook commands; until you reinstall, each session starts with `Hooks are from an older mutagate … rerun … install`.
 
 ## How it works
 
