@@ -283,12 +283,15 @@ export function status(c, json) {
       ...r.survivors.map(m => `  ${m.file}:${m.line} ${m.method}: ${m.plain} [${m.short}] id ${m.id}`), ...(r.warnings || []).map(w => `  ${w}`)];
   }), ...liveWarnings(c), untargeted(c)].filter(Boolean).join('\n') || 'mutagate: no targets touched this session.';
 }
+// prune.cjs removes a data dir whose marked repo path is gone.
+const markRepo = c => { const f = path.join(c.data, 'repo-path'); if (!exists(f)) atomic(f, c.repo); };
 export async function register(c, test, explicit) {
   const r = resolveTargets(c, test, explicit);
   if (!c.config.languages.includes(language(test))) return { test, targets: [], disabled: true, message: 'mutagate: language disabled by configuration' };
   // Keep unresolved warnings per test for the gate.
   const others = s => s.warnings.filter(w => !w.startsWith(`mutagate: target unresolved for ${test}.`));
   if (r.ambiguous) { await updateState(c, s => { s.warnings = [...others(s), r.message]; }); return r; }
+  markRepo(c);
   await updateState(c, s => {
     s.config = c.config;
     s.warnings = others(s);
@@ -588,9 +591,16 @@ export function loadResult(c, key, t, expectedFingerprint) {
   return normalized.get(file).r;
 }
 
+const detached = (run, args, env) => run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}).unref(); // a failed spawn emits 'error' later; hooks fail open
 export function schedule(c, key, run = spawn) {
-  const worker = run(process.execPath, [path.join(HERE, 'mutagate.mjs'), 'worker', '--repo', c.repo, '--session', c.sid, '--key', key ], { detached: true, stdio: 'ignore', env: { ...process.env, MUTAGATE_HOOK_SESSION: c.sid, MUTAGATE_HARNESS: c.harness } });
-  worker.unref();
+  detached(run, ['worker', '--repo', c.repo, '--session', c.sid, '--key', key], { MUTAGATE_HOOK_SESSION: c.sid, MUTAGATE_HARNESS: c.harness });
+}
+// SessionStart starts the cache prune (prune.cjs) at most once a day; the stamp mtime records the last start (a clock jump also restarts it).
+export function schedulePrune(c, run = spawn) {
+  const stamp = path.join(c.root, 'repos', '.pruned'), st = fs.statSync(stamp, { throwIfNoEntry: false });
+  if (st && Math.abs(Date.now() - st.mtimeMs) < 86400000) return;
+  atomic(stamp, new Date().toISOString());
+  detached(run, ['prune'], { CLAUDE_PLUGIN_DATA: c.root });
 }
 // once names a one-time block flag; otherwise maxRounds applies.
 async function claimBlock(c, key, once) {
@@ -691,6 +701,7 @@ export async function handleHook(c, p, event) {
     };
   }
   if (event === 'SessionStart') {
+    try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
     const banner =
@@ -925,6 +936,7 @@ export async function main(argv = process.argv.slice(2)) {
   if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'].includes(args._[1] || p.hook_event_name))
     return 0;
   try {
+    if (cmd === 'prune') { await runtimeRequire('./prune.cjs')(cacheRoot(), { lock, abandoned }); return 0; } // internal, started by schedulePrune
     c = context(args, p);
     if (['run', 'check', 'status', 'waive'].includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
     if (cmd === 'hook') {

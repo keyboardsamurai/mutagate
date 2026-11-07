@@ -72,6 +72,14 @@ _Avoid_: background job, runner process, daemon
 A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight.
 _Avoid_: stale lock, expired lock
 
+**Data dir**:
+The directory under the cache root that holds the session state, results, logs and scratch copies of one repo path.
+_Avoid_: repo cache, state dir
+
+**Cache prune**:
+The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist.
+_Avoid_: garbage collection, cache eviction
+
 **Scoped copy** (Python):
 The per-run copy of the scoped project inputs that mutmut mutates. It is deleted after the result is normalized.
 _Avoid_: scratch copy (for Python), work dir, sandbox

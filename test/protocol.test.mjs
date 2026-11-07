@@ -23,7 +23,7 @@ for(const executable of ['mutagate.mjs','mutagate-hook.cjs'])for(const harness o
 });
 test('every result-affecting helper is hashed into fingerprint',()=>{
  const list=JSON.parse(fs.readFileSync(path.join(root,'scripts/mutagate.mjs'),'utf8').match(/const implementation = (\[[^\]]*\])/)[1].replaceAll("'",'"'));
- for(const f of fs.readdirSync(path.join(root,'scripts')).filter(f=>f.endsWith('.cjs')&&!['install.cjs','doctor.cjs','mutagate-hook.cjs'].includes(f)))assert.ok(list.includes(f),f);
+ for(const f of fs.readdirSync(path.join(root,'scripts')).filter(f=>f.endsWith('.cjs')&&!['install.cjs','doctor.cjs','prune.cjs','mutagate-hook.cjs'].includes(f)))assert.ok(list.includes(f),f);
 });
 test('size limits and Kotlin labeled-corpus precision',()=>{
  assert.ok(fs.readFileSync(path.join(root,'scripts/mutagate.mjs'),'utf8').split('\n').length<1400);

@@ -138,7 +138,14 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   hook path and not hashed into `fingerprint`. `doctor.cjs` renders the doctor
   text, writes `checking <name>…` progress to stderr and adds a WARN check when an
   installed harness differs from its pin; it is lazy, not on the hook path and not
-  hashed into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
+  hashed into `fingerprint`. `prune.cjs` is the cache prune: `register`, and
+  SessionStart in an existing data dir, write a `repo-path` marker into it, and `schedulePrune`
+  spawns the internal `prune` command detached when the mtime of
+  `repos/.pruned` is a day old. It deletes `reports/*` after 24 h, session state
+  after 14 days and its results with it, and data dirs whose marked repo path is gone
+  (unmarked: 14 days idle), rotates `trace.jsonl` at 10 MB, skips a data dir with
+  a held lock and never touches `jars/`, `tools/` or `recorded/`. It is not hashed
+  into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
 - `references/` ships with the skill:
   - `jars.json` has SHA-256-pinned PIT jars.
   - `versions.json` mirrors `test/harness-versions.json` for `doctor`.
@@ -178,7 +185,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `export function`/`export const`. Any other module syntax makes the generator
   throw.
 - Every `scripts/*.cjs` that affects results is in the `fingerprint` helper list;
-  helpers that do not (`install.cjs`, `doctor.cjs`) are listed as exceptions in
+  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`) are listed as exceptions in
   `test/protocol.test.mjs`.
 - `scripts/hooks.json` is generated from `hookConfig('codex')`. Regenerate it
   after changing hook wiring.
