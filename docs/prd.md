@@ -787,7 +787,7 @@ Consulted for this document. Re-verify against pinned versions.
 
 ## Appendix A: shared `scripts/hooks.json` (Claude Code and Codex)
 
-Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with the absolute Node and runtime paths (ADR-0013).
+Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with `f='<abs scripts dir>/hook' && [ -f "$f" ] && sh "$f"` (Windows: the absolute Node and runtime paths) (ADR-0013).
 
 ```json
 {

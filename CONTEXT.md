@@ -157,5 +157,5 @@ The generated Git branch `skill` that holds only the skill package for one relea
 _Avoid_: release branch, dist branch
 
 **Machine-local**:
-Config that holds absolute Node and skill paths of one machine. Do not commit it. Install warns when a project install is machine-local.
+Config that holds absolute paths of one machine. Do not commit it. Install warns when a project install is machine-local.
 _Avoid_: absolute install, local config

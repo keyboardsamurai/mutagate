@@ -4,7 +4,8 @@ const fs = require('node:fs'), os = require('node:os'), path = require('node:pat
 const CLI = path.join(__dirname, 'mutagate-hook.cjs'), slash = s => s.split(path.sep).join('/');
 const quote = s => process.platform === 'win32' ? '"' + s.replaceAll('"', '""') + '"' : "'" + s.replaceAll("'", "'\\''") + "'";
 const atomic = (p, data) => { fs.mkdirSync(path.dirname(p), { recursive: true }); const tmp = `${p}.${process.pid}.${crypto.randomUUID()}.tmp`; fs.writeFileSync(tmp, data, { mode: 0o600 }); fs.renameSync(tmp, p); };
-const wrapper = rel => `f="$(git rev-parse --show-toplevel)/${rel}/hook" && [ -f "$f" ] && sh "$f"`;
+// Runs scripts/hook, which picks Node at run time. [ -f ]: dash exits 2, a block, on a missing script (ADR-0013).
+const wrapper = f => `f=${f} && [ -f "$f" ] && sh "$f"`;
 const isOurs = (h, rel) => h.command?.includes('mutagate') || !!rel && !!h.command?.includes(`show-toplevel)/${rel}/hook"`);
 // Scripts dir under the Git top level, or null for absolute paths (ADR-0013).
 function gitRel(c) {
@@ -13,8 +14,9 @@ function gitRel(c) {
     return rel && !rel.startsWith('..') && !path.isAbsolute(rel) && /^[\w./-]+$/.test(rel) ? rel : null; } catch { return null; }
 }
 function hooks(agent, rel) {
-  // Git top level wrapper or absolute form (ADR-0013).
-  const command = (event, extra = '') => rel ? `${wrapper(rel)} ${event}${extra} # mutagate` : `${quote(process.execPath)} ${quote(CLI)} hook ${event}${extra}`,
+  // Wrapper under the Git top level or at its absolute path; Windows: absolute Node and runtime (ADR-0013).
+  const command = (event, extra = '') => process.platform === 'win32' ? `${quote(process.execPath)} ${quote(CLI)} hook ${event}${extra}`
+      : `${wrapper(rel ? `"$(git rev-parse --show-toplevel)/${rel}/hook"` : quote(path.join(__dirname, 'hook')))} ${event}${extra} # mutagate`,
     handler = (event, extra = '') => ({ type: 'command', command: command(event, extra), timeout: ['Stop', 'SubagentStop', 'TaskCompleted'].includes(event) ? 600 : extra ? 900 : 30,
       ...(agent === 'codex' && !['Stop', 'SubagentStop'].includes(event) ? { additionalContextLimit: 2500 } : {}) }), // Codex rejects it elsewhere.
     out = {};

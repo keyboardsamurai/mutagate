@@ -52,7 +52,7 @@ All commands accept `--repo <directory>` (Windows: `scripts\mutagate.cmd`). Inst
 
 A project install inside Git uses repo-relative hook commands ([ADR-0013](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0013-project-hooks-use-repo-relative-paths.md)), so commit the skill dir, the harness config (`.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/mutagate.js` or `.pi/extensions/mutagate.ts`) and `.mutagate/config.json`, and every clone gets the same gate. Each teammate needs Node 22+ and the toolchain; without them the hooks fail open and do not block.
 
-User scope (`--scope user`), a skill outside Git, and Windows write machine-local absolute paths: do not commit them. Claude started in a subdirectory may not load root settings; start `claude` in the Git top level.
+User scope (`--scope user`), a skill outside Git, and Windows write machine-local absolute paths: do not commit them. On macOS and Linux these commands run the absolute `scripts/hook`, so the hooks keep working after a Node upgrade (nvm, Homebrew) removes the Node that ran `install`. Claude started in a subdirectory may not load root settings; start `claude` in the Git top level.
 
 `install` saves its Node 22+ path in the gitignored `scripts/.node-path`. The hook wrapper and adapters pick Node from `MUTAGATE_NODE`, then that file, then PATH.
 

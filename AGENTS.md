@@ -73,10 +73,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   - `normalize` converts runner output into the shared result shape, and
     `report` turns that result into survivor text.
   - `gate`, `install`, and `doctor` implement the matching commands.
-- Hook path: a portable project install (skill inside the Git top level, not
-  Windows) makes the harness run the `scripts/hook` wrapper through a
-  Git-top-level command (ADR-0013); otherwise the command is the absolute Node
-  and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
+- Hook path: on POSIX the harness runs the `scripts/hook` wrapper, through a
+  Git-top-level command for a portable project install (skill inside the Git
+  top level) and at its absolute path otherwise (ADR-0013); on Windows the
+  command is the absolute Node and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
   `scripts/.node-path` (machine-local, untracked through `scripts/.gitignore`),
   then PATH. The wrapper runs `mutagate-hook.cjs hook <Event>`, which reads the
   JSON payload on stdin. Under Node < 22 hooks exit 0 and SessionStart says so.
