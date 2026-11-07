@@ -296,15 +296,21 @@ test('portable hook identity survives skill relocation and Git failure', { skip:
   }
 });
 
-test('portable hook command fails open without Git or the skill dir, also under dash', { skip: process.platform === 'win32' }, t => {
-  const command = m.hookConfig('claude', { repo: path.resolve(import.meta.dirname, '..') }).hooks.Stop[0].hooks[0].command;
-  assert.match(command, /\[ -f "\$f" \]/);
+test('portable hook command fails open without Git, the skill dir or Node, also under dash; Claude commands that cannot block exit 0', { skip: process.platform === 'win32' }, t => {
+  const root = path.resolve(import.meta.dirname, '..'), commands = Object.values(m.hookConfig('claude', { repo: root }).hooks).flatMap(groups => groups[0].hooks.map(h => h.command));
+  assert.match(commands[0], /\[ -f "\$f" \]/);
+  // Copilot runs .claude/settings.json hooks and denies the edit on a failed PreToolUse; gate and --mutate commands keep their exit code (ADR-0013).
+  assert.deepEqual(commands.map(command => command.split('sh "$f" ').pop()), [`SessionStart --installed ${m.VERSION} || true # mutagate`, 'PreToolUse || true # mutagate', 'PostToolUse || true # mutagate', 'PostToolUse --mutate # mutagate', 'Stop # mutagate', 'SubagentStop # mutagate', 'TaskCompleted # mutagate']);
+  assert.doesNotMatch(JSON.stringify(m.hookConfig('codex', { repo: root })), /\|\|/);
   const noGit = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'hook-open-'))), noSkill = path.join(noGit, 'repo');
   t.after(() => fs.rmSync(noGit, { recursive: true, force: true }));
   fs.mkdirSync(noSkill); assert.equal(spawnSync('git', ['init', '-q'], { cwd: noSkill }).status, 0);
   const env = { ...process.env, GIT_CEILING_DIRECTORIES: path.dirname(noGit) }; // dash exits 2 on a missing script
-  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) for (const cwd of [noGit, noSkill]) {
-    const status = spawnSync(shell, ['-c', command], { cwd, env, input: '{}' }).status;
-    assert.ok(status !== 0 && status !== 2, `${shell} in ${cwd}: ${status}`);
+  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) for (const cwd of [noGit, noSkill]) for (const command of commands) {
+    const { status, stdout } = spawnSync(shell, ['-c', command], { cwd, env, input: '{}', encoding: 'utf8' });
+    if (command.includes('|| true')) assert.deepEqual([status, stdout], [0, ''], `${shell} in ${cwd}: ${command}`);
+    else assert.ok(status !== 0 && status !== 2, `${shell} in ${cwd}: ${status}`);
   }
+  const noNode = spawnSync('/bin/sh', [path.join(root, 'scripts/hook'), 'Stop'], { env: { ...env, MUTAGATE_NODE: path.join(noGit, 'node'), PATH: env.PATH.split(path.delimiter).filter(d => !fs.existsSync(path.join(d, 'node'))).join(path.delimiter) }, input: '{}', encoding: 'utf8' });
+  assert.deepEqual([noNode.status, noNode.stdout], [0, ''], noNode.stderr);
 });

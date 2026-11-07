@@ -192,6 +192,7 @@ mutagate sends no telemetry and uploads nothing. It downloads only when a tool i
 | Codex never runs the hooks | Codex does not trust new or changed hooks | Open `/hooks` in Codex, trust mutagate (after each install) |
 | Claude ignores the hooks | Claude started in a subdirectory, root `.claude/settings.json` not loaded | Start `claude` in the Git top level |
 | `Hooks are from mutagate X, skill is Y: rerun … install` at session start, or `WARN <harness> install` in doctor | The skill was updated after `install` wrote the hooks | Rerun `<skill>/scripts/mutagate install --agent <harness>` with the same `--scope`; Codex: trust mutagate in `/hooks` again |
+| GitHub Copilot denies each file edit in a repo with a Claude project install | Copilot also runs the hooks in `.claude/settings.json`; the `PreToolUse` hook of an earlier install fails when the clone has no skill dir, `git` or Node | Rerun `<skill>/scripts/mutagate install --agent claude` and commit `.claude/settings.json` |
 | `mutagate inactive: hooks run Node …; need 22+` | Hooks found Node < 22 | `MUTAGATE_NODE=/path/to/node22`, or rerun `install` under Node 22+ |
 | `jar download failed` / `offline: missing …` | No access to Maven Central (proxy, offline) | `node <skill>/scripts/cache-jars.mjs`, then `export MUTAGATE_OFFLINE=1` |
 | C# result: run budget exceeded | Cold `dotnet` builds take 2–5 min | `.mutagate/config.json`: `"runBudgetSec": 600` |

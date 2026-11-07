@@ -78,8 +78,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   top level) and at its absolute path otherwise (ADR-0013); on Windows the
   command is the absolute Node and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
   `scripts/.node-path` (machine-local, untracked through `scripts/.gitignore`),
-  then PATH. The wrapper runs `mutagate-hook.cjs hook <Event>`, which reads the
-  JSON payload on stdin. Under Node < 22 hooks exit 0 and SessionStart says so.
+  then PATH, and exits 0 without Node. The wrapper runs
+  `mutagate-hook.cjs hook <Event>`, which reads the JSON payload on stdin. On
+  POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
+  in `|| true`, because Copilot also runs them (ADR-0013). Under Node < 22 hooks exit 0 and SessionStart says so.
   `install` stamps its `VERSION` into the SessionStart command
   (`--installed <VERSION>`) and replaces `__MUTAGATE_VERSION__` in the
   adapters, which send it as payload `installed`; a missing or other stamp adds

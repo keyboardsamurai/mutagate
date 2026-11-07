@@ -15,9 +15,10 @@ function gitRel(c) {
 }
 function hooks(agent, rel, version) {
   // Wrapper under the Git top level or at its absolute path; Windows: absolute Node and runtime (ADR-0013). SessionStart carries the install stamp (ADR-0017).
-  const command = (event, extra = '', a = `${event}${event === 'SessionStart' ? ` --installed ${version}` : ''}${extra}`) => process.platform === 'win32' ? `${quote(process.execPath)} ${quote(CLI)} hook ${a}`
-      : `${wrapper(rel ? `"$(git rev-parse --show-toplevel)/${rel}/hook"` : quote(path.join(__dirname, 'hook')))} ${a} # mutagate`,
-    handler = (event, extra = '') => ({ type: 'command', command: command(event, extra), timeout: ['Stop', 'SubagentStop', 'TaskCompleted'].includes(event) ? 600 : extra ? 900 : 30,
+  // Claude commands that never block end in || true: Copilot also runs .claude/settings.json and denies the edit on a failed PreToolUse (ADR-0013).
+  const gate = ['Stop', 'SubagentStop', 'TaskCompleted'], command = (event, extra = '', a = `${event}${event === 'SessionStart' ? ` --installed ${version}` : ''}${extra}`) => process.platform === 'win32' ? `${quote(process.execPath)} ${quote(CLI)} hook ${a}`
+      : `${wrapper(rel ? `"$(git rev-parse --show-toplevel)/${rel}/hook"` : quote(path.join(__dirname, 'hook')))} ${a}${agent === 'claude' && !extra && !gate.includes(event) ? ' || true' : ''} # mutagate`,
+    handler = (event, extra = '') => ({ type: 'command', command: command(event, extra), timeout: gate.includes(event) ? 600 : extra ? 900 : 30,
       ...(agent === 'codex' && !['Stop', 'SubagentStop'].includes(event) ? { additionalContextLimit: 2500 } : {}) }), // Codex rejects it elsewhere.
     out = {};
   for (const event of ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', ...(agent === 'claude' ? ['TaskCompleted'] : [])]) out[event] = [{
