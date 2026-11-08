@@ -185,7 +185,8 @@ test('installed hook runtime is generated from the core and used by every instal
   for (const harness of ['opencode', 'pi']) {
     m.install(c, harness);
     const file = path.join(c.repo, harness === 'opencode' ? '.opencode/plugins/mutagate.js' : '.pi/extensions/mutagate.ts');
-    assert.match(fs.readFileSync(file, 'utf8'), /mutagate-hook.cjs/);
+    const text = fs.readFileSync(file, 'utf8');
+    assert.match(text, /mutagate-hook.cjs/); assert.ok(text.includes(`harness: '${harness}'`), `${file}: the harness's own adapter`);
   }
 });
 

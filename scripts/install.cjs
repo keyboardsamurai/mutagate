@@ -26,6 +26,7 @@ function hooks(agent, rel, stamp) {
     hooks: [handler(event), ...(event === 'PostToolUse' ? [{ ...handler(event, ' --mutate'), ...(agent === 'claude' ? { asyncRewake: true } : { async: true }) }] : [])] }];
   return { hooks: out };
 }
+const ADAPTERS = { opencode: 'opencode.js', pi: 'pi.ts' }; // file in scripts/adapters per adapter harness; Claude and Codex get native JSON hooks
 // Config file (Claude, Codex) or adapter (OpenCode, Pi) of agent's install, under the home dir for user scope, else the repo.
 function configFile(agent, scope, c) {
   const user = scope === 'user', base = user ? os.homedir() : c.repo;
@@ -41,7 +42,7 @@ function install(c, agent, scope = 'project', remove = false, version) {
   if (!remove) try { fs.writeFileSync(path.join(__dirname, '.node-path'), process.execPath); } catch {} // for scripts/hook, wrappers, adapters; gitignored
   const rel = gitRel(c, scope), stamp = `${version}:${scope}`, // install stamp (ADR-0017)
     message = file => `${remove ? 'Removed' : 'Installed'} mutagate: ${file}.${remove || rel || scope === 'user' ? '' : ' Paths are absolute and machine-local: do not commit it, or use --scope user.'}`;
-  if (agent === 'claude' || agent === 'codex') {
+  if (!ADAPTERS[agent]) {
     const p = configFile(agent, scope, c), config = fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : {};
     config.hooks ??= {};
     for (const [event, groups] of Object.entries(config.hooks)) { // isOurs: absolute form or this skill's wrapper
@@ -54,13 +55,13 @@ function install(c, agent, scope = 'project', remove = false, version) {
   }
   const dest = configFile(agent, scope, c);
   if (remove) { if (fs.existsSync(dest) && fs.readFileSync(dest, 'utf8').includes('mutagate adapter')) fs.unlinkSync(dest); }
-  else atomic(dest, fs.readFileSync(path.join(__dirname, 'adapters', agent === 'pi' ? 'pi.ts' : 'opencode.js'), 'utf8').replace('"__MUTAGATE_CLI__"', JSON.stringify(rel ? slash(path.relative(path.dirname(dest), CLI)) : CLI)).replace('"__MUTAGATE_INSTALLED__"', JSON.stringify(stamp)));
+  else atomic(dest, fs.readFileSync(path.join(__dirname, 'adapters', ADAPTERS[agent]), 'utf8').replace('"__MUTAGATE_CLI__"', JSON.stringify(rel ? slash(path.relative(path.dirname(dest), CLI)) : CLI)).replace('"__MUTAGATE_INSTALLED__"', JSON.stringify(stamp)));
   return message(dest);
 }
 // doctor: the install stamp of agent's install in scope, '' without one, or null when not installed (ADR-0017). Raw JSON escapes quotes.
 function installStamp(c, agent, scope) {
   try { const text = fs.readFileSync(configFile(agent, scope, c), 'utf8');
-    if (agent === 'opencode' || agent === 'pi') return text.match(/installed: "([^"]*)"/)?.[1] ?? '';
+    if (ADAPTERS[agent]) return text.match(/installed: "([^"]*)"/)?.[1] ?? '';
     const rel = gitRel(c, scope), ours = Object.values(JSON.parse(text).hooks ?? {}).flat().flatMap(g => g.hooks ?? []).filter(h => isOurs(h, rel));
     return ours.length ? ours.map(h => h.command.match(/ SessionStart --installed (\S+)/)?.[1]).find(Boolean) ?? '' : null; } catch { return null; }
 }
