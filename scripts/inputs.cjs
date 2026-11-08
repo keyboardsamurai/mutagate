@@ -27,11 +27,13 @@ function fileDigest(file) {
 }
 
 const scanned = name => !ignored.has(name) && !noise.test(name);
-// Directory entries for the files() and inputFiles walks, without ignored and noise names; none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
+// Directory entries for the files() and inputFiles walks, without ignored and noise names or, beside a .csproj, bin and obj
+// (.NET build output); none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
 function dirEntries(dir, root = false) {
   let entries;
   try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (unreadable.has(e.code)) return []; throw e; }
-  return !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => scanned(e.name));
+  entries = !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => scanned(e.name));
+  return entries.some(e => e.isFile() && e.name.endsWith('.csproj')) ? entries.filter(e => !(e.isDirectory() && ['bin', 'obj'].includes(e.name))) : entries;
 }
 
 // The files Git lists below repo (tracked and unignored untracked), or null outside Git or when it lists none (repo inside an
@@ -51,23 +53,23 @@ function gitFiles(repo) {
 // Files for detect, registration and resolution: in a Git repo the files Git lists (ADR-0016), else a walk. Both drop ignored and
 // noise names, hidden names, dist, venvs below the root, bin and obj beside a .csproj, exclude globs and symlinks (Git: tracked ones only).
 function files(repo, exclude) {
-  const kept = (relative, name, dir, dotnet) => !(dir && dotnet && ['bin', 'obj'].includes(name)) && !name.startsWith('.') && name !== 'dist' && !exclude.some(g => glob(g).test(relative));
+  const kept = (relative, name) => !name.startsWith('.') && name !== 'dist' && !exclude.some(g => glob(g).test(relative));
   const listed = gitFiles(repo);
   if (listed) {
     const venvs = new Set(), dotnets = new Set(), dirs = new Map([['.', true]]);
     for (const f of listed) if (f.endsWith('/pyvenv.cfg')) venvs.add(path.posix.dirname(f)); else if (f.endsWith('.csproj')) dotnets.add(path.posix.dirname(f));
     const dirKept = d => {
-      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && kept(d, name, true, dotnets.has(parent))); }
+      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && !(dotnets.has(parent) && ['bin', 'obj'].includes(name)) && kept(d, name)); }
       return dirs.get(d);
     };
-    return listed.filter(f => { const name = path.posix.basename(f); return dirKept(path.posix.dirname(f)) && scanned(name) && kept(f, name, false); });
+    return listed.filter(f => { const name = path.posix.basename(f); return dirKept(path.posix.dirname(f)) && scanned(name) && kept(f, name); });
   }
   const out = [];
   function visit(dir) {
-    const entries = dirEntries(dir, dir === repo), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
+    const entries = dirEntries(dir, dir === repo);
     for (const e of entries) {
       const p = path.join(dir, e.name), relative = path.relative(repo, p).split(path.sep).join('/');
-      if (e.isSymbolicLink() || !kept(relative, e.name, e.isDirectory(), dotnet)) continue;
+      if (e.isSymbolicLink() || !kept(relative, e.name)) continue;
       if (e.isDirectory()) visit(p);
       else out.push(relative);
     }
@@ -124,10 +126,9 @@ function inputFiles(c, t) {
   const found = new Set();
   const owned = ['repos', 'jars', 'recorded', 'tools'].map(name => path.resolve(c.root, name));
   function visit(dir, project) {
-    const root = dir === project, entries = dirEntries(dir, root), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
+    const root = dir === project, entries = dirEntries(dir, root);
     const go = fs.existsSync(path.join(project, 'go.mod'));
     for (const entry of entries) {
-      if (dotnet && entry.isDirectory() && ['bin', 'obj'].includes(entry.name)) continue;
       if (go && root && (entry.isDirectory() ? entry.name === 'bin' : entry.name.endsWith('.out'))) continue;
       const file = path.join(dir, entry.name);
       // Go build output: go build -o, go test -c and extensionless executables from go build ./cmd/x.

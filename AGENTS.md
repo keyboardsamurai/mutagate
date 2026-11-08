@@ -136,8 +136,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   resolution: the Git file list in a Git repo, else a walk, with the same name
   rules; ADR-0016), scopes project inputs and computes digests
   for fingerprints; its `dirEntries` reads a directory for both repo walks
-  (`files` and `inputFiles`) and skips unreadable directories, venvs and noise
-  names; its `read` and `fileDigest` treat a file it cannot read as empty. `kotlin-source.cjs` provides the source-aware part of the
+  (`files` and `inputFiles`) and skips unreadable directories, venvs, noise
+  names and `bin`/`obj` beside a `.csproj`; its `read` and `fileDigest` treat a file it cannot read as empty. `kotlin-source.cjs` provides the source-aware part of the
   Kotlin Tier B filter, and `references/kotlin-junk.yaml` holds its pattern
   rules. `glob.cjs` compiles globs, cached per process. `mutmut-bridge.cjs` writes the mutmut
   config and result bridge per mutmut version (2, 3.0–3.5, 3.6+). `errors.cjs`
