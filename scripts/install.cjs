@@ -58,10 +58,10 @@ function install(c, agent, scope = 'project', remove = false, version) {
   return message(dest);
 }
 // doctor: the install stamp of agent's install in scope, '' without one, or null when not installed (ADR-0017). Raw JSON escapes quotes.
-function installed(c, agent, scope) {
+function installStamp(c, agent, scope) {
   try { const text = fs.readFileSync(configFile(agent, scope, c), 'utf8');
     if (agent === 'opencode' || agent === 'pi') return text.match(/installed: "([^"]*)"/)?.[1] ?? '';
     const rel = gitRel(c, scope), ours = Object.values(JSON.parse(text).hooks ?? {}).flat().flatMap(g => g.hooks ?? []).filter(h => isOurs(h, rel));
     return ours.length ? ours.map(h => h.command.match(/ SessionStart --installed (\S+)/)?.[1]).find(Boolean) ?? '' : null; } catch { return null; }
 }
-module.exports = { hookConfig: (agent, c, version) => hooks(agent, c && gitRel(c), version), install, installed };
+module.exports = { hookConfig: (agent, c, version) => hooks(agent, c && gitRel(c), version), install, installStamp };

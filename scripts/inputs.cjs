@@ -15,12 +15,12 @@ const inside = (root, file) => file === root || file.startsWith(root + path.sep)
 const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) { if (unreadable.has(e.code)) return ''; throw e; } };
 
 // The stat values that change when a file changes; fileDigest and the loadResult memo compare them.
-const stamp = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
+const statKey = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
 function fileDigest(file) {
   try {
-    const at = stamp(file), previous = digestCache.get(file);
-    if (previous?.stamp === at) return previous.digest;
-    const entry = { stamp: at, digest: digest(fs.readFileSync(file)) };
+    const at = statKey(file), previous = digestCache.get(file);
+    if (previous?.at === at) return previous.digest;
+    const entry = { at, digest: digest(fs.readFileSync(file)) };
     digestCache.set(file, entry);
     return entry.digest;
   } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; }
@@ -165,6 +165,6 @@ function inputFiles(c, t) {
 exports.files = files;
 exports.inputFiles = inputFiles;
 exports.fileDigest = fileDigest;
-exports.stamp = stamp;
+exports.statKey = statKey;
 exports.read = read;
 exports.unreadable = unreadable;

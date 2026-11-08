@@ -91,9 +91,9 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `install` stamps `<VERSION>:<scope>` into the SessionStart command
   (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
   adapters, which send it as payload `installed`; a missing stamp or other
-  version adds a rerun notice (`reinstall`) to SessionStart, exact when the
+  version adds a rerun notice (`rerunNotice`) to SessionStart, exact when the
   stamp has a scope, and a doctor WARN with the exact command per project or
-  user install (`installed`, ADR-0017). `scripts/hooks.json`
+  user install (`installStamp`, ADR-0017). `scripts/hooks.json`
   carries `MUTAGATE_VERSION` instead.
   PostToolUse on a test file registers targets. `schedule` then spawns a detached
   `worker` process that calls `runTarget` while holding a per-target lock.

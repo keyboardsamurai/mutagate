@@ -586,10 +586,10 @@ async function runTarget(c, key, runner) {
 }
 // Retry errors once (e.g. concurrent builds).
 const retryable = r => r?.status === 'error' && (r.attempts ?? 1) < 2;
-const normalized = new Map(), stamp = p => { try { return runtimeRequire('./inputs.cjs').stamp(p); } catch { return ''; } };
+const normalized = new Map(), statKey = p => { try { return runtimeRequire('./inputs.cjs').statKey(p); } catch { return ''; } };
 function loadResult(c, key, t, expectedFingerprint) {
-  // Normalize once per process while the result file, the fingerprint and waivers.json are unchanged; stamps are taken before the reads.
-  const file = resultFile(c, key), at = [stamp(file), t?.fingerprint, stamp(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
+  // Normalize once per process while the result file, the fingerprint and waivers.json are unchanged; stat keys are taken before the reads.
+  const file = resultFile(c, key), at = [statKey(file), t?.fingerprint, statKey(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
   if (!t || !r || t.resultGeneration !== t.generation || t.fingerprint !==
     (expectedFingerprint ?? fingerprint(c, t))) return null;
   if (!r.raw) return r;
@@ -601,11 +601,11 @@ const detached = (run, args, env) => run(process.execPath, [path.join(HERE, 'mut
 function schedule(c, key, run = spawn) {
   detached(run, ['worker', '--repo', c.repo, '--session', c.sid, '--key', key], { MUTAGATE_HOOK_SESSION: c.sid, MUTAGATE_HARNESS: c.harness });
 }
-// SessionStart starts the cache prune (prune.cjs) at most once a day; the stamp mtime records the last start (a clock jump also restarts it).
+// SessionStart starts the cache prune (prune.cjs) at most once a day; the mtime of repos/.pruned records the last start (a clock jump also restarts it).
 function schedulePrune(c, run = spawn) {
-  const stamp = path.join(c.root, 'repos', '.pruned'), st = fs.statSync(stamp, { throwIfNoEntry: false });
+  const pruned = path.join(c.root, 'repos', '.pruned'), st = fs.statSync(pruned, { throwIfNoEntry: false });
   if (st && Math.abs(Date.now() - st.mtimeMs) < 86400000) return;
-  atomic(stamp, new Date().toISOString());
+  atomic(pruned, new Date().toISOString());
   detached(run, ['prune'], { CLAUDE_PLUGIN_DATA: c.root });
 }
 // once names a one-time block flag; otherwise maxRounds applies.
@@ -712,8 +712,8 @@ async function handleHook(c, p, event) {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
-    const stale = reinstall(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
-      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${stale ? ` ${stale}.` : ''}`;
+    const installNote = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
+      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${installNote ? ` ${installNote}.` : ''}`;
     return notice(banner);
   }
   if (event === 'PostToolUse') {
@@ -818,7 +818,7 @@ function detect(c) {
 const hookConfig = (agent, c) => runtimeRequire('./install.cjs').hookConfig(agent, c, VERSION);
 const install = (c, agent, scope, remove) => runtimeRequire('./install.cjs').install(c, agent, scope, remove, VERSION);
 // SessionStart and doctor text when the install stamp <version>:<scope> is missing or not VERSION, else ''; known: the scope doctor read (ADR-0017).
-const reinstall = (c, stamp, agent, known) => { const [v, s] = String(stamp ?? '').split(':'), scope = known || s;
+const rerunNotice = (c, stamp, agent, known) => { const [v, s] = String(stamp ?? '').split(':'), scope = known || s;
   return v === VERSION ? '' : `Hooks are from ${/^\d[\w.+-]*$/.test(v) ? 'mutagate ' + v : 'an older mutagate'}, skill is ${VERSION}: rerun ${cliName(c)} install --agent ${agent}${scope === 'user' ? ' --scope user' : scope ? '' : ' (add --scope user for a user install)'}`; };
 
 function agents(c) {
@@ -857,9 +857,9 @@ async function doctor(c) {
     if (d.language === 'csharp' && c.config.runBudgetSec === DEFAULTS.runBudgetSec) checks.push({ name: '.NET run budget', pass: true, note: 'Cold runs can take 2 to 5 minutes; set runBudgetSec: 600 in .mutagate/config.json.' });
   }
   step('adapter'); const found = ['claude', 'codex', 'opencode', 'pi'] // each harness in both scopes; pass needs a detected one, any when none is detected
-    .flatMap(a => ['project', 'user'].map(s => [a, s, runtimeRequire('./install.cjs').installed(c, a, s)])).filter(x => x[2] !== null), detected = agents(c);
+    .flatMap(a => ['project', 'user'].map(s => [a, s, runtimeRequire('./install.cjs').installStamp(c, a, s)])).filter(x => x[2] !== null), detected = agents(c);
   checks.push({ name: 'adapter installed', pass: found.some(([a]) => !detected.length || detected.includes(a)), hint: 'Run mutagate install --agent <harness>.' },
-    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: reinstall(c, stamp, a, s) })).filter(x => x.note)); step('harness versions');
+    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: rerunNotice(c, stamp, a, s) })).filter(x => x.note)); step('harness versions');
   const versions = json(path.join(ROOT, 'references/versions.json'), { note: 'Version manifest excluded from skill installation; see README.' }); checks.push(...await dr.harnessChecks(versions)); step('synthetic scoped mutation smoke');
   const dir = path.join(c.data, 'doctor', crypto.randomUUID());
   mkdir(dir);
