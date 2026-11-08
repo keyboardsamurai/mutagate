@@ -102,9 +102,9 @@ export function context(args = {}, payload = {}) {
     data = path.join(root, 'repos', hash(repo));
   const { config, errors } = configFor(repo, root, args);
   // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`. No env makes them `claude` (ADR-0015).
-  const inherited = payload.timestamp !== undefined, harness = inherited ? 'copilot' : process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  const inherited = payload.timestamp !== undefined, harness = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited || ['claude', 'codex', 'opencode', 'pi'].includes(harness) ? harness : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited ? 'copilot' : ['claude', 'codex', 'opencode', 'pi'].includes(harness) ? harness : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
