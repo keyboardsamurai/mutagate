@@ -35,13 +35,15 @@ export function atomic(p, data) {
   fs.writeFileSync(tmp, typeof data === 'string' ? data : JSON.stringify(data, null, 2) + '\n', { mode: 0o600 });
   fs.renameSync(tmp, p);
 }
+// Real path of the deepest existing ancestor plus the missing rest, so an alias (macOS /tmp, /var) resolves; null for a Windows unmapped drive or share root.
+const realPath = (p, a = p) => { // one realpath when p exists (the hook path), else walk up
+  for (;;) try { return path.join(fs.realpathSync(a), path.relative(a, p)); } catch { if (a === path.dirname(a)) return null; a = path.dirname(a); }
+};
 export function safePath(repo, input) {
   if (typeof input !== 'string' || !input || input.includes('\0')) return null;
-  // repo is a realpath: resolve the deepest existing ancestor before the containment check, so an alias (macOS /tmp) still matches.
-  const p = path.resolve(repo, input);
-  let ancestor = p;
-  while (!exists(ancestor) && ancestor !== path.dirname(ancestor)) ancestor = path.dirname(ancestor);
-  let real; try { real = path.join(fs.realpathSync(ancestor), path.relative(ancestor, p)); } catch { return null; } // Windows: an unmapped drive or share root
+  // repo is a realpath: resolve the input the same way before the containment check.
+  const real = realPath(path.resolve(repo, input));
+  if (!real) return null;
   const rel = path.relative(repo, real);
   return rel === '..' || rel.startsWith('..' + path.sep) || path.isAbsolute(rel) ? null : real;
 }
@@ -58,8 +60,9 @@ export function parseArgs(args) {
   return out;
 }
 export function cacheRoot(env = process.env) {
-  return env.CLAUDE_PLUGIN_DATA || (process.platform === 'win32' ? path.join(env.LOCALAPPDATA || os.homedir(),
-    'mutagate') : path.join(env.XDG_CACHE_HOME || path.join(os.homedir(), '.cache'), 'mutagate'));
+  const root = path.resolve(env.CLAUDE_PLUGIN_DATA || (process.platform === 'win32' ? path.join(env.LOCALAPPDATA || os.homedir(),
+    'mutagate') : path.join(env.XDG_CACHE_HOME || path.join(os.homedir(), '.cache'), 'mutagate')));
+  return realPath(root) || root; // tools (Jest, Vitest) get real data-dir paths, not a symlinked alias
 }
 export function configFor(repo, root, args = {}, env = process.env) {
   const errors = [],
@@ -906,7 +909,7 @@ async function doctor(c) {
       smoke = 'probe.test.js';
     }
     if (!smoke) throw Error('no supported runner detected');
-    const sc = { ...c, repo: fs.realpathSync(dir), toolRepo: c.repo, data: path.join(dir, 'state-data'), stateFile: path.join(dir, 'state-data/session.json') };
+    const sc = { ...c, repo: dir, toolRepo: c.repo, data: path.join(dir, 'state-data'), stateFile: path.join(dir, 'state-data/session.json') };
     const resolved = await register(sc, smoke);
     if (resolved.ambiguous) throw Error(resolved.message);
     const result = await runTarget(sc, targetKey(resolved.targets[0]));

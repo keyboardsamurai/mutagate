@@ -96,7 +96,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`
-  exit 3). Session state is JSON under `cacheRoot()`, written through
+  exit 3). Session state is JSON under `cacheRoot()` (a real path, resolved
+  like `safePath`, so tools get no symlinked alias), written through
   `updateState` with a lock and atomic writes; compute `fingerprint` before
   `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
   keeps normalized results per process while the result file, the fingerprint
