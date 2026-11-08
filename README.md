@@ -113,7 +113,7 @@ OpenCode and Pi continue the session with the survivors instead of blocking nati
 
 Pinned version, upgrade, uninstall, `--agent auto`, user scope and Windows: [docs/install.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/install.md).
 
-Upgrading from 0.9.0: run the `npx skills add` line and `install --agent <harness>` again (Codex: trust the hooks in `/hooks` again). 0.9.1 changes the installed hook commands; until you reinstall, each session starts with `Hooks are from an older mutagate … rerun … install`.
+Upgrading from 0.9.0: run the `npx skills add` line and `install --agent <harness>` again (Codex: trust the hooks in `/hooks` again). 0.9.1 changes the installed hook commands; until you reinstall, each session starts with `Hooks are from an older mutagate … rerun … install`. The skill update alone makes a Claude install inert under GitHub Copilot.
 
 ## How it works
 
@@ -177,6 +177,8 @@ Live eval (`npm run eval`), `natural` and `forced` scenarios:
 ✅ both scenarios passed · ⏳ missing scenario · ❌ mutagate/harness gap. Each scenario runs twice and passes when one run passes ([ADR-0011](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0011-live-eval-local-two-runs-per-cell.md)). Reliability: one of two runs failed for OpenCode C# `natural`, Pi C# `natural`, Pi Java `natural`, Pi Python `natural` and Pi Python `forced`. Records: [test/evidence](https://github.com/keyboardsamurai/mutagate/blob/main/test/evidence/README.md).
 
 OpenCode forwards only write/edit/patch/apply_patch tools; Pi only write/edit.
+
+GitHub Copilot CLI also runs the hooks in `.claude/settings.json`. mutagate keeps these calls inert: exit 0, no runs, no gate, no waiver guard. Until a Copilot install exists, the session starts with `mutagate inactive under Copilot`; Copilot support comes in 0.9.2 ([ADR-0015](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0015-inherited-claude-hooks-are-inert-under-copilot.md)).
 
 **One-shot caveats:** OpenCode/Pi need persistent sessions (interactive, `opencode serve`, `pi --mode rpc`); `opencode run`/`pi -p` cannot reprompt. Without streaming input, `claude -p` waits for the async hook on each test write.
 

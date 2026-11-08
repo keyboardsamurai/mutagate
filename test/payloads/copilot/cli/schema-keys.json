@@ -1,0 +1,55 @@
+{
+ "SessionStart": [
+  "cwd",
+  "hook_event_name",
+  "initial_prompt",
+  "session_id",
+  "source",
+  "timestamp"
+ ],
+ "PreToolUse": [
+  "cwd",
+  "hook_event_name",
+  "session_id",
+  "timestamp",
+  "tool_input",
+  "tool_name",
+  "tool_use_id"
+ ],
+ "PostToolUse": [
+  "cwd",
+  "hook_event_name",
+  "session_id",
+  "timestamp",
+  "tool_input",
+  "tool_name",
+  "tool_result",
+  "tool_use_id"
+ ],
+ "Stop": [
+  "agent_id",
+  "agent_type",
+  "cwd",
+  "hook_event_name",
+  "parent_agent_id",
+  "session_id",
+  "stop_hook_active",
+  "stop_reason",
+  "timestamp",
+  "transcript_path"
+ ],
+ "SubagentStop": [
+  "agent_id",
+  "agent_name",
+  "agent_type",
+  "cwd",
+  "hook_event_name",
+  "last_assistant_message",
+  "parent_agent_id",
+  "session_id",
+  "stop_hook_active",
+  "stop_reason",
+  "timestamp",
+  "transcript_path"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "hook_event_name": "SubagentStop",
+ "session_id": "0fca0ebc-a7ec-46f1-989b-fd8d6177f78f",
+ "timestamp": "2026-11-08T07:47:30.802Z",
+ "cwd": "/repo",
+ "agent_id": "66224e26-bf29-4d6d-95b6-f81a53c8d05d",
+ "agent_type": "explore",
+ "parent_agent_id": "0fca0ebc-a7ec-46f1-989b-fd8d6177f78f",
+ "transcript_path": "~/.copilot/session-state/0fca0ebc-a7ec-46f1-989b-fd8d6177f78f/events.jsonl",
+ "agent_name": "explore",
+ "last_assistant_message": "2",
+ "stop_reason": "end_turn",
+ "stop_hook_active": false
+}

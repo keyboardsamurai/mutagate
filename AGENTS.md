@@ -81,7 +81,13 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   then PATH, and exits 0 without Node. The wrapper runs
   `mutagate-hook.cjs hook <Event>`, which reads the JSON payload on stdin. On
   POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
-  in `|| true`, because Copilot also runs them (ADR-0013). Under Node < 22 hooks exit 0 and SessionStart says so.
+  in `|| true`, because Copilot also runs them (ADR-0013). Copilot CLI payloads
+  have a top-level `timestamp` (no other harness sends it): `context` marks such a
+  call `inherited` (harness `copilot`, whatever the `CLAUDE_*` env), and
+  `handleHook` returns first, exit 0 with no state, recording or stdout, except
+  one SessionStart `additionalContext` notice while no native Copilot hook file
+  exists; trace decision `inherited` (ADR-0015, payloads in
+  `test/payloads/copilot/cli/`). Under Node < 22 hooks exit 0 and SessionStart says so.
   `install` stamps `<VERSION>:<scope>` into the SessionStart command
   (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
   adapters, which send it as payload `installed`; a missing stamp or other

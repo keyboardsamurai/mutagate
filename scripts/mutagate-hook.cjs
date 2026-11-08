@@ -101,9 +101,10 @@ function context(args = {}, payload = {}) {
   const session = hash(sid),
     data = path.join(root, 'repos', hash(repo));
   const { config, errors } = configFor(repo, root, args);
-  const harness = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`. No env makes them `claude` (ADR-0015).
+  const inherited = payload.timestamp !== undefined, harness = inherited ? 'copilot' : process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: ['claude', 'codex', 'opencode', 'pi'].includes(harness) ? harness : 'unknown', args,
+  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited || ['claude', 'codex', 'opencode', 'pi'].includes(harness) ? harness : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
@@ -688,6 +689,8 @@ async function gate(c, { wait, hook = false, runner } = {}) {
 async function handleHook(c, p, event) {
   const contextOutput = text => ({ code: 0, out: { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
     notice = text => [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
+  if (c.inherited) return event === 'SessionStart' && ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) ? // inert until a native Copilot install
+    { code: 0, out: { additionalContext: 'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).' } } : { code: 0 };
   if (Number(process.versions.node.split('.')[0]) < 22) return event === 'SessionStart' ? notice(`mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.`) : { code: 0 };
   if (event === 'PreToolUse') {
     const waiver = extractPaths(p).some(f => safePath(c.repo, f) === path.join(c.repo, '.mutagate/waivers.json'));
@@ -951,14 +954,14 @@ async function main(argv = process.argv.slice(2)) {
     if (cmd === 'hook') {
       const event = args._[1] || p.hook_event_name,
         start = Date.now();
-      if (args.record || process.env.MUTAGATE_RECORD === '1') atomic(path.join(c.root, 'recorded', c.harness,
+      if (!c.inherited && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
         `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), p);
       const r = await handleHook(c, p, event);
       if (r.out) console.log(JSON.stringify(r.out));
       if (r.text) console.log(r.text);
       if (r.err) console.error(r.err);
       trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: r.code === 2 ? 'block' : 'allow', duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err)
+        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.code === 2 ? 'block' : 'allow', duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err)
       });
       return r.code;
     }

@@ -140,6 +140,10 @@ _Avoid_: conversation, thread, run (for this)
 The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode or Pi.
 _Avoid_: agent, host tool, IDE
 
+**Inherited hook call**:
+A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
+_Avoid_: foreign hook, Copilot hook
+
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).
 _Avoid_: relative install, repo install

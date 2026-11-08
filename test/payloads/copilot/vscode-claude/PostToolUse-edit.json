@@ -1,0 +1,42 @@
+{
+ "session_id": "63ed0a29-7aa0-459c-b93d-b618a931b72f",
+ "transcript_path": "~/.claude/projects/-repo/63ed0a29-7aa0-459c-b93d-b618a931b72f.jsonl",
+ "cwd": "/repo",
+ "prompt_id": "d2345e73-3480-4857-ae87-7df499bc6c4b",
+ "permission_mode": "auto",
+ "effort": {
+  "level": "high"
+ },
+ "hook_event_name": "PostToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "/repo/src/calc.js",
+  "old_string": "export const pow = (a, b) => a ** b;\n",
+  "new_string": "export const pow = (a, b) => a ** b;\nexport const mod = (a, b) => a % b;\n",
+  "replace_all": false
+ },
+ "tool_response": {
+  "filePath": "/repo/src/calc.js",
+  "oldString": "export const pow = (a, b) => a ** b;\n",
+  "newString": "export const pow = (a, b) => a ** b;\nexport const mod = (a, b) => a % b;\n",
+  "originalFile": "export const add = (a, b) => a + b;\nexport const sub = (a, b) => a - b;\nexport const mul = (a, b) => a * b;\nexport const div = (a, b) => a / b;\nexport const pow = (a, b) => a ** b;\n",
+  "structuredPatch": [
+   {
+    "oldStart": 3,
+    "oldLines": 3,
+    "newStart": 3,
+    "newLines": 4,
+    "lines": [
+     " export const mul = (a, b) => a * b;",
+     " export const div = (a, b) => a / b;",
+     " export const pow = (a, b) => a ** b;",
+     "+export const mod = (a, b) => a % b;"
+    ]
+   }
+  ],
+  "userModified": false,
+  "replaceAll": false
+ },
+ "tool_use_id": "toolu_01SKMvGgouLqTCZK88pBxKf6",
+ "duration_ms": 2
+}
