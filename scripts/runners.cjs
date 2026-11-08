@@ -2,7 +2,7 @@
 // Runners drive the mutation engines and return raw mutants; lazy, off the hook path. mutagate.mjs injects the engine helpers.
 const fs = require('node:fs'), path = require('node:path'), os = require('node:os'), crypto = require('node:crypto'), { spawn, spawnSync } = require('node:child_process'), { createRequire } = require('node:module');
 const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), exists = p => fs.existsSync(p), mkdir = p => fs.mkdirSync(p, { recursive: true }),
-  slash = s => s.split(path.sep).join('/'), sha256 = s => crypto.createHash('sha256').update(s).digest('hex'), readIf = p => require('./inputs.cjs').read(p); // '' for a file mutagate cannot read
+  slash = s => s.split(path.sep).join('/'), sha256 = s => crypto.createHash('sha256').update(s).digest('hex'), { read: readOrEmpty } = require('./inputs.cjs'); // '' for a file mutagate cannot read
 // Runner process groups die with mutagate: on exit, and on SIGINT/SIGTERM/SIGHUP (exit 128+signo). Handlers install on the first spawn.
 const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
 let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };
@@ -76,7 +76,7 @@ async function launcherJar(cp, mvn, opts) {
 function javaExe(repo=process.cwd()) {
   const executable=home=>path.join(home,'bin',process.platform==='win32'?'java.exe':'java');
   if(process.env.JAVA_HOME)return executable(process.env.JAVA_HOME);
-  const configured=readIf(path.join(repo,'gradle.properties')).match(/^org\.gradle\.java\.installations\.paths\s*=\s*(.+)$/m)?.[1].split(',')||[];
+  const configured=readOrEmpty(path.join(repo,'gradle.properties')).match(/^org\.gradle\.java\.installations\.paths\s*=\s*(.+)$/m)?.[1].split(',')||[];
   const jdks=path.join(process.env.GRADLE_USER_HOME||path.join(os.homedir(),'.gradle'),'jdks');
   const homes=[...configured,...(exists(jdks)?fs.readdirSync(jdks).flatMap(p=>[path.join(jdks,p),path.join(jdks,p,'Contents/Home')]):[])];
   return homes.map(p=>executable(path.resolve(repo,p.trim()))).find(exists)||'java';
@@ -84,7 +84,7 @@ function javaExe(repo=process.cwd()) {
 // Kotlin top-level functions use the file facade.
 // ponytail: a .kt file with several targets mutates its facade in each target's run.
 const pitTargets = (c, t) => [t.target, t.language === 'kotlin' && t.file.endsWith('.kt') && require('./kotlin-source.cjs').facadeClass(t.file,
-  readIf(path.join(c.repo, t.file)))].filter(Boolean).flatMap(x => [x, x + '$*']).join(',');
+  readOrEmpty(path.join(c.repo, t.file)))].filter(Boolean).flatMap(x => [x, x + '$*']).join(',');
 const pitRaw = (out, xml) => /Created 0 mutation test units/.test(out) ? [] : parsePitXML(read(xml));
 async function pit(c, t, dir, opts) {
   const java = javaExe(c.repo);
@@ -94,7 +94,7 @@ async function pit(c, t, dir, opts) {
     gradle = ['build.gradle', 'build.gradle.kts'].some(f => exists(path.join(module, f)));
   let cp, main, source, testClasses;
   const buildHash = hash(require('./inputs.cjs').inputFiles(c, t).filter(f =>
-      /(?:build\.gradle(?:\.kts)?|settings\.gradle(?:\.kts)?|gradle\.properties|pom\.xml|libs\.versions\.toml)$/.test(f)).map(f => f + read(path.join(c.repo, f))).join('')),
+      /(?:build\.gradle(?:\.kts)?|settings\.gradle(?:\.kts)?|gradle\.properties|pom\.xml|libs\.versions\.toml)$/.test(f)).map(f => f + readOrEmpty(path.join(c.repo, f))).join('')),
     cacheFile = path.join(c.data, 'classpath', hash(module) + '.json'),
     cached = cacheJson(cacheFile),
     cacheValid = cached?.hash === buildHash && cached.cp.filter(p=>p.endsWith('.jar')).every(exists);
@@ -200,7 +200,7 @@ async function stryker(c, t, dir, opts) {
 async function python(c, t, dir, opts) {
   const py = process.env.VIRTUAL_ENV ? path.join(process.env.VIRTUAL_ENV, process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python') : 'python3';
   const project = c.toolRepo || c.repo,
-    uv = exists(path.join(project, 'uv.lock')) || exists(path.join(project, 'pyproject.toml')) && /\[tool\.uv\]|\[dependency-groups\]|uv_build/.test(read(path.join(project, 'pyproject.toml')));
+    uv = exists(path.join(project, 'uv.lock')) || exists(path.join(project, 'pyproject.toml')) && /\[tool\.uv\]|\[dependency-groups\]|uv_build/.test(readOrEmpty(path.join(project, 'pyproject.toml')));
   const exe = uv ? 'uv' : py;
   const pythonArgs = uv ? ['run', '--project', project, '--no-sync', 'python'] : [];
   let v; try { v = await command(exe, [...pythonArgs, '-c', 'import importlib.metadata; print(importlib.metadata.version("mutmut"))'], { ...opts, cwd: c.repo }); } catch (e) { throw Error(`mutmut 2 or 3 must be installed in the project environment (${uv ? 'uv add --dev mutmut, then uv sync' : 'pip install mutmut'}): ${String(e.message).slice(0, 300)}`); }
@@ -217,11 +217,11 @@ async function python(c, t, dir, opts) {
     try { fs.copyFileSync(path.join(c.repo, f), dest); } catch (e) { if (!unreadable.has(e.code)) throw e; } // not copied: mutagate cannot read it
   }
   const cfg = path.join(work, 'setup.cfg');
-  atomic(cfg, readIf(cfg).replace(/\[mutmut\][\s\S]*?(?=\n\[|$)/g, '') +
+  atomic(cfg, readOrEmpty(cfg).replace(/\[mutmut\][\s\S]*?(?=\n\[|$)/g, '') +
     `\n[mutmut]\npaths_to_mutate=${t.file}\ntests_dir=${t.tests.map(f=>path.dirname(f)).join(',')}\nrunner="${py}" -m pytest -x -q ${t.tests.map(f=>JSON.stringify(f)).join(' ')}\n`
   );
   const toml = path.join(work, 'pyproject.toml');
-  if (major === 3) atomic(toml, readIf(toml).replace(/\[tool\.mutmut\][\s\S]*?(?=\n\[|$)/g, '') + mm.tomlConfig(major, minor, t, inputs));
+  if (major === 3) atomic(toml, readOrEmpty(toml).replace(/\[tool\.mutmut\][\s\S]*?(?=\n\[|$)/g, '') + mm.tomlConfig(major, minor, t, inputs));
   const run = await command(exe, [...prefix, 'run', ...(major === 3 ? ['--max-children', '4'] : [])], { ...opts, cwd: work, allowFailure: true });
   if (run.signal) throw Error('mutation run budget exceeded');
   const out = run.error + '\n' + run.output, none = run.code && /runner returned 5\b/.test(out);
@@ -280,13 +280,14 @@ async function goRunner(c, t, dir, opts) {
     const mod = path.resolve(c.repo, t.module), pkgDir = path.dirname(path.resolve(c.repo, t.file));
     if (!exists(path.join(mod, 'go.mod'))) throw Error(`go.mod not found above ${t.file}`);
     const entries = fs.readdirSync(pkgDir), base = runner === 'gomutants' ? mod : pkgDir;
-    // gremlins 0.6 guesses imports from packages; build failures may look killed.
-    if (runner === 'gremlins' && pkgDir !== mod && pkg(read(path.join(c.repo, t.file))) !== path.basename(pkgDir)) throw Error('gremlins requires the subdirectory name to match its Go package; use goRunner=gomutants');
+    // gremlins 0.6 guesses imports from packages; build failures may look killed. No check without a package clause (an unreadable file reads as empty).
+    const declared = runner === 'gremlins' && pkgDir !== mod && pkg(readOrEmpty(path.join(c.repo, t.file)));
+    if (declared && declared !== path.basename(pkgDir)) throw Error('gremlins requires the subdirectory name to match its Go package; use goRunner=gomutants');
     const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const siblings = entries.filter(f => f.endsWith('.go') && !f.endsWith('_test.go') && f !== path.basename(t.file))
       .map(f => '^' + escape(slash(path.relative(base, path.join(pkgDir, f)))) + '$');
     const others = entries.filter(f => f.endsWith('_test.go') && !t.tests.includes(slash(path.relative(c.repo, path.join(pkgDir, f)))))
-      .flatMap(f => [...read(path.join(pkgDir, f)).matchAll(/^\s*func\s+(Test\w*)\s*\(/gm)].map(m => m[1]));
+      .flatMap(f => [...readOrEmpty(path.join(pkgDir, f)).matchAll(/^\s*func\s+(Test\w*)\s*\(/gm)].map(m => m[1]));
     const cfg = path.join(dir, 'go-config.yml'), workers = `--workers=${Math.min(4, os.availableParallelism())}`;
     atomic(cfg, '{}\n');
     const tags = c.config.goTags ? [`--tags=${c.config.goTags}`] : [];
