@@ -103,9 +103,9 @@ function context(args = {}, payload = {}) {
     data = path.join(root, 'repos', hash(repo));
   const { config, errors } = configFor(repo, root, args);
   // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`. No env makes them `claude` (ADR-0015).
-  const inherited = payload.timestamp !== undefined, harness = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  const inherited = payload.timestamp !== undefined, named = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(harness) ? harness : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
@@ -394,7 +394,7 @@ const MUTATORS = [
 function plainMutation(m, c) {
   if (m.status === 'NO_COVERAGE') return 'line was not covered by the scoped tests';
   const source = safePath(c.repo, m.file),
-    line = source ? readIf(source).split('\n')[m.line - 1] || '' : '';
+    line = source ? readOrEmpty(source).split('\n')[m.line - 1] || '' : '';
   if (/ConditionalsBoundary|CONDITIONALS_BOUNDARY/.test(m.mutator)) {
     const operators = line.match(/>=|<=|(?<![=>])>(?![=>])|(?<![=<])<(?![=<])/g) || [];
     if (operators.length === 1) return `${operators[0]} became ${{'>=':'>','<=':'<','>':'>=','<':'<='}[operators[0]]} and no test noticed`;
@@ -435,7 +435,7 @@ function normalize(raw, c, t, meta = {}) {
     if (m.ignored) continue;
     const id = hash(`${m.file}:${m.line}:${m.mutator}:${m.method}:${m.mutation_key||''}`);
     ids.add(id);
-    const rule = meta.kotlinTier === 'A' ? null : junkRule(m, rules, readIf(safePath(c.repo, m.file) || ''));
+    const rule = meta.kotlinTier === 'A' ? null : junkRule(m, rules, readOrEmpty(safePath(c.repo, m.file) || ''));
     if (rule) { filtered.push({ ...m, id, rule: rule.id }); continue; }
     if (!['KILLED', 'TIMED_OUT', 'SURVIVED', 'NO_COVERAGE'].includes(m.status)) { error_mutants++; continue; }
     const isWaived = waivers.some(w => w.id === id && w.target === t.target && w.reason?.trim());
@@ -449,7 +449,7 @@ function normalize(raw, c, t, meta = {}) {
       mapped = MUTATORS[rank];
     survivors.push({
       ...m, id, plain: clean(plainMutation(m, c)),
-      public: m.public ?? (t.language === 'python' ? !m.method.startsWith('_') : /\bpublic\b|\bexport\b/.test(readIf(path.join(c.repo, t.file)).split('\n')[ m.line - 1] || '') || t.language === 'kotlin' && !/\bprivate\b|\bprotected\b|\binternal\b/.test(readIf(path.join(c.repo, t.file)).split('\n')[m .line - 1] || '')),
+      public: m.public ?? (t.language === 'python' ? !m.method.startsWith('_') : /\bpublic\b|\bexport\b/.test(readOrEmpty(path.join(c.repo, t.file)).split('\n')[ m.line - 1] || '') || t.language === 'kotlin' && !/\bprivate\b|\bprotected\b|\binternal\b/.test(readOrEmpty(path.join(c.repo, t.file)).split('\n')[m .line - 1] || '')),
       severity: rank < 0 ? 99 : rank, short: m.status === 'NO_COVERAGE' ? 'no coverage' : mapped?.[1] || 'mutation', in_diff: lines.has(m .line),
       waived: false
     });
@@ -511,7 +511,7 @@ function report(r, cfg = DEFAULTS) {
 let loaded;
 const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
-const readIf = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
+const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -583,14 +583,14 @@ async function runTarget(c, key, runner) {
 }
 // Retry errors once (e.g. concurrent builds).
 const retryable = r => r?.status === 'error' && (r.attempts ?? 1) < 2;
-const normalized = new Map(), statKey = p => { try { return runtimeRequire('./inputs.cjs').statKey(p); } catch { return ''; } };
+const normalized = new Map(), statKeyOrEmpty = p => { try { return runtimeRequire('./inputs.cjs').statKey(p); } catch { return ''; } };
 function loadResult(c, key, t, expectedFingerprint) {
   // Normalize once per process while the result file, the fingerprint and waivers.json are unchanged; stat keys are taken before the reads.
-  const file = resultFile(c, key), at = [statKey(file), t?.fingerprint, statKey(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
+  const file = resultFile(c, key), memoKey = [statKeyOrEmpty(file), t?.fingerprint, statKeyOrEmpty(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
   if (!t || !r || t.resultGeneration !== t.generation || t.fingerprint !==
     (expectedFingerprint ?? fingerprint(c, t))) return null;
   if (!r.raw) return r;
-  if (normalized.get(file)?.at !== at) normalized.set(file, { at, r: normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) });
+  if (normalized.get(file)?.memoKey !== memoKey) normalized.set(file, { memoKey, r: normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) });
   return normalized.get(file).r;
 }
 
@@ -709,8 +709,8 @@ async function handleHook(c, p, event) {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
-    const installNote = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
-      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${installNote ? ` ${installNote}.` : ''}`;
+    const rerunText = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
+      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${rerunText ? ` ${rerunText}.` : ''}`;
     return notice(banner);
   }
   if (event === 'PostToolUse') {
