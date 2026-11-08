@@ -173,7 +173,7 @@ Details, failures and platforms: [docs/validation.md](https://github.com/keyboar
 |---|---|---|---|---|---|
 | Java | [PIT](https://pitest.org) 1.21.0 | Gradle/Maven · JUnit 4/5 | JDK 11+ | automatic, SHA-256 pinned | ✅ Gradle, Gradle multi-module, Maven |
 | Kotlin | PIT + junk filter ([Tier B](#kotlin)), Arcmutate ([Tier A](#kotlin), licensed) | Gradle/Maven · JUnit 4/5 | JDK 11+ | automatic, SHA-256 pinned | ✅ Gradle, Kotlin/Java mixed · ⏳ Tier A |
-| Python | [mutmut](https://github.com/boxed/mutmut) 2.5.1 / 3.8.0 | pytest · pip or uv | mutmut + pytest in the project env | you | ✅ pip, uv |
+| Python | [mutmut](https://github.com/boxed/mutmut) 2.5.1 / 3.8.1 | pytest · pip or uv | mutmut + pytest in the project env | you | ✅ pip, uv |
 | TypeScript / JavaScript | [Stryker](https://stryker-mutator.io) 9.1.1 | Jest 29 or Vitest 3 | `@stryker-mutator/core` + its test runner in the project | you | ✅ Jest, Vitest |
 | Go | [gomutants](https://github.com/szhekpisov/gomutants) 0.6.1, gremlins 0.6.0 fallback | `go test` | Go 1.26+ | automatic, cached | ✅ nested-package module · 🟡 [scoping caveats](#runners) |
 | C# | Stryker.NET 5.0.0 | `dotnet test` · xUnit | .NET SDK 10 | automatic, cached | ✅ xUnit · 🟡 [slow cold builds](#runners) |

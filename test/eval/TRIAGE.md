@@ -113,7 +113,7 @@ Is not:
   found") in the transcript or `stderr.log`
 - host flakes: toolchain missing, network, port collisions in TypeScript
   supertest tests (random 503/404), mutmut 3.0–3.5 segfaults on macOS (the
-  pins are 3.8.0; a segfault with mutmut 3.6+ is a finding)
+  pins are 3.8.1; a segfault with mutmut 3.6+ is a finding)
 - Pi 0.73.1 not retrying OpenRouter mid-stream errors (harness bug, see below)
 - an `ended: killed` run whose transcript shows long model steps and no
   mutagate wait (model latency), unless mutagate output sent the agent astray

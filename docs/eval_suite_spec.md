@@ -439,7 +439,7 @@ and classes that must be scored), `traps` (ids present), `prodFiles` (globs
 that count as production code; files matching the test globs are subtracted),
 and `testCommand`. Stacks: Java Spring Boot 4
 with Maven and JUnit 5; Kotlin Spring Boot 4 with Gradle and JUnit 5; Python
-FastAPI with pytest, uv and mutmut 3.8.0; TypeScript Express with Vitest; Go `net/http`;
+FastAPI with pytest, uv and mutmut 3.8.1; TypeScript Express with Vitest; Go `net/http`;
 C# ASP.NET Core minimal API with xUnit and `WebApplicationFactory`. Build-tool
 variants are not repeated here; the integration suite covers them.
 

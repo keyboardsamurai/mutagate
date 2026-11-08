@@ -13,6 +13,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 ### Changed
 
 - The runners moved from `mutagate.mjs` to the lazily loaded `scripts/runners.cjs`, which is hashed into fingerprints.
+- The tested mutmut 3 version is now 3.8.1; mutmut 3.8.0 crashes collecting stats with pytest 9.2.
 - In a Git repo, detection and target resolution use the files Git lists (`git ls-files -co --exclude-standard`) instead of a repo walk, so a file that Git ignores no longer counts for detection and is no longer a target, and files in submodules or nested repositories are no longer targets (ADR-0016). Fingerprints and Python and .NET copies still include ignored files.
 
 ### Fixed

@@ -152,7 +152,7 @@ and an entrypoint.
 |---|---|---|
 | Java | Spring Boot 4 + Maven, JUnit 5 | PIT |
 | Kotlin | Spring Boot 4 + Gradle, JUnit 5 | PIT + Tier B filter |
-| Python | FastAPI + pytest, uv | mutmut 3.8.0 |
+| Python | FastAPI + pytest, uv | mutmut 3.8.1 |
 | TypeScript | Express + Vitest | Stryker 9.1.1 |
 | Go | `net/http` | gomutants 0.6.1 |
 | C# | ASP.NET Core minimal API + xUnit + `WebApplicationFactory` | Stryker.NET 5.0.0 |
