@@ -709,8 +709,8 @@ async function handleHook(c, p, event) {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
-    const stamp = c.args.installed ?? p.installed, banner = // install stamp: --installed in the hook command, installed in the adapter payload
-      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${stamp === VERSION ? '' : ` ${reinstall(c, stamp, c.harness === 'unknown' ? '<harness>' : c.harness)} (add --scope user for a user install).`}`;
+    const stale = reinstall(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
+      `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${stale ? ` ${stale}.` : ''}`;
     return notice(banner);
   }
   if (event === 'PostToolUse') {
@@ -814,8 +814,9 @@ function detect(c) {
 }
 const hookConfig = (agent, c) => runtimeRequire('./install.cjs').hookConfig(agent, c, VERSION);
 const install = (c, agent, scope, remove) => runtimeRequire('./install.cjs').install(c, agent, scope, remove, VERSION);
-// SessionStart and doctor text when the install stamp is missing or differs (ADR-0017).
-const reinstall = (c, stamp, agent) => `Hooks are from ${/^\d[\w.+-]*$/.test(stamp) ? 'mutagate ' + stamp : 'an older mutagate'}, skill is ${VERSION}: rerun ${cliName(c)} install --agent ${agent}`;
+// SessionStart and doctor text when the install stamp <version>:<scope> is missing or not VERSION, else ''; known: the scope doctor read (ADR-0017).
+const reinstall = (c, stamp, agent, known) => { const [v, s] = String(stamp ?? '').split(':'), scope = known || s;
+  return v === VERSION ? '' : `Hooks are from ${/^\d[\w.+-]*$/.test(v) ? 'mutagate ' + v : 'an older mutagate'}, skill is ${VERSION}: rerun ${cliName(c)} install --agent ${agent}${scope === 'user' ? ' --scope user' : scope ? '' : ' (add --scope user for a user install)'}`; };
 
 function agents(c) {
   return [...new Set([...(process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_PLUGIN_ROOT || exists(path.join(c.repo, '.claude')) ? [ 'claude' ] : []), ...(process.env.CODEX_HOME || exists(path.join(c.repo, '.codex')) ? ['codex'] : []), ...(exists(path.join(c.repo, '.opencode')) || exists(
@@ -852,9 +853,10 @@ async function doctor(c) {
     } catch (e) { checks.push({ name: 'mutation toolchain', pass: false, hint: e.message }); }
     if (d.language === 'csharp' && c.config.runBudgetSec === DEFAULTS.runBudgetSec) checks.push({ name: '.NET run budget', pass: true, note: 'Cold runs can take 2 to 5 minutes; set runBudgetSec: 600 in .mutagate/config.json.' });
   }
-  step('project adapter'); const stamps = agents(c).map(a => [a, runtimeRequire('./install.cjs').installed(c, a)]).filter(([, stamp]) => stamp !== null);
-  checks.push({ name: 'project adapter installed', pass: stamps.length > 0, hint: 'Run mutagate install --agent <harness>.' },
-    ...stamps.filter(([, stamp]) => stamp !== VERSION).map(([a, stamp]) => ({ name: `${a} install`, pass: true, warn: true, note: reinstall(c, stamp, a) }))); step('harness versions');
+  step('adapter'); const found = ['claude', 'codex', 'opencode', 'pi'] // each harness in both scopes; pass needs a detected one, any when none is detected
+    .flatMap(a => ['project', 'user'].map(s => [a, s, runtimeRequire('./install.cjs').installed(c, a, s)])).filter(x => x[2] !== null), detected = agents(c);
+  checks.push({ name: 'adapter installed', pass: found.some(([a]) => !detected.length || detected.includes(a)), hint: 'Run mutagate install --agent <harness>.' },
+    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: reinstall(c, stamp, a, s) })).filter(x => x.note)); step('harness versions');
   const versions = json(path.join(ROOT, 'references/versions.json'), { note: 'Version manifest excluded from skill installation; see README.' }); checks.push(...await dr.harnessChecks(versions)); step('synthetic scoped mutation smoke');
   const dir = path.join(c.data, 'doctor', crypto.randomUUID());
   mkdir(dir);

@@ -232,8 +232,9 @@ test('project install with the skill inside the Git repo writes the same repo-re
     }
     const texts = files.map(f => fs.readFileSync(path.join(repo, f), 'utf8'));
     for (const d of ['.opencode', '.pi']) fs.rmSync(path.join(repo, d), { recursive: true }); // doctor must find the native hooks alone
-    const doctor = spawnSync(process.execPath, [path.join(skill, 'scripts/mutagate.mjs'), 'doctor', '--repo', repo], { encoding: 'utf8', env: { ...process.env, CLAUDE_PLUGIN_DATA: path.join(parent, 'data') } });
-    assert.match(doctor.stdout, /PASS project adapter installed/, doctor.stdout + doctor.stderr);
+    const doctor = spawnSync(process.execPath, [path.join(skill, 'scripts/mutagate.mjs'), 'doctor', '--repo', repo], { encoding: 'utf8', env: { // no user install counts
+      ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^(CLAUDE_|CODEX_)/.test(k))), HOME: path.join(parent, 'home'), XDG_CONFIG_HOME: path.join(parent, 'home/.config'), CLAUDE_PLUGIN_DATA: path.join(parent, 'data') } });
+    assert.match(doctor.stdout, /PASS adapter installed/, doctor.stdout + doctor.stderr);
     return texts;
   });
   assert.deepEqual(configs[0], configs[1]);
@@ -279,7 +280,7 @@ test('portable hook identity survives skill relocation and Git failure', { skip:
     assert.equal(stop().length, 2);
     fs.renameSync(original, moved);
     const { default: helper } = await import(path.join(moved, 'scripts/install.cjs'));
-    assert.equal(helper.installed({ repo }, agent), m.VERSION);
+    assert.equal(helper.installed({ repo }, agent, 'project'), `${m.VERSION}:project`);
     invoke(moved, 'install');
     assert.equal(stop().length, 2, 'relocation must replace the old command');
     assert.ok(stop()[1].command.includes('/tools/quality/scripts/hook'));

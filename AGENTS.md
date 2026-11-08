@@ -82,11 +82,13 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `mutagate-hook.cjs hook <Event>`, which reads the JSON payload on stdin. On
   POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
   in `|| true`, because Copilot also runs them (ADR-0013). Under Node < 22 hooks exit 0 and SessionStart says so.
-  `install` stamps its `VERSION` into the SessionStart command
-  (`--installed <VERSION>`) and replaces `__MUTAGATE_VERSION__` in the
-  adapters, which send it as payload `installed`; a missing or other stamp adds
-  a rerun-install notice to SessionStart and a doctor WARN (`installed`,
-  ADR-0017). `scripts/hooks.json` carries `MUTAGATE_VERSION` instead.
+  `install` stamps `<VERSION>:<scope>` into the SessionStart command
+  (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
+  adapters, which send it as payload `installed`; a missing stamp or other
+  version adds a rerun notice (`reinstall`) to SessionStart, exact when the
+  stamp has a scope, and a doctor WARN with the exact command per project or
+  user install (`installed`, ADR-0017). `scripts/hooks.json`
+  carries `MUTAGATE_VERSION` instead.
   PostToolUse on a test file registers targets. `schedule` then spawns a detached
   `worker` process that calls `runTarget` while holding a per-target lock.
   The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s

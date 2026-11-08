@@ -157,7 +157,7 @@ The generated Git branch `skill` that holds only the skill package for one relea
 _Avoid_: release branch, dist branch
 
 **Install stamp**:
-The mutagate version that `install` writes into the hook config or adapter. When it is missing or differs from the skill's version, SessionStart and `doctor` tell to run `install` again (ADR-0017).
+The mutagate version and install scope that `install` writes into the hook config or adapter. When it is missing or its version differs from the skill's version, SessionStart and `doctor` give the `install` command to run again (ADR-0017).
 _Avoid_: installed version file, install marker
 
 **Machine-local**:

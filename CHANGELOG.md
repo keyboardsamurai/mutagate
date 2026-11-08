@@ -8,7 +8,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Added
 
-- After the skill is updated and `install` is not run again, SessionStart says `Hooks are from mutagate X, skill is Y: rerun … install`, and `doctor` warns for a project install (`WARN <harness> install`). `install` now writes its version into the SessionStart hook command, and the OpenCode and Pi adapters send it in their payload; hooks from earlier versions have none, so run `install` again once after this upgrade (ADR-0017).
+- After the skill is updated and `install` is not run again, SessionStart says `Hooks are from mutagate X, skill is Y: rerun mutagate install --agent <harness>`, with `--scope user` for a user install, and `doctor` warns for each such project or user install (`WARN <harness> <scope> install`). `install` now writes its version and scope into the SessionStart hook command, and the OpenCode and Pi adapters send them in their payload; hooks from earlier versions have none, so run `install` again once after this upgrade (ADR-0017).
 
 ### Changed
 
@@ -17,6 +17,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Fixed
 
+- `doctor` no longer fails `project adapter installed` when the harness has only a user install: the check is now `adapter installed` and counts project and user installs.
 - Mutation tool process trees (PIT, Stryker, mutmut, Stryker.NET, Go tools, Maven/Gradle builds) no longer outlive mutagate: it kills them when it exits, and after SIGINT, SIGTERM or SIGHUP (Ctrl-C on `run --sync`, a harness killing a hook at its timeout) it kills them and exits with 128+signal number.
 - A lock whose pid was reused by an unrelated process (after a reboot or crash) no longer keeps a target in flight: lock holders renew their lock every 10 s, and a lock whose holder is dead or has not renewed it for 60 s is abandoned. Only one waiter takes over an abandoned lock, and a process deletes only a lock it still holds.
 - The async PostToolUse hook (`--mutate`) no longer runs past its 900 s timeout, where the harness killed it mid-run and lost the results: it ends within 850 s, starts a stale target only when its last run fits in the time left, and leaves skipped or cut targets pending for the gate.

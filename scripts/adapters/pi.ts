@@ -15,7 +15,7 @@ export default function mutagate(pi) {
     child.on('error', () => resolve({}));
     child.on('close', () => { try { resolve(JSON.parse(text)); } catch { resolve({}); } });
     child.stdin.on('error', () => {});
-    child.stdin.end(JSON.stringify({ cwd: ctx.cwd, session_id: ctx.sessionManager.getSessionId(), harness: 'pi', installed: "__MUTAGATE_VERSION__", hook_event_name: event, tool_name: tool === 'write' ? 'Write' : tool === 'edit' ? 'Edit' : tool, tool_input: input ? {...input, file_path: input.path} : undefined }));
+    child.stdin.end(JSON.stringify({ cwd: ctx.cwd, session_id: ctx.sessionManager.getSessionId(), harness: 'pi', installed: "__MUTAGATE_INSTALLED__", hook_event_name: event, tool_name: tool === 'write' ? 'Write' : tool === 'edit' ? 'Edit' : tool, tool_input: input ? {...input, file_path: input.path} : undefined }));
   });
   const inject = (text, deliverAs = 'steer') => pi.sendMessage({ customType: 'mutagate', content: text, display: false }, { deliverAs });
   pi.on('session_start', async (_, ctx) => {

@@ -62,7 +62,7 @@ Replace `#skill` with `#skill-v0.9.1` in the `npx skills add` line.
 
 ## Upgrade
 
-Run the same `npx skills add` line again, then `<skill>/scripts/mutagate install --agent <harness>` again. Codex: trust mutagate in `/hooks` again. `install` writes its version into the SessionStart hook command (OpenCode and Pi: into the adapter); until you run it again, each session starts with `Hooks are from mutagate X, skill is Y: rerun … install`, and `doctor` warns for a project install ([ADR-0017](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0017-install-stamp-in-the-hook-config.md)).
+Run the same `npx skills add` line again, then `<skill>/scripts/mutagate install --agent <harness>` again. Codex: trust mutagate in `/hooks` again. `install` writes its version and scope into the SessionStart hook command (OpenCode and Pi: into the adapter); until you run it again, each session starts with `Hooks are from mutagate X, skill is Y: rerun … install` and the command to run, and `doctor` warns for each such project or user install ([ADR-0017](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0017-install-stamp-in-the-hook-config.md)).
 
 ## Uninstall
 
