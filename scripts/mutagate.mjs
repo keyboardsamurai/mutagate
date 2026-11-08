@@ -22,8 +22,8 @@ export const hash = (s) => crypto.createHash('sha1').update(s).digest('hex');
 const read = (p) => fs.readFileSync(p, 'utf8');
 const exists = (p) => fs.existsSync(p);
 const json = (p, fallback = {}) => exists(p) ? JSON.parse(read(p)) : fallback;
-// atomic() does not fsync, so a crash can leave cache JSON torn; torn cache JSON reads as the fallback (missing).
-const cacheJson = (p, fallback = null) => { try { return json(p, fallback); } catch (e) { if (e instanceof SyntaxError) return fallback; throw e; } };
+// atomic() does not fsync, so a crash can leave cache JSON torn; torn cache JSON reads as the fallback (missing), after calling torn() if given.
+const cacheJson = (p, fallback = null, torn) => { try { return json(p, fallback); } catch (e) { if (!(e instanceof SyntaxError)) throw e; torn?.(); return fallback; } };
 const mkdir = (p) => fs.mkdirSync(p, { recursive: true });
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const slash = (s) => s.split(path.sep).join('/');
@@ -111,11 +111,7 @@ export function context(args = {}, payload = {}) {
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
 let noted; // one note per corrupt state file
 export function state(c) {
-  try { return json(c.stateFile, blankState()); } catch (e) {
-    if (!(e instanceof SyntaxError)) throw e;
-    if (noted !== c.stateFile) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); }
-    return blankState();
-  }
+  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
 }
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
 // Holders touch the lock every 10 s; a lock is abandoned when that heartbeat is over 60 s old or its pid is dead.
