@@ -2,7 +2,7 @@
 // Runners drive the mutation engines and return raw mutants; lazy, off the hook path. mutagate.mjs injects the engine helpers.
 const fs = require('node:fs'), path = require('node:path'), os = require('node:os'), crypto = require('node:crypto'), { spawn, spawnSync } = require('node:child_process'), { createRequire } = require('node:module');
 const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), exists = p => fs.existsSync(p), mkdir = p => fs.mkdirSync(p, { recursive: true }),
-  slash = s => s.split(path.sep).join('/'), sha256 = s => crypto.createHash('sha256').update(s).digest('hex'), readIf = p => exists(p) ? read(p) : '';
+  slash = s => s.split(path.sep).join('/'), sha256 = s => crypto.createHash('sha256').update(s).digest('hex'), readIf = p => require('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 // Runner process groups die with mutagate: on exit, and on SIGINT/SIGTERM/SIGHUP (exit 128+signo). Handlers install on the first spawn.
 const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
 let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };

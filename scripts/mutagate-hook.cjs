@@ -515,7 +515,7 @@ function report(r, cfg = DEFAULTS) {
 let loaded;
 const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
-const readIf = p => exists(p) ? read(p) : '';
+const readIf = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
