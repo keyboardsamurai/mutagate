@@ -18,22 +18,24 @@ const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) {
 const statKey = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
 function fileDigest(file) {
   try {
-    const at = statKey(file), previous = digestCache.get(file);
-    if (previous?.at === at) return previous.digest;
-    const entry = { at, digest: digest(fs.readFileSync(file)) };
+    const key = statKey(file), previous = digestCache.get(file);
+    if (previous?.key === key) return previous.digest;
+    const entry = { key, digest: digest(fs.readFileSync(file)) };
     digestCache.set(file, entry);
     return entry.digest;
   } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; }
 }
 
 const scanned = name => !ignored.has(name) && !noise.test(name);
-// Directory entries for the files() and inputFiles walks, without ignored and noise names or, beside a .csproj, bin and obj
-// (.NET build output); none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
+// .NET build output, dropped beside a .csproj.
+const dotnetOutput = name => name === 'bin' || name === 'obj';
+// Directory entries for the files() and inputFiles walks, without ignored and noise names or, beside a .csproj, bin and obj;
+// none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
 function dirEntries(dir, root = false) {
   let entries;
   try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (unreadable.has(e.code)) return []; throw e; }
   entries = !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => scanned(e.name));
-  return entries.some(e => e.isFile() && e.name.endsWith('.csproj')) ? entries.filter(e => !(e.isDirectory() && ['bin', 'obj'].includes(e.name))) : entries;
+  return entries.some(e => e.isFile() && e.name.endsWith('.csproj')) ? entries.filter(e => !(e.isDirectory() && dotnetOutput(e.name))) : entries;
 }
 
 // The files Git lists below repo (tracked and unignored untracked), or null outside Git or when it lists none (repo inside an
@@ -59,7 +61,7 @@ function files(repo, exclude) {
     const venvs = new Set(), dotnets = new Set(), dirs = new Map([['.', true]]);
     for (const f of listed) if (f.endsWith('/pyvenv.cfg')) venvs.add(path.posix.dirname(f)); else if (f.endsWith('.csproj')) dotnets.add(path.posix.dirname(f));
     const dirKept = d => {
-      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && !(dotnets.has(parent) && ['bin', 'obj'].includes(name)) && kept(d, name)); }
+      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && !(dotnets.has(parent) && dotnetOutput(name)) && kept(d, name)); }
       return dirs.get(d);
     };
     return listed.filter(f => { const name = path.posix.basename(f); return dirKept(path.posix.dirname(f)) && scanned(name) && kept(f, name); });
