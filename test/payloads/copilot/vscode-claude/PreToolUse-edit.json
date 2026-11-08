@@ -1,0 +1,19 @@
+{
+ "session_id": "63ed0a29-7aa0-459c-b93d-b618a931b72f",
+ "transcript_path": "~/.claude/projects/-repo/63ed0a29-7aa0-459c-b93d-b618a931b72f.jsonl",
+ "cwd": "/repo",
+ "prompt_id": "d2345e73-3480-4857-ae87-7df499bc6c4b",
+ "permission_mode": "auto",
+ "effort": {
+  "level": "high"
+ },
+ "hook_event_name": "PreToolUse",
+ "tool_name": "Edit",
+ "tool_input": {
+  "file_path": "/repo/src/calc.js",
+  "old_string": "export const pow = (a, b) => a ** b;\n",
+  "new_string": "export const pow = (a, b) => a ** b;\nexport const mod = (a, b) => a % b;\n",
+  "replace_all": false
+ },
+ "tool_use_id": "toolu_01SKMvGgouLqTCZK88pBxKf6"
+}

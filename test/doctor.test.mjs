@@ -45,3 +45,22 @@ test('doctor --json keeps its shape plus version; progress goes to stderr',t=>{
  assert.match(r.stderr,/^checking runner detected…$/m);
  const text=cli('mutagate.mjs',['doctor','--repo',repo],{env:{...env,PATH:path.dirname(process.execPath),CLAUDE_PLUGIN_DATA:path.join(repo,'.data')}});
  assert.equal(text.stdout.split('\n')[0],`mutagate ${m.VERSION}`);assert.doesNotMatch(text.stdout,/Tested versions/);assert.match(text.stdout,/^FAIL runner detected/m);});
+test('SessionStart and doctor name the install command to rerun when an install stamp is missing or differs',t=>{
+ const repo=tmp(t),home=tmp(t),run=(args,p={},cwd=repo)=>cli('mutagate.mjs',[...args,'--repo',cwd],{env:{...env,HOME:home,XDG_CONFIG_HOME:path.join(home,'.config'),PATH:path.dirname(process.execPath),CLAUDE_PLUGIN_DATA:path.join(repo,'.data')},input:JSON.stringify({cwd,session_id:'s',...p})});
+ const checks=cwd=>JSON.parse(run(['doctor','--json'],{},cwd).stdout).checks,adapter=cwd=>checks(cwd).find(x=>x.name==='adapter installed').pass,other=tmp(t);
+ assert.equal(adapter(other),false);for(const a of ['claude','opencode'])assert.equal(run(['install','--agent',a,'--scope','user']).status,0);assert.equal(adapter(other),true,'a user install counts');
+ for(const [d,pass] of [['.claude',true],['.pi',false]]){const r=tmp(t);fs.mkdirSync(path.join(r,d));assert.equal(adapter(r),pass,`only a detected harness counts when one is detected: ${d}`);}
+ for(const a of ['claude','codex','opencode','pi'])assert.equal(run(['install','--agent',a]).status,0);
+ const edit=(f,a,b)=>{const s=fs.readFileSync(f,'utf8');assert.ok(s.includes(a),f);fs.writeFileSync(f,s.replace(a,b));},v=m.VERSION;
+ const warns=(cwd=repo)=>checks(cwd).filter(x=>x.warn&&x.name.endsWith(' install')).map(x=>`${x.name}: ${x.note}`),fix=(from,a)=>`Hooks are from ${from}, skill is ${v}: rerun mutagate install --agent ${a}`;
+ assert.deepEqual(warns(),[]);
+ edit(path.join(repo,'.claude/settings.json'),` SessionStart --installed ${v}:project`,' SessionStart --installed 0.8.0:project');edit(path.join(home,'.claude/settings.json'),` --installed ${v}:user`,'');
+ edit(path.join(repo,'.codex/hooks.json'),` --installed ${v}:project`,'');edit(path.join(repo,'.pi/extensions/mutagate.ts'),`installed: ${JSON.stringify(v+':project')}, `,'');edit(path.join(home,'.config/opencode/plugins/mutagate.js'),JSON.stringify(v+':user'),'"0.8.0:user"');
+ assert.deepEqual(warns(),[`claude project install: ${fix('mutagate 0.8.0','claude')}`,`claude user install: ${fix('an older mutagate','claude')} --scope user`,`codex project install: ${fix('an older mutagate','codex')}`,
+  `opencode user install: ${fix('mutagate 0.8.0','opencode')} --scope user`,`pi project install: ${fix('an older mutagate','pi')}`]);
+ {const r=tmp(t);fs.mkdirSync(path.join(r,'.pi'));assert.deepEqual(warns(r).map(x=>x.split(':')[0]),['claude user install','opencode user install'],'stale user installs of undetected harnesses');}
+ for(const s of [`${v}:project`,`${v}:user`])assert.doesNotMatch(run(['hook','SessionStart','--installed',s]).stdout,/rerun/);assert.doesNotMatch(run(['hook','SessionStart'],{harness:'pi',installed:`${v}:user`}).stdout,/rerun/);
+ const start=stamp=>run(['hook','SessionStart','--installed',stamp]).stdout,hint=' (add --scope user for a user install).';
+ assert.ok(start('0.8.0:project').includes(`${fix('mutagate 0.8.0','<harness>')}.`));assert.ok(start('0.8.0:user').includes(`${fix('mutagate 0.8.0','<harness>')} --scope user.`));assert.ok(start('0.8.0').includes(fix('mutagate 0.8.0','<harness>')+hint),'no scope: hint');
+ assert.ok(JSON.parse(run(['hook','SessionStart'],{harness:'pi'}).stdout).systemMessage.endsWith(fix('an older mutagate','pi')+hint));
+ assert.ok(JSON.parse(run(['hook','SessionStart'],{harness:'pi',installed:'0.8.0:user'}).stdout).systemMessage.endsWith(`${fix('mutagate 0.8.0','pi')} --scope user.`));});

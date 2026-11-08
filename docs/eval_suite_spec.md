@@ -402,7 +402,7 @@ first agent `run` or `check` CLI call passed: a `decision: "cli"` trace event,
 or in older run dirs a non-hook session event), errors superseded by a later
 scored or no-mutants result (`recovered-error`), and final `unscored` results carrying an
 `error` reason (`unscored-final`, evidence `<target>: <reason>`). Source-read
-detection includes `errors.cjs`, `dotnet.cjs` and `mutmut-bridge.cjs`; escaped
+detection includes `errors.cjs`, `dotnet.cjs`, `mutmut-bridge.cjs` and `runners.cjs`; escaped
 newlines end shell matches and reads redirected to `/dev/null` do not warn.
 
 Executed CLI commands come from Claude Bash tool uses, Codex command-execution
@@ -439,7 +439,7 @@ and classes that must be scored), `traps` (ids present), `prodFiles` (globs
 that count as production code; files matching the test globs are subtracted),
 and `testCommand`. Stacks: Java Spring Boot 4
 with Maven and JUnit 5; Kotlin Spring Boot 4 with Gradle and JUnit 5; Python
-FastAPI with pytest, uv and mutmut 3.8.0; TypeScript Express with Vitest; Go `net/http`;
+FastAPI with pytest, uv and mutmut 3.8.1; TypeScript Express with Vitest; Go `net/http`;
 C# ASP.NET Core minimal API with xUnit and `WebApplicationFactory`. Build-tool
 variants are not repeated here; the integration suite covers them.
 

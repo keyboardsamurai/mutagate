@@ -6,7 +6,8 @@ export function sharedHooks() {
   for (const groups of Object.values(config.hooks)) {
     for (const group of groups) {
       for (const handler of group.hooks) {
-        handler.command = 'MUTAGATE_HOOK ' + handler.command.split(' hook ')[1];
+        // Arguments from the built command, so install.cjs stays their only builder (POSIX wrapper or Windows absolute form). The install stamp is a placeholder, so a version bump leaves the template unchanged.
+        handler.command = 'MUTAGATE_HOOK ' + handler.command.split(/ hook | sh "\$f" /).pop().replace(/ # mutagate$/, '').replace(/ --installed \S+/, ' --installed MUTAGATE_VERSION');
       }
     }
   }

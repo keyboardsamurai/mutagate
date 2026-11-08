@@ -1,0 +1,16 @@
+{
+ "hook_event_name": "PostToolUse",
+ "session_id": "0fca0ebc-a7ec-46f1-989b-fd8d6177f78f",
+ "timestamp": "2026-11-08T07:47:21.273Z",
+ "cwd": "/repo",
+ "tool_name": "Edit",
+ "tool_input": {
+  "path": "/repo/src/calc.js",
+  "old_str": "export const add = (a, b) => a + b;",
+  "new_str": "export const add = (a, b) => a + b;\nexport const sub = (a, b) => a - b;"
+ },
+ "tool_result": {
+  "result_type": "success",
+  "text_result_for_llm": "File /repo/src/calc.js updated with changes."
+ }
+}

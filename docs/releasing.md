@@ -190,6 +190,5 @@ The Claude Code plugin is not on the 1.0 path.
 ## Before 1.0
 
 - **SSH tag signing.** `git config gpg.format ssh && git config user.signingkey ~/.ssh/id_ed25519.pub`, add the key as a signing key on GitHub, then tag with `git tag -s`. Update this doc.
-- **Stale-install warning (0.9.1).** `install` writes `scripts/.installed`; SessionStart and `doctor` warn on a mismatch.
 - **`.cjs`-only package.** Ship `mutagate-hook.cjs` once, hash it in `fingerprint`, and drop `mutagate.mjs` from the package.
 - **Evidence enforcement.** `test/eval.test.mjs` fails a release version whose ✅ cells have a stale package digest or harness pin. Run the full sweep first: `npm run eval -- --repeat 2`.

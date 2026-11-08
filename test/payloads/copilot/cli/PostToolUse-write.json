@@ -1,0 +1,15 @@
+{
+ "hook_event_name": "PostToolUse",
+ "session_id": "0fca0ebc-a7ec-46f1-989b-fd8d6177f78f",
+ "timestamp": "2026-11-08T07:47:17.926Z",
+ "cwd": "/repo",
+ "tool_name": "Write",
+ "tool_input": {
+  "path": "/repo/test/calc.test.js",
+  "file_text": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { add } from '../src/calc.js';\n\ntest('add adds two numbers', () => {\n  assert.equal(add(2, 3), 5);\n});\n"
+ },
+ "tool_result": {
+  "result_type": "success",
+  "text_result_for_llm": "Created file /repo/test/calc.test.js with 181 characters"
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "hook_event_name": "PreToolUse",
+ "session_id": "0bf6aa49-54f6-4e2a-a211-9b797a1d6f19",
+ "timestamp": "2026-11-08T08:17:16.321Z",
+ "cwd": "/repo",
+ "tool_use_id": "custom_call_SklpgdBGRNp2IwWwCFAZm8GF",
+ "tool_name": "Edit",
+ "tool_input": "*** Begin Patch\n*** Update File: src/calc.js\n@@\n export const sub = (a, b) => a - b;\n+export const mul = (a, b) => a * b;\n*** End Patch\n"
+}

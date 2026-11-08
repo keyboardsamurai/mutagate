@@ -22,7 +22,7 @@ Run dir:
 | `meta.json` | harness, harnessVersion, model, lang, scenario, task, n, startedAt/endedAt and wallMs (agent only), exitCode, `ended` (`exit`, `idle` = driver done-detection, `killed` = run deadline), `session` (from the trace SessionStart). The deadline is 30 min from run start and covers copy, skill install, setup and the agent; `ended` null plus `error.log` naming a `failed (SIGKILL)` setup step means setup used it up. |
 | `stdout.log`, `stderr.log` | the harness transcript. Claude: stream-json with `hook_response` events. Codex: `exec --json`. OpenCode: server message export, one part per line in time order (raw `run` output is `run.jsonl`, server log `serve.log`; the session database `opencode/data/opencode/opencode.db*` is deleted after the export). Pi: RPC events without streaming deltas. |
 | `final.txt` | last assistant text, may be empty |
-| `trace.jsonl` | mutagate's own trace (`MUTAGATE_TRACE=1`): one JSON event per line with `ts, harness, event, session, file, tool, decision, duration_ms, error`, plus `mutate` (true only for the async `--mutate` PostToolUse handler; absent in sweeps recorded before 2026-09-14's fixes); `Result` events carry `target, score, decision` (`pass`, `below`, `unscored`, `error`, `stale`, `killed`); `killed` from a clipped budget leaves the target pending |
+| `trace.jsonl` | mutagate's own trace (`MUTAGATE_TRACE=1`): one JSON event per line with `ts, harness, event, session, file, tool, decision, duration_ms, error`, plus `mutate` (true only for the async `--mutate` PostToolUse handler; absent in sweeps recorded before 2026-09-14's fixes); `Result` events carry `target, score, decision` (`pass`, `below`, `unscored`, `error`, `stale`, `killed`, `skipped`); `killed` from a clipped budget leaves the target pending; `skipped` means the gate threw on that target (`error` names why) and gated the others |
 | `runner-logs/` | per-target runner logs (JSON lines with exe, args, code, signal, output); `<key>.prev.log` is the run before |
 | `recorded/` | raw hook payloads (`MUTAGATE_RECORD=1`) |
 | `status.json` | `status --json` after the run, per target: file, tests, score, stale, blocks, result |
@@ -113,7 +113,7 @@ Is not:
   found") in the transcript or `stderr.log`
 - host flakes: toolchain missing, network, port collisions in TypeScript
   supertest tests (random 503/404), mutmut 3.0–3.5 segfaults on macOS (the
-  pins are 3.8.0; a segfault with mutmut 3.6+ is a finding)
+  pins are 3.8.1; a segfault with mutmut 3.6+ is a finding)
 - Pi 0.73.1 not retrying OpenRouter mid-stream errors (harness bug, see below)
 - an `ended: killed` run whose transcript shows long model steps and no
   mutagate wait (model latency), unless mutagate output sent the agent astray

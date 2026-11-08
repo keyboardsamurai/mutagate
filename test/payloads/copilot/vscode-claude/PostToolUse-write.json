@@ -1,0 +1,26 @@
+{
+ "session_id": "63ed0a29-7aa0-459c-b93d-b618a931b72f",
+ "transcript_path": "~/.claude/projects/-repo/63ed0a29-7aa0-459c-b93d-b618a931b72f.jsonl",
+ "cwd": "/repo",
+ "prompt_id": "d2345e73-3480-4857-ae87-7df499bc6c4b",
+ "permission_mode": "auto",
+ "effort": {
+  "level": "high"
+ },
+ "hook_event_name": "PostToolUse",
+ "tool_name": "Write",
+ "tool_input": {
+  "file_path": "/repo/test/mod.test.js",
+  "content": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { mod } from '../src/calc.js';\n\ntest('mod returns the remainder', () => {\n  assert.equal(mod(7, 3), 1);\n});\n\ntest('mod with exact divisor returns 0', () => {\n  assert.equal(mod(6, 3), 0);\n});\n\ntest('mod by 0 returns NaN', () => {\n  assert.ok(Number.isNaN(mod(5, 0)));\n});\n"
+ },
+ "tool_response": {
+  "type": "create",
+  "filePath": "/repo/test/mod.test.js",
+  "content": "import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport { mod } from '../src/calc.js';\n\ntest('mod returns the remainder', () => {\n  assert.equal(mod(7, 3), 1);\n});\n\ntest('mod with exact divisor returns 0', () => {\n  assert.equal(mod(6, 3), 0);\n});\n\ntest('mod by 0 returns NaN', () => {\n  assert.ok(Number.isNaN(mod(5, 0)));\n});\n",
+  "structuredPatch": [],
+  "originalFile": null,
+  "userModified": false
+ },
+ "tool_use_id": "toolu_019hefnwDgDmL8oUSEGbjkF7",
+ "duration_ms": 3
+}

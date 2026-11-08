@@ -179,16 +179,18 @@ test('installed hook runtime is generated from the core and used by every instal
   const { c } = fixture(t);
   for (const harness of ['claude', 'codex']) {
     const entries = Object.values(m.hookConfig(harness).hooks).flatMap(groups => groups.flatMap(group => group.hooks));
-    assert.ok(entries.every(entry => entry.command.includes('mutagate-hook.cjs')));
+    assert.ok(entries.every(entry => process.platform === 'win32' ? entry.command.includes('mutagate-hook.cjs') : entry.command.startsWith(`f='${path.resolve(import.meta.dirname, '../scripts/hook')}' `))); // Windows: absolute Node and runtime
   }
+  assert.match(fs.readFileSync(new URL('../scripts/hook', import.meta.url), 'utf8'), /"\$d\/mutagate-hook\.cjs" hook "\$@"/);
   for (const harness of ['opencode', 'pi']) {
     m.install(c, harness);
     const file = path.join(c.repo, harness === 'opencode' ? '.opencode/plugins/mutagate.js' : '.pi/extensions/mutagate.ts');
-    assert.match(fs.readFileSync(file, 'utf8'), /mutagate-hook.cjs/);
+    const text = fs.readFileSync(file, 'utf8');
+    assert.match(text, /mutagate-hook.cjs/); assert.ok(text.includes(`harness: '${harness}'`), `${file}: the harness's own adapter`);
   }
 });
 
-test('hook installation remains idempotent when the package path has no skill name', async t => {
+test('hook installation remains idempotent when the package path has no skill name', { skip: process.platform === 'win32' }, async t => {
   const { packageSkill } = await import('./package.mjs');
   const parent = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'package-check-')));
   t.after(() => fs.rmSync(parent, { recursive: true, force: true }));
@@ -200,8 +202,17 @@ test('hook installation remains idempotent when the package path has no skill na
     assert.equal(result.status, 0, result.stderr);
     const config = JSON.parse(fs.readFileSync(path.join(repo, '.claude/settings.json')));
     assert.equal(config.hooks.Stop?.length || 0, operation === 'uninstall' ? 0 : 1);
-    if (operation === 'install') { assert.match(result.stdout, /machine-local/); assert.ok(config.hooks.Stop[0].hooks[0].command.includes(installed)); } // skill outside the repo: absolute
+    if (operation === 'install') { assert.match(result.stdout, /machine-local/); assert.equal(config.hooks.Stop[0].hooks[0].command, `f='${installed}/scripts/hook' && [ -f "$f" ] && sh "$f" Stop # mutagate`); } // skill outside the repo: absolute wrapper, no Node path
   }
+  // A removed Node in scripts/.node-path (nvm uninstall, brew cleanup) falls back to PATH; a removed skill dir fails open, also under dash.
+  assert.equal(spawnSync(process.execPath, [path.join(installed, 'scripts/mutagate.mjs'), 'install', '--agent', 'claude', '--repo', repo]).status, 0);
+  fs.writeFileSync(path.join(installed, 'scripts/.node-path'), path.join(parent, 'gone/bin/node'));
+  const hooks = JSON.parse(fs.readFileSync(path.join(repo, '.claude/settings.json'))).hooks, env = { ...process.env, PATH: path.dirname(process.execPath) + path.delimiter + process.env.PATH, CLAUDE_PLUGIN_DATA: path.join(parent, 'data') };
+  delete env.MUTAGATE_NODE;
+  const start = spawnSync('sh', ['-c', hooks.SessionStart[0].hooks[0].command], { cwd: repo, env, input: JSON.stringify({ cwd: repo, session_id: 'abs' }), encoding: 'utf8' });
+  assert.equal(start.status, 0, start.stderr); assert.match(start.stdout, /^mutagate \S+ active\./m);
+  fs.rmSync(installed, { recursive: true });
+  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) { const status = spawnSync(shell, ['-c', hooks.Stop[0].hooks[0].command], { cwd: repo, env, input: '{}' }).status; assert.ok(status !== 0 && status !== 2, `${shell}: ${status}`); }
 });
 
 test('project install with the skill inside the Git repo writes the same repo-relative config at any location', async t => {
@@ -222,8 +233,9 @@ test('project install with the skill inside the Git repo writes the same repo-re
     }
     const texts = files.map(f => fs.readFileSync(path.join(repo, f), 'utf8'));
     for (const d of ['.opencode', '.pi']) fs.rmSync(path.join(repo, d), { recursive: true }); // doctor must find the native hooks alone
-    const doctor = spawnSync(process.execPath, [path.join(skill, 'scripts/mutagate.mjs'), 'doctor', '--repo', repo], { encoding: 'utf8', env: { ...process.env, CLAUDE_PLUGIN_DATA: path.join(parent, 'data') } });
-    assert.match(doctor.stdout, /PASS project adapter installed/, doctor.stdout + doctor.stderr);
+    const doctor = spawnSync(process.execPath, [path.join(skill, 'scripts/mutagate.mjs'), 'doctor', '--repo', repo], { encoding: 'utf8', env: { // no user install counts
+      ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^(CLAUDE_|CODEX_)/.test(k))), HOME: path.join(parent, 'home'), XDG_CONFIG_HOME: path.join(parent, 'home/.config'), CLAUDE_PLUGIN_DATA: path.join(parent, 'data') } });
+    assert.match(doctor.stdout, /PASS adapter installed/, doctor.stdout + doctor.stderr);
     return texts;
   });
   assert.deepEqual(configs[0], configs[1]);
@@ -269,7 +281,7 @@ test('portable hook identity survives skill relocation and Git failure', { skip:
     assert.equal(stop().length, 2);
     fs.renameSync(original, moved);
     const { default: helper } = await import(path.join(moved, 'scripts/install.cjs'));
-    assert.equal(helper.installed({ repo }, file), true);
+    assert.equal(helper.installStamp({ repo }, agent, 'project'), `${m.VERSION}:project`);
     invoke(moved, 'install');
     assert.equal(stop().length, 2, 'relocation must replace the old command');
     assert.ok(stop()[1].command.includes('/tools/quality/scripts/hook'));
@@ -279,22 +291,28 @@ test('portable hook identity survives skill relocation and Git failure', { skip:
     const noGit = { ...process.env, PATH: path.join(parent, 'missing-bin') };
     invoke(moved, 'install', noGit);
     assert.equal(stop().length, 2, 'absolute fallback must replace the portable command');
-    assert.ok(stop()[1].command.includes('mutagate-hook.cjs'));
+    assert.ok(stop()[1].command.startsWith(`f='${moved}/scripts/hook' `));
     invoke(moved, 'install');
     invoke(moved, 'uninstall', noGit);
     assert.deepEqual(stop(), [own], 'uninstall must also work without Git');
   }
 });
 
-test('portable hook command fails open without Git or the skill dir, also under dash', { skip: process.platform === 'win32' }, t => {
-  const command = m.hookConfig('claude', { repo: path.resolve(import.meta.dirname, '..') }).hooks.Stop[0].hooks[0].command;
-  assert.match(command, /\[ -f "\$f" \]/);
+test('portable hook command fails open without Git, the skill dir or Node, also under dash; Claude commands that cannot block exit 0', { skip: process.platform === 'win32' }, t => {
+  const root = path.resolve(import.meta.dirname, '..'), commands = Object.values(m.hookConfig('claude', { repo: root }).hooks).flatMap(groups => groups[0].hooks.map(h => h.command));
+  assert.match(commands[0], /\[ -f "\$f" \]/);
+  // Copilot runs .claude/settings.json hooks and denies the edit on a failed PreToolUse; gate and --mutate commands keep their exit code (ADR-0013).
+  assert.deepEqual(commands.map(command => command.split('sh "$f" ').pop()), [`SessionStart --installed ${m.VERSION} || true # mutagate`, 'PreToolUse || true # mutagate', 'PostToolUse || true # mutagate', 'PostToolUse --mutate # mutagate', 'Stop # mutagate', 'SubagentStop # mutagate', 'TaskCompleted # mutagate']);
+  assert.doesNotMatch(JSON.stringify(m.hookConfig('codex', { repo: root })), /\|\|/);
   const noGit = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'hook-open-'))), noSkill = path.join(noGit, 'repo');
   t.after(() => fs.rmSync(noGit, { recursive: true, force: true }));
   fs.mkdirSync(noSkill); assert.equal(spawnSync('git', ['init', '-q'], { cwd: noSkill }).status, 0);
   const env = { ...process.env, GIT_CEILING_DIRECTORIES: path.dirname(noGit) }; // dash exits 2 on a missing script
-  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) for (const cwd of [noGit, noSkill]) {
-    const status = spawnSync(shell, ['-c', command], { cwd, env, input: '{}' }).status;
-    assert.ok(status !== 0 && status !== 2, `${shell} in ${cwd}: ${status}`);
+  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) for (const cwd of [noGit, noSkill]) for (const command of commands) {
+    const { status, stdout } = spawnSync(shell, ['-c', command], { cwd, env, input: '{}', encoding: 'utf8' });
+    if (command.includes('|| true')) assert.deepEqual([status, stdout], [0, ''], `${shell} in ${cwd}: ${command}`);
+    else assert.ok(status !== 0 && status !== 2, `${shell} in ${cwd}: ${status}`);
   }
+  const noNode = spawnSync('/bin/sh', [path.join(root, 'scripts/hook'), 'Stop'], { env: { ...env, MUTAGATE_NODE: path.join(noGit, 'node'), PATH: env.PATH.split(path.delimiter).filter(d => !fs.existsSync(path.join(d, 'node'))).join(path.delimiter) }, input: '{}', encoding: 'utf8' });
+  assert.deepEqual([noNode.status, noNode.stdout], [0, ''], noNode.stderr);
 });

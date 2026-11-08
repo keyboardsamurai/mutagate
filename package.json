@@ -1,6 +1,6 @@
 {
   "name": "mutagate",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "Scoped mutation testing gate for coding agents (Claude Code, Codex, OpenCode, Pi).",
   "license": "MIT",

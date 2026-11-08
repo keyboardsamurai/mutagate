@@ -1,6 +1,6 @@
 This is the root folder of a Python FastAPI application that we want to build. Nothing is initialized yet.
 
-Build a FastAPI application with uv (Python 3.12) and pytest, in a `matrix` package, that keeps an in-memory matrix of integers with atomic cells (32-bit range). Declare pytest, httpx and mutmut==3.8.0 as dev dependencies; mutmut is the project's mutation tester.
+Build a FastAPI application with uv (Python 3.12) and pytest, in a `matrix` package, that keeps an in-memory matrix of integers with atomic cells (32-bit range). Declare pytest, httpx and mutmut==3.8.1 as dev dependencies; mutmut is the project's mutation tester.
 
 1. `matrix/service.py`: rows and columns from 1 to 1000 (reject anything else), get, set, add a delta (reject 32-bit overflow instead of wrapping), clear, and a snapshot copy of all cells, all thread-safe. Reject cells outside the matrix.
 2. `matrix/api.py`: REST endpoints under /api/matrix: GET the matrix (rows, cols, cells), GET and PUT `/cells/{row}/{col}` (`?value=`), POST `/cells/{row}/{col}/add` (`?delta=`), and DELETE to clear. Invalid cells, overflow and bad input return 400 with a JSON error message.

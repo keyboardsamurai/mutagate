@@ -7,7 +7,7 @@ description: Use mutation testing for test quality, inspect surviving mutants af
 
 Paths below are relative to this skill directory. Run commands with the project as the working directory, or pass `--repo <project>`.
 
-If hooks are not installed (no `mutagate ... active` line at session start), ask the user, then run `scripts/mutagate install --agent <harness>` for the harness you run in.
+If hooks are not installed (no `mutagate ... active` line at session start) or that line says to rerun install, ask the user, then run `scripts/mutagate install --agent <harness>` for the harness you run in, with `--scope user` when that line names it.
 
 After writing or changing a test file:
 

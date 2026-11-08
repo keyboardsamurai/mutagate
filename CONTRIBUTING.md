@@ -35,7 +35,7 @@ Record architectural decisions as numbered ADRs in [docs/adr/](docs/adr/README.m
 - JDK 21 with Gradle 8.14.3 (Java, Kotlin)
 - Go 1.26 with `go install github.com/szhekpisov/gomutants@v0.6.1`
 - .NET 10 with `dotnet tool install dotnet-stryker --version 5.0.0`
-- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.0)
+- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.1)
 - `npm ci` in each `test/fixtures/ts-*` directory
 
 ## Build and install the package locally

@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {command} from '../scripts/mutagate.mjs';
+import {runners} from '../scripts/mutagate.mjs';const {command}=runners();
 import {packageSkill} from './package.mjs';
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-installer-')),stage=path.join(dir,'package'),project=path.join(dir,'project'),linked=path.join(dir,'linked project'),moved=path.join(dir,'moved here','linked project 2');
 const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...env,CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir)};
@@ -43,7 +43,7 @@ else try {
  adapters(moved);
  // Not a Git repo: absolute commands and the machine-local warning.
  assert.match(cli(project,'install','--agent','claude'),/machine-local/);
- for(const [cmd] of commands(project))assert.ok(cmd.startsWith(`'${process.execPath}' '${fs.realpathSync(path.join(project,'.claude/skills/mutagate/scripts'))}/mutagate-hook.cjs' hook `),cmd);
+ for(const [cmd] of commands(project))assert.ok(cmd.startsWith(`f='${fs.realpathSync(path.join(project,'.claude/skills/mutagate/scripts'))}/hook' && [ -f "$f" ] && sh "$f" `),cmd);
  fired+=fire(project,project,['SessionStart','Stop']);
  console.log(JSON.stringify({passed:true,agents:['claude-code','codex','opencode','pi'],bytes,hook_runs:fired}));
 }finally{fs.rmSync(dir,{recursive:true,force:true});}

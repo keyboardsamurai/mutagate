@@ -204,6 +204,7 @@ The CLI accepts one input shape on stdin and emits one output shape on stdout. I
   "cwd": "/abs/path",
   "hook_event_name": "PostToolUse",
   "harness": "claude|codex|opencode|pi",
+  "installed": "1.0.0",
   "tool_name": "Write",
   "tool_input": { "file_path": "src/test/kotlin/com/acme/UserServiceTest.kt" },
   "tool_response": {},
@@ -211,7 +212,7 @@ The CLI accepts one input shape on stdin and emits one output shape on stdout. I
 }
 ```
 
-`harness` is a mutagate extension. Claude Code and Codex do not send it. The CLI infers it: `CLAUDE_PLUGIN_ROOT` or `CLAUDE_PROJECT_DIR` set and no `CODEX_HOME` implies claude, `CODEX_HOME` or a `turn_id` field implies codex, adapters set it explicitly. `MUTAGATE_HARNESS` env var overrides.
+`harness` is a mutagate extension. Claude Code and Codex do not send it. The CLI infers it: `CLAUDE_PLUGIN_ROOT` or `CLAUDE_PROJECT_DIR` set and no `CODEX_HOME` implies claude, `CODEX_HOME` or a `turn_id` field implies codex, adapters set it explicitly. `MUTAGATE_HARNESS` env var overrides. Exception: a payload with a top-level `timestamp` is an inherited hook call (GitHub Copilot CLI running the Claude hooks). Its harness is `copilot` whatever `MUTAGATE_HARNESS`, `harness` or the `CLAUDE_*` env say, and the call is inert (ADR-0015). `installed` is also a mutagate extension: the OpenCode and Pi adapters send the install stamp `<version>:<scope>` of the `install` that wrote them (ADR-0017). Claude Code and Codex get the stamp from the `--installed <stamp>` flag of the SessionStart command.
 
 **Codex delta (FR-11.2):** file edits arrive as `tool_name: "apply_patch"` with the patch text in `tool_input.command`, not `file_path`. The CLI must extract paths from `*** Add File:`, `*** Update File:`, `*** Delete File:` and `*** Move to:` lines.
 
@@ -249,6 +250,7 @@ On Codex the CLI emits `"permissionDecision": "deny"` with the same reason plus 
 
 SessionStart: plain text on stdout, one line, for example
 `mutagate 1.0 active. runner=pitest (gradle, kotlin tier B). threshold 0.80. mode gate.`
+When the install stamp is missing or its version differs from the skill version, the line ends with `Hooks are from mutagate <stamp version>, skill is <version>: rerun mutagate install --agent <harness>`, then ` --scope user` for a user stamp, nothing for a project stamp, and ` (add --scope user for a user install)` when the stamp or its scope is missing (`an older mutagate` when there is no stamp; ADR-0017).
 
 ### 8.4 Result schema
 
@@ -326,7 +328,7 @@ Numbered for traceability. Priority P0 blocks release, P1 should ship in v1, P2 
 | FR-1.4 | `mutagate status` lists targets touched this session with score, staleness, in-flight state. | P1 |
 | FR-1.5 | `mutagate waive <survivor-id> --reason "<text>"` prints the JSON that would be added to waivers.json and, unless `--apply` is given by a human, does not write. `--apply` writes. The skill instructs agents never to pass `--apply`. | P1 |
 | FR-1.6 | `mutagate install [--agent auto\|claude\|codex\|opencode\|pi] [--scope project\|user]` writes the adapter or hook config to the correct location. Idempotent. Prints exact next steps (for Codex: "open /hooks and trust mutagate"). | P0 |
-| FR-1.7 | `mutagate doctor` checks: Node version, JDK present, build tool detected, jars present and verified, adapter installed for the detected harness, config valid, a dry scoped run on a synthetic class succeeds. Exit 0 when all pass. | P0 |
+| FR-1.7 | `mutagate doctor` checks: Node version, JDK present, build tool detected, jars present and verified, adapter installed for a detected harness, or any harness when none is detected (project or user scope; WARN per stale install stamp), config valid, a dry scoped run on a synthetic class succeeds. Exit 0 when all pass. | P0 |
 | FR-1.8 | `mutagate detect` prints `{harness, language, buildTool, runner, kotlinTier}` as JSON. | P1 |
 | FR-1.9 | All commands honor `--repo <path>` and `MUTAGATE_CONFIG` override. | P1 |
 | FR-1.10 | Startup time of `mutagate hook` for the invalidate path is under 80 ms p95 on a warm machine (measured in test). | P1 |
@@ -478,7 +480,7 @@ Every runner implements: `detect(repo) -> bool`, `prepare(repo) -> env`, `run(ta
 
 | ID | Requirement | Pri |
 |---|---|---|
-| FR-9.1 | `install --agent claude --scope project` merges the hook entries from `scripts/hooks.json` into `.claude/settings.json` under `hooks`, adds the Claude-only overlay (`asyncRewake` on the PostToolUse mutate handler, `TaskCompleted` gate, `if` filters), and runs the skill's `scripts/hook` wrapper as `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f" <Event>` when the skill is inside the Git top level (ADR-0013). Without Git, with the skill outside the top level, an unsafe relative path, `--scope user` or Windows, it uses absolute paths and warns for project scope that they are machine-local. `--scope user` targets `~/.claude/settings.json`. Existing unrelated hooks are preserved. Re-running replaces only entries whose command contains `mutagate` or this skill's Git-top-level wrapper path. | P0 |
+| FR-9.1 | `install --agent claude --scope project` merges the hook entries from `scripts/hooks.json` into `.claude/settings.json` under `hooks`, adds the Claude-only overlay (`asyncRewake` on the PostToolUse mutate handler, `TaskCompleted` gate, `if` filters, and on POSIX ` \|\| true` before ` # mutagate` on the SessionStart, PreToolUse and sync PostToolUse commands, because GitHub Copilot also runs `.claude/settings.json` and denies the edit when a PreToolUse hook fails, ADR-0013), and runs the skill's `scripts/hook` wrapper as `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f" <Event>` when the skill is inside the Git top level (ADR-0013). Without Git, with the skill outside the top level, an unsafe relative path, `--scope user` or Windows, it uses absolute paths and warns for project scope that they are machine-local. `--scope user` targets `~/.claude/settings.json`. Existing unrelated hooks are preserved. Re-running replaces only entries whose command contains `mutagate` or this skill's Git-top-level wrapper path. | P0 |
 | FR-9.2 | `install --agent codex` writes `.codex/hooks.json` (or merges into an existing one) using shell-form commands, no `args`, no `if`, no `asyncRewake`, `additionalContextLimit: 2500`. Ends by printing the trust instruction. | P0 |
 | FR-9.3 | `install --agent opencode` copies `adapters/opencode.js` to `.opencode/plugin/mutagate.js` with the CLI path baked in. VERIFY directory name (`plugin` vs `plugins`) against pinned OpenCode. | P0 |
 | FR-9.4 | `install --agent pi` copies `adapters/pi.ts` to `.pi/extensions/mutagate.ts` (project) or `~/.pi/agent/extensions/` (user). Also documents the package route: adding the repo to `packages` in Pi settings. VERIFY. | P0 |
@@ -503,7 +505,7 @@ Common adapter contract: build the payload of 8.3, spawn `node <cli> hook <Event
 
 | Event | Handler | Notes |
 |---|---|---|
-| SessionStart | `hook SessionStart` | stdout banner becomes context |
+| SessionStart | `hook SessionStart --installed <version>:<scope>` | stdout banner becomes context |
 | PostToolUse `Write\|Edit` | `hook PostToolUse` sync (invalidate) | under 80 ms |
 | PostToolUse `Write\|Edit` | `hook PostToolUse --mutate` with `asyncRewake: true` | exits 0 for non-test files immediately, exit 2 with report on survivors |
 | PreToolUse `Write\|Edit` with `if: Write(**/.mutagate/waivers.json)` and a second handler for `Edit(...)` | `hook PreToolUse` | `ask` |
@@ -787,14 +789,14 @@ Consulted for this document. Re-verify against pinned versions.
 
 ## Appendix A: shared `scripts/hooks.json` (Claude Code and Codex)
 
-Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with the absolute Node and runtime paths (ADR-0013).
+Shell form only, no `args`, no `if`, no `asyncRewake`. `install` adds the Claude overlay. `MUTAGATE_HOOK` is replaced at install time with the repo-relative wrapper command `f="$(git rev-parse --show-toplevel)/<rel>/hook" && [ -f "$f" ] && sh "$f"` when the skill is inside the Git top level, else with `f='<abs scripts dir>/hook' && [ -f "$f" ] && sh "$f"` (Windows: the absolute Node and runtime paths) (ADR-0013). `MUTAGATE_VERSION` is replaced with all of the install stamp `<version>:<scope>` (ADR-0017).
 
 ```json
 {
   "description": "mutagate: mutation-score gate for agent-written tests",
   "hooks": {
     "SessionStart": [
-      { "hooks": [ { "type": "command", "command": "MUTAGATE_HOOK SessionStart", "timeout": 20 } ] }
+      { "hooks": [ { "type": "command", "command": "MUTAGATE_HOOK SessionStart --installed MUTAGATE_VERSION", "timeout": 20 } ] }
     ],
     "PostToolUse": [
       { "matcher": "Edit|Write", "hooks": [

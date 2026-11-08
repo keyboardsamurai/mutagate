@@ -169,7 +169,7 @@ Check for Phase 1: `npm test` green; `MUTAGATE_FIXTURES=ts-jest,ts-vitest npm ru
 
 ## 5. Phase 2: Go runner
 
-### 5.1 Runner (insert after `python`, before `readIf`)
+### 5.1 Runner (insert after `python`, before `readOrEmpty`)
 
 ```js
 async function goRunner(c, t, dir, opts) {

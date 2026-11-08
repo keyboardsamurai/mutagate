@@ -18,6 +18,10 @@ _Avoid_: dependency target, imported target, extra target
 The session record that binds a test file to its targets. A PostToolUse on a test or `mutagate run <test>` creates it.
 _Avoid_: tracking, scheduling, enrolment
 
+**Repo file list**:
+The repo files that detection and target resolution use. In a Git repo, it holds only the files that Git lists.
+_Avoid_: file index, scan result
+
 **Result**:
 The normalized outcome of one mutation run for a target: status `pass`, `below`, `unscored` or `error`, with score and survivors.
 _Avoid_: report, score file, outcome
@@ -64,6 +68,18 @@ _Avoid_: engine, backend, driver
 The detached process that runs one target under its lock and publishes the result.
 _Avoid_: background job, runner process, daemon
 
+**Abandoned lock**:
+A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight.
+_Avoid_: stale lock, expired lock
+
+**Data dir**:
+The directory under the cache root that holds the session state, results, logs and scratch copies of one repo path.
+_Avoid_: repo cache, state dir
+
+**Cache prune**:
+The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist.
+_Avoid_: garbage collection, cache eviction
+
 **Scoped copy** (Python):
 The per-run copy of the scoped project inputs that mutmut mutates. It is deleted after the result is normalized.
 _Avoid_: scratch copy (for Python), work dir, sandbox
@@ -102,8 +118,12 @@ _Avoid_: gate budget, hook budget, check budget
 The longest time the gate waits for a worker that is already running a target. It never enlarges a budget.
 _Avoid_: gate wait, poll timeout, in-flight budget
 
+**Rerun deadline**:
+The time, 850 s after the start of an async PostToolUse hook, by which its reruns of stale targets end. It keeps the hook inside its 900 s timeout. The hook starts no target whose last run does not fit before it; such targets stay pending for the gate.
+_Avoid_: hook deadline, handler timeout, mutate budget
+
 **Clipped run**:
-A run killed under a budget below the run budget. It is never published; the target stays pending.
+A run killed at a deadline or budget below the run budget. It is never published; the target stays pending.
 _Avoid_: budget kill, partial run, timed-out run
 
 **Usage error**:
@@ -119,6 +139,10 @@ _Avoid_: conversation, thread, run (for this)
 **Harness**:
 The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode or Pi.
 _Avoid_: agent, host tool, IDE
+
+**Inherited hook call**:
+A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
+_Avoid_: foreign hook, Copilot hook
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).
@@ -136,6 +160,10 @@ _Avoid_: bundle, dist, artifact
 The generated Git branch `skill` that holds only the skill package for one release; users install from it (ADR-0014).
 _Avoid_: release branch, dist branch
 
+**Install stamp**:
+The mutagate version and install scope that `install` writes into the hook config or adapter. When it is missing or its version differs from the skill's version, SessionStart and `doctor` give the `install` command to run again (ADR-0017).
+_Avoid_: installed version file, install marker
+
 **Machine-local**:
-Config that holds absolute Node and skill paths of one machine. Do not commit it. Install warns when a project install is machine-local.
+Config that holds absolute paths of one machine. Do not commit it. Install warns when a project install is machine-local.
 _Avoid_: absolute install, local config

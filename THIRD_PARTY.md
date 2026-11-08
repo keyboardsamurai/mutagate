@@ -14,6 +14,6 @@ mutagate bundles no third-party code. It drives the mutation engines below. Some
 | [gremlins](https://github.com/go-gremlins/gremlins) | 0.6.0 | Go fallback | `go install`, cached | Apache-2.0 |
 | [Stryker.NET](https://stryker-mutator.io) (`dotnet-stryker`) | 5.0.0 | C# | `dotnet tool install` from NuGet, cached | Apache-2.0 |
 | [StrykerJS](https://stryker-mutator.io) (`@stryker-mutator/*`) | 9.1.1 tested | TypeScript, JavaScript | your project (npm) | Apache-2.0 |
-| [mutmut](https://github.com/boxed/mutmut) | 2.5.1, 3.8.0 tested | Python | your project (pip, uv) | BSD-3-Clause |
+| [mutmut](https://github.com/boxed/mutmut) | 2.5.1, 3.8.1 tested | Python | your project (pip, uv) | BSD-3-Clause |
 
 The skills CLI (`npx skills`) and the harnesses are separate products under their own terms. See [SECURITY.md](SECURITY.md) for network endpoints and integrity checks.

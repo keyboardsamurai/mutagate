@@ -37,7 +37,7 @@ npm run test:integration                          # real mutation runs on test/f
 MUTAGATE_FIXTURES=go-module,java-maven npm run test:integration   # select fixtures
 MUTAGATE_TEST_ENTRY=mutagate-hook.cjs npm run test:integration    # run through the generated CJS runtime (CI does this)
 npm run test:driver                               # scripted gate E2E for all four harness envelopes
-npm run test:performance                          # hook p95 must be <= 80 ms (MUTAGATE_PERF_COUNT sets samples)
+npm run test:performance                          # hook p95 <= 80 ms; 15k-file Git repo: SessionStart, test edit <= 300 ms (MUTAGATE_PERF_COUNT sets samples, max 100 there)
 npm run test:installer
 npm run generate:runtime                          # regenerate scripts/mutagate-hook.cjs
 npm run generate:hooks                            # regenerate scripts/hooks.json
@@ -60,30 +60,66 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 
 ## Architecture
 
-- `scripts/mutagate.mjs` holds the entire engine and exports its functions, which
-  tests import directly:
+- `scripts/mutagate.mjs` holds the engine except the runners and exports its
+  functions, which tests import directly:
   - `main` handles CLI dispatch and `handleHook` handles hook events.
   - `configFor` merges config in this order: flags, env, project, user, `DEFAULTS`.
   - `resolveTargets` maps a test file to the production target it covers, and
     `fingerprint` invalidates stale results.
-  - Each language has a runner: `pit` (Java and Kotlin), `stryker`, `python`,
-    `goRunner`, and `dotnetRunner`.
+  - Each language has a runner in `scripts/runners.cjs`: `pit` (Java and
+    Kotlin), `stryker`, `python`, `goRunner`, and `dotnetRunner`. The
+    `runners()` accessor loads it lazily and injects the engine helpers it
+    needs; tests reach runner symbols through `m.runners().x`.
   - `normalize` converts runner output into the shared result shape, and
     `report` turns that result into survivor text.
   - `gate`, `install`, and `doctor` implement the matching commands.
-- Hook path: a portable project install (skill inside the Git top level, not
-  Windows) makes the harness run the `scripts/hook` wrapper through a
-  Git-top-level command (ADR-0013); otherwise the command is the absolute Node
-  and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
+- Hook path: on POSIX the harness runs the `scripts/hook` wrapper, through a
+  Git-top-level command for a portable project install (skill inside the Git
+  top level) and at its absolute path otherwise (ADR-0013); on Windows the
+  command is the absolute Node and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
   `scripts/.node-path` (machine-local, untracked through `scripts/.gitignore`),
-  then PATH. The wrapper runs `mutagate-hook.cjs hook <Event>`, which reads the
-  JSON payload on stdin. Under Node < 22 hooks exit 0 and SessionStart says so.
+  then PATH, and exits 0 without Node. The wrapper runs
+  `mutagate-hook.cjs hook <Event>`, which reads the JSON payload on stdin. On
+  POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
+  in `|| true`, because Copilot also runs them (ADR-0013). Copilot CLI payloads
+  have a top-level `timestamp` (no other harness sends it): `context` marks such a
+  call `inherited` (harness `copilot`, whatever the `CLAUDE_*` env). `main`
+  skips recording and traces decision `inherited`; `handleHook` returns first,
+  exit 0 with no state or stdout, except one SessionStart `additionalContext`
+  notice while no native Copilot hook file exists (ADR-0015, payloads in
+  `test/payloads/copilot/cli/`). Under Node < 22 hooks exit 0 and SessionStart says so.
+  `install` stamps `<VERSION>:<scope>` into the SessionStart command
+  (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
+  adapters, which send it as payload `installed`; a missing stamp or other
+  version adds a rerun notice (`rerunNotice`) to SessionStart, exact when the
+  stamp has a scope, and a doctor WARN with the exact command per project or
+  user install (`installStamp`, ADR-0017). `scripts/hooks.json`
+  carries `MUTAGATE_VERSION` instead.
   PostToolUse on a test file registers targets. `schedule` then spawns a detached
   `worker` process that calls `runTarget` while holding a per-target lock.
+  The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s
+  quiet and ends by 850 s after its start (hook timeout 900 s): like `gate`, it
+  passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
+  target only when `gateAdvice` says its `lastRunMs` fits.
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
-  result once (`attempts`) and blocks once on an `agent_caused` one. Session
-  state is JSON under `cacheRoot()`, written through `updateState` with a lock
-  and atomic writes.
+  result once (`attempts`) and blocks once on an `agent_caused` one. An
+  exception in one target skips only that target, with a warning (`check`
+  exit 3). Session state is JSON under `cacheRoot()` (a real path, resolved
+  like `safePath`, so tools get no symlinked alias), written through
+  `updateState` with a lock and atomic writes; compute `fingerprint` before
+  `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
+  keeps normalized results per process while the result file, the fingerprint
+  and `waivers.json` are unchanged. Writes do not fsync, so state,
+  result and classpath files are read through `cacheJson`: torn JSON reads as
+  missing (a result reruns, state starts blank with a stderr note). Every lock
+  (state, target, tool install, .NET project, JVM compile) is a `wx` file from `lock` with
+  the pid and a random token. The holder touches it
+  every 10 s; `abandoned` (also used by `inFlight`) is true when the mtime is
+  over 60 s old or the pid is dead. One waiter takes it over under
+  `<lock>.break`, a live pid's lock only after that waiter saw its mtime unchanged
+  for 15 s of monotonic time, or half its wait budget if shorter (2.5 s for the
+  state lock; timers stop during system sleep); release deletes the file only
+  while it holds the holder's token.
 - Sessions: `context` takes the id from payload `agent_id`, then `session_id`,
   then env `MUTAGATE_HOOK_SESSION` (set by `schedule` for workers, by the OpenCode
   `shell.env` hook and by Pi at `session_start`), `CODEX_THREAD_ID`,
@@ -96,21 +132,38 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `__MUTAGATE_CLI__` in these adapters with the runtime path, relative to the
   adapter file when portable, else absolute; adapters pick Node like `scripts/hook`.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
-  keep hook latency low. `inputs.cjs` scopes project inputs and computes digests
-  for fingerprints. `kotlin-source.cjs` provides the source-aware part of the
+  keep hook latency low. `inputs.cjs` lists repo files (`files`, for detect and
+  resolution: the Git file list in a Git repo, else a walk, with the same name
+  rules; ADR-0016), scopes project inputs and computes digests
+  for fingerprints; its `dirEntries` reads a directory for both repo walks
+  (`files` and `inputFiles`) and skips unreadable directories, venvs, noise
+  names and `bin`/`obj` beside a `.csproj`; its `read` gives '' and
+  `fileDigest` a fixed digest for a file it cannot read. `kotlin-source.cjs`
+  provides the source-aware part of the
   Kotlin Tier B filter, and `references/kotlin-junk.yaml` holds its pattern
-  rules. `glob.cjs` does glob matching. `mutmut-bridge.cjs` writes the mutmut
+  rules. `glob.cjs` compiles globs, cached per process. `mutmut-bridge.cjs` writes the mutmut
   config and result bridge per mutmut version (2, 3.0–3.5, 3.6+). `errors.cjs`
   (`agentCause`) finds the line that makes an error agent-caused (a failing
   command naming any session test, a glob-matched test or edited production file,
   or a runner's red-baseline message; Python scoped-copy-only failures fail open).
   `dotnet.cjs` finds a file's `.csproj` and builds the Stryker.NET test filter,
   the per-project lock list, the test-project check and the persistent scoped
-  scratch copy. `install.cjs` holds `hookConfig` and `install`; it is not on the
+  scratch copy. `runners.cjs` drives the mutation tools (runners, `command`,
+  `tool`, `TOOLS`, `jars`) and returns raw mutants. `command` starts each tool in
+  its own process group (Windows: a `taskkill /T` tree) and kills it at its deadline; on the first spawn it
+  installs handlers that kill all live groups on `exit` and exit 128+signo on
+  SIGINT, SIGTERM and SIGHUP. `install.cjs` holds `hookConfig` and `install`; it is not on the
   hook path and not hashed into `fingerprint`. `doctor.cjs` renders the doctor
   text, writes `checking <name>…` progress to stderr and adds a WARN check when an
   installed harness differs from its pin; it is lazy, not on the hook path and not
-  hashed into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
+  hashed into `fingerprint`. `prune.cjs` is the cache prune: `register`, and
+  SessionStart in an existing data dir, write a `repo-path` marker into it, and `schedulePrune`
+  spawns the internal `prune` command detached when the mtime of
+  `repos/.pruned` is a day old. It deletes `reports/*` after 24 h, session state
+  after 14 days and its results with it, and data dirs whose marked repo path is gone
+  (unmarked: 14 days idle), rotates `trace.jsonl` at 10 MB, skips a data dir with
+  a held lock and never touches `jars/`, `tools/` or `recorded/`. It is not hashed
+  into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
 - `references/` ships with the skill:
   - `jars.json` has SHA-256-pinned PIT jars.
   - `versions.json` mirrors `test/harness-versions.json` for `doctor`.
@@ -149,6 +202,9 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   top-level single-line `import x from '...'` statements and
   `export function`/`export const`. Any other module syntax makes the generator
   throw.
+- Every `scripts/*.cjs` that affects results is in the `fingerprint` helper list;
+  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`) are listed as exceptions in
+  `test/protocol.test.mjs`.
 - `scripts/hooks.json` is generated from `hookConfig('codex')`. Regenerate it
   after changing hook wiring.
 - `scripts/mutagate.mjs` must stay under 1,400 lines
@@ -162,6 +218,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   for deliberate blocks and Claude async survivor delivery. CLI `run --sync` and
   `check` exit 0 on pass (including final unscored with no mutants to test),
   1 when below threshold or otherwise unscored, 2 on usage errors,
-  and 3 on error results and infrastructure errors. Usage errors (errors with
+  3 on error results and infrastructure errors, and 128+signo after a signal
+  once a tool was started. Usage errors (errors with
   `usage: true`) exit 2 and are not traced as errors, except under `hook` (traced, exit 0);
   `--help`/`-h` exits 0.

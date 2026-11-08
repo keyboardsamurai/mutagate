@@ -14,6 +14,9 @@
 - [ADR-0012](0012-uncovered-python-target-is-agent-caused.md) Uncovered Python target is agent-caused - accepted 2026-09-16
 - [ADR-0013](0013-project-hooks-use-repo-relative-paths.md) Project hooks use repo-relative paths - accepted 2026-09-16
 - [ADR-0014](0014-skill-branch-distribution.md) Users install the skill from a generated `skill` branch - accepted 2026-10-06
+- [ADR-0015](0015-inherited-claude-hooks-are-inert-under-copilot.md) Inherited Claude hooks are inert under Copilot - accepted 2026-11-08
+- [ADR-0016](0016-detection-uses-the-git-file-list.md) Detection and target resolution use the Git file list - accepted 2026-11-07
+- [ADR-0017](0017-install-stamp-in-the-hook-config.md) The install stamp travels with each install - accepted 2026-11-07
 
 ## Withdrawn
 

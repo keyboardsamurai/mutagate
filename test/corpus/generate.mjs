@@ -3,7 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { command, cacheRoot } from '../../scripts/mutagate.mjs';
+import { runners, cacheRoot } from '../../scripts/mutagate.mjs';
+const { command } = runners();
 const root = path.resolve(import.meta.dirname, '../..');
 const output = process.argv[2];
 if (!output) throw Error('Provide an output directory for raw corpus evidence.');

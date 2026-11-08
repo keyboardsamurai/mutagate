@@ -1,26 +1,85 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const { spawnSync } = require('node:child_process');
 const { glob } = require('./glob.cjs');
 
-const ignored = new Set(['node_modules', 'venv', 'build', 'target', 'state-data', '__pycache__', 'mutants', 'StrykerOutput', 'TestResults']);
+// Names both walks skip: tool output, then editor, OS and coverage noise.
+const ignored = new Set(['node_modules', 'venv', 'build', 'target', 'state-data', '__pycache__', 'mutants', 'StrykerOutput', 'TestResults', 'htmlcov', 'test-results', '.DS_Store', 'Thumbs.db']);
+const noise = /^\.coverage(?:\..+)?$|\.sw[po]$|~$/, unreadable = new Set(['EACCES', 'EPERM', 'ENOENT', 'ELOOP', 'ENOTDIR']);
 const manifests = ['build.gradle', 'build.gradle.kts', 'pom.xml', 'pyproject.toml', 'setup.cfg', 'package.json', 'go.mod'];
 const digestCache = new Map();
 const digest = value => crypto.createHash('sha1').update(value).digest('hex');
 const inside = (root, file) => file === root || file.startsWith(root + path.sep);
-const read = file => fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+// A file or directory mutagate cannot read counts as empty: '' here, no entries in dirEntries, a fixed digest in fileDigest.
+const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) { if (unreadable.has(e.code)) return ''; throw e; } };
 
+// The stat values that change when a file changes; fileDigest and the loadResult memo compare them.
+const statKey = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
 function fileDigest(file) {
-  const stat = fs.statSync(file, { bigint: true });
-  const stamp = `${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}:${stat.ino}`;
-  const previous = digestCache.get(file);
-  if (previous?.stamp === stamp) return previous.digest;
-  const entry = { stamp, digest: digest(fs.readFileSync(file)) };
-  digestCache.set(file, entry);
-  return entry.digest;
+  try {
+    const key = statKey(file), previous = digestCache.get(file);
+    if (previous?.key === key) return previous.digest;
+    const entry = { key, digest: digest(fs.readFileSync(file)) };
+    digestCache.set(file, entry);
+    return entry.digest;
+  } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; }
 }
 
-const hasManifest = dir => fs.existsSync(dir) && (manifests.some(name => fs.existsSync(path.join(dir, name))) || fs.readdirSync(dir).some(name => /\.(cs|fs)proj$/.test(name)));
+const scanned = name => !ignored.has(name) && !noise.test(name);
+// .NET build output, dropped beside a .csproj.
+const dotnetOutput = name => name === 'bin' || name === 'obj';
+// Directory entries for the files() and inputFiles walks, without ignored and noise names or, beside a .csproj, bin and obj;
+// none for an unreadable dir or, below the walk root, a venv (pyvenv.cfg).
+function dirEntries(dir, root = false) {
+  let entries;
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (unreadable.has(e.code)) return []; throw e; }
+  entries = !root && entries.some(e => e.name === 'pyvenv.cfg') ? [] : entries.filter(e => scanned(e.name));
+  return entries.some(e => e.isFile() && e.name.endsWith('.csproj')) ? entries.filter(e => !(e.isDirectory() && dotnetOutput(e.name))) : entries;
+}
+
+// The files Git lists below repo (tracked and unignored untracked), or null outside Git or when it lists none (repo inside an
+// ignored directory). Deleted tracked files, tracked symlinks, submodules and nested repositories are left out.
+function gitFiles(repo) {
+  const git = spawnSync('git', ['ls-files', '-z', '-s', '-t', '-c', '-o', '--exclude-standard'], { cwd: repo, encoding: 'utf8', maxBuffer: 2 ** 28, timeout: 10000 });
+  if (git.error || git.status !== 0 || !git.stdout) return null;
+  const found = new Set();
+  for (const entry of git.stdout.split('\0')) {
+    const file = entry[0] === '?' ? entry.slice(2) : entry.slice(entry.indexOf('\t') + 1);
+    // A deleted tracked file stays in the index until staged; existsSync drops it at less cost than ls-files -d.
+    if (entry[0] === '?' ? !file.endsWith('/') : entry && !/^. 1[26]0000 /.test(entry) && fs.existsSync(path.join(repo, file))) found.add(file);
+  }
+  return [...found];
+}
+
+// Files for detect, registration and resolution: in a Git repo the files Git lists (ADR-0016), else a walk. Both drop ignored and
+// noise names, hidden names, dist, venvs below the root, bin and obj beside a .csproj, exclude globs and symlinks (Git: tracked ones only).
+function files(repo, exclude) {
+  const kept = (relative, name) => !name.startsWith('.') && name !== 'dist' && !exclude.some(g => glob(g).test(relative));
+  const listed = gitFiles(repo);
+  if (listed) {
+    const venvs = new Set(), dotnets = new Set(), dirs = new Map([['.', true]]);
+    for (const f of listed) if (f.endsWith('/pyvenv.cfg')) venvs.add(path.posix.dirname(f)); else if (f.endsWith('.csproj')) dotnets.add(path.posix.dirname(f));
+    const dirKept = d => {
+      if (!dirs.has(d)) { const parent = path.posix.dirname(d), name = path.posix.basename(d); dirs.set(d, dirKept(parent) && !venvs.has(d) && scanned(name) && !(dotnets.has(parent) && dotnetOutput(name)) && kept(d, name)); }
+      return dirs.get(d);
+    };
+    return listed.filter(f => { const name = path.posix.basename(f); return dirKept(path.posix.dirname(f)) && scanned(name) && kept(f, name); });
+  }
+  const out = [];
+  function visit(dir) {
+    const entries = dirEntries(dir, dir === repo);
+    for (const e of entries) {
+      const p = path.join(dir, e.name), relative = path.relative(repo, p).split(path.sep).join('/');
+      if (e.isSymbolicLink() || !kept(relative, e.name)) continue;
+      if (e.isDirectory()) visit(p);
+      else out.push(relative);
+    }
+  }
+  visit(repo);
+  return out;
+}
+const hasManifest = dir => manifests.some(name => fs.existsSync(path.join(dir, name))) || dirEntries(dir, true).some(e => /\.(cs|fs)proj$/.test(e.name));
 
 function projectRoot(repo, file) {
   let dir = path.dirname(path.resolve(repo, file));
@@ -69,16 +128,14 @@ function inputFiles(c, t) {
   const found = new Set();
   const owned = ['repos', 'jars', 'recorded', 'tools'].map(name => path.resolve(c.root, name));
   function visit(dir, project) {
-    if (!fs.existsSync(dir)) return;
-    const entries = fs.readdirSync(dir, { withFileTypes: true }), dotnet = entries.some(e => e.isFile() && e.name.endsWith('.csproj'));
-    const go = fs.existsSync(path.join(project, 'go.mod')), root = dir === project;
+    const root = dir === project, entries = dirEntries(dir, root);
+    const go = fs.existsSync(path.join(project, 'go.mod'));
     for (const entry of entries) {
-      if (dotnet && entry.isDirectory() && ['bin', 'obj'].includes(entry.name)) continue;
       if (go && root && (entry.isDirectory() ? entry.name === 'bin' : entry.name.endsWith('.out'))) continue;
       const file = path.join(dir, entry.name);
       // Go build output: go build -o, go test -c and extensionless executables from go build ./cmd/x.
       if (go && entry.isFile() && (/\.(?:test|exe)$/.test(entry.name) || !entry.name.includes('.') && fs.statSync(file).mode & 0o111)) continue;
-      if (entry.isSymbolicLink() || ignored.has(entry.name) || entry.isDirectory() && entry.name.startsWith('.') && !['.mvn', '.config'].includes(entry.name) || owned.some(root => inside(root, file))) continue;
+      if (entry.isSymbolicLink() || entry.isDirectory() && entry.name.startsWith('.') && !['.mvn', '.config'].includes(entry.name) || owned.some(root => inside(root, file))) continue;
       const relative = path.relative(c.repo, file).split(path.sep).join('/');
       if (c.config.exclude.some(pattern => glob(pattern).test(relative))) continue;
       if (entry.isDirectory()) {
@@ -108,5 +165,9 @@ function inputFiles(c, t) {
   return [...found].sort().map(file => path.relative(c.repo, file).split(path.sep).join('/'));
 }
 
+exports.files = files;
 exports.inputFiles = inputFiles;
 exports.fileDigest = fileDigest;
+exports.statKey = statKey;
+exports.read = read;
+exports.unreadable = unreadable;

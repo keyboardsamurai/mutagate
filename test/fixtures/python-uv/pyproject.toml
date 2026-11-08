@@ -2,4 +2,4 @@
 name = 'python-uv'
 version = '0.0.0'
 requires-python = '>=3.12'
-dependencies = ['mutmut==3.8.0', 'pytest==8.4.2']
+dependencies = ['mutmut==3.8.1', 'pytest==8.4.2']
