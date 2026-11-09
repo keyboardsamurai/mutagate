@@ -153,8 +153,8 @@ and an entrypoint.
 | Java | Spring Boot 4 + Maven, JUnit 5 | PIT |
 | Kotlin | Spring Boot 4 + Gradle, JUnit 5 | PIT + Tier B filter |
 | Python | FastAPI + pytest, uv | mutmut 3.8.1 |
-| TypeScript | Express + Vitest | Stryker 9.1.1 |
-| Go | `net/http` | gomutants 0.6.1 |
+| TypeScript | Express + Vitest | Stryker 9.6.1 |
+| Go | `net/http` | gomutants 0.7.2 |
 | C# | ASP.NET Core minimal API + xUnit + `WebApplicationFactory` | Stryker.NET 5.0.0 |
 
 Each task has an `expected.json`:
@@ -242,7 +242,7 @@ A run **passes** when every hard check passes.
 **M0 (agent, host setup).** The user has already done: `.env` with both keys,
 Pi 0.73.1, OpenCode 1.18.30. The agent does the rest, following
 `.github/workflows/ci.yml`:
-- `go install github.com/szhekpisov/gomutants@v0.6.1`
+- `go install github.com/gomutants/gomutants@v0.7.2`
 - .NET SDK 10 plus `dotnet tool install dotnet-stryker --version 5.0.0`
 - a uv venv with `mutmut` and `pytest`, and update the old uv 0.5.26 (M0
   used 3.3.1, which segfaults on macOS; the pin is now 3.8.0)

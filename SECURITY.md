@@ -32,7 +32,7 @@ mutagate itself sends no telemetry and uploads nothing. It downloads only when a
 | What | Endpoint | Integrity |
 |---|---|---|
 | PIT jars (Java, Kotlin) | Maven Central, `https://repo1.maven.org/maven2/` (`scripts/cache-jars.mjs` also allows `repo.maven.apache.org`) | SHA-256 pinned in `references/jars.json` |
-| gomutants 0.6.1, gremlins 0.6.0 (Go) | `go install`: Go module proxy and checksum database (your `GOPROXY`/`GOSUMDB`, default `proxy.golang.org`, `sum.golang.org`) | Go checksum database; not pinned by mutagate |
+| gomutants 0.7.2, gremlins 0.6.0 (Go) | `go install`: Go module proxy and checksum database (your `GOPROXY`/`GOSUMDB`, default `proxy.golang.org`, `sum.golang.org`) | Go checksum database; not pinned by mutagate |
 | Stryker.NET 5.0.0 (C#) | `dotnet tool install`: NuGet (default `api.nuget.org`, or your NuGet config) | **not hash-pinned yet** |
 | Arcmutate Kotlin plugin | Maven Central, only with an Arcmutate licence or `kotlinTier: "A"` | SHA-256 pinned |
 

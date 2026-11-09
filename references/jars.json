@@ -1,21 +1,27 @@
 [
   {
     "artifact": "pitest-command-line",
-    "version": "1.21.0",
-    "path": "org/pitest/pitest-command-line/1.21.0/pitest-command-line-1.21.0.jar",
-    "sha256": "c0a1d8b78884cc429278ce48595cc00ae49e5ce642ca3e43630f2abfd77c5c4b"
+    "version": "1.30.2",
+    "path": "org/pitest/pitest-command-line/1.30.2/pitest-command-line-1.30.2.jar",
+    "sha256": "e2bbe643656f87893c1568809f1cb343a3816bfe3c367bd83bc181de9532ccbc"
   },
   {
     "artifact": "pitest",
-    "version": "1.21.0",
-    "path": "org/pitest/pitest/1.21.0/pitest-1.21.0.jar",
-    "sha256": "4b54f2442a50b3bee69ffce006eabcd037832bdd8c4ae279fd2e23d8ea699204"
+    "version": "1.30.2",
+    "path": "org/pitest/pitest/1.30.2/pitest-1.30.2.jar",
+    "sha256": "8f142c43e6f5f2d26baae4f317fc6c37a4b4b765b30481f21db721b89f15ee81"
   },
   {
     "artifact": "pitest-entry",
-    "version": "1.21.0",
-    "path": "org/pitest/pitest-entry/1.21.0/pitest-entry-1.21.0.jar",
-    "sha256": "b8668120b43f2f19f9d9da559ff044a5a11bf1aeb5addd1e0671b3311d47d1b0"
+    "version": "1.30.2",
+    "path": "org/pitest/pitest-entry/1.30.2/pitest-entry-1.30.2.jar",
+    "sha256": "775ccf7d2d99f5fa99baecd3fa9fd84fecf14132d63cfef22ff81e409d73a34c"
+  },
+  {
+    "artifact": "pitest-history-plugin",
+    "version": "0.0.1",
+    "path": "org/pitest/pitest-history-plugin/0.0.1/pitest-history-plugin-0.0.1.jar",
+    "sha256": "be71de9dd10951d45f7555d4068373db86388a956041ca99c98c56722c53625e"
   },
   {
     "artifact": "pitest-junit5-plugin",
@@ -49,9 +55,9 @@
   },
   {
     "artifact": "pitest-kotlin-plugin",
-    "version": "1.4.0",
-    "path": "com/arcmutate/pitest-kotlin-plugin/1.4.0/pitest-kotlin-plugin-1.4.0.jar",
-    "sha256": "0b3974eeb198b186e2c1bab605afbd9cc96a7b3b76f3d35a299e3bec1c71024e",
+    "version": "1.5.2",
+    "path": "com/arcmutate/pitest-kotlin-plugin/1.5.2/pitest-kotlin-plugin-1.5.2.jar",
+    "sha256": "3f8fbc755fe6898fd2fd03691fe4242cd96f1ef3ea83c0053de9b9d2da6d602f",
     "optional": "arcmutate"
   }
 ]

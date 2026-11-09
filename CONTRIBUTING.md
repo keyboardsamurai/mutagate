@@ -33,10 +33,10 @@ Record architectural decisions as numbered ADRs in [docs/adr/](docs/adr/README.m
 `npm run test:integration` runs real mutation runs on `test/fixtures/`. Select fixtures with `MUTAGATE_FIXTURES=go-module,java-maven`. Versions follow CI (`.github/workflows/ci.yml`):
 
 - JDK 21 with Gradle 8.14.3 (Java, Kotlin)
-- Go 1.26 with `go install github.com/szhekpisov/gomutants@v0.6.1`
+- Go 1.26 (1.26.10 or later, else `GOTOOLCHAIN=auto` downloads it) with `go install github.com/gomutants/gomutants@v0.7.2`
 - .NET 10 with `dotnet tool install dotnet-stryker --version 5.0.0`
-- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.1)
-- `npm ci` in each `test/fixtures/ts-*` directory
+- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.1), both with pytest 9.2.0
+- `npm ci` in each `test/fixtures/ts-*` directory. To regenerate the `ts-vitest` or `test/eval/tasks/typescript` lockfile, use npm 11 (`npx -y npm@11 install`): npm 10 crashes resolving Vitest 4.1 (`edgesOut`). `npm ci` from the lockfile works with npm 10.
 
 ## Build and install the package locally
 

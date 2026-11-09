@@ -4,6 +4,13 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+
+- Tool updates: PIT 1.21.0 → 1.30.2, the Arcmutate Kotlin plugin 1.4.0 → 1.5.2 and gomutants 0.6.1 → 0.7.2; the tested StrykerJS is 9.6.1 (was 9.1.1) with Vitest 4.1.12 (was 3.2.4), and the tested pytest is 9.2.0 (was 8.4.2) with mutmut 2.5.1 and 3.8.1. Kotlin Tier A (Arcmutate licence) is not tested with plugin 1.5.2, and the live agent evals were not run again for these updates.
+- Since PIT 1.23, incremental history is a plugin: mutagate now downloads `org.pitest:pitest-history-plugin` 0.0.1 (SHA-256 pinned) with the PIT jars, so PIT keeps its history between runs. Proxy or offline setups: run `node <skill>/scripts/cache-jars.mjs` again after the update; until then, with `MUTAGATE_OFFLINE=1`, Java and Kotlin runs fail with `offline: missing pitest-command-line`. PIT `EQUIVALENT` mutants are now ignored like Stryker `Ignored` ones: they are not scored and not counted as errors.
+- gomutants moved to `github.com/gomutants/gomutants`; mutagate installs 0.7.2 on first use unless a `gomutants` is on PATH, which it uses whatever its version: replace an older one with `go install github.com/gomutants/gomutants@v0.7.2`. It builds with Go 1.26.10 or later; an earlier Go downloads that version (`GOTOOLCHAIN=auto`, the default). gomutants 0.7 keeps a variable or import in use when a mutant removes its last use, so these mutants now run instead of failing to compile, and you can see new survivors of this kind (on the Go eval task 15 more mutants are killed and no score drops).
+- Test fixtures and eval tasks: the dependency updates above, plus an npm `overrides` pin of `qs` 6.16.1 (typed-rest-client 2.3.1 pins 6.15.1), clear the reported advisories in the lockfiles (@babel/core, ajv, zod, vitest, @vitest/mocker, tinypool, qs, pytest CVE-2025-71176). minimatch 10.2.6 and deepmerge 4.3.1 (Jest 29) have no upstream fix and stay.
+
 ## [0.9.1] - 2026-11-08
 
 ### Added

@@ -28,7 +28,7 @@ allprojects { p -> p.plugins.withId('java') { p.tasks.register('corpusClasspath'
   const javac = path.join(process.env.JAVA_HOME, 'bin', process.platform === 'win32' ? 'javac.exe' : 'javac');
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'references/jars.json')));
   const jars = manifest.filter(x => !x.optional && x.artifact !== 'pitest-junit5-plugin').map(x => path.join(cacheRoot(), 'jars', path.basename(x.path)));
-  const engine = jars.find(p => path.basename(p) === 'pitest-1.21.0.jar');
+  const engine = path.join(cacheRoot(), 'jars', path.basename(manifest.find(x => x.artifact === 'pitest').path));
   await command(javac, ['-cp', engine, '-d', work, path.join(import.meta.dirname, 'ExposeSynthetics.java')], { timeout: 30000 });
   const classes = path.join(repo, 'build/classes/kotlin/main');
   await command(java, ['-cp', [work, engine].join(path.delimiter), 'ExposeSynthetics', classes], { timeout: 30000 });

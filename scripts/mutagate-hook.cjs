@@ -321,11 +321,12 @@ function parsePitXML(text) {
   return [...text.matchAll( /<mutation\s+([^>]+)>([\s\S]*?)<\/mutation>/g)].map(m => {
     const field = n => xmlText(m[2].match(new RegExp('<' + n + '>([\\s\\S]*?)</' + n + '>'))?.[
       1
-    ] || '');
-    return {
+    ] || ''), status = m[1].match(/status=['"]([^'"]+)/)?.[1];
+    return { // PIT 1.25+ EQUIVALENT: like Stryker Ignored
       file: field('sourceFile'), class: field('mutatedClass'), method: field('mutatedMethod'), line: Number(field('lineNumber')),
       mutator: field('mutator'), description: field('description'),
-      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'), status: m[1].match(/status=['"]([^'"]+)/)?.[1]
+      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'),
+      ...status === 'EQUIVALENT' ? { status: 'NON_VIABLE', ignored: true } : { status }
     };
   });
 }

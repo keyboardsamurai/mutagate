@@ -5,7 +5,7 @@ requires-python = ">=3.12"
 dependencies = ["fastapi==0.141.1", "uvicorn==0.53.0"]
 
 [dependency-groups]
-dev = ["httpx==0.28.1", "hypothesis==6.168.3", "mutmut==3.8.1", "pytest==8.4.2"]
+dev = ["httpx==0.28.1", "hypothesis==6.168.3", "mutmut==3.8.1", "pytest==9.2.0"]
 
 [build-system]
 requires = ["uv_build>=0.12.13,<0.13"]
