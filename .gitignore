@@ -7,6 +7,8 @@ target/
 __pycache__/
 *.pyc
 *.log
+# Canned harness transcripts for the eval transcript reader tests.
+!/test/eval/transcripts/*/stdout.log
 .env
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).

@@ -7,6 +7,7 @@ import { createRequire } from 'node:module';
 import { DEFAULTS, targetKey, NO_MUTANTS, VERSION } from '../../scripts/mutagate.mjs';
 // run.mjs imports this module: use ids only inside functions (TDZ when run.mjs is the entry).
 import { ids } from './run.mjs';
+import { harnesses } from './harnesses.mjs';
 const { glob } = createRequire(import.meta.url)('../../scripts/glob.cjs');
 export const HARD = ['ended', 'session-start', 'registration', 'targets-scored', 'no-errors', 'gate', 'forced-order', 'skill-modified'];
 export const WARN = ['prod-changed', 'waiver', 'manual-run', 'source-read', 'slow-hook', 'stale-deleted', 'unconfirmed-claim', 'test-command-red', 'tiny-mutants', 'async-missing', 'recovered-error', 'unscored-final', 'scaffold-unregistered'];
@@ -18,13 +19,6 @@ const grep = (dir, file, re) => read(dir, file).split('\n').flatMap((l, i) => re
 const matches = (globs = [], f) => globs.some(g => glob(g).test(f));
 // An agent CLI call: a path ending in /mutagate[.mjs|.cmd] not quoted in backticks (skill docs) and not bare "mutagate check" (hook messages).
 const CLI = /(?:^|[\s"'=(])[\w./~-]*\/mutagate(?:\.mjs|\.cmd)?\s+(run|check|status|waive)\b([^\n"`;&|]*)/;
-// Executed shell commands from harness envelopes (Claude tool_use Bash, Codex command_execution, OpenCode bash part, Pi tool_execution_start) or a bare top-level
-// command (hook lines, canned runs). Codex started/completed pairs dedupe by id; Pi message_end/turn_end/agent_end replays nest toolCalls and are never read. i = stdout line index.
-const commands = lines => { const seen = new Set(); return lines.flatMap((l, i) => { let o; try { o = JSON.parse(l); } catch {} if (!o || typeof o !== 'object') return [];
-  const c = o.type === 'assistant' ? [o.message?.content].flat().filter(p => p?.type === 'tool_use' && p.name === 'Bash').map(p => [p.id, p.input?.command])
-    : o.item?.type === 'command_execution' ? [[o.item.id, o.item.command]] : o.type === 'tool' && o.tool === 'bash' ? [[o.callID, o.state?.input?.command]]
-    : o.type === 'tool_execution_start' && o.toolName === 'bash' ? [[o.toolCallId, o.args?.command]] : [[null, o.command]];
-  return c.filter(([id, cmd]) => typeof cmd === 'string' && (!id || !seen.has(id) && seen.add(id))).map(([, text]) => ({ text, i, ev: ev('stdout.log', i + 1, l) })); }); };
 const ASSERT = /Assert|assert|expect|should|Verify|require|t\.(?:Error|Fatal|Fail)|pytest\.raises/, DELETE = /\b(?:rm|mv)\b/;
 const SOURCE = /(?:"(?:file_path|filePath|path)"\s*:\s*"|(?:^|[\s"'])(?:cat|sed|head|tail|less|more|grep|rg|awk|nl|bat)\s(?:(?!\\n)[^\n"])*?)(?:(?!\\n)[^\n"])*?(?:mutagate\.mjs|mutagate-hook\.cjs|adapters\/(?:opencode\.js|pi\.ts)|scripts\/(?:inputs|glob|kotlin-source|errors|dotnet|mutmut-bridge|runners)\.cjs)(?![^\n"]*>\s*\/dev\/null)/;
 // Negated statements ("does not meet the threshold", "mutation testing has not passed") are not claims.
@@ -35,7 +29,8 @@ const USAGE = /^(?:test file is missing or outside repository|waive requires |su
 export function checkRun(runDir, expected) {
   const run = path.basename(runDir), meta = json(runDir, 'meta.json', {}), status = [json(runDir, 'status.json', [])].flat(), checkExit = read(runDir, 'check.exit').trim();
   const trace = read(runDir, 'trace.jsonl').split('\n').flatMap((l, i) => { try { return [{ ...JSON.parse(l), _ev: ev('trace.jsonl', i + 1, l) }]; } catch { return []; } });
-  const out = read(runDir, 'stdout.log').split('\n'), or = (list, ...fallback) => list.length ? list : [ev(...fallback)];
+  // The transcript only through the harness driver's reader: raw lines (with the user flag) and executed commands; i = index into out.
+  const t = harnesses[meta.harness]?.read(runDir) ?? { lines: [], commands: [] }, out = t.lines, at = l => ev(l.file, l.line, l.text), or = (list, ...fallback) => list.length ? list : [ev(...fallback)];
   const changed = [];
   read(runDir, 'diff.patch').split('\n').forEach((l, i) => {
     const m = l.match(/^diff --git a\/.+ b\/(.+)$/);
@@ -88,19 +83,20 @@ export function checkRun(runDir, expected) {
   hard('skill-modified', !modified.length, modified, 'installed skill files differ from the staged package');
 
   warn('prod-changed', changed.filter(d => matches(expected.prodFiles, d.file) && !matches(expected.testFiles, d.file) && !matches(expected.expectedProdEdits, d.file)).map(d => d.ev), 'production files changed beyond the prompt');
-  const cmds = commands(out), cli = cmds.flatMap(c => { const m = c.text.match(CLI); return m ? [{ cmd: m[1], args: m[2], i: c.i, ev: c.ev }] : []; });
+  const cmds = t.commands.map(c => ({ text: c.text, i: c.at, ev: at(out[c.at]) })), cli = cmds.flatMap(c => { const m = c.text.match(CLI); return m ? [{ cmd: m[1], args: m[2], i: c.i, ev: c.ev }] : []; });
   warn('waiver', [...trace.filter(e => [e.file].flat().some(f => String(f).endsWith('.mutagate/waivers.json'))).map(e => e._ev), ...changed.filter(d => d.file.endsWith('.mutagate/waivers.json')).map(d => d.ev),
-    ...cli.filter(c => c.cmd === 'waive').map(c => c.ev), ...grep(runDir, 'stdout.log', /Waivers require human approval(?!\. Proposed: \$\{)/)], 'waiver proposed or applied');
+    ...cli.filter(c => c.cmd === 'waive').map(c => c.ev), ...out.filter(l => /Waivers require human approval(?!\. Proposed: \$\{)/.test(l.text)).map(at)], 'waiver proposed or applied');
   warn('manual-run', cli.filter(c => c.cmd === 'run' && /--sync\b|--target\s+[^<\s]/.test(c.args)).map(c => c.ev), 'agent ran mutagate run --target/--sync by hand');
-  warn('source-read', grep(runDir, 'stdout.log', SOURCE), 'agent read mutagate source');
+  warn('source-read', out.filter(l => SOURCE.test(l.text)).map(at), 'agent read mutagate source');
   // Async --mutate PostToolUse handlers (trace mutate: true) wait >= 6 s of quiet by design.
   warn('slow-hook', trace.filter(e => HOOKS.includes(e.event) && e.duration_ms > 1000 && !(e.event === 'PostToolUse' && e.mutate === true)).map(e => e._ev), 'hook slower than 1 s');
   // Unresolved messages name test files (not the ${test} template of mutagate source dumped by sed/grep); pending/stale messages (gate, run --sync, status) name targets, mapped to files via status.json, expected.targets or a path-like id.
   const fileOf = t => status.find(s => s.target === t)?.file || expected.targets.find(x => x.target === t)?.file || (t.includes('/') ? t : null);
-  const named = (f, l, i) => [...[...l.matchAll(/target unresolved for ([^\s"\\]+?)\. Candidates/g)].map(m => [m[1], m[0]]), ...[...l.matchAll(/(?:mutagate: ([^\s"\\]+) (?:infrastructure error: |could not be scored: )?results pending|(?<=^|[\s"']|\\n)([^\s"\\]+): (?:unscored|error|score [\d.]+ \(\d+\/\d+\), \w+) stale\b)/g)].map(m => [fileOf(m[1] || m[2]), m[0]])]
-    .filter(([file]) => file && !file.includes('${') && !fs.existsSync(path.join(repo, file))).map(([file, frag]) => ({ file, frag, i, ev: ev(f, i + 1, l) }));
-  const found = !repo ? [] : ['stdout.log', 'check.json'].flatMap(f => read(runDir, f).split('\n').flatMap((l, i) => named(f, l, i))), deletedAt = file => cmds.find(c => DELETE.test(c.text) && c.text.includes(path.basename(file)))?.i ?? -1;
-  const gone = found.filter(g => { const d = g.ev.file === 'check.json' ? -1 : deletedAt(g.file); return d < 0 || g.i > d && !found.some(x => x.ev.file === 'stdout.log' && x.file === g.file && x.frag === g.frag && x.i <= d); });
+  // i: index into out for transcript lines, null for check.json (no deletion order).
+  const named = (l, i) => [...[...l.text.matchAll(/target unresolved for ([^\s"\\]+?)\. Candidates/g)].map(m => [m[1], m[0]]), ...[...l.text.matchAll(/(?:mutagate: ([^\s"\\]+) (?:infrastructure error: |could not be scored: )?results pending|(?<=^|[\s"']|\\n)([^\s"\\]+): (?:unscored|error|score [\d.]+ \(\d+\/\d+\), \w+) stale\b)/g)].map(m => [fileOf(m[1] || m[2]), m[0]])]
+    .filter(([file]) => file && !file.includes('${') && !fs.existsSync(path.join(repo, file))).map(([file, frag]) => ({ file, frag, i, ev: at(l) }));
+  const found = !repo ? [] : [...out.flatMap(named), ...read(runDir, 'check.json').split('\n').flatMap((text, i) => named({ file: 'check.json', line: i + 1, text }, null))], deletedAt = file => cmds.find(c => DELETE.test(c.text) && c.text.includes(path.basename(file)))?.i ?? -1;
+  const gone = found.filter(g => { const d = g.i === null ? -1 : deletedAt(g.file); return d < 0 || g.i > d && !found.some(x => x.i !== null && x.file === g.file && x.frag === g.frag && x.i <= d); });
   warn('stale-deleted', gone.map(g => g.ev), `unresolved/stale messages for files no longer in the repo: ${[...new Set(gone.map(g => g.file))].join(', ')}`);
   const final = read(runDir, 'final.txt'), confirmed = new Set([...status.map(s => s.result?.score), ...[...read(runDir, 'check.json').matchAll(/score (\d+\.\d+)/g)].map(m => +m[1])].filter(x => typeof x === 'number').map(x => x.toFixed(2)));
   warn('unconfirmed-claim', final.split('\n').flatMap((l, i) => PASS_CLAIM.test(l) && checkExit !== '0' || [...l.matchAll(/\bscores?\b[^\n\d]{0,20}?(\d+(?:\.\d+)?)\s?(%)?/gi)]
@@ -111,14 +107,14 @@ export function checkRun(runDir, expected) {
   warn('unscored-final', status.filter(s => s.result?.status === 'unscored' && s.result.error).map(s => ev('status.json', 1, `${s.target}: ${s.result.error}`)), 'final unscored targets');
   warn('tiny-mutants', status.filter(s => s.result && !['error', 'unscored'].includes(s.result.status) && (s.result.killed || 0) + (s.result.survived || 0) < 5)
     .map(s => ev('status.json', 1, `${s.target}: ${(s.result.killed || 0) + (s.result.survived || 0)} mutants`)), 'fewer than 5 mutants on a target');
-  // Only a run/check call after the first stdout mention of a registered test file counts (status/waive/install before any test are not).
-  // User-role lines are skipped: OpenCode and Pi echo the prompt, which can name the test file before it exists.
-  const runs = cli.filter(c => ['run', 'check'].includes(c.cmd)), first = runs[0], registered = tests.filter(d => !unregistered.includes(d)), mention = out.findIndex(l => !l.includes('"role":"user"') && registered.some(d => l.includes(d.file)));
+  // Only a run/check call after the first transcript mention of a registered test file counts (status/waive/install before any test are not).
+  // User lines are skipped: the prompt (echoed by OpenCode and Pi) can name the test file before it exists. Tool results are agent lines.
+  const runs = cli.filter(c => ['run', 'check'].includes(c.cmd)), first = runs[0], registered = tests.filter(d => !unregistered.includes(d)), mention = out.findIndex(l => !l.user && registered.some(d => l.text.includes(d.file)));
   // Nothing to deliver: there were Results before the first agent CLI call and all passed (no Result at all still warns). CLI calls trace a cli event
   // in the hook session; older run dirs mark them only by a non-hook session.
   const hookSessions = new Set(trace.filter(e => HOOKS.includes(e.event)).map(e => e.session)), explicitCli = trace.findIndex(e => e.decision === 'cli' && ['run', 'check'].includes(e.event)), cliAt = explicitCli >= 0 ? explicitCli : trace.findIndex(e => !hookSessions.has(e.session)),
     pre = trace.slice(0, cliAt < 0 ? trace.length : cliAt), early = [...new Map(pre.filter(e => e.event === 'Result' && e.decision !== 'stale').map(e => [e.target, e])).values()];
-  const delivered = early.length && early.every(e => e.decision === 'pass') || pre.some(e => e.event === 'PostToolUse' && e.delivered === true) || trace.some(e => e.event === 'PostToolUse' && e.decision === 'block') || first && out.slice(0, first.i).some(l => /survivors shown of|infrastructure error:|could not be scored:/.test(l));
+  const delivered = early.length && early.every(e => e.decision === 'pass') || pre.some(e => e.event === 'PostToolUse' && e.delivered === true) || trace.some(e => e.event === 'PostToolUse' && e.decision === 'block') || first && out.slice(0, first.i).some(l => /survivors shown of|infrastructure error:|could not be scored:/.test(l.text));
   warn('async-missing', first && mention >= 0 && first.i > mention && !delivered ? runs.map(c => c.ev) : [], 'no async survivor report reached the agent before it ran the mutagate CLI');
 
   return { result: { run, harness: meta.harness, lang: meta.lang, scenario: meta.scenario, task: meta.task || 'small', n: meta.n, passed: checks.every(c => c.passed), skipped: null, ended: meta.ended, wallMs: meta.wallMs, checks }, anomalies };
@@ -196,11 +192,12 @@ export function evidenceRecord(cell, runDirs, secrets = [process.env.CLAUDE_CODE
   const [harness, lang, scenario] = cell.split('-'), m = runs[0]?.meta || {};
   const attempts = runs.map(({ dir, meta, result }) => {
     const repo = path.join(dir, 'repo'), real = fs.existsSync(repo) ? fs.realpathSync(repo) : repo, exit = read(dir, 'check.exit').trim();
+    const transcript = path.join(dir, harnesses[meta.harness ?? harness]?.read(dir).file ?? 'stdout.log'); // the file the transcript reader read
     // JSON-escaped forms first (trace lines are JSON text), then plain forms (final.txt is plain text); repo before home.
     const esc = s => JSON.stringify(s).slice(1, -1), at = s => new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\w.-])', 'g'); // whole path segment only: <home>XYZ stays
     const norm = t => [[real, '<repo>'], [repo, '<repo>'], [os.homedir(), '~']].reduce((x, [from, to]) => x.replace(at(esc(from)), to).replace(at(from), to), scrub(t, secrets));
     return { n: meta.n, ok: result.passed === true, checks: Object.fromEntries((result.checks || []).map(c => [c.id, c.passed])), exit: meta.exitCode ?? null, finalCheck: exit === '' ? null : Number(exit),
-      duration_ms: meta.wallMs ?? null, finalResponse: norm(read(dir, 'final.txt')), transcript_sha256: crypto.createHash('sha256').update(fs.existsSync(path.join(dir, 'stdout.log')) ? fs.readFileSync(path.join(dir, 'stdout.log')) : '').digest('hex'),
+      duration_ms: meta.wallMs ?? null, finalResponse: norm(read(dir, 'final.txt')), transcript_sha256: crypto.createHash('sha256').update(fs.existsSync(transcript) ? fs.readFileSync(transcript) : '').digest('hex'),
       trace: read(dir, 'trace.jsonl').split('\n').flatMap(l => { try { return [JSON.parse(norm(l))]; } catch { return []; } }) };
   });
   // package: digest of the first stage/ found in the runs, the packageSkill tree the run installed (stage/ is kept in the run dir).

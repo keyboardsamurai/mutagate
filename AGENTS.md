@@ -192,7 +192,11 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     That run dir is the seam: drivers write it, the checker reads it, and tests
     use canned run dirs.
   - `harnesses.mjs` has one self-contained driver per harness: preflight
-    against the pins, isolated config env, launch and done-detection.
+    against the pins, isolated config env, launch, done-detection (OpenCode
+    and Pi share one settle loop) and `read`, the transcript reader. Only the
+    reader parses a harness transcript: it returns the final text (written to
+    `final.txt`), the executed commands and the raw lines with a user flag;
+    `transcripts/<harness>/` holds the canned real transcripts its tests use.
   - `checks.mjs` turns a run dir into `result.json` (hard checks) and
     `anomalies.json` (warnings with file:line evidence), renders the sweep
     `report.md`, scrubs secrets, and builds `test/evidence/live/` records.

@@ -137,6 +137,21 @@ test('OpenCode allows external directories for skill hooks', () => {
   assert.equal(opencodeConfig('m').model, 'm');
 });
 
+// Canned real transcripts in eval/transcripts/<harness>/: abridged runs of sweep 20261003-214323-0b96, strings cut at 160 characters, repo paths scrubbed to /repo and run-dir paths to <run>.
+test('each harness reads its own transcript: executed commands (ids dedupe, replays and suggestions skipped), user lines (never tool results), final text', t => {
+  const dir = h => path.join(import.meta.dirname, 'eval/transcripts', h), raw = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-transcript-'));
+  t.after(() => fs.rmSync(raw, { recursive: true, force: true }));
+  const read = (h, d = dir(h)) => { const r = harnesses[h].read(d); return [[...new Set([r.file, ...r.lines.map(l => l.file)])], r.commands.map(c => [r.lines[c.at].line, c.text.slice(0, 24)]), r.lines.filter(l => l.user).map(l => l.line), r.final.slice(0, 24)]; };
+  const zsh = "/bin/zsh -lc \"sed -n '1,";
+  assert.deepEqual(read('claude'), [['stdout.log'], [[2, 'find . -path ./target -p'], [3, 'find . -path ./target -p'], [11, 'mvn -q -o test -Dtest=Ma']], [10], 'Added `GET /api/matrix/s']);
+  assert.deepEqual(read('codex'), [['stdout.log'], [[6, zsh], [8, zsh], [14, zsh], [19, "/bin/zsh -lc 'mvn test'"]], [], 'Implemented:\n\n- Strength']);
+  // OpenCode: the server export holds the re-prompted turns; without it, the raw `run --format json` output.
+  assert.deepEqual(read('opencode'), [['messages.jsonl'], [[3, 'find . -type f -not -pat'], [7, 'ls -la .agents/skills/mu'], [8, 'mvn -q -DskipTests=false']], [1, 2, 6], 'Added `GET /api/matrix/s']);
+  fs.copyFileSync(path.join(dir('opencode'), 'stdout.log'), path.join(raw, 'stdout.log'));
+  assert.deepEqual(read('opencode', raw), [['stdout.log'], [[2, 'find . -type f -not -pat']], [], '']);
+  assert.deepEqual(read('pi'), [['stdout.log'], [[10, 'find . -type f -name "*.'], [11, 'find . -type f \\( -name '], [25, 'cd /repo && mvn test 2>&']], [4, 5, 18, 20, 21], 'All 67 tests pass across']);
+});
+
 test('Claude resolves its executable pin before PATH', t => {
   const pin = JSON.parse(fs.readFileSync(new URL('./harness-versions.json', import.meta.url), 'utf8')).packages['@anthropic-ai/claude-code'];
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-claude-pin-')), exe = path.join(home, '.local/share/claude/versions', pin), oldPath = process.env.PATH;

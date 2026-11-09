@@ -290,7 +290,11 @@ unknown inside Claude Code" bug is masked. `CODEX_HOME` is exported only for
 Codex because detection keys on it.
 
 **Harness drivers.** One module, one entry per harness, each exposing
-preflight, environment, launch, and done-detection:
+preflight, environment, launch, done-detection, and a transcript reader. The
+reader is the only parser of the harness transcript: it returns the final
+text, the executed shell commands, and the raw transcript lines, each marked
+as a user line (a user-role message such as the prompt or a re-prompt, never
+a tool result) or not:
 
 - Claude: headless print mode with streamed JSON output, verbose, hook events
   included, permissions bypassed, model from config, fresh config directory
@@ -330,12 +334,21 @@ before the continuation gate can re-prompt. That gap is filed as a mutagate
 issue and noted in the README, not worked around in the suite.
 
 **Run directory contract (the seam).** Every driver writes the same layout, and
-the checker reads nothing else except the task's expected file:
+the checker reads nothing else except the task's expected file. It reads the
+transcript only through the driver's transcript reader:
 
 - `meta.json`: harness, harness version, model, language, scenario, task, run
   number, start and end timestamps, wall time, process exit code, how the run
   ended (`exit`, `idle`, `killed`).
-- `stdout.log`, `stderr.log`: the raw harness transcript streams.
+- `stdout.log`, `stderr.log`: the raw harness transcript streams. One exception:
+  Pi's `stdout.log` leaves out the streaming deltas (`message_update`,
+  `tool_execution_update`) and the `get_state` poll responses. `message_end` and
+  `tool_execution_end` carry the same content, and a raw RPC stream grows to tens
+  of MB per run, too large for the secret scrub (it skips files over 5 MB).
+- `messages.jsonl` (OpenCode only): the server's message export over all
+  sessions, one part per line in time order. `run` exits at the first idle, so
+  turns re-prompted by the gate are only here.
+- `final.txt`: the last assistant text, from the driver's transcript reader.
 - `trace.jsonl`: mutagate's trace, copied from the data directory for the
   run's repo.
 - `runner-logs/`: mutagate's per-target runner logs.
@@ -408,9 +421,9 @@ scored or no-mutants result (`recovered-error`), and final `unscored` results ca
 detection includes `errors.cjs`, `dotnet.cjs`, `mutmut-bridge.cjs` and `runners.cjs`; escaped
 newlines end shell matches and reads redirected to `/dev/null` do not warn.
 
-Executed CLI commands come from Claude Bash tool uses, Codex command-execution
-items, OpenCode bash parts, Pi tool-execution starts, or top-level command fields.
-Command IDs deduplicate repeated events; suggestions and nested Pi toolCall replays
+Executed CLI commands come from the run's transcript reader: Claude Bash tool
+uses, Codex command-execution items, OpenCode bash parts, or Pi tool-execution
+starts. Command IDs deduplicate repeated events; suggestions and nested Pi toolCall replays
 do not count. A PostToolUse with `delivered: true` before the CLI boundary counts
 as async delivery; older trace/transcript heuristics remain fallbacks.
 
@@ -531,9 +544,13 @@ Modules under test and how:
 - **Task validation** (integration, opt-in): per task, reference tests in,
   `run --sync` out, every declared target scored. Prior art: the runner
   fixtures with weak/strong variants and `expected.json`.
-- **Live drivers** are validated only by the smoke run in M1 and the sweeps
-  themselves. The scripted driver suite already proves the hook envelopes for
-  all four harnesses without a model and stays as is.
+- **Transcript readers**: each driver's `read(runDir)` on an abridged, scrubbed
+  real transcript per harness in `test/eval/transcripts/<harness>/`: final
+  text, executed commands (id dedupe), user lines (prompt echo) apart from agent
+  lines.
+- **Live drivers** (launch and done-detection) are validated only by the smoke
+  run in M1 and the sweeps themselves. The scripted driver suite already proves
+  the hook envelopes for all four harnesses without a model and stays as is.
 
 Seams, from highest to lowest:
 

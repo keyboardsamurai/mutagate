@@ -3,7 +3,10 @@
 //  preflight({env})           -> {exe, version} or {reason}; env is the agent env, exe must come from the original PATH
 //  env({runDir, repo})        -> harness-specific env merged over the agent env
 //  launch({exe, repo, runDir, prompt, model, env, timeoutMs, config})
-//                             -> {exitCode, ended: 'exit'|'idle'|'killed', final}; writes stdout.log and stderr.log, owns done-detection
+//                             -> {exitCode, ended: 'exit'|'idle'|'killed'}; writes stdout.log (the raw transcript; Pi drops deltas and get_state polls) and stderr.log, owns done-detection
+//  read(runDir)               -> {file, final, lines: [{file, line, text, user}], commands: [{text, at}]}: the transcript reader, the only parser of this harness's
+//                                transcript. lines are the raw transcript lines (user: a user-role message, never a tool result); commands are the executed
+//                                shell commands, at = index into lines; final is the last assistant text; file is the run-dir file read. run.mjs writes final.txt from it, checks.mjs reads the rest.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -39,6 +42,28 @@ export function spawnRun(exe, args, { cwd, env, runDir, timeoutMs, stdin = 'igno
   return { child, done };
 }
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+// Done-detection of the long-lived harnesses (OpenCode serve, Pi RPC): poll once a second until the deadline ('killed'), the harness is gone ('exit'), or for settleMs
+// idle() holds and no mutagate process of this repo is alive ('idle'). That is a superset of "no target lock held": locks are taken only inside hook and worker
+// processes, and a --mutate hook settles before it locks.
+const hooksAlive = scripts => (spawnSync('ps', ['-Aww', '-o', 'args='], { encoding: 'utf8', timeout: 5000 }).stdout || '').includes(scripts);
+async function settle({ deadline, settleMs, exited, idle, scripts }) {
+  for (let quiet = Date.now(); ; await sleep(1000)) {
+    if (Date.now() > deadline) return 'killed';
+    if (exited()) return 'exit';
+    if (!await idle() || hooksAlive(scripts)) quiet = Date.now();
+    else if (Date.now() - quiet >= settleMs) return 'idle';
+  }
+}
+// Transcript reader core over one run-dir file of JSON lines: cmd(o) -> [[id, command]] (started/completed pairs dedupe by id), user(o), final(objects) -> text.
+function transcript(runDir, file, { cmd = () => [], user = () => false, final }) {
+  let text = '';
+  try { text = fs.readFileSync(path.join(runDir, file), 'utf8'); } catch {}
+  const raw = text.split('\n'), objs = raw.map(l => { try { const o = JSON.parse(l); return o && typeof o === 'object' ? o : null; } catch { return null; } }), seen = new Set();
+  return { file, final: final(objs.filter(Boolean)) || '', lines: raw.map((t, i) => ({ file, line: i + 1, text: t, user: !!objs[i] && user(objs[i]) })),
+    commands: objs.flatMap((o, at) => o ? cmd(o).filter(([id, c]) => typeof c === 'string' && (!id || !seen.has(id) && seen.add(id))).map(([, c]) => ({ text: c, at })) : []) };
+}
+
 export const opencodeConfig = model => ({ model, permission: { external_directory: 'allow' } });
 
 export const harnesses = {
@@ -49,10 +74,13 @@ export const harnesses = {
     env({ runDir }) { const dir = path.join(runDir, 'claude-config'); fs.mkdirSync(dir, { recursive: true }); return { CLAUDE_CONFIG_DIR: dir, CLAUDE_CODE_OAUTH_TOKEN: process.env.CLAUDE_CODE_OAUTH_TOKEN, DISABLE_AUTOUPDATER: '1' }; },
     async launch({ exe, repo, runDir, prompt, model, env, timeoutMs }) {
       const r = await spawnRun(exe, ['-p', prompt, '--output-format', 'stream-json', '--verbose', '--include-hook-events', '--dangerously-skip-permissions', '--model', model], { cwd: repo, env, runDir, timeoutMs }).done;
-      let final = '';
-      for (const l of fs.readFileSync(path.join(runDir, 'stdout.log'), 'utf8').split('\n')) try { const e = JSON.parse(l); if (e.type === 'result' && typeof e.result === 'string') final = e.result; } catch {}
-      return { exitCode: r.code, ended: r.killed ? 'killed' : 'exit', final };
+      return { exitCode: r.code, ended: r.killed ? 'killed' : 'exit' };
     },
+    // stream-json: Bash tool_use blocks; user lines are user messages other than tool results (the Skill body, Stop hook feedback); final is the result event.
+    read: runDir => transcript(runDir, 'stdout.log', {
+      cmd: o => o.type === 'assistant' ? [o.message?.content].flat().filter(p => p?.type === 'tool_use' && p.name === 'Bash').map(p => [p.id, p.input?.command]) : [],
+      user: o => o.type === 'user' && ![o.message?.content].flat().some(p => p?.type === 'tool_result'),
+      final: objs => objs.findLast(o => o.type === 'result' && typeof o.result === 'string')?.result }),
   },
   codex: {
     agent: 'codex', skillDir: '.agents/skills/mutagate',
@@ -74,12 +102,13 @@ export const harnesses = {
       const trust = `projects={${JSON.stringify(fs.realpathSync(repo))}={trust_level="trusted"}}`;
       const args = ['exec', '--json', '--dangerously-bypass-hook-trust', '--dangerously-bypass-approvals-and-sandbox', '--ignore-user-config', '--ignore-rules', '--ephemeral', '-m', model, '-c', `model_reasoning_effort=${config.codexEffort}`, '-c', trust, '-c', this.userSkillsOff(), '-C', repo, prompt];
       const r = await spawnRun(exe, args, { cwd: repo, env, runDir, timeoutMs }).done;
-      // Last agent message in the JSONL stream: item.completed {item:{type:"agent_message",text}}, or a last_agent_message field on the turn/task events.
-      let final = '';
-      const walk = o => { if (!o || typeof o !== 'object') return; if (o.type === 'agent_message' && typeof (o.text ?? o.message) === 'string') final = o.text ?? o.message; else if (typeof o.last_agent_message === 'string') final = o.last_agent_message; Object.values(o).forEach(walk); };
-      for (const l of fs.readFileSync(path.join(runDir, 'stdout.log'), 'utf8').split('\n')) try { walk(JSON.parse(l)); } catch {}
-      return { exitCode: r.code, ended: r.killed ? 'killed' : 'exit', final };
+      return { exitCode: r.code, ended: r.killed ? 'killed' : 'exit' };
     },
+    // exec --json: command_execution items (item.started and item.completed share the id); the prompt is not echoed. Final: the last agent message,
+    // item.completed {item:{type:"agent_message",text}}, or a last_agent_message field on the turn/task events.
+    read: runDir => transcript(runDir, 'stdout.log', {
+      cmd: o => o.item?.type === 'command_execution' ? [[o.item.id, o.item.command]] : [],
+      final: objs => { let final; const walk = o => { if (!o || typeof o !== 'object') return; if (o.type === 'agent_message' && typeof (o.text ?? o.message) === 'string') final = o.text ?? o.message; else if (typeof o.last_agent_message === 'string') final = o.last_agent_message; Object.values(o).forEach(walk); }; objs.forEach(walk); return final; } }),
   },
   opencode: {
     agent: 'opencode', skillDir: '.agents/skills/mutagate',
@@ -87,19 +116,18 @@ export const harnesses = {
     // Per-run config, data and state; XDG_CACHE_HOME stays shared because it is mutagate's cacheRoot. OPENCODE_TEST_HOME moves opencode's own home lookups
     // (~/.agents/skills, ~/.claude) off the user's home without touching the agent's HOME; project .agents/skills still load. The bash tool runs $SHELL: pin bash, not the user's zsh.
     env({ runDir }) { const d = s => path.join(runDir, 'opencode', s); return { SHELL: '/bin/bash', XDG_CONFIG_HOME: d('config'), XDG_DATA_HOME: d('data'), XDG_STATE_HOME: d('state'), OPENCODE_TEST_HOME: d('home'), OPENCODE_DISABLE_CLAUDE_CODE: '1', OPENCODE_DISABLE_AUTOUPDATE: '1', OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY }; },
-    // `run` exits on the first idle, so a long-lived `serve` hosts the session and mutagate's plugin can re-prompt it from the Stop gate. Done when for settleMs no
-    // session is busy or changed and no mutagate process of this repo is alive (hooks and workers are the only lock holders; a --mutate hook settles before it locks).
-    // stdout.log is the server's message export, one line per part over all sessions in time order, so re-prompted turns are in it; run.jsonl is `run --format json`.
+    // `run` exits on the first idle, so a long-lived `serve` hosts the session and mutagate's plugin can re-prompt it from the Stop gate. Done (settle) when no
+    // session is busy or changed. stdout.log is the raw `run --format json` output, which ends at that first idle; messages.jsonl is the server's message export,
+    // one line per part over all sessions in time order (role and model from its message), so re-prompted turns are in it.
     async launch({ exe, repo, runDir, prompt, model, env, timeoutMs, config }) {
-      const file = f => path.join(runDir, f), sleep = ms => new Promise(r => setTimeout(r, ms)), deadline = Date.now() + timeoutMs, fd = fs.openSync(file('serve.log'), 'w');
+      const file = f => path.join(runDir, f), deadline = Date.now() + timeoutMs, fd = fs.openSync(file('serve.log'), 'w');
       // The configured default model, as a real user has. mutagate's plugin now re-prompts with the session's model, but it falls back to the default when no
       // assistant message has one; before that fix, a bare config made opencode pick openrouter/google/gemini-3-pro-image-preview (no tool support).
       fs.mkdirSync(path.join(env.XDG_CONFIG_HOME, 'opencode'), { recursive: true }); fs.writeFileSync(path.join(env.XDG_CONFIG_HOME, 'opencode/opencode.json'), JSON.stringify(opencodeConfig(model)) + '\n');
       const serve = spawn(exe, ['serve', '--port', '0'], { cwd: repo, env, stdio: ['ignore', fd, fd], detached: true });
       fs.closeSync(fd); if (serve.pid) procs.add(serve.pid);
-      let up = true, run, code = null, running = false, ended = 'idle', final = '';
+      let up = true, run, code = null, running = false, ended = 'idle';
       serve.on('exit', () => { up = false; }).on('error', () => { up = false; });
-      const scripts = path.join(repo, '.agents/skills/mutagate/scripts') + path.sep, hooksAlive = () => (spawnSync('ps', ['-Aww', '-o', 'args='], { encoding: 'utf8', timeout: 5000 }).stdout || '').includes(scripts);
       const kill = p => { try { process.kill(-p, 'SIGKILL'); } catch {} };
       try {
         let url;
@@ -108,28 +136,31 @@ export const harnesses = {
         // The prompt goes in on stdin: `run` wraps positional words that contain spaces in quotes.
         run = spawnRun(exe, ['run', '--attach', url, '--format', 'json', '--auto', '-m', model], { cwd: repo, env, runDir, timeoutMs, stdin: 'pipe' });
         run.child.stdin.on('error', () => {}).end(prompt); running = true; run.done.then(r => { code = r.code; running = false; });
-        for (let sig, quiet = Date.now(); ; await sleep(1000)) {
-          if (Date.now() > deadline) { ended = 'killed'; break; }
-          if (!up) { ended = 'exit'; break; }
+        let sig;
+        ended = await settle({ deadline, settleMs: config.settleMs, exited: () => !up, scripts: path.join(repo, this.skillDir, 'scripts') + path.sep, idle: async () => {
           const s = await Promise.all([get('/session/status'), get('/session')]).catch(() => null), now = JSON.stringify(s?.[1].map(x => [x.id, x.time]));
-          if (!s || running || Object.values(s[0]).some(x => x.type !== 'idle') || now !== sig || hooksAlive()) { sig = now; quiet = Date.now(); }
-          else if (Date.now() - quiet >= config.settleMs) break;
-        }
+          const idle = !!s && !running && Object.values(s[0]).every(x => x.type === 'idle') && now === sig; sig = now; return idle;
+        } });
         if (up) {
           const msgs = (await Promise.all((await get('/session')).map(x => get(`/session/${x.id}/message`)))).flat().sort((a, b) => a.info.time.created - b.info.time.created);
-          fs.renameSync(file('stdout.log'), file('run.jsonl'));
-          fs.writeFileSync(file('stdout.log'), msgs.flatMap(m => [...m.parts.map(p => ({ role: m.info.role, model: m.info.modelID ?? m.info.model?.modelID, ...p })), ...m.info.error ? [{ role: m.info.role, sessionID: m.info.sessionID, messageID: m.info.id, error: m.info.error }] : []]).map(x => JSON.stringify(x) + '\n').join(''));
+          fs.writeFileSync(file('messages.jsonl'), msgs.flatMap(m => [...m.parts.map(p => ({ role: m.info.role, model: m.info.modelID ?? m.info.model?.modelID, ...p })), ...m.info.error ? [{ role: m.info.role, sessionID: m.info.sessionID, messageID: m.info.id, error: m.info.error }] : []]).map(x => JSON.stringify(x) + '\n').join(''));
           for (const m of msgs.filter(m => m.info.error)) fs.appendFileSync(file('stderr.log'), `opencode session error in ${m.info.id} (${m.info.modelID}): ${m.info.error.name}: ${m.info.error.data?.message ?? ''}\n`);
-          final = msgs.filter(m => m.info.role === 'assistant').map(m => m.parts.filter(p => p.type === 'text').map(p => p.text).join('\n')).filter(Boolean).at(-1) ?? '';
         }
       } catch (e) { fs.appendFileSync(file('stderr.log'), `mutagate eval driver: ${e.message}\n`); if (ended === 'idle') ended = 'exit'; }
       kill(serve.pid); procs.delete(serve.pid);
       if (run) { kill(run.child.pid); code = (await run.done).code; }
       fs.rmSync(path.join(env.XDG_CONFIG_HOME, 'opencode/node_modules'), { recursive: true, force: true }); // ~60 MB plugin SDK install per run
-      // The session database duplicates stdout.log's export and cannot be string-scrubbed (SQLite pages, WAL); delete it once serve is dead.
+      // The session database duplicates the messages.jsonl export and cannot be string-scrubbed (SQLite pages, WAL); delete it once serve is dead.
       for (const f of ['opencode.db', 'opencode.db-wal', 'opencode.db-shm']) fs.rmSync(path.join(env.XDG_DATA_HOME, 'opencode', f), { force: true });
-      return { exitCode: code, ended, final };
+      return { exitCode: code, ended };
     },
+    // messages.jsonl when the export was written, else stdout.log: older run dirs hold the export there, and a run whose serve died has only the raw `run`
+    // output, whose events nest the part ({type, part}). bash tool parts; user lines are user-role parts (the prompt and plugin re-prompts); final is the
+    // text of the last assistant message that has text.
+    read: runDir => transcript(runDir, fs.existsSync(path.join(runDir, 'messages.jsonl')) ? 'messages.jsonl' : 'stdout.log', {
+      cmd: o => { const p = o.part ?? o; return p.type === 'tool' && p.tool === 'bash' ? [[p.callID, p.state?.input?.command]] : []; },
+      user: o => o.role === 'user',
+      final: objs => Object.values(Object.groupBy(objs.filter(o => o.role === 'assistant' && o.type === 'text'), o => o.messageID)).map(ps => ps.map(p => p.text).join('\n')).filter(Boolean).at(-1) }),
   },
   pi: {
     agent: 'pi', skillDir: '.pi/skills/mutagate',
@@ -139,10 +170,9 @@ export const harnesses = {
       const dir = path.join(runDir, 'pi-agent'); fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, 'settings.json'), '{"skills":["!**"]}\n');
       return { PI_CODING_AGENT_DIR: dir, PI_TELEMETRY: '0', PI_SKIP_VERSION_CHECK: '1', OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY };
     },
-    // RPC session (pi docs/rpc.md): one prompt, then poll get_state. Done when the session is idle for settleMs and no mutagate process of this repo is alive:
-    // a superset of "no target lock held", since locks are only taken inside hook/worker processes and a --mutate hook settles before it locks.
+    // RPC session (pi docs/rpc.md): one prompt, then poll get_state. Done (settle) when the session is not streaming, compacting or holding pending messages.
     async launch({ exe, repo, runDir, prompt, model, env, timeoutMs, config }) {
-      const log = fs.createWriteStream(path.join(runDir, 'stdout.log')), err = fs.openSync(path.join(runDir, 'stderr.log'), 'w'), sleep = ms => new Promise(r => setTimeout(r, ms));
+      const log = fs.createWriteStream(path.join(runDir, 'stdout.log')), err = fs.openSync(path.join(runDir, 'stderr.log'), 'w');
       const child = spawn(exe, ['--mode', 'rpc', '--provider', 'openrouter', '--model', model], { cwd: repo, env, stdio: ['pipe', 'pipe', err], detached: true });
       fs.closeSync(err); if (child.pid) procs.add(child.pid);
       const exited = new Promise(r => { child.on('exit', code => r({ code })); child.on('error', e => { fs.appendFileSync(path.join(runDir, 'stderr.log'), `spawn ${exe}: ${e.message}\n`); r({ code: null }); }); });
@@ -159,25 +189,23 @@ export const harnesses = {
       });
       child.stdin.on('error', () => {});
       const send = (type, extra, ms = 60000) => Promise.race([new Promise(r => { const id = String(++seq); waiting.set(id, r); child.stdin.write(JSON.stringify({ id, type, ...extra }) + '\n'); }), exited.then(() => null), new Promise(r => setTimeout(r, ms).unref()).then(() => null)]);
-      const scripts = path.join(repo, '.pi/skills/mutagate/scripts') + path.sep, hooksAlive = () => (spawnSync('ps', ['-Aww', '-o', 'args='], { encoding: 'utf8', timeout: 5000 }).stdout || '').includes(scripts);
-      const deadline = Date.now() + timeoutMs; let ended = 'exit', idleSince = 0;
       await send('prompt', { message: prompt });
-      while (!done) {
-        await sleep(1000);
-        if (Date.now() > deadline) { ended = 'killed'; break; }
-        const s = (await send('get_state'))?.data;
-        if (!s) continue;
-        idleSince = !s.isStreaming && !s.isCompacting && !s.pendingMessageCount && !hooksAlive() ? idleSince || Date.now() : 0;
-        if (idleSince && Date.now() - idleSince >= config.settleMs) { ended = 'idle'; break; }
-      }
-      const final = done ? '' : (await send('get_last_assistant_text', {}, 10000))?.data?.text ?? '';
+      const ended = await settle({ deadline: Date.now() + timeoutMs, settleMs: config.settleMs, exited: () => done, scripts: path.join(repo, this.skillDir, 'scripts') + path.sep,
+        idle: async () => { const s = (await send('get_state'))?.data; return !!s && !s.isStreaming && !s.isCompacting && !s.pendingMessageCount; } });
       if (ended === 'idle') { child.stdin.end(); await Promise.race([exited, sleep(10000)]); }
       try { process.kill(-child.pid, 'SIGKILL'); } catch {}
       procs.delete(child.pid);
       const { code } = await Promise.race([exited, sleep(5000).then(() => ({ code: null }))]);
       if (!child.stdout.closed) await Promise.race([new Promise(r => child.stdout.once('close', r)), sleep(2000)]);
       await new Promise(r => log.end(r));
-      return { exitCode: code, ended, final };
+      return { exitCode: code, ended };
     },
+    // RPC events: bash tool_execution_start (toolCalls replayed in message_end/turn_end/agent_end are not executions); user lines carry a user-role message,
+    // also inside an agent_end replay. Final as get_last_assistant_text: the text of the last assistant message_end that is not aborted and empty, trimmed.
+    read: runDir => transcript(runDir, 'stdout.log', {
+      cmd: o => o.type === 'tool_execution_start' && o.toolName === 'bash' ? [[o.toolCallId, o.args?.command]] : [],
+      user: o => [o.message, o.messages].flat().some(m => m?.role === 'user'),
+      final: objs => { const m = objs.findLast(o => o.type === 'message_end' && o.message?.role === 'assistant' && !(o.message.stopReason === 'aborted' && !o.message.content?.length))?.message;
+        return m && [m.content].flat().filter(c => c?.type === 'text').map(c => c.text).join('').trim(); } }),
   },
 };

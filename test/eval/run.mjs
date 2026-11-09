@@ -109,7 +109,7 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
   const env={...base,PWD:repo,...h.env({runDir:dir,repo})},start=Date.now();meta.startedAt=new Date(start).toISOString();
   console.log(`start ${run.name}`);
   const r=await h.launch({exe:pre.get(harness).exe,repo,runDir:dir,prompt,model,env,timeoutMs:stepTimeout(budget),config});budget.agentEnd=Date.now();
-  Object.assign(meta,{endedAt:new Date().toISOString(),wallMs:Date.now()-start,exitCode:r.exitCode,ended:r.ended});write('final.txt',r.final);
+  Object.assign(meta,{endedAt:new Date().toISOString(),wallMs:Date.now()-start,exitCode:r.exitCode,ended:r.ended});write('final.txt',h.read(dir).final);
   const cache=cacheRoot(env),data=path.join(cache,'repos',hash(repo)),trace=path.join(data,'trace.jsonl');
   const events=(fs.existsSync(trace)?fs.readFileSync(trace,'utf8'):'').split('\n').flatMap(l=>{try{return [JSON.parse(l)];}catch{return [];}}),starts=events.filter(e=>e.event==='SessionStart');
   meta.session=(starts.find(e=>e.harness===harness)??starts[0])?.session??null;
