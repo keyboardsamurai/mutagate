@@ -4,7 +4,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { parseArgs, planSweep, aggregate, evidenceCells, ids, runRepo, stepTimeout, diffSince } from './eval/run.mjs';
+import { parseArgs, planSweep, aggregate, evidenceCells, ids, runRepo, stepTimeout, diffSince, agentEnv } from './eval/run.mjs';
+import { scratch } from './scratch.mjs';
+import { hash } from '../scripts/mutagate.mjs';
 import { scrubDir } from './eval/checks.mjs';
 import { harnesses, opencodeConfig, pinned } from './eval/harnesses.mjs';
 const config = JSON.parse(fs.readFileSync(new URL('./eval/config.json', import.meta.url)));
@@ -143,4 +145,22 @@ test('Claude resolves its executable pin before PATH', t => {
   fs.writeFileSync(exe, `#!/bin/sh\nprintf "${pin} (Claude Code)\\n"\n`, { mode: 0o755 });
   process.env.PATH = home;
   assert.deepEqual(pinned('claude', '@anthropic-ai/claude-code', home), { exe, version: pin });
+});
+
+test('a scratch repo copies like a live run, keeps its CLI session and cache root under an inherited agent session, and shares jars/ and tools/ with the real cache root', t => {
+  const xdg = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-xdg-')), inherited = { CODEX_THREAD_ID: 'codex-thread', CLAUDE_CODE_SESSION_ID: 'claude-session', GH_TOKEN: 'gh' }, saved = Object.fromEntries([...Object.keys(inherited), 'XDG_CACHE_HOME'].map(k => [k, process.env[k]]));
+  Object.assign(process.env, inherited, { XDG_CACHE_HOME: xdg });
+  t.after(() => { for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k]; else process.env[k] = v; fs.rmSync(xdg, { recursive: true, force: true }); });
+  const s = scratch(path.join(import.meta.dirname, 'eval/tasks/python'), { session: 'scratch-1', env: { MUTAGATE_TRACE: '1' } });
+  t.after(s.rm);
+  assert.deepEqual(['expected.json', 'reference', 'prompt.natural.md', 'prompt.pbt.md'].filter(f => fs.existsSync(path.join(s.repo, f))), []);
+  assert.ok(fs.existsSync(path.join(s.repo, 'pyproject.toml')));
+  assert.deepEqual(Object.keys(inherited).filter(k => k in s.env || k in agentEnv()), []);
+  const r = s.cli(['status']);
+  assert.equal(r.status, 0, r.stderr);
+  const trace = fs.readFileSync(path.join(s.env.CLAUDE_PLUGIN_DATA, 'repos', hash(s.repo), 'trace.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+  assert.deepEqual(trace.map(e => [e.event, e.session]), [['status', 'scratch-1']]);
+  for (const n of ['jars', 'tools']) fs.writeFileSync(path.join(s.env.CLAUDE_PLUGIN_DATA, n, 'kept'), n);
+  s.rm();
+  assert.deepEqual([fs.existsSync(s.dir), ...['jars', 'tools'].map(n => fs.readFileSync(path.join(xdg, 'mutagate', n, 'kept'), 'utf8'))], [false, 'jars', 'tools']);
 });

@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {runners,hash,cacheRoot} from '../../scripts/mutagate.mjs';
 const {command}=runners();
 import {packageSkill} from '../package.mjs';
+import {BUILD,copyRepo,scrubEnv} from '../scratch.mjs';
 import {harnesses,which,procs} from './harnesses.mjs';
 import {writeChecks,writeSweep,scrubDir,evidenceRecord} from './checks.mjs';
 export const ids={harness:['claude','codex','opencode','pi'],lang:['java','kotlin','python','typescript','go','csharp'],scenario:['natural','forced'],task:['small','greenfield']};
@@ -73,14 +74,13 @@ export function diffSince(repo,baseline,timeout=GRACE_MS){
 
 // ---- CLI execution (docs/eval_suite.md "Run lifecycle") ----
 const root=path.resolve(import.meta.dirname,'../..'),tasks=path.join(import.meta.dirname,'tasks'),home=os.homedir(),readJson=f=>JSON.parse(fs.readFileSync(f,'utf8'));
-export const BUILD=new Set(['node_modules','.venv','target','build','.gradle','bin','obj','StrykerOutput','TestResults','dist','__pycache__','.pytest_cache','mutants','.mutmut-cache']);
 const IGNORE=['','.claude/','.agents/','.pi/','.opencode/','.codex/',...BUILD,''].join('\n');
 
-// process.env minus inherited harness/mutagate vars and secrets, plus the mutagate debug env and the toolchains.
+// process.env minus inherited harness/mutagate vars and secrets (scrubEnv), plus the mutagate debug env and the toolchains.
 // Stripping all CLAUDE* (not only CLAUDECODE/CLAUDE_CODE_*/CLAUDE_CONFIG_DIR) also drops CLAUDE_PROJECT_DIR and CLAUDE_PLUGIN_ROOT, which mutagate's harness detection reads.
 export function agentEnv(){
  const java=[path.join(home,'.sdkman/candidates/java/21.0.2-open'),process.env.JAVA_HOME].find(p=>p&&fs.existsSync(p)),dotnet=path.join(home,'.dotnet');
- const env=Object.fromEntries(Object.entries(process.env).filter(([k])=>!/^(CLAUDE|CODEX_|OPENCODE|PI_|MUTAGATE_)/.test(k)&&k!=='OPENROUTER_API_KEY'));
+ const env=scrubEnv();
  return {...env,MUTAGATE_TRACE:'1',MUTAGATE_DEBUG:'1',MUTAGATE_RECORD:'1',MUTAGATE_NODE:process.execPath,...(java&&{JAVA_HOME:java}),...(!env.DOTNET_ROOT&&fs.existsSync(dotnet)&&{DOTNET_ROOT:dotnet}),
   PATH:[path.dirname(process.execPath),java&&path.join(java,'bin'),path.join(home,'go/bin'),dotnet,path.join(dotnet,'tools'),process.env.PATH].filter(Boolean).join(path.delimiter)};
 }
@@ -95,7 +95,7 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
  const repo=fs.realpathSync(repoDir);fs.symlinkSync(repo,path.join(dir,'repo'));started.push({dir,repo});
  const cli=path.join(repo,h.skillDir,'scripts/mutagate.mjs'),sh=(exe,args,o={})=>command(exe,args,{cwd:repo,env:base,timeout:stepTimeout(budget),...o});
  try{
-  if(task==='small')fs.cpSync(taskDir,repo,{recursive:true,filter:src=>{const rel=path.relative(taskDir,src);return !['expected.json','reference'].includes(rel)&&!/^prompt\.[a-z0-9-]+\.md$/.test(rel)&&!rel.split(path.sep).some(s=>BUILD.has(s));}});
+  if(task==='small')copyRepo(taskDir,repo);
   const stage=path.join(dir,'stage');packageSkill(stage);
   await sh('npx',['--yes','skills@1.5.26','add',stage,'--skill','mutagate','--agent',h.agent,'--yes','--copy'],{env:{...base,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'}});
   await sh('git',['init','-q']);await sh(node,[cli,'install','--agent',harness,'--repo',repo]); // in Git first: install writes the portable form users get

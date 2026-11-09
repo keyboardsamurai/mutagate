@@ -172,8 +172,17 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - Each runner fixture `test/fixtures/<name>/` has an `expected.json` with the
   test path, weak and strong score ranges, and required survivor methods. Its
   `variants/<Stem>.weak|strong.<ext>` files are swapped in over the test. The
-  integration test copies the fixture to a temp dir and asserts that build files
-  are unchanged.
+  integration test copies the fixture to a scratch repo and asserts that build
+  files are unchanged.
+- `test/scratch.mjs` makes the scratch repo for the integration, driver,
+  clipped and performance scripts: the live eval copy (`copyRepo`: no top-level
+  `expected.json`, `reference/` or `prompt.*.md`, no build dirs), the variant
+  swap, a temp cache root whose `jars/` and `tools/` link to the real cache
+  root, one CLI call, and `scrubEnv`, which removes the
+  inherited harness, `MUTAGATE_*` and token vars (the integration test sets
+  `MUTAGATE_GO_RUNNER`, `MUTAGATE_DEBUG` and `MUTAGATE_TRACE` back).
+  `test/installer.mjs` and the eval `agentEnv` use `scrubEnv` too, and
+  `test/corpus/generate.mjs` uses `copyRepo`.
 - `test/eval/` is the live eval suite, not part of the skill package:
   - `run.mjs` plans the sweep (`parseArgs`, `planSweep`, `aggregate` are pure
     exports) and runs each cell: copy `tasks/<lang>` to a repo at

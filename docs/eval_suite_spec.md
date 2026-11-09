@@ -278,7 +278,10 @@ each step gets the remaining time. After the agent returns, `check`,
 counted from agent end, so a run killed at the deadline still has artifacts.
 A run lasts at most the deadline plus the grace plus driver teardown.
 
-**Environment for the agent process.** `MUTAGATE_TRACE=1`, `MUTAGATE_DEBUG=1`,
+**Environment for the agent process.** The inherited env loses `CLAUDE*`,
+`CODEX_*`, `OPENCODE*`, `PI_*`, `MUTAGATE_*`, `COPILOT_*`, `GH_TOKEN`,
+`GITHUB_TOKEN` and `OPENROUTER_API_KEY` (`scrubEnv` in `test/scratch.mjs`).
+Then it gets `MUTAGATE_TRACE=1`, `MUTAGATE_DEBUG=1`,
 `MUTAGATE_RECORD=1`, `MUTAGATE_NODE` pointing at a Node 22 binary (the host's
 PATH node is 21), `JAVA_HOME` at JDK 21, plus the harness-specific isolation
 below. `MUTAGATE_HARNESS` is deliberately **not** set: the SessionStart label

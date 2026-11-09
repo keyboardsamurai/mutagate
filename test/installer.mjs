@@ -5,9 +5,10 @@ import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {runners} from '../scripts/mutagate.mjs';const {command}=runners();
 import {packageSkill} from './package.mjs';
+import {scrubEnv} from './scratch.mjs';
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-installer-')),stage=path.join(dir,'package'),project=path.join(dir,'project'),linked=path.join(dir,'linked project'),moved=path.join(dir,'moved here','linked project 2');
-const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...env,CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir)};
-for(const k of ['MUTAGATE_NODE','MUTAGATE_HARNESS','MUTAGATE_HOOK_SESSION','MUTAGATE_SESSION','CLAUDE_PROJECT_DIR','CLAUDE_CODE_SESSION_ID','CODEX_HOME','CODEX_THREAD_ID'])delete hookEnv[k]; // hooks must find Node through .node-path
+// scrubEnv drops MUTAGATE_NODE too: hooks must find Node through .node-path.
+const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...scrubEnv(env),CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir)};
 const add=(cwd,...flags)=>command('npx',['--yes','skills@1.5.26','add',stage,'--skill','mutagate','--agent','claude-code','codex','opencode','pi','--yes',...flags],{cwd,timeout:120000,env});
 const cli=(repo,...args)=>{const r=spawnSync(process.execPath,[path.join(repo,'.claude/skills/mutagate/scripts/mutagate.mjs'),...args,'--repo',repo],{cwd:repo,env:hookEnv,encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout;};
 const configs=repo=>['.claude/settings.json','.codex/hooks.json'].filter(f=>fs.existsSync(path.join(repo,f))).map(f=>fs.readFileSync(path.join(repo,f),'utf8'));

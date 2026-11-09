@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { runners, cacheRoot } from '../../scripts/mutagate.mjs';
+import { copyRepo } from '../scratch.mjs';
 const { command } = runners();
 const root = path.resolve(import.meta.dirname, '../..');
 const output = process.argv[2];
@@ -12,9 +13,7 @@ fs.mkdirSync(output, { recursive: true });
 const work = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-kotlin-corpus-'))); // macOS: Gradle reports /private/var, PIT matches paths literally
 try {
   const repo = path.join(work, 'fixture');
-  fs.cpSync(path.join(root, 'test/fixtures/kotlin-gradle'), repo, {
-    recursive: true, filter: p => !p.split(path.sep).some(s => ['build', '.gradle', '.cache'].includes(s))
-  });
+  copyRepo(path.join(root, 'test/fixtures/kotlin-gradle'), repo);
   const init = path.join(work, 'corpus.gradle');
   fs.writeFileSync(init, `import groovy.json.JsonOutput
 allprojects { p -> p.plugins.withId('java') { p.tasks.register('corpusClasspath') {
