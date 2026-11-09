@@ -1,0 +1,8 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251684666,
+ "cwd": "/repo",
+ "transcriptPath": "~/.copilot/session-state/cd7224a0-0295-47fa-a7c8-5c2b4ca69873/events.jsonl",
+ "stopReason": "end_turn",
+ "stop_hook_active": true
+}

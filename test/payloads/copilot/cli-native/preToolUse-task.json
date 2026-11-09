@@ -1,0 +1,14 @@
+{
+ "sessionId": "b738a909-8f72-41f4-8cc6-7e07895006a8",
+ "timestamp": 1794251815607,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01GsSUpa2Nks9P8JH8zKXDCA",
+ "toolName": "task",
+ "toolArgs": {
+  "agent_type": "general-purpose",
+  "name": "gp-step",
+  "description": "Create gp test file",
+  "mode": "sync",
+  "prompt": "Create the file tests/gp.test.js containing console.log('gp'); using the create tool. Then run this shell command in the repo root: env | grep -iE \"copilot|session|claude\" > shellenv-gp.txt . Then stop."
+ }
+}

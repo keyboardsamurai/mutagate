@@ -1,0 +1,14 @@
+{
+ "sessionId": "a5561028-780a-42f5-aff0-1c5a166fde9b",
+ "timestamp": 1794251953874,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01NSZaiKN7raNPKmcaqgKHBq",
+ "toolName": "bash",
+ "toolArgs": {
+  "command": "sh -c \"sleep 90; echo done > long.txt\"",
+  "description": "Run sleep then write long.txt",
+  "mode": "sync",
+  "initial_wait": 30,
+  "shellId": "long"
+ }
+}

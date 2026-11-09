@@ -1,0 +1,18 @@
+{
+ "sessionId": "20a9a7dc-e1a7-45df-9825-9aa7200a3195",
+ "timestamp": 1794251838726,
+ "cwd": "/repo",
+ "toolCallId": "toolu_018q3SADJJ1oaAHZSNzMNgAY",
+ "toolName": "create",
+ "toolArgs": {
+  "path": "/repo/tests/nested.test.js",
+  "file_text": "console.log('nested');\n"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "Created file /repo/tests/nested.test.js with 23 characters"
+ },
+ "agentId": "20a9a7dc-e1a7-45df-9825-9aa7200a3195",
+ "agentType": "general-purpose",
+ "parentAgentId": "76bf5d09-c554-4518-9e0b-46d000a7dc39"
+}

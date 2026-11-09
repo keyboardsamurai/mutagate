@@ -1,0 +1,18 @@
+{
+ "sessionId": "a5561028-780a-42f5-aff0-1c5a166fde9b",
+ "timestamp": 1794251984021,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01NSZaiKN7raNPKmcaqgKHBq",
+ "toolName": "bash",
+ "toolArgs": {
+  "command": "sh -c \"sleep 90; echo done > long.txt\"",
+  "description": "Run sleep then write long.txt",
+  "mode": "sync",
+  "initial_wait": 30,
+  "shellId": "long"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "<command with shellId: long is still running after 30 seconds. The command is still running but hasn't produced output yet. You will be automatically notified when it completes; if you need the command to complete end your response with no tool calls to wait for the notification, or use stop_bash to stop it.>"
+ }
+}

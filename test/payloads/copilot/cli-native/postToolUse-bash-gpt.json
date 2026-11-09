@@ -1,0 +1,15 @@
+{
+ "sessionId": "7e9a9165-5eb8-4e7d-a6ec-135340e7e0b4",
+ "timestamp": 1794251738695,
+ "cwd": "/repo",
+ "toolCallId": "call_pdS6PvFO2RpARYyMBo6RLkCZ",
+ "toolName": "bash",
+ "toolArgs": {
+  "command": "echo done",
+  "description": "Run requested echo command"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "done\n<shellId: 0 completed with exit code 0>"
+ }
+}

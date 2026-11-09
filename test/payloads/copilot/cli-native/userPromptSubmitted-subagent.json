@@ -1,0 +1,9 @@
+{
+ "sessionId": "361ceb94-8b5e-4393-8450-b0a8b70b3bbb",
+ "timestamp": 1794251815820,
+ "cwd": "/repo",
+ "prompt": "Create the file tests/gp.test.js containing console.log('gp'); using the create tool. Then run this shell command in the repo root: env | grep -iE \"copilot|session|claude\" > shellenv-gp.txt . Then stop.",
+ "agentId": "361ceb94-8b5e-4393-8450-b0a8b70b3bbb",
+ "agentType": "general-purpose",
+ "parentAgentId": "b738a909-8f72-41f4-8cc6-7e07895006a8"
+}

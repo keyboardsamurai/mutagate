@@ -1,0 +1,15 @@
+{
+ "sessionId": "a5561028-780a-42f5-aff0-1c5a166fde9b",
+ "timestamp": 1794252044032,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01LpLx872DDs24TKQPhcP1ae",
+ "toolName": "read_bash",
+ "toolArgs": {
+  "shellId": "long",
+  "delay": 90
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "\n<shellId: long completed with exit code 0>"
+ }
+}
