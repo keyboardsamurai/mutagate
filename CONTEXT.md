@@ -58,6 +58,10 @@ _Avoid_: pending, empty result, null score
 The final unscored reason for a target whose file yields no eligible mutant. It is no obligation: no block, counted as pass.
 _Avoid_: zero mutants, empty run, nothing to mutate
 
+**Target verdict**:
+The classification of one target: pending, retry (an error result with a second attempt left) or the final result status, with its obligation (block, warn or none) and its exit code. The gate, `run --sync`, `status`, the worker and the async hook take it from one function.
+_Avoid_: target state, decision
+
 ### Runs
 
 **Runner**:

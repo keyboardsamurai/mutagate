@@ -250,7 +250,7 @@ The agent runs these through the skill; you can run them too. `<skill>` is the s
 | Command | What it does |
 |---|---|
 | `<skill>/scripts/mutagate run <test> [--target <target>]` | Starts a background run for a test. `--target` picks the target when the name fits several files; the choice lasts for the session. |
-| `run <test> --sync [--json]` | Runs now and prints the report. |
+| `run <test> --sync [--json]` | Runs now and prints the report. A target still pending (its source changed during both attempts, or another run held it past the run budget) prints no report but the gate's message `mutagate: <target> results pending; run <skill>/scripts/mutagate check --wait <gateBudgetSec>`; with `--json` it prints `{"target": …, "status": "pending", "message": …}`. |
 | `check [--wait <sec>] [--json]` | Checks every target in the session, like the gate at finish. Reuses finished results and waits for running ones. `--wait` allows more time than the default 120 s. |
 | `status [--json]` | Scores, stale targets, survivors with their ids, waivers, tests without a target, and production edits no test covers. |
 | `detect` | Shows what mutagate found: harness, language, build tool, runner, Kotlin tier (JSON). |

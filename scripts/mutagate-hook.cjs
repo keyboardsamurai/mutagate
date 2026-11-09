@@ -271,10 +271,10 @@ const untargeted = c => { const s = state(c), l = (s.edited || []).filter(f => !
   return l.length ? `mutagate: not mutation-tested, no test targets them: ${l.slice(0, 8).join(', ')}${l.length > 8 ? ` (+${l.length - 8} more)` : ''}. Write tests for them to gate them.` : ''; };
 const gone = (c, t) => !exists(path.join(c.repo, t.file));
 function status(c, json) {
-  const s = state(c), targets = Object.entries(s.targets).filter(([, t]) => !gone(c, t)).map(([key, t]) => ({
-    target: t.target, file: t.file, tests: t.tests, secondary: t.secondary, blocks: t.blocks, stale: !loadResult(c, key, t), in_flight: inFlight(c, key),
-    result: loadResult(c, key, t)
-  }));
+  const s = state(c), targets = Object.entries(s.targets).filter(([, t]) => !gone(c, t)).map(([key, t]) => { const { result, running } = verdict(c, key, t); return {
+    target: t.target, file: t.file, tests: t.tests, secondary: t.secondary, blocks: t.blocks, stale: !result, in_flight: running,
+    result
+  }; });
   if (json) return JSON.stringify(targets);
   // List survivors, waiver ids and unresolved tests.
   return [...targets.flatMap(({ target, result: r, stale, in_flight }) => {
@@ -594,6 +594,17 @@ function loadResult(c, key, t, expectedFingerprint) {
   if (normalized.get(file)?.memoKey !== memoKey) normalized.set(file, { memoKey, r: normalize(r.raw, c, t, { started_at: r.started_at, duration_ms: r.duration_ms, kotlinTier: r.kotlinTier, runner: r.runner }) });
   return normalized.get(file).r;
 }
+// The Target verdict, the one place for these rules. kind: pending (no usable Result; running while a run holds the target lock), retry (an error
+// Result with a second attempt left) or the final Result status. obligation: block (once names its one-time flag), warn or none. code: see exitCode.
+function verdict(c, key, t, r = loadResult(c, key, t)) {
+  const [code, obligation, once] = !r || r.tests_deleted ? [1, 'block', 'pendingBlocked'] : r.status === 'unscored' ? r.error?.startsWith(NO_MUTANTS) ? [0, 'none'] : [1, 'warn'] :
+    r.status === 'error' ? r.agent_caused ? [3, 'block', 'errorBlocked'] : [3, 'warn'] : r.status === 'below' ? [1, 'block'] : [0, 'none'];
+  return { kind: !r ? 'pending' : retryable(r) ? 'retry' : r.status, running: inFlight(c, key), result: r, code, obligation, once };
+}
+// One exit-code mapping for gate and run --sync: a below target gives 1; otherwise the first nonzero code (pending, unscored 1, error 3) holds.
+const exitCode = (code, v) => v.kind === 'below' ? 1 : code || v.code;
+// The pending text of gate and run --sync; needed is the gate's budget advice.
+const pendingText = (c, t, needed) => `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`;
 
 const detached = (run, args, env) => run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}).unref(); // a failed spawn emits 'error' later; hooks fail open
 function schedule(c, key, run = spawn) {
@@ -630,53 +641,37 @@ async function gate(c, { wait, hook = false, runner } = {}) {
     if (gone(c, original)) { await updateState(c, s => { if (s.targets[key] && gone(c, s.targets[key])) delete s.targets[key]; }); continue; }
     if (original.secondary && !c.config.gateSecondaries) continue;
     let t = state(c).targets[key]; if (!t) continue;
-    const expectedFingerprint = fingerprint(c, t);
-    let r = loadResult(c, key, t, expectedFingerprint);
+    const expectedFingerprint = fingerprint(c, t), open = v => ['pending', 'retry'].includes(v.kind);
+    let v = verdict(c, key, t, loadResult(c, key, t, expectedFingerprint));
     let needed = '', advice = b => runtimeRequire('./errors.cjs').gateAdvice(b, c.config.runBudgetSec, t.lastRunMs, Date.now() - start, cliName(c));
     const until = Math.min(end, Date.now() + (wait ?? c.config.gateWaitSec) * 1000);
-    while (t && (!r || retryable(r)) && inFlight(c, key) && Date.now() < until) {
+    while (t && open(v) && v.running && Date.now() < until) {
       await sleep(100);
       t = state(c).targets[key];
-      r = loadResult(c, key, t, expectedFingerprint);
+      v = verdict(c, key, t, loadResult(c, key, t, expectedFingerprint));
     }
-    if (r) r = loadResult(c, key, t);
-    for (let retry = 0; retry < 2 && t && (!r || retryable(r)) && !inFlight(c, key) && Date.now() < end; retry++) {
+    if (v.result) v = verdict(c, key, t);
+    for (let retry = 0; retry < 2 && t && open(v) && !v.running && Date.now() < end; retry++) {
       const scoped = {
         ...c, deadline: end, budgetSec: Math.max(1, Math.min(c.config.runBudgetSec, Math.floor((end - Date .now()) / 1000)))
       };
       needed = advice(scoped.budgetSec);
       if (needed) break;
-      r = await runTarget(scoped, key, runner) || r && loadResult(c, key, state(c).targets[key]);
+      const r = await runTarget(scoped, key, runner);
       t = state(c).targets[key]; if (!t) break;
-      if (!r) { needed = advice(0); break; }
+      v = verdict(c, key, t, r || v.result && loadResult(c, key, t));
+      if (!v.result) { needed = advice(0); break; }
     }
     if (!t) continue;
+    const r = v.result, text = r ? report(r, r.status === 'unscored' ? DEFAULTS : c.config) : pendingText(c, t, needed);
     if (needed && r) warnings.push(`mutagate: ${t.target}${needed}`);
-    if (!r || r.tests_deleted) {
-      code = Math.max(code, 1);
-      const msg = r?.tests_deleted ? report(r) : `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`;
-      if (
-        hook && await claimBlock(c, key, 'pendingBlocked')) blocks.push(msg);
-      else warnings.push(msg);
-      continue;
-    }
-    if (r.status === 'unscored') { const text = report(r); if (r.error?.startsWith(NO_MUTANTS)) reports.push(text); else { code = Math.max(code, 1); warnings.push(text); } continue; }
-    reports.push(report(r, c.config));
-    if (['below', 'error'].includes(r.status)) await updateState(c, s => { if (s.targets[key]) s.targets[key].reported = reportKey(report(r, c.config)); });
-    if (r.status === 'error') {
-      if (!code) code = 3;
-      // Block fixable test failures once; infrastructure errors fail open.
-      // ponytail: once per target per session, never reset, like pendingBlocked.
-      if (hook && r.agent_caused && await claimBlock(c, key, 'errorBlocked')) blocks.push(report(r, c.config));
-      else warnings.push(report(r, c.config));
-      continue;
-    }
-    if (r.status === 'below') {
-      code = 1;
-      if (hook && await claimBlock(c, key)) blocks.push(report(r, c.config));
-      else if (hook) warnings.push(c.config.mode === 'advise' ? report(r, c.config) :
-        `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}`);
-    }
+    code = exitCode(code, v);
+    if (r && (r.status !== 'unscored' || v.obligation === 'none')) reports.push(text);
+    if (['below', 'error'].includes(r?.status)) await updateState(c, s => { if (s.targets[key]) s.targets[key].reported = reportKey(text); });
+    // Block fixable test failures and pending targets once (ponytail: per target per session, never reset), below targets up to maxRounds; infrastructure errors fail open.
+    if (hook && v.obligation === 'block' && await claimBlock(c, key, v.once)) blocks.push(text);
+    else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(v.kind === 'below' && c.config.mode !== 'advise' ?
+      `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
   } catch (e) { if (!code) code = 3; warnings.push(`mutagate: ${clean(original.target)} skipped: ${clean(e.message)}`); trace(c, 'Result', { target: original.target, decision: 'skipped', error: clean(e.message) }); }
   const reason = joinReports([...blocks, ...warnings], 1800);
   return {
@@ -774,7 +769,7 @@ async function handleHook(c, p, event) {
       };
       if (!await settle()) return { code: 0 };
       for (const [key, t] of Object.entries(state(c).targets)) {
-        if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || loadResult(c, key, t)) continue;
+        if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || verdict(c, key, t).kind !== 'pending') continue;
         if (!await settle()) break;
         // Start a target only when its last run fits before `end`, like the gate; the gate runs the rest.
         const budgetSec = Math.min(c.config.runBudgetSec, Math.floor((end - Date.now()) / 1000));
@@ -972,7 +967,7 @@ async function main(argv = process.argv.slice(2)) {
         if (!t) return 0;
         const delay = Math.min(3000, 3000 - (Date.now() - t.changedAt)); // clock jumps
         if (delay > 0) await sleep(delay);
-        if (loadResult(c, key, state(c).targets[key])) return 0;
+        if (verdict(c, key, state(c).targets[key]).kind !== 'pending') return 0;
         await runTarget(c, key);
       }
       return 0;
@@ -994,17 +989,12 @@ async function main(argv = process.argv.slice(2)) {
       let code = 0;
       const results = [];
       for (const t of r.targets) {
-        const result = await runTarget(c, targetKey(t)) || normalize([], c, t, { error: 'results pending after source changes' });
-        if (result) {
-          results.push(result);
-          if (t.secondary && !c.config.gateSecondaries) continue;
-          if (result.status === 'below') code = 1;
-          else if (result.status === 'error' && !code) code = 3;
-          else if (result.status === 'unscored' && !result.error?.startsWith(NO_MUTANTS) && !code) code = 1;
-        }
+        const v = verdict(c, targetKey(t), t, await runTarget(c, targetKey(t)));
+        results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
+        if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }
       console.log(args.json ? JSON.stringify(results.length === 1 ? results[0] : results) :
-        joinReports(results.map(r => report(r, c.config))));
+        joinReports(results.map(r => r.status === 'pending' ? r.message : report(r, c.config))));
       return code;
     }
     if (cmd === 'check') {

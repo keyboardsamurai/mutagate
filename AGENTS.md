@@ -72,6 +72,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     needs; tests reach runner symbols through `m.runners().x`.
   - `normalize` converts runner output into the shared result shape, and
     `report` turns that result into survivor text.
+  - `verdict` gives the Target verdict (pending, retry or the final Result
+    status, its obligation and exit code) to `gate`, `run --sync`, `status`,
+    the worker and the async hook; `exitCode` folds the codes for `gate` and
+    `run --sync`.
   - `gate`, `install`, and `doctor` implement the matching commands.
 - Hook path: on POSIX the harness runs the `scripts/hook` wrapper, through a
   Git-top-level command for a portable project install (skill inside the Git
