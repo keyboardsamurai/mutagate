@@ -1,0 +1,4 @@
+{"ts":"2026-11-10T11:46:08.512Z","harness":"copilot","event":"SessionStart","session":"167b564b-169a-42f5-a088-f6a2031e9204","file":[],"decision":"inherited","exit":0,"duration_ms":0,"error":null,"mutate":false,"delivered":false}
+{"ts":"2026-11-10T11:46:40.389Z","harness":"copilot","event":"PreToolUse","session":"167b564b-169a-42f5-a088-f6a2031e9204","tool":"Edit","file":[],"decision":"inherited","exit":0,"duration_ms":1,"error":null,"mutate":false,"delivered":false}
+{"ts":"2026-11-10T11:46:40.506Z","harness":"copilot","event":"PostToolUse","session":"167b564b-169a-42f5-a088-f6a2031e9204","tool":"Edit","file":[],"decision":"inherited","exit":0,"duration_ms":1,"error":null,"mutate":false,"delivered":false}
+{"ts":"2026-11-10T11:46:40.556Z","harness":"copilot","event":"PostToolUse","session":"167b564b-169a-42f5-a088-f6a2031e9204","tool":"Edit","file":[],"decision":"inherited","exit":0,"duration_ms":0,"error":null,"mutate":true,"delivered":false}

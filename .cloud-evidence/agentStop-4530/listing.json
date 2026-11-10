@@ -1,0 +1,17 @@
+{
+  "event": "agentStop",
+  "pid": 4530,
+  "at": "2026-11-10T11:48:00.928Z",
+  "cacheRootExists": true,
+  "files": [
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/trace.jsonl",
+      "size": 957
+    }
+  ],
+  "errors": [],
+  "markerEnvNames": [
+    "COPILOT_AGENT_CALLBACK_URL",
+    "COPILOT_AGENT_JOB_ID"
+  ]
+}
