@@ -9,7 +9,7 @@ const TOOLS = { create: 'Write', edit: 'Edit', str_replace_editor: 'Edit', apply
   KEYS = { path: 'file_path', file_text: 'content', old_str: 'old_string', new_str: 'new_string' };
 const progress = message => JSON.stringify({ type: 'progress', message }); // a display-only stdout line; the model never sees it (#35 D10)
 const DRAIN = new Set([...Object.keys(TOOLS), 'read_bash']); // delivery points (ADR-0019): read_bash ends a backgrounded bash command (S13)
-module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, reportKey, gate, detached, spawn }) => {
+module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, deliver, gate, detached, spawn }) => {
   const link = (data, id) => path.join(data, 'agents', hash(id));
   const cp = {
     // 'spawned' (the --mutate handler; never installed, so never Local), 'local' (a VS Code Local payload) or 'cloud' (ADR-0021), or 'native'.
@@ -46,9 +46,9 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
       return updateState(c, s => {
         const sent = [];
         s.outbox = (s.outbox || []).filter(e => {
-          const t = s.targets[e.key], k = checked.get(e.key);
+          const k = checked.get(e.key);
           if (k?.run !== e.run) return true;
-          if (k.current === e.run && t && t.reported !== reportKey(e.text)) { sent.push(e.text); t.reported = reportKey(e.text); }
+          if (k.current === e.run && deliver(s, e.key, e.text)) sent.push(e.text);
           return false;
         });
         return sent;

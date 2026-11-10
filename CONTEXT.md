@@ -161,12 +161,16 @@ The detached `hook PostToolUse --mutate --harness copilot` process that a native
 _Avoid_: async hook, worker (for this)
 
 **Outbox**:
-The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry already reported, leave it without delivery (ADR-0019).
+The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry that is already the delivered report, leave it without delivery (ADR-0019).
 _Avoid_: queue, inbox, pending reports
 
 **Delivery point**:
-A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not yet reported as `additionalContext` (ADR-0019).
+A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not the delivered report as `additionalContext` (ADR-0019).
 _Avoid_: drain hook, flush point
+
+**Delivered report**:
+The last report of a target that got to the agent: a hook gave it, a gate blocked with it, or `check` or `run --sync` printed it. mutagate does not give the same report for that target again. A pass clears it, so a later regression goes out again (ADR-0019).
+_Avoid_: ledger, reported, shown
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).

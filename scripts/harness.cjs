@@ -2,7 +2,7 @@
 // Harness profiles (ADR-0022): `pick` names the profile of a call; `base` is Claude-shaped, the others change only what differs. `write` encodes a
 // handleHook intent as {code, stdout, stderr}, no side effects. Loaded by context(). Not hashed into fingerprint: it shapes output and delivery, not results.
 const os = require('node:os'), path = require('node:path');
-module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, reportKey }) => {
+module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, deliver }) => {
   let own;
   const none = { code: 0, stdout: '', stderr: '' }, json = o => ({ code: 0, stdout: JSON.stringify(o) + '\n', stderr: '' });
   // The Copilot root agent shell: a session command, COPILOT_AGENT_SESSION_ID and no hook session id, whatever its CLAUDE_* env (ADR-0020).
@@ -28,7 +28,7 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     deliveries: async () => [], // reports a PostToolUse delivers
     rerun() {}, // after a sync PostToolUse; else the async --mutate hook reruns
     // A --mutate run: the report to deliver now, or null. Redeliver changed results; a pass resets delivery.
-    survivor: async (c, key, r, text) => await updateState(c, s => { const t = s.targets[key], next = text && reportKey(text); if (!t || t.reported === next) return false; t.reported = next; return true; }) && text || null,
+    survivor: async (c, key, r, text) => text && await updateState(c, s => deliver(s, key, text)) && text || null, // a pass has no text; runTarget cleared the delivered report
     async stop(c) { const g = await gate(c, { hook: true }); return g.block ? { block: g.reason } : g.reason ? { warn: g.reason } : {}; },
     write(i, event) {
       const own = x => json({ hookSpecificOutput: { hookEventName: event, ...x } }), text = i.context ?? i.survivors;

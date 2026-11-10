@@ -513,12 +513,14 @@ function report(r, cfg = DEFAULTS) {
 
 let loaded, copilotLoaded, harnessLoaded;
 const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
-const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, reportKey, gate, detached, spawn }); // the copilot profile (ADR-0022)
-const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, reportKey }); // pick and the profiles (ADR-0022)
+const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, deliver, gate, detached, spawn }); // the copilot profile (ADR-0022)
+const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, deliver }); // pick and the profiles (ADR-0022)
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 
-const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) s.targets[key].reported = reportKey(text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
+const deliver = (s, key, text) => { const t = s.targets[key], k = reportKey(text); if (!t || t.reported === k) return false; t.reported = k; return true; };
+
+const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
