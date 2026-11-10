@@ -12,14 +12,15 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     if (!args.harness && p.timestamp !== undefined) return 'inherited';
     const named = args.harness || env.MUTAGATE_HARNESS || p.harness || (shell(args, p, env) ? 'copilot' : env.CODEX_HOME || p.turn_id ? 'codex' :
       env.CLAUDE_PLUGIN_ROOT || env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-    return HARNESSES.includes(named) ? named : 'unknown';
+    // Only the tag makes a native Copilot call (ADR-0020); the Copilot root agent shell and its workers (MUTAGATE_HARNESS) stay Claude-shaped.
+    return named === 'copilot' && args.harness !== 'copilot' ? 'copilotShell' : HARNESSES.includes(named) ? named : 'unknown';
   };
   const base = {
     inert: false, quiet: false, waiver: 'deny', // inert: unrecorded, traced `inherited`; quiet: no stderr
     bashWait: false, label: '', // bashWait: initial_wait hint; label: rerun notice name
     events: ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'],
     read: p => ({ p, record: true }), // null: inert
-    place: (args, p) => ({ top: false, id: () => p.agent_id || p.session_id }), // top: Git top of cwd; id(data): session id
+    place: (args, p, shell) => ({ top: !args.repo && shell, id: () => p.agent_id || p.session_id }), // top: Git top of cwd (the Copilot root agent shell, whatever the tag); id(data): session id
     tags: () => ({}), // extra trace fields
     admit: (c, p, event) => Number(process.versions.node.split('.')[0]) < 22 ? // an intent that ends the call early, else undefined; {error}: traced only
       event === 'SessionStart' ? { notice: `mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.` } : {} : undefined,
@@ -43,6 +44,7 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     // Claude asks the human; its async hook wakes the agent: exit 2, survivors on stderr.
     claude: { ...base, waiver: 'ask', write(i, event) { return i.survivors && i.wake ? { code: 2, stdout: '', stderr: i.survivors + '\n' } : base.write.call(this, i, event); } },
     codex: base, opencode: agent, pi: agent,
+    copilotShell: { ...base, harness: 'copilot', bashWait: true }, // Copilot by name, not native: traces harness copilot, the bash wait hint
     unknown: { ...base, label: '<harness>', rerun(c, keys) { for (const key of new Set(keys)) schedule(c, key, c.spawn); } }, // no async hook: a worker per target; c.spawn: test seam
     // Inert; one SessionStart notice while no native Copilot hook file exists and, without copilotCloud, no cloud marker is set (ADR-0015, ADR-0021).
     inherited: { ...base, harness: 'copilot', inert: true, write: i => i.notice ? json({ additionalContext: i.notice }) : none,

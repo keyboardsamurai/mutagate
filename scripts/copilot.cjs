@@ -1,5 +1,5 @@
 'use strict';
-// The Copilot harness profile (ADR-0022) of native hook calls (`--harness copilot`, #35, ADR-0020) and session commands in the Copilot root agent shell:
+// The Copilot harness profile (ADR-0022) of native calls (`--harness copilot`, #35, ADR-0020) and the Git top of the Copilot root agent shell:
 // origin, payload normalization, the subagent chain, the agentStop gate and its output, the outbox and the write probe. Loaded only for those calls, the inherited SessionStart notice (`cloud`), doctor and install (TOOLS, DRAIN: the hook matchers). Not hashed into fingerprint: it maps payloads and session ids, not results.
 const fs = require('node:fs'), path = require('node:path');
 // Cloud coding agent markers (ADR-0021): in the cloud hook env of spike S16, in no local CLI hook or agent shell env.
@@ -82,10 +82,10 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
       return Promise.race([work, new Promise(res => { timer = setTimeout(res, W * 1000, { deadline: true, warn: `mutagate: gate stopped at ${W} s of the ${T} s agentStop timeout; allowed` }); })])
         .finally(() => clearTimeout(timer));
     },
-    // The profile (ADR-0022). Local inert, cloud too unless copilotCloud (ADR-0021); repo: the Git top of cwd (ADR-0020).
+    // The profile of the tag only (ADR-0022). Local inert, cloud too unless copilotCloud (ADR-0021); repo: the Git top of cwd (ADR-0020).
     profile: base => ({ ...base, quiet: true, bashWait: true, events: [...base.events, 'SubagentStart'],
       read(p, args) { const o = cp.origin(p, args); return o === 'local' ? null : { p: cp.normalize(p), cloud: o === 'cloud', record: o !== 'spawned' }; },
-      place: (args, p, shell) => ({ top: !args.repo && (p.cwd ? !!args.harness : shell), id: data => cp.session(data, p) }),
+      place: (args, p, shell) => ({ top: !args.repo && (!!p.cwd || shell), id: data => cp.session(data, p) }),
       // Never a ppid- session (ADR-0020).
       admit: (c, p, event) => !p.session_id ? { error: 'Copilot hook payload without sessionId' } : base.admit(c, p, event) ?? (event === 'SubagentStart' ? (cp.link(c.data, p), {}) : undefined),
       ready: c => cp.probe(path.join(c.data, 'state')), // ADR-0021

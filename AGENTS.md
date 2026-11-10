@@ -66,9 +66,11 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   functions, which tests import directly:
   - `main` handles CLI dispatch and does only the process I/O of a hook call.
     `runHook(argv, stdin text, env)` runs one hook call and returns
-    `{code, stdout, stderr}`; it is the test surface for hook calls (ADR-0022).
+    `{code, stdout, stderr}`, and `deadline` when the Copilot watchdog ended it;
+    it is the test surface for hook calls (ADR-0022).
     `handleHook` handles hook events and returns harness-neutral intents
-    (nothing, `context`, `notice`, `confirm`, `block`, `warn`, `survivors`).
+    (nothing, `context`, `notice`, `confirm`, `block`, `warn`, `survivors`;
+    `error` for an `admit` refusal, traced with no output; `deadline` with `warn`).
   - `configFor` merges config in this order: flags, env, project, user, `DEFAULTS`.
   - `resolveTargets` maps a test file to the production target it covers, and
     `fingerprint` invalidates stale results.
@@ -126,7 +128,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   by G = min(`gateBudgetSec`, T − 2M), M = min(30, ⌊T/4⌋), passes `gate` the
   options `schedulePending` (a worker for a target left pending with nothing in
   flight) and `blocksOnly` (only a block marks a report shown, ADR-0019); `gate`
-  does not read the profile. It allows after 8 blocks in a row
+  has no harness branch (its helpers `state` and `pendingText` read `quiet` and `bashWait`). It allows after 8 blocks in a row
   (state `stopStreak`), and at W = T − M allows, traces `deadline` and exits so
   `runners.cjs` kills the runner groups; a subagent `agentStop` exits 0 (ADR-0018).
   Session state is JSON under `cacheRoot()` (a real path, resolved
@@ -183,10 +185,14 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   harness name in traces). `pick(args, payload, env)` chooses the profile in this
   order: the `--harness` tag, payload `timestamp` (`inherited`), `MUTAGATE_HARNESS`,
   payload `harness`, the Copilot root agent shell (`shell`, session commands
-  only), the Codex markers, the `CLAUDE_*` markers, else `unknown`. Only `pick`
+  only), the Codex markers, the `CLAUDE_*` markers, else `unknown`. Only the tag
+  gives the native `copilot` profile; another `copilot` name gives `copilotShell`
+  (Claude-shaped, harness `copilot`, `bashWait`). Only `pick`
   takes `env`. A profile is `base` (Claude-shaped) with overrides of the methods
-  `read`, `place`, `admit`, `write`, `stop`, `deliveries` and `survivor`, and a few
-  data fields (`inert`, `quiet`, `waiver`, `bashWait`). `write` encodes an intent as
+  `read`, `place`, `admit`, `write`, `stop`, `deliveries` and `survivor`, the small
+  hooks `ready`, `rerun` and `tags`, and data fields (`events`, `label`, `inert`,
+  `quiet`, `waiver`, `bashWait`). `base.place` gives the Copilot root agent shell
+  the Git top of cwd, whatever the tag. `write` encodes an intent as
   `{code, stdout, stderr}` with no side effects: a `confirm` is `ask` for Claude and
   `deny` for the others; `survivors` with `wake` is exit 2 and stderr for Claude,
   else `additionalContext`. The engine does not compare harness names.
