@@ -1,6 +1,6 @@
 # GitHub Copilot
 
-mutagate gates GitHub Copilot CLI on macOS and Linux: local, in a trusted folder, with the Copilot sandbox off. Tested version: Copilot CLI 1.0.107. The live eval has not run for Copilot yet, so the README matrix row is ⏳. Decisions: [ADR-0015](adr/0015-inherited-claude-hooks-are-inert-under-copilot.md), [ADR-0018](adr/0018-copilot-completion-gate.md) (gate), [ADR-0019](adr/0019-copilot-outbox-delivery.md) (reports), [ADR-0020](adr/0020-copilot-payloads-and-sessions.md) (payloads and sessions), [ADR-0021](adr/0021-copilot-boundaries.md) (boundaries).
+mutagate gates GitHub Copilot CLI on macOS and Linux: local, in a trusted folder, with the Copilot sandbox off. Tested version: Copilot CLI 1.0.107. The live eval passed for all six languages (README matrix). Decisions: [ADR-0015](adr/0015-inherited-claude-hooks-are-inert-under-copilot.md), [ADR-0018](adr/0018-copilot-completion-gate.md) (gate), [ADR-0019](adr/0019-copilot-outbox-delivery.md) (reports), [ADR-0020](adr/0020-copilot-payloads-and-sessions.md) (payloads and sessions), [ADR-0021](adr/0021-copilot-boundaries.md) (boundaries).
 
 ## Install
 
@@ -53,7 +53,7 @@ Copilot also runs the hooks in `.claude/settings.json`. mutagate keeps those cal
 
 | Case | Status |
 |---|---|
-| Copilot CLI, macOS and Linux | Supported. Live eval pending. |
+| Copilot CLI, macOS and Linux | Supported. Live eval passed on macOS. |
 | VS Code, Copilot harness | Same hook file. Not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` exists for the release. |
 | VS Code, Local harness | Inert: its payloads have `hook_event_name`, and mutagate exits 0 with no state or output. |
 | Copilot cloud coding agent | Inert unless `.mutagate/config.json` has `"copilotCloud": true`. mutagate detects it by `COPILOT_AGENT_PROMPT` or `GITHUB_COPILOT_API_TOKEN` in the hook environment, not yet confirmed in a cloud job. That environment holds Copilot tokens that a run would inherit. |

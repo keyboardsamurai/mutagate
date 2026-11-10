@@ -52,11 +52,11 @@ Go: verified with a `go 1.22` module under Go 1.26.
 
 ## GitHub Copilot
 
-Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`) and on the checks below. The live eval has not run for Copilot, so its README matrix row is ⏳.
+Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`) and on the checks below. The live eval passed both scenarios for all six languages on 2026-11-10 (Copilot CLI 1.0.107, `claude-sonnet-5`, macOS; records `test/evidence/live/copilot-*.json`).
 
 | Case | Status |
 |---|---|
-| Copilot CLI, macOS and Linux | 🟡 deterministic tests (payloads, subagent chain, gate deadline and watchdog, outbox, install, doctor) and the scripted `test:driver` Copilot envelope (weak test blocks, strong test allows, through the installed bash commands; CI runs it on Linux and macOS) · ⏳ live eval |
+| Copilot CLI, macOS and Linux | 🟡 deterministic tests (payloads, subagent chain, gate deadline and watchdog, outbox, install, doctor) and the scripted `test:driver` Copilot envelope (weak test blocks, strong test allows, through the installed bash commands; CI runs it on Linux and macOS) · ✅ live eval on macOS |
 | Hook latency (macOS, 100 samples) | ✅ installed hook p95 43.0 ms; Copilot test edit 39.1 ms; delivery point with an outbox entry 38.4 ms. In a 15,000-file tree the delivery point takes 439 ms, once per background result, outside the 80 ms budget ([ADR-0019](adr/0019-copilot-outbox-delivery.md)) |
 | VS Code Copilot harness | ⏳ not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` |
 | VS Code Local harness | inert by design |
