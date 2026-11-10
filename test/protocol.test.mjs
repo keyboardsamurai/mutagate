@@ -70,6 +70,7 @@ test('every result-affecting helper is hashed into fingerprint',()=>{
 });
 test('size limits and Kotlin labeled-corpus precision',()=>{
  assert.ok(fs.readFileSync(path.join(root,'scripts/mutagate.mjs'),'utf8').split('\n').length<1400);
+ const arch=fs.readFileSync(path.join(root,'AGENTS.md'),'utf8').split('\n## Architecture\n')[1].split('\n## ')[0];assert.ok(arch.split(/\s+/).filter(Boolean).length<1100,'AGENTS.md Architecture is a code map; ADR text lives in docs/adr/');
  const base=path.join(root,'test/fixtures/kotlin-gradle');
  const rules=JSON.parse(fs.readFileSync(path.join(root,'references/kotlin-junk.yaml'))),data=JSON.parse(fs.readFileSync(path.join(base,'labeled-mutants.json'))),corpus=data.mutants;
  const classify=x=>m.junkRule(x,rules,fs.readFileSync(path.join(base,'src/main/kotlin/acme',x.file),'utf8'));

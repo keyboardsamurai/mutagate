@@ -188,6 +188,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - `scripts/mutagate.mjs` must stay under 1,400 lines
   (`test/protocol.test.mjs`). The dense style is intentional. Put substantial
   new logic in a lazily required `.cjs` helper.
+- The `## Architecture` section of this file stays under 1,100 words
+  (`test/protocol.test.mjs`): a code map with ADR pointers, no ADR text.
 - The packaged skill (`SKILL.md`, `README.md`, `LICENSE`, `scripts/`,
   `references/`) must stay under 350 KB.
 - Every ✅ in the README harness × language matrix needs passing `natural`
