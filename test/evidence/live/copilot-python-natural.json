@@ -1,0 +1,3283 @@
+{
+  "harness": "copilot",
+  "version": "1.0.107",
+  "model": "claude-sonnet-5",
+  "mutagate": "0.9.1",
+  "package": "c441087e2e950b4480b8dd003708a87146cb7628a16906b3be2ca5711b025660",
+  "lang": "python",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-11-10T07:35:26.530Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 1,
+      "finalCheck": 0,
+      "duration_ms": 292666,
+      "finalResponse": "",
+      "transcript_sha256": "57ea95efbe367fcfeda89c310ea13bb1cd78d09e85780c0112e35b89f6e89bba",
+      "trace": [
+        {
+          "ts": "2026-11-10T07:30:37.985Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:30:42.244Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:30:44.334Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:30:55.281Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:30:57.917Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:30:57.985Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:03.095Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:03.155Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:06.152Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:06.220Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:12.380Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6132,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:24.900Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:24.980Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:33.917Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 2752,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:31:33.917Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8908,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:34.478Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:34.549Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:40.390Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:40.465Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:40.609Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:48.057Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1406,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:31:49.136Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1013,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:31:49.525Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:49.604Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:50.442Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "stale",
+          "duration_ms": 1232,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:31:50.442Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9950,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:57.134Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1349,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:31:58.202Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1001,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:31:59.492Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1221,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:01.191Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1627,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:01.192Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11561,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:06.371Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:06.452Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:32:10.284Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:13.853Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1221,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:14.967Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1051,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_handlers - A...; log: ~/.cache/mutagate/repos/40040e9df1145d2e7673ad74e3349b7fdf0f31db/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:16.361Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1316,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:17.242Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:32:18.263Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1821,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:18.263Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11783,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:20.875Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:32:24.537Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:30.639Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:30.702Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:35.008Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:38.644Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1753,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:40.215Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1498,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:41.532Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1240,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:43.294Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1689,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:43.294Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12565,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:45.318Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:48.568Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:51.918Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:51.984Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:54.667Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:57.820Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:32:59.745Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1903,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:01.135Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1375,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:02.390Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1241,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:04.061Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.6753246753246753,
+          "decision": "below",
+          "duration_ms": 1657,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:04.078Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12065,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:04.132Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 24,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:30.165Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:30.247Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:34.904Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:34.969Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:36.297Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:40.125Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:40.189Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:41.017Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:46.417Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:46.480Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:48.168Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1782,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:48.169Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7953,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:51.480Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:51.545Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:52.533Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:59.581Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1844,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:00.793Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:00.861Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:01.169Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1512,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:01.170Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9598,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:07.725Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:07.789Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:08.722Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1673,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:08.723Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7835,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:10.568Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:13.688Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:34:15.497Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1788,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:16.842Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1331,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:18.068Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1213,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:19.868Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 1787,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:19.894Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12078,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:19.916Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:24.856Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:34:24.952Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:28.645Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:34:28.739Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:32.106Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:37.972Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:38.034Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:41.787Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:41.855Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:44.107Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6044,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:45.843Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:45.899Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:47.918Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6035,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:48.813Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:48.877Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:51.611Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:51.677Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:51.960Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/matrix/api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:54.386Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:54.927Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:00.155Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 0.9836065573770492,
+          "decision": "pass",
+          "duration_ms": 2273,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:01.937Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1704,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:02.972Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:03.041Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:03.484Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1461,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:03.486Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11780,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:06.953Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:07.019Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:09.091Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:11.777Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:11.842Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:13.091Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6040,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:14.433Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:20.356Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2312,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:22.122Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1682,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:23.724Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1522,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:26.070Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 2245,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:26.070Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14202,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:26.593Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:35:26.760Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "93ded14c-9476-41d9-ab6a-13789d32b777",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 1,
+      "finalCheck": 0,
+      "duration_ms": 242131,
+      "finalResponse": "",
+      "transcript_sha256": "6329ce04671567febbf54557b176e763a2f202e978871c216b4d691b2ed00ec5",
+      "trace": [
+        {
+          "ts": "2026-11-10T07:31:15.814Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:31:20.974Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:22.713Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:34.054Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:37.792Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:40.404Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:40.465Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:31:46.597Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/conftest.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6105,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:16.096Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:16.167Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:24.246Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1906,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_service.py::TestSnapshot::test_reflects_cell_values - asser...; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:24.247Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8051,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:25.554Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:25.629Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:31.497Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:31.569Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:31.678Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6022,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:39.164Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1413,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_service.py::TestSnapshot::test_reflects_cell_values - asser...; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:39.538Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:39.621Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:40.364Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 1138,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_exception_handlers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:40.365Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8769,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:47.011Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1195,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_service.py::TestSnapshot::test_reflects_cell_values - asser...; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:48.151Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1074,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_exception_handlers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:49.501Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1272,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:32:50.695Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1132,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_main.py::TestCreateApp::test_installs_api_and_page_routers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/6b0dec235b1f3958fda76220a4f811a6ad59c5dd.log"
+        },
+        {
+          "ts": "2026-11-10T07:32:50.696Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11046,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:56.085Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:32:56.165Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:33:02.405Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:03.480Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1132,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_service.py::TestSnapshot::test_reflects_cell_values - asser...; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/eca9d35ceff437d00825ab0f8a407a64fddc76c9.log"
+        },
+        {
+          "ts": "2026-11-10T07:33:04.561Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1014,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_api.py::TestInstall::test_registers_router_and_exception_handlers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/e465e6f15f667c9969e4a487ef72623c7ca486f9.log"
+        },
+        {
+          "ts": "2026-11-10T07:33:05.833Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1197,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:06.975Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 1077,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_main.py::TestCreateApp::test_installs_api_and_page_routers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/6b0dec235b1f3958fda76220a4f811a6ad59c5dd.log"
+        },
+        {
+          "ts": "2026-11-10T07:33:07.028Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:08.075Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1038,
+          "error": "mutmut failed (1): failed to collect stats. runner returned 1; FAILED tests/test_main.py::TestCreateApp::test_installs_api_and_page_routers; log: ~/.cache/mutagate/repos/a7cb6744dca9ad98bf037f31709e7ec29e6bc495/logs/6b0dec235b1f3958fda76220a4f811a6ad59c5dd.log"
+        },
+        {
+          "ts": "2026-11-10T07:33:08.076Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Write",
+          "file": [
+            "<repo>/tests/test_matrix_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11883,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:10.319Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:33:16.018Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:22.832Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:22.894Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:27.180Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:27.242Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:28.944Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6023,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:31.069Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:31.137Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:33.294Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_api.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6025,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:33.856Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:33.916Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:37.187Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:38.551Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:38.613Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:39.970Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:41.049Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:44.087Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:33:46.004Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 0.8833333333333333,
+          "decision": "pass",
+          "duration_ms": 1896,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:47.396Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1377,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:48.652Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1245,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:50.303Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": 0.7012987012987013,
+          "decision": "below",
+          "duration_ms": 1637,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:33:50.317Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11677,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:33:50.370Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:03.196Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:03.261Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:11.276Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 0.9166666666666666,
+          "decision": "pass",
+          "duration_ms": 1827,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:12.666Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1311,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:13.938Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 0.8387096774193549,
+          "decision": "pass",
+          "duration_ms": 1200,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:15.714Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": 0.7012987012987013,
+          "decision": "below",
+          "duration_ms": 1701,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:15.715Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12427,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:27.049Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:27.116Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:31.855Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:31.916Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:33.167Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_service.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6023,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:40.142Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2012,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:41.348Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:41.420Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:41.735Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1516,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:41.736Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9793,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:49.451Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1834,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:50.871Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1348,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:50.950Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:51.015Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:52.207Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1264,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:52.208Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_page.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10755,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:58.000Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:58.067Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:34:59.532Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 2307,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:34:59.534Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8492,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:01.363Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:04.042Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:35:07.169Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/service.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3094,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:08.689Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/api.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1506,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:09.962Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/page.py",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1260,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:11.811Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "target": "matrix/main.py",
+          "score": 0.987012987012987,
+          "decision": "pass",
+          "duration_ms": 1834,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:35:11.828Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Edit",
+          "file": [
+            "<repo>/tests/test_main.py"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13733,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:11.863Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:35:14.059Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:35:14.144Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "1752f76f-e768-416b-b2d5-fd3b7b99ee0a",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}
