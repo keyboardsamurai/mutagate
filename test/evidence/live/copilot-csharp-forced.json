@@ -1,0 +1,2436 @@
+{
+  "harness": "copilot",
+  "version": "1.0.107",
+  "model": "claude-sonnet-5",
+  "mutagate": "0.9.1",
+  "package": "8bfd61110fe7e23577077ef5f3f191cf77fe9a58f35163682baa306bacbf3468",
+  "lang": "csharp",
+  "task": "small",
+  "scenario": "forced",
+  "passed": true,
+  "checked_at": "2026-11-10T09:08:20.720Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 1,
+      "duration_ms": 371064,
+      "finalResponse": "All 60 tests pass. I moved the HTTP-level integration checks into `MatrixEndpointsTests.cs` (exercising `MapMatrixApi`'s route registration and endpoint filter) and `ProgramTests.cs` (exercising `Program.cs`'s host startup wiring), instead of a separate ambiguous file, so mutagate can map tests to each target. No production code changes beyond the previously added `Sum` endpoint.",
+      "transcript_sha256": "cc8c2cf3988861a0756f7f461d0021326e9dd10986446f2716f6bf8a48b6eced",
+      "trace": [
+        {
+          "ts": "2026-11-10T08:58:15.052Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:58:16.953Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:58:28.311Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:58:28.452Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:58:40.318Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.23636363636363636,
+          "decision": "below",
+          "duration_ms": 10733,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:58:40.320Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 10757,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:58:40.352Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11871,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:58:47.093Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:03.380Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:03.449Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:07.669Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:10.974Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:11.051Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:14.099Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:14.190Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:17.137Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6052,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:17.876Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:17.964Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:20.290Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6071,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:31.806Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:31.954Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 40,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:37.682Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8909090909090909,
+          "decision": "stale",
+          "duration_ms": 27978,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:59:37.682Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 34206,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:42.863Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 3,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:43.025Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 40,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:48.810Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:48.912Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 25,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:49.090Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6014,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:58.424Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:59:58.491Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:00.583Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "stale",
+          "duration_ms": 22873,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:00:00.583Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 42580,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:02.248Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:03.690Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 3086,
+          "error": "dotnet-stryker failed (1): 4 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(10,46): error CS0246: The type or namespace name 'IValueHttpResult' could not be found (are you missing a using directive or an assembly reference?) [~/.cac; log: ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-11-10T09:00:03.690Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 31703,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:04.191Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:06.460Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 2757,
+          "error": "dotnet-stryker failed (1): 4 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(10,46): error CS0246: The type or namespace name 'IValueHttpResult' could not be found (are you missing a using directive or an assembly reference?) [~/.cac; log: ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-11-10T09:00:06.461Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17515,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:07.183Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:07.247Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:09.262Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 4581,
+          "error": "dotnet-stryker failed (1): 4 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(10,46): error CS0246: The type or namespace name 'IValueHttpResult' could not be found (are you missing a using directive or an assembly reference?) [~/.cac; log: ~/.cache/mutagate/repos/7b002bfed34696de93cfdeaa879116d3658b36e5/logs/1de3dd4402f35d43a369912f996ad580042da97c.log"
+        },
+        {
+          "ts": "2026-11-10T09:00:09.263Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10740,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:11.087Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:00:36.632Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 23139,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:00:44.155Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 7439,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:00:55.739Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 11502,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:01:03.835Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/Program.cs",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 8084,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:01:03.837Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 50169,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:01:03.861Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 56587,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:01:31.362Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:01:31.436Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:01:37.186Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:01:56.554Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 18913,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:02:03.859Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 7207,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:02:14.363Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 10428,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:02:22.629Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/Program.cs",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 8252,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:02:22.632Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 43744,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:02:22.652Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 51190,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:31.759Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 26,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:50.617Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:53.674Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:02.631Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:02.720Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:12.072Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:12.130Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:16.223Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:16.295Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:18.185Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6028,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:22.932Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:23.054Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 50,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:27.459Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "stale",
+          "duration_ms": 18501,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:03:27.461Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 24711,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:35.629Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:49.479Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 21997,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:03:49.481Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 33160,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:59.487Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.6,
+          "decision": "below",
+          "duration_ms": 9892,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:09.994Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 10460,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:20.803Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "target": "Matrix/Program.cs",
+          "score": 0.9285714285714286,
+          "decision": "pass",
+          "duration_ms": 10791,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:20.805Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 42623,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:04:20.825Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 57739,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:04:21.959Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T09:04:22.049Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "d7e1c4bd-baf2-401a-9980-c112c3ebce79",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 1,
+      "duration_ms": 380367,
+      "finalResponse": "All 39 tests pass. I replaced the unresolved standalone integration test file with equivalent HTTP-level tests placed inside `MatrixEndpointsTests.cs` and `ProgramTests.cs` (filenames mutagate can map 1:1 to `MatrixEndpoints.cs` and `Program.cs`), using `WebApplicationFactory<Program>` so route registration, the error-handling filter, and the top-level bootstrap (`builder`/`app`/`app.Run()`) are actually exercised and attributable for scoring. No production code changes this round.",
+      "transcript_sha256": "c2aa76459b8ea60ce67c0cb302bb6c51b4d13844aa51aa2ab83dac36bf0d34a9",
+      "trace": [
+        {
+          "ts": "2026-11-10T09:02:04.794Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:02:07.001Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:16.363Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:16.431Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:27.596Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.23636363636363636,
+          "decision": "below",
+          "duration_ms": 10515,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:02:27.598Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 10540,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:02:27.613Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11155,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:42.128Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:42.218Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 30,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:47.946Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:50.590Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:53.947Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:54.001Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:56.586Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:02:56.644Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:00.068Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixService.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6040,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:00.641Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:00.705Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:02.709Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:06.063Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8727272727272727,
+          "decision": "stale",
+          "duration_ms": 17609,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:03:06.064Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23810,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:06.577Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:06.648Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:06.774Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix/MatrixEndpoints.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6036,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:19.752Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:19.824Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:24.759Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:24.874Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 39,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:25.888Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:30.551Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "stale",
+          "duration_ms": 17682,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:03:30.552Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixServiceTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23871,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:31.744Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:31.841Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 24,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:37.779Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:38.905Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 7824,
+          "error": "dotnet-stryker failed (1): 4 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/3c1441f787e3526c4ced584c81477abbb1e43706/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(13,48): error CS0246: The type or namespace name 'IValueHttpResult' could not be found (are you missing a using directive or an assembly reference?) [~/.cac; log: ~/.cache/mutagate/repos/3c1441f787e3526c4ced584c81477abbb1e43706/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-11-10T09:03:38.905Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixPageTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13998,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:40.802Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:40.919Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 27,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:43.947Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": null,
+          "decision": "stale",
+          "duration_ms": 5019,
+          "error": "dotnet-stryker failed (1): 4 Error(s) | Initial build of targeted project failed. Please make sure the targeted project | is buildable. You can reproduce this error yourself using: \"dotnet build; ~/.cache/mutagate/repos/3c1441f787e3526c4ced584c81477abbb1e43706/dotnet/e5d6c66f40fa5f5e/Matrix.Tests/MatrixEndpointsTests.cs(13,48): error CS0246: The type or namespace name 'IValueHttpResult' could not be found (are you missing a using directive or an assembly reference?) [~/.cac; log: ~/.cache/mutagate/repos/3c1441f787e3526c4ced584c81477abbb1e43706/logs/fecea390b3d781432f2b6fa891395804de96b1af.log"
+        },
+        {
+          "ts": "2026-11-10T09:03:43.948Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12074,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:03:44.627Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:04:04.546Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 17428,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:13.320Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 8693,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:22.186Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8822,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:30.071Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/Program.cs",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 7871,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:04:30.073Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 42184,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:04:30.083Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 49130,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:04:48.242Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:04:48.315Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:04:53.618Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:05:12.023Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 17498,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:05:20.341Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.3333333333333333,
+          "decision": "below",
+          "duration_ms": 8219,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:05:29.265Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8842,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:05:30.155Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:05:37.125Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/Program.cs",
+          "score": 0.7142857142857143,
+          "decision": "below",
+          "duration_ms": 7786,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:05:37.126Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Write",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixApiIntegrationTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 48785,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:05:52.093Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "read_bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:05:57.661Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:04.642Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 80,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:06:11.813Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:14.768Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:17.899Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:20.408Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:45.613Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:53.134Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:06:53.196Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:03.654Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:03.777Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 29,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:10.187Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:10.270Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:18.301Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "stale",
+          "duration_ms": 18866,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:07:18.303Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 25081,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:19.468Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:19.527Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:23.629Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:35.793Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "stale",
+          "duration_ms": 17467,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:07:35.794Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/MatrixEndpointsTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 31983,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:07:53.162Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixService.cs",
+          "score": 0.8983050847457628,
+          "decision": "pass",
+          "duration_ms": 17336,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:07:53.164Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 42869,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:08:02.455Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixEndpoints.cs",
+          "score": 0.6666666666666666,
+          "decision": "below",
+          "duration_ms": 9263,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:08:10.680Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/MatrixPage.cs",
+          "score": 0.9333333333333333,
+          "decision": "pass",
+          "duration_ms": 8185,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:08:20.143Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "target": "Matrix/Program.cs",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 9448,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T09:08:20.144Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 53903,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T09:08:20.152Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "tool": "Edit",
+          "file": [
+            "<repo>/Matrix.Tests/ProgramTests.cs"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 60599,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T09:08:20.753Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T09:08:20.833Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "d6dbe2f9-2752-4948-a3a5-c22a89084b7f",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}
