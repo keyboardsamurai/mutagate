@@ -1,0 +1,658 @@
+{
+  "probe": "s16",
+  "source": "claude-settings",
+  "event": "PostToolUse",
+  "argv": [
+    "/usr/local/bin/node",
+    "/home/runner/work/mutagate/mutagate/.github/s16/probe.cjs",
+    "PostToolUse",
+    "claude-settings"
+  ],
+  "at": "2026-11-10T08:49:12.405Z",
+  "cwd": "/home/runner/work/mutagate/mutagate",
+  "stdin": {
+    "endedBy": "eof",
+    "bytes": 1020,
+    "raw": "{\"hook_event_name\":\"PostToolUse\",\"session_id\":\"6b42bf20-8f86-4e9f-bff7-3b539de1a0de\",\"timestamp\":\"2026-11-10T08:49:12.336Z\",\"cwd\":\"/home/runner/work/mutagate/mutagate\",\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"ls -la docs\",\"description\":\"Inspect docs directory\"},\"tool_result\":{\"result_type\":\"success\",\"text_result_for_llm\":\"total 232\\ndrwxrwxr-x  4 runner runner  4096 Nov 10 08:48 .\\ndrwxr-xr-x 10 runner runner  4096 Nov 10 08:48 ..\\ndrwxrwxr-x  2 runner runner  4096 Nov 10 08:48 adr\\n-rw-rw-r--  1 runner runner 20674 Nov 10 08:48 eval_suite.md\\n-rw-rw-r--  1 runner runner 36787 Nov 10 08:48 eval_suite_spec.md\\n-rw-rw-r--  1 runner runner 48721 Nov 10 08:48 go_csharp_runners.md\\ndrwxrwxr-x  2 runner runner  4096 Nov 10 08:48 img\\n-rw-rw-r--  1 runner runner  4459 Nov 10 08:48 install.md\\n-rw-rw-r--  1 runner runner 67021 Nov 10 08:48 prd.md\\n-rw-rw-r--  1 runner runner  8887 Nov 10 08:48 releasing.md\\n-rw-rw-r--  1 runner runner 19647 Nov 10 08:48 validation.md\\n<shellId: 2 completed with exit code 0>\"}}",
+    "keys": [
+      "hook_event_name",
+      "session_id",
+      "timestamp",
+      "cwd",
+      "tool_name",
+      "tool_input",
+      "tool_result"
+    ]
+  },
+  "envNames": [
+    "ACCEPT_EULA",
+    "ACTIONS_ORCHESTRATION_ID",
+    "ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE",
+    "ACTIONS_RUNNER_RETURN_JOB_RESULT_FOR_HOSTED",
+    "ACTIONS_RUNNER_SYMLINK_CACHED_ACTIONS",
+    "AGENT_TOOLSDIRECTORY",
+    "AI_AGENT",
+    "ANDROID_HOME",
+    "ANDROID_NDK",
+    "ANDROID_NDK_HOME",
+    "ANDROID_NDK_LATEST_HOME",
+    "ANDROID_NDK_ROOT",
+    "ANDROID_SDK_ROOT",
+    "ANT_HOME",
+    "AZURE_EXTENSION_DIR",
+    "BOOTSTRAP_HASKELL_NONINTERACTIVE",
+    "CAROOT",
+    "CHROMEWEBDRIVER",
+    "CHROME_BIN",
+    "CI",
+    "CLAUDE_PROJECT_DIR",
+    "CLOUD_SESSION_STORE",
+    "CONDA",
+    "COPILOT_AGENT_ACTION",
+    "COPILOT_AGENT_BASE_COMMIT",
+    "COPILOT_AGENT_BRANCH_NAME",
+    "COPILOT_AGENT_CALLBACK_URL",
+    "COPILOT_AGENT_COMMIT_EMAIL",
+    "COPILOT_AGENT_COMMIT_LOGIN",
+    "COPILOT_AGENT_CONTENT_FILTER_MODE",
+    "COPILOT_AGENT_DEBUG",
+    "COPILOT_AGENT_FIREWALL_ENABLE_RULESET_ALLOW_LIST",
+    "COPILOT_AGENT_FIREWALL_LOG_FILE",
+    "COPILOT_AGENT_FIREWALL_RULESET_ALLOW_LIST",
+    "COPILOT_AGENT_INFERENCE_IDENTITY",
+    "COPILOT_AGENT_INJECTED_SECRET_NAMES",
+    "COPILOT_AGENT_ISSUE_NUMBER",
+    "COPILOT_AGENT_JOB_ID",
+    "COPILOT_AGENT_MCP_SERVER_TEMP",
+    "COPILOT_AGENT_ONLINE_EVALUATION_DISABLED",
+    "COPILOT_AGENT_PR_COMMIT_COUNT",
+    "COPILOT_AGENT_PR_NUMBER",
+    "COPILOT_AGENT_RESUME_SESSION_ID",
+    "COPILOT_AGENT_RUNTIME_VERSION",
+    "COPILOT_AGENT_SESSION_ID",
+    "COPILOT_AGENT_SIGN_COMMITS",
+    "COPILOT_AGENT_SOURCE_ENVIRONMENT",
+    "COPILOT_AGENT_START_TIME_SEC",
+    "COPILOT_AGENT_TIMEOUT_MIN",
+    "COPILOT_AGENT_TIMING_SECTIONS",
+    "COPILOT_CLI",
+    "COPILOT_ENABLE_SECRET_FILTERING",
+    "COPILOT_EXPERIMENTS",
+    "COPILOT_EXPERIMENT_ASSIGNMENT_CONTEXT",
+    "COPILOT_FEATURE_FLAGS",
+    "COPILOT_JOB_EVENT_TYPE",
+    "COPILOT_MCP_ENABLED",
+    "COPILOT_MCP_INVOCATION_AUTH_ENABLED",
+    "COPILOT_MCP_READ_ONLY_MODE",
+    "COPILOT_PERMISSION_GATE_REASON",
+    "COPILOT_PERMISSION_MODE",
+    "COPILOT_PREINSTALLED_RUNTIME",
+    "COPILOT_PROJECT_DIR",
+    "COPILOT_SDK_AUTH_TOKEN",
+    "COPILOT_USE_SESSIONS",
+    "CPD_SAVE_TRAJECTORY_OUTPUT",
+    "CURL_CA_BUNDLE",
+    "DBUS_SESSION_BUS_ADDRESS",
+    "DEBIAN_FRONTEND",
+    "DOTNET_MULTILEVEL_LOOKUP",
+    "DOTNET_NOLOGO",
+    "DOTNET_SKIP_FIRST_TIME_EXPERIENCE",
+    "DOTNET_SYSTEM_NET_DISABLEIPV6",
+    "EDGEWEBDRIVER",
+    "ENABLE_RUNNER_TRACING",
+    "FIREWALL_RULESET_CONTENT",
+    "GECKOWEBDRIVER",
+    "GHCUP_INSTALL_BASE_PREFIX",
+    "GITHUB_ACTION",
+    "GITHUB_ACTIONS",
+    "GITHUB_ACTION_REF",
+    "GITHUB_ACTION_REPOSITORY",
+    "GITHUB_ACTOR",
+    "GITHUB_ACTOR_ID",
+    "GITHUB_API_URL",
+    "GITHUB_ARTIFACTS",
+    "GITHUB_ARTIFACTS_LIST",
+    "GITHUB_BASE_REF",
+    "GITHUB_COPILOT_3P_MCP_POLICY_ENABLED",
+    "GITHUB_DOWNLOADS_URL",
+    "GITHUB_ENV",
+    "GITHUB_EVENT_NAME",
+    "GITHUB_EVENT_PATH",
+    "GITHUB_GRAPHQL_URL",
+    "GITHUB_HEAD_REF",
+    "GITHUB_JOB",
+    "GITHUB_OUTPUT",
+    "GITHUB_PATH",
+    "GITHUB_REF",
+    "GITHUB_REF_NAME",
+    "GITHUB_REF_PROTECTED",
+    "GITHUB_REF_TYPE",
+    "GITHUB_REPOSITORY",
+    "GITHUB_REPOSITORY_ID",
+    "GITHUB_REPOSITORY_OWNER",
+    "GITHUB_REPOSITORY_OWNER_ID",
+    "GITHUB_RETENTION_DAYS",
+    "GITHUB_RUN_ATTEMPT",
+    "GITHUB_RUN_ID",
+    "GITHUB_RUN_NUMBER",
+    "GITHUB_SERVER_URL",
+    "GITHUB_SHA",
+    "GITHUB_STATE",
+    "GITHUB_STEP_SUMMARY",
+    "GITHUB_TOKEN_VARNAME",
+    "GITHUB_TRIGGERING_ACTOR",
+    "GITHUB_UPLOADS_URL",
+    "GITHUB_VERIFICATION_TOKEN",
+    "GITHUB_WORKFLOW",
+    "GITHUB_WORKFLOW_REF",
+    "GITHUB_WORKFLOW_SHA",
+    "GITHUB_WORKSPACE",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_KEY_0",
+    "GIT_CONFIG_KEY_1",
+    "GIT_CONFIG_VALUE_0",
+    "GIT_CONFIG_VALUE_1",
+    "GIT_PAGER",
+    "GOROOT_1_24_X64",
+    "GOROOT_1_25_X64",
+    "GOROOT_1_26_X64",
+    "GRADLE_HOME",
+    "HCA_CLOUD_PROVIDER",
+    "HOME",
+    "HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS",
+    "HOMEBREW_NO_AUTO_UPDATE",
+    "INVOCATION_ID",
+    "ImageOS",
+    "ImageVersion",
+    "JAVA_HOME",
+    "JAVA_HOME_11_X64",
+    "JAVA_HOME_17_X64",
+    "JAVA_HOME_21_X64",
+    "JAVA_HOME_25_X64",
+    "JAVA_HOME_8_X64",
+    "JOURNAL_STREAM",
+    "LANG",
+    "LOGNAME",
+    "MAIL",
+    "MEMORY_PRESSURE_WATCH",
+    "MEMORY_PRESSURE_WRITE",
+    "NODE_EXTRA_CA_CERTS",
+    "NVM_DIR",
+    "PAGER",
+    "PATH",
+    "PIPX_BIN_DIR",
+    "PIPX_HOME",
+    "POWERSHELL_DISTRIBUTION_CHANNEL",
+    "PSModulePath",
+    "PWD",
+    "REQUESTS_CA_BUNDLE",
+    "RUNNER_ARCH",
+    "RUNNER_ENVIRONMENT",
+    "RUNNER_NAME",
+    "RUNNER_OS",
+    "RUNNER_TEMP",
+    "RUNNER_TOOL_CACHE",
+    "RUNNER_TRACKING_ID",
+    "RUNNER_WORKSPACE",
+    "SECRET_SCANNING_URL",
+    "SELENIUM_JAR_PATH",
+    "SGX_AESM_ADDR",
+    "SHELL",
+    "SHLVL",
+    "SHOULD_CONTINUE",
+    "SSL_CERT_DIR",
+    "SSL_CERT_FILE",
+    "SUDO_COMMAND",
+    "SUDO_GID",
+    "SUDO_UID",
+    "SUDO_USER",
+    "SWIFT_PATH",
+    "SYSTEMD_EXEC_PID",
+    "TERM",
+    "USER",
+    "USE_BAZEL_FALLBACK_VERSION",
+    "VCPKG_INSTALLATION_ROOT",
+    "XDG_CONFIG_HOME",
+    "XDG_RUNTIME_DIR",
+    "XDG_SESSION_CLASS",
+    "XDG_SESSION_ID",
+    "XDG_SESSION_TYPE",
+    "_",
+    "copilot-feature-agentic-memory",
+    "copilot-software-factories",
+    "copilot_feature_agentic_memory_user_scoped",
+    "copilot_feature_agentic_memory_user_scoped_cfi",
+    "copilot_inject_integration_headers",
+    "copilot_mission_control_decoupled_mode",
+    "copilot_swe_agent_3p_security_prompt",
+    "copilot_swe_agent_agent_merge_outcome_telemetry",
+    "copilot_swe_agent_automation_pull_request_state_tools",
+    "copilot_swe_agent_automation_subagent_allowlist",
+    "copilot_swe_agent_blackbird_tool_use",
+    "copilot_swe_agent_cap_claude_opus_token_limits",
+    "copilot_swe_agent_cca_session_attribution",
+    "copilot_swe_agent_chronicle",
+    "copilot_swe_agent_claude_error_classification",
+    "copilot_swe_agent_cleanup_partial_clone",
+    "copilot_swe_agent_clone_session_logging",
+    "copilot_swe_agent_co_author_hook",
+    "copilot_swe_agent_code_review",
+    "copilot_swe_agent_code_review_disabled",
+    "copilot_swe_agent_codex_error_classification",
+    "copilot_swe_agent_enable_dependabot_checker",
+    "copilot_swe_agent_enable_security_tool",
+    "copilot_swe_agent_error_annotations",
+    "copilot_swe_agent_failure_recovery_before_shutdown",
+    "copilot_swe_agent_firewall_enabled_by_default",
+    "copilot_swe_agent_logs_url_trailer",
+    "copilot_swe_agent_mcp_builtin_provenance",
+    "copilot_swe_agent_mcp_permission_gate",
+    "copilot_swe_agent_new_out_proc_mcp",
+    "copilot_swe_agent_new_security_tools",
+    "copilot_swe_agent_oidc_token_exchange",
+    "copilot_swe_agent_overlay_analysis",
+    "copilot_swe_agent_parallel_tool_execution",
+    "copilot_swe_agent_parallel_validation",
+    "copilot_swe_agent_retry_workflow_run",
+    "copilot_swe_agent_runtime_timing_telemetry",
+    "copilot_swe_agent_secret_scanning_hook",
+    "copilot_swe_agent_trivial_change",
+    "copilot_swe_agent_trivial_change_code_review_disable",
+    "copilot_swe_agent_trivial_change_skip",
+    "copilot_swe_agent_unified_task_tool",
+    "copilot_swe_agent_upload_attachment",
+    "copilot_swe_agent_use_attachment_proxy",
+    "copilot_swe_agent_use_non_blocking_callbacks",
+    "copilot_swe_agent_validation_agent_dependencies",
+    "copilot_swe_agent_validation_tool_settings",
+    "copilot_swe_agent_vision"
+  ],
+  "values": {
+    "CI": "true",
+    "COPILOT_CLI": "1",
+    "GITHUB_ACTIONS": "true",
+    "GITHUB_EVENT_NAME": "dynamic",
+    "GITHUB_JOB": "copilot",
+    "GITHUB_WORKFLOW": "dynamic/copilot-swe-agent/copilot",
+    "RUNNER_ENVIRONMENT": "github-hosted",
+    "RUNNER_OS": "Linux"
+  },
+  "masked": {
+    "AGENT_TOOLSDIRECTORY": {
+      "present": true,
+      "length": 20
+    },
+    "AI_AGENT": {
+      "present": true,
+      "length": 26
+    },
+    "COPILOT_AGENT_ACTION": {
+      "present": true,
+      "length": 3
+    },
+    "COPILOT_AGENT_BASE_COMMIT": {
+      "present": true,
+      "length": 32
+    },
+    "COPILOT_AGENT_BRANCH_NAME": {
+      "present": true,
+      "length": 22
+    },
+    "COPILOT_AGENT_CALLBACK_URL": {
+      "present": true,
+      "length": 57
+    },
+    "COPILOT_AGENT_COMMIT_EMAIL": {
+      "present": true,
+      "length": 42
+    },
+    "COPILOT_AGENT_COMMIT_LOGIN": {
+      "present": true,
+      "length": 22
+    },
+    "COPILOT_AGENT_CONTENT_FILTER_MODE": {
+      "present": true,
+      "length": 17
+    },
+    "COPILOT_AGENT_DEBUG": {
+      "present": true,
+      "length": 5
+    },
+    "COPILOT_AGENT_FIREWALL_ENABLE_RULESET_ALLOW_LIST": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_AGENT_FIREWALL_LOG_FILE": {
+      "present": true,
+      "length": 45
+    },
+    "COPILOT_AGENT_FIREWALL_RULESET_ALLOW_LIST": {
+      "present": true,
+      "length": 2936
+    },
+    "COPILOT_AGENT_INFERENCE_IDENTITY": {
+      "present": true,
+      "length": 5
+    },
+    "COPILOT_AGENT_INJECTED_SECRET_NAMES": {
+      "present": true,
+      "length": 0
+    },
+    "COPILOT_AGENT_ISSUE_NUMBER": {
+      "present": true,
+      "length": 1
+    },
+    "COPILOT_AGENT_JOB_ID": {
+      "present": true,
+      "length": 53
+    },
+    "COPILOT_AGENT_MCP_SERVER_TEMP": {
+      "present": true,
+      "length": 34
+    },
+    "COPILOT_AGENT_ONLINE_EVALUATION_DISABLED": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_AGENT_PR_COMMIT_COUNT": {
+      "present": true,
+      "length": 1
+    },
+    "COPILOT_AGENT_PR_NUMBER": {
+      "present": true,
+      "length": 0
+    },
+    "COPILOT_AGENT_RESUME_SESSION_ID": {
+      "present": true,
+      "length": 0
+    },
+    "COPILOT_AGENT_RUNTIME_VERSION": {
+      "present": true,
+      "length": 61
+    },
+    "COPILOT_AGENT_SESSION_ID": {
+      "present": true,
+      "length": 36
+    },
+    "COPILOT_AGENT_SIGN_COMMITS": {
+      "present": true,
+      "length": 5
+    },
+    "COPILOT_AGENT_SOURCE_ENVIRONMENT": {
+      "present": true,
+      "length": 9
+    },
+    "COPILOT_AGENT_START_TIME_SEC": {
+      "present": true,
+      "length": 10
+    },
+    "COPILOT_AGENT_TIMEOUT_MIN": {
+      "present": true,
+      "length": 2
+    },
+    "COPILOT_AGENT_TIMING_SECTIONS": {
+      "present": true,
+      "length": 60
+    },
+    "COPILOT_ENABLE_SECRET_FILTERING": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_EXPERIMENTS": {
+      "present": true,
+      "length": 14
+    },
+    "COPILOT_EXPERIMENT_ASSIGNMENT_CONTEXT": {
+      "present": true,
+      "length": 320
+    },
+    "COPILOT_FEATURE_FLAGS": {
+      "present": true,
+      "length": 1886
+    },
+    "COPILOT_JOB_EVENT_TYPE": {
+      "present": true,
+      "length": 6
+    },
+    "COPILOT_MCP_ENABLED": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_MCP_INVOCATION_AUTH_ENABLED": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_MCP_READ_ONLY_MODE": {
+      "present": true,
+      "length": 5
+    },
+    "COPILOT_PERMISSION_GATE_REASON": {
+      "present": true,
+      "length": 7
+    },
+    "COPILOT_PERMISSION_MODE": {
+      "present": true,
+      "length": 7
+    },
+    "COPILOT_PREINSTALLED_RUNTIME": {
+      "present": true,
+      "length": 4
+    },
+    "COPILOT_PROJECT_DIR": {
+      "present": true,
+      "length": 35
+    },
+    "COPILOT_SDK_AUTH_TOKEN": {
+      "present": true,
+      "length": 40
+    },
+    "COPILOT_USE_SESSIONS": {
+      "present": true,
+      "length": 4
+    },
+    "GITHUB_COPILOT_3P_MCP_POLICY_ENABLED": {
+      "present": true,
+      "length": 4
+    },
+    "GITHUB_TOKEN_VARNAME": {
+      "present": true,
+      "length": 24
+    },
+    "GITHUB_VERIFICATION_TOKEN": {
+      "present": true,
+      "length": 64
+    },
+    "copilot-feature-agentic-memory": {
+      "present": true,
+      "length": 4
+    },
+    "copilot-software-factories": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_feature_agentic_memory_user_scoped": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_feature_agentic_memory_user_scoped_cfi": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_inject_integration_headers": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_mission_control_decoupled_mode": {
+      "present": true,
+      "length": 5
+    },
+    "copilot_swe_agent_3p_security_prompt": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_agent_merge_outcome_telemetry": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_automation_pull_request_state_tools": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_automation_subagent_allowlist": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_blackbird_tool_use": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_cap_claude_opus_token_limits": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_cca_session_attribution": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_chronicle": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_claude_error_classification": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_cleanup_partial_clone": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_clone_session_logging": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_co_author_hook": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_code_review": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_code_review_disabled": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_codex_error_classification": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_enable_dependabot_checker": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_enable_security_tool": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_error_annotations": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_failure_recovery_before_shutdown": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_firewall_enabled_by_default": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_logs_url_trailer": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_mcp_builtin_provenance": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_mcp_permission_gate": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_new_out_proc_mcp": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_new_security_tools": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_oidc_token_exchange": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_overlay_analysis": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_parallel_tool_execution": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_parallel_validation": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_retry_workflow_run": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_runtime_timing_telemetry": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_secret_scanning_hook": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_trivial_change": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_trivial_change_code_review_disable": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_trivial_change_skip": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_unified_task_tool": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_upload_attachment": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_use_attachment_proxy": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_use_non_blocking_callbacks": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_validation_agent_dependencies": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_validation_tool_settings": {
+      "present": true,
+      "length": 4
+    },
+    "copilot_swe_agent_vision": {
+      "present": true,
+      "length": 4
+    }
+  }
+}
