@@ -84,73 +84,27 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     status, its obligation and exit code) to `gate`, `run --sync`, `status`,
     the worker and the async hook; `exitCode` folds the codes for `gate` and
     `run --sync`.
-  - `gate`, `install`, and `doctor` implement the matching commands.
-- Hook path: on POSIX the harness runs the `scripts/hook` wrapper, through a
-  Git-top-level command for a portable project install (skill inside the Git
-  top level) and at its absolute path otherwise (ADR-0013); on Windows the
-  command is the absolute Node and `mutagate-hook.cjs`. `scripts/hook` is a sh wrapper that picks Node from `MUTAGATE_NODE`, then
-  `scripts/.node-path` (machine-local, untracked through `scripts/.gitignore`),
-  then PATH, and exits 0 without Node. The wrapper runs
-  `mutagate-hook.cjs hook <Event>`, which reads the JSON payload on stdin. On
-  POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
-  in `|| true`, because Copilot also runs them (ADR-0013). Copilot CLI payloads
-  have a top-level `timestamp` (no other harness sends it): `pick` gives such a
-  call without `--harness` the `inherited` profile (harness `copilot`, whatever the `CLAUDE_*` env). `runHook`
-  skips recording and traces decision `inherited`; its `admit` ends the call first,
-  exit 0 with no state or stdout, except one SessionStart `additionalContext`
-  notice while no native Copilot hook file exists and, without `copilotCloud`,
-  no cloud marker is set (ADR-0015, ADR-0021, payloads in
-  `test/payloads/copilot/cli/`). Under Node < 22 hooks exit 0 and SessionStart says so.
-  `install` stamps `<VERSION>:<scope>` into the SessionStart command
-  (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
-  adapters, which send it as payload `installed`; a missing stamp or other
-  version adds a rerun notice (`rerunNotice`) to SessionStart, exact when the
-  stamp has a scope, and a doctor WARN with the exact command per project or
-  user install (`installStamp`, ADR-0017). `scripts/hooks.json`
-  carries `MUTAGATE_VERSION` instead.
-  PostToolUse on a test file registers targets. `schedule` then spawns a detached
-  `worker` process that calls `runTarget` while holding a per-target lock.
-  The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s
-  quiet and ends by 850 s after its start (hook timeout 900 s): like `gate`, it
-  passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
-  target only when `gateAdvice` says its `lastRunMs` fits. Copilot has no async
-  hooks: a new native write `postToolUse` with targets or a test path spawns that
-  handler detached (`hook PostToolUse --mutate --harness copilot`, raw payload on
-  stdin), which queues each run's report in the session `outbox` instead of
-  printing it. A root-agent write or shell `postToolUse` (`read_bash` too) is a
-  delivery point: it sends the fresh entries that are not the delivered report
-  and not a pass now as `additionalContext` and makes them the delivered report
-  (`deliver`, state `reported`). A gate block or a `check` or `run --sync`
-  report makes its text the delivered report and removes only the outbox entry
-  of its run; a recorded pass clears it, and so does a waiver pass that
-  `check`, `run --sync` or a gate sees (ADR-0019).
-  Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
-  result once (`attempts`) and blocks once on an `agent_caused` one. An
-  exception in one target skips only that target, with a warning (`check`
-  exit 3). A native Copilot `hook Stop --timeout T` (`agentStop`) ends the gate
-  by G = min(`gateBudgetSec`, T − 2M), M = min(30, ⌊T/4⌋), passes `gate` the
-  options `schedulePending` (a worker for a target left pending with nothing in
-  flight) and `blocksOnly` (only a block makes a report the
-  delivered report, ADR-0019); `gate`
-  has no harness branch (its helpers `state` and `pendingText` read `quiet` and `bashWait`). It allows after 8 blocks in a row
-  (state `stopStreak`), and at W = T − M allows, traces `deadline` and exits so
-  `runners.cjs` kills the runner groups; a subagent `agentStop` exits 0 (ADR-0018).
-  Session state is JSON under `cacheRoot()` (a real path, resolved
-  like `safePath`, so tools get no symlinked alias), written through
-  `updateState` with a lock and atomic writes; compute `fingerprint` before
-  `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
-  keeps normalized results per process while the result file, the fingerprint
-  and `waivers.json` are unchanged. Writes do not fsync, so state,
-  result and classpath files are read through `cacheJson`: torn JSON reads as
-  missing (a result reruns, state starts blank with a stderr note). Every lock
-  (state, target, tool install, .NET project, JVM compile) is a `wx` file from `lock` with
-  the pid and a random token. The holder touches it
-  every 10 s; `abandoned` (also used by `inFlight`) is true when the mtime is
-  over 60 s old or the pid is dead. One waiter takes it over under
-  `<lock>.break`, a live pid's lock only after that waiter saw its mtime unchanged
-  for 15 s of monotonic time, or half its wait budget if shorter (2.5 s for the
-  state lock; timers stop during system sleep); release deletes the file only
-  while it holds the holder's token.
+  - `gate` implements the gate (options `wait`, `hook`, `budget`, `streak`,
+    `schedulePending`, `blocksOnly`; ADR-0002, ADR-0003, ADR-0005, ADR-0018).
+    `install` delegates to `install.cjs`; `doctor` assembles the checks and
+    `doctor.cjs` renders them.
+  - State: `cacheRoot`, `atomic`, `cacheJson`, `lock`, `abandoned`, `inFlight`,
+    `updateState` (compute `fingerprint` before it), `loadResult`, `schedule` and
+    `schedulePrune` (ADR-0023, ADR-0024). `handleHook` with `--mutate` is the
+    async rerun branch (ADR-0005, ADR-0019).
+- Hook path: on POSIX the harness runs the `scripts/hook` wrapper, which picks
+  Node and runs `mutagate-hook.cjs hook <Event>` with the JSON payload on stdin;
+  on Windows the command is the absolute Node and runtime (ADR-0013). `install`
+  stamps `--installed <VERSION>:<scope>` into the SessionStart command and
+  `__MUTAGATE_INSTALLED__` into the adapters (payload `installed`);
+  `rerunNotice` and `installStamp` read it (ADR-0017). A payload `timestamp`
+  without the `--harness` tag gives `pick` the `inherited` profile (ADR-0015,
+  payloads in `test/payloads/copilot/cli/`). PostToolUse on a test file
+  registers targets; `schedule` spawns a detached `worker` that calls
+  `runTarget` under the target lock. The Copilot spawned handler puts each
+  report in the session `outbox`; `deliver` writes the delivered report (state
+  `reported`, ADR-0019). Stop, SubagentStop and TaskCompleted call `gate`; the
+  native Copilot `hook Stop --timeout T` is `agentStop` (ADR-0018).
 - Sessions: `context` takes the id from payload `agent_id`, then `session_id`,
   then env `MUTAGATE_HOOK_SESSION` (set by `schedule` for workers, by the OpenCode
   `shell.env` hook and by Pi at `session_start`), `CODEX_THREAD_ID`,
