@@ -141,12 +141,20 @@ The unit of state that groups registrations, results and blocks under one id fro
 _Avoid_: conversation, thread, run (for this)
 
 **Harness**:
-The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode or Pi.
+The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode, Pi or GitHub Copilot (through a native install).
 _Avoid_: agent, host tool, IDE
 
 **Inherited hook call**:
 A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
 _Avoid_: foreign hook, Copilot hook
+
+**Native install**:
+mutagate's own Copilot hook file, `.github/hooks/mutagate.json` or the user hook dir. Each command gives `--harness copilot`, so its calls are native hook calls: mutagate normalizes their camelCase payloads and handles them, unlike inherited hook calls (ADR-0020).
+_Avoid_: Copilot hook, tagged install
+
+**Spawned handler**:
+The detached `hook PostToolUse --mutate --harness copilot` process that a native hook call starts with its raw payload, because Copilot has no async hooks. No hook file installs it, so mutagate never treats its payload as a VS Code Local payload and does not record it.
+_Avoid_: async hook, worker (for this)
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).

@@ -16,7 +16,7 @@ export const VERSION = '0.9.1';
 export const DEFAULTS = {
   schema: 1, mode: 'gate', threshold: .8, maxSurvivors: 10, maxRounds: 2, runBudgetSec: 300, gateBudgetSec: 120, gateWaitSec: 60,
   countNoCoverage: true, gateSecondaries: false, languages: ['java', 'kotlin', 'python', 'typescript', 'go', 'csharp'], testGlobs: [], mainRoots: [],
-  exclude: [ '**/generated/**', '**/build/**' ], javaRunner: 'standalone', kotlinTier: 'auto', goRunner: 'auto', goTags: '', allowAgentWaivers: false
+  exclude: [ '**/generated/**', '**/build/**' ], javaRunner: 'standalone', kotlinTier: 'auto', goRunner: 'auto', goTags: '', allowAgentWaivers: false, copilotCloud: false
 };
 export const hash = (s) => crypto.createHash('sha1').update(s).digest('hex');
 const read = (p) => fs.readFileSync(p, 'utf8');
@@ -87,31 +87,35 @@ export function configFor(repo, root, args = {}, env = process.env) {
   for (const key of ['testGlobs', 'exclude']) for (const pattern of Array.isArray(cfg[key]) ? cfg[key] : []) { try { glob(pattern); } catch { errors.push(`invalid ${key} glob: ${pattern}`); } }
   return { config: errors.length ? structuredClone(DEFAULTS) : cfg, errors: [...new Set(errors)] };
 }
-const HARNESSES = ['claude', 'codex', 'opencode', 'pi']; // installable harnesses: context() keeps them, doctor and the no-harness hint list them
+const HARNESSES = ['claude', 'codex', 'opencode', 'pi']; // installable harnesses: context() keeps them and copilot, doctor and the no-harness hint list them
+const SESSION_CMDS = ['run', 'check', 'status', 'waive']; // CLI commands on the session state
 export function context(args = {}, payload = {}) {
   const real = p => fs.realpathSync(path.resolve(p));
   let repo;
   // A deleted hook cwd (cd build/x, then a clean) must not skip every hook, Stop included.
   try { repo = real(args.repo || payload.cwd || process.cwd()); } catch (e) { if (args.repo || !payload.cwd || e.code !== 'ENOENT') throw e; repo = real(process.env.CLAUDE_PROJECT_DIR || process.cwd()); }
-  // Claude cwd follows `cd`; project dir stays fixed.
-  if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
-  const root = cacheRoot();
-  // Session id precedence: README Sessions. ponytail: subagent Bash env carries the parent id, so subagent CLI runs gate at the parent's Stop.
-  const e = process.env, agentId = payload.agent_id || payload.session_id || e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID, sid = String(agentId ||
-    e.MUTAGATE_SESSION || `ppid-${process.ppid}-${Math.floor(Date.now()/43200000)}`);
-  const session = hash(sid),
-    data = path.join(root, 'repos', hash(repo));
+  // Claude cwd follows `cd`; project dir stays fixed. A native Copilot call uses the Git top of cwd, not the launch dir in CLAUDE_PROJECT_DIR, and so does a
+  // session command in the Copilot root agent shell (session COPILOT_AGENT_SESSION_ID), which starts in the launch dir: both reach one data dir (ADR-0020).
+  const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID,
+    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : SESSION_CMDS.includes(args._?.[0]) && !envId && e.COPILOT_AGENT_SESSION_ID) && copilot().top(repo);
+  if (top) repo = top; else if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
+  const root = cacheRoot(), data = path.join(root, 'repos', hash(repo));
+  // Session id precedence: README Sessions, ADR-0009. ponytail: subagent Bash env carries the parent id, so subagent CLI runs gate at the parent's Stop.
+  // A Copilot subagent call joins its root session (copilot.cjs). COPILOT_CLI alone also marks an agent session (ADR-0007).
+  const agentId = (args.harness === 'copilot' ? copilot().session(data, payload) : payload.agent_id || payload.session_id) || envId ||
+    e.COPILOT_AGENT_SESSION_ID, sid = String(agentId || e.MUTAGATE_SESSION || `ppid-${process.ppid}-${Math.floor(Date.now()/43200000)}`);
+  const session = hash(sid);
   const { config, errors } = configFor(repo, root, args);
-  // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`. No env makes them `claude` (ADR-0015).
-  const inherited = payload.timestamp !== undefined, named = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`, and only its native hook commands carry the --harness tag. No env makes them `claude` (ADR-0015).
+  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : [...HARNESSES, 'copilot'].includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
 let noted; // one note per corrupt state file
 export function state(c) {
-  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
+  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile && c.args?.harness !== 'copilot') { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
 }
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
 // Holders touch the lock every 10 s; a lock is abandoned when that heartbeat is over 60 s old or its pid is dead.
@@ -240,11 +244,12 @@ export function resolveTargets(c, test, explicit) {
     }))
   };
 }
+export const PATCH_HEADER = /^(\*\*\* (?:Add File|Update File|Delete File|Move to): )(.+)$/gm; // apply_patch file headers; copilot.cjs resolves them against cwd
 export function extractPaths(p) {
   const input = p.tool_input || {},
     out = [input.file_path, input.filePath, input.path].filter(x => typeof x === 'string');
   if (p.tool_name === 'apply_patch')
-    for (const m of String(input.command || '').matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)\r?$/gm)) out.push(m[1].trim());
+    for (const m of String(input.command || '').matchAll(PATCH_HEADER)) out.push(m[2].trim());
   return [...new Set(out)];
 }
 export function fingerprint(c,t) {
@@ -509,8 +514,9 @@ export function report(r, cfg = DEFAULTS) {
   return [heading(shown), ...lines, ...(r.warnings || [])].join('\n').slice(0, 1800 - footer.length) + footer;
 }
 // Runners live in runners.cjs, loaded on first use.
-let loaded;
+let loaded, copilotLoaded;
 export const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
+export const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER }); // --harness copilot hook calls and session commands in the Copilot root agent shell
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 export async function runTarget(c, key, runner) {
@@ -680,29 +686,25 @@ export async function gate(c, { wait, hook = false, runner } = {}) {
   };
 }
 export async function handleHook(c, p, event) {
-  const contextOutput = text => ({ code: 0, out: { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
-    notice = text => [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
   if (c.inherited) return event === 'SessionStart' && ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) ? // inert until a native Copilot install
     { code: 0, out: { additionalContext: 'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).' } } : { code: 0 };
+  const cp = c.args.harness === 'copilot' && copilot(), // native Copilot output (#35 D12): top-level fields, exit 0, no plain text or stderr
+    contextOutput = text => ({ code: 0, out: cp ? { additionalContext: text.slice(0, 1800) } : { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
+    notice = text => cp ? contextOutput(text) : [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
   if (Number(process.versions.node.split('.')[0]) < 22) return event === 'SessionStart' ? notice(`mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.`) : { code: 0 };
+  if (event === 'SubagentStart') { copilot().link(c.data, p); return { code: 0 }; } // Copilot only (main): the subagent chain (ADR-0020)
   if (event === 'PreToolUse') {
     const waiver = extractPaths(p).some(f => safePath(c.repo, f) === path.join(c.repo, '.mutagate/waivers.json'));
     if (!waiver ||
       c.config.allowAgentWaivers) return { code: 0 };
     const proposed = clean(p.tool_input?.content || p.tool_input?.new_string || p.tool_input?.command || p.tool_input?.newText || 'waiver edit').slice(0, 1000);
-    return {
-      code: 0,
-      out: {
-        hookSpecificOutput: {
-          hookEventName: event,
-          permissionDecision: c.harness === 'claude' ? 'ask' : 'deny',
-          permissionDecisionReason: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.`
-        }
-      }
-    };
+    const decision = { permissionDecision: c.harness === 'claude' ? 'ask' : 'deny', permissionDecisionReason: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.` };
+    return { code: 0, out: cp ? decision : { hookSpecificOutput: { hookEventName: event, ...decision } } };
   }
   if (event === 'SessionStart') {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
+    const off = cp && cp.probe(path.join(c.data, 'state')); // ADR-0021
+    if (off) return notice(off);
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
     const rerunText = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
@@ -789,7 +791,8 @@ export async function handleHook(c, p, event) {
     return contextOutput(text);
   }
   if (['Stop', 'SubagentStop', 'TaskCompleted'].includes(event)) {
-    const g = await gate(c, { hook: true });
+    const off = cp && cp.probe(path.join(c.data, 'state')), g = off ? { reason: off } : await gate(c, { hook: true }); // ADR-0021: no gate without a writable state dir
+    if (cp) return cp.stop(g);
     return g.block ? {
       code: 2, out: { decision: 'block', reason: g.reason }, err: g.reason
     } : g.reason ? { code: 0, out: { systemMessage: g.reason } } : { code: 0 };
@@ -936,25 +939,32 @@ export async function main(argv = process.argv.slice(2)) {
       p = JSON.parse(fs.readFileSync(0, 'utf8'));
       if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error(
         'expected object');
-    } catch { console.error('mutagate: malformed hook JSON'); return 0; }
+    } catch { if (args.harness !== 'copilot') console.error('mutagate: malformed hook JSON'); return 0; } // a native Copilot hook writes no stderr (#35 D12)
   }
-  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'].includes(args._[1] || p.hook_event_name))
+  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted', ...(args.harness === 'copilot' ? ['SubagentStart'] : [])].includes(args._[1] || p.hook_event_name))
     return 0;
   try {
     if (cmd === 'prune') { await runtimeRequire('./prune.cjs')(cacheRoot(), { lock, abandoned }); return 0; } // internal, started by schedulePrune
+    // Native Copilot hook calls carry --harness copilot (ADR-0020): a VS Code Local payload stays inert (ADR-0021); the raw payload is recorded, the normalized one used.
+    const cp = cmd === 'hook' && args.harness === 'copilot' && copilot(), origin = cp && cp.origin(p, args), raw = p;
+    if (origin === 'local') return 0;
+    if (cp) p = cp.normalize(p);
     c = context(args, p);
-    if (['run', 'check', 'status', 'waive'].includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
+    if (SESSION_CMDS.includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
     if (cmd === 'hook') {
       const event = args._[1] || p.hook_event_name,
         start = Date.now();
-      if (!c.inherited && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
-        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), p);
+      if (origin === 'cloud' && !c.config.copilotCloud) return 0; // the cloud agent is inert unless the repo opts in (ADR-0021)
+      if (!c.inherited && origin !== 'spawned' && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
+        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
+      if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return 0; } // never a ppid- session (ADR-0020)
       const r = await handleHook(c, p, event);
       if (r.out) console.log(JSON.stringify(r.out));
       if (r.text) console.log(r.text);
       if (r.err) console.error(r.err);
       trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.code === 2 ? 'block' : 'allow', duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err)
+        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
+        ...(cp && p.agentId && c.sid === p.agentId && { chain: 'unresolved' }) // a Copilot subagent call outside its root session
       });
       return r.code;
     }
@@ -974,7 +984,9 @@ export async function main(argv = process.argv.slice(2)) {
     }
     if (cmd === 'detect') { console.log(JSON.stringify(detect(c))); return 0; }
     if (cmd === 'run') {
-      const r = await register(c, args._[1], args.target);
+      // A Copilot shell below the Git top (context): a test path relative to cwd, else relative to the Git top as mutagate prints it.
+      const cwd = !args.repo && args._[1] && fs.realpathSync('.'), rel = cwd && cwd !== c.repo && slash(path.relative(c.repo, path.resolve(cwd, args._[1]))), test = rel && fs.existsSync(path.join(c.repo, rel)) ? rel : args._[1];
+      const r = await register(c, test, args.target);
       if (r.disabled) { console.log(args.json ? JSON.stringify({ status: 'disabled', message: r.message }) : r.message); return 0; }
       if (r.ambiguous) {
         console.log(args.json ? JSON.stringify(r) : r.message);
@@ -1049,7 +1061,7 @@ export async function main(argv = process.argv.slice(2)) {
     return cmd === 'help' ? 0 : 2;
   } catch (e) { // Usage errors (e.usage) exit 2 and are not traced as errors.
     if (c && (cmd === 'hook' || !e.usage)) trace(c, cmd, { error: clean(e.message), decision: 'error' });
-    console.error('mutagate: ' + clean(e.message));
+    if (cmd !== 'hook' || args.harness !== 'copilot') console.error('mutagate: ' + clean(e.message));
     return cmd === 'hook' ? 0 : e.usage ? 2 : 3;
   }
 }

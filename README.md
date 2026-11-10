@@ -240,6 +240,7 @@ Put shared settings in `.mutagate/config.json` and commit it:
 | `goRunner` | `"auto"` | `"gomutants"` or `"gremlins"`, see [Runners](#runners). |
 | `goTags` | `""` | Go build tags, comma-separated. |
 | `allowAgentWaivers` | `false` | Lets agents approve their own waivers. |
+| `copilotCloud` | `false` | Runs mutagate in the GitHub Copilot cloud coding agent. Without it, its hook calls do nothing. |
 
 Where settings come from, strongest first: command-line flags (`--run-budget-sec 600`), environment variables (`MUTAGATE_RUN_BUDGET_SEC=600`), the project's `.mutagate/config.json` (or the file `MUTAGATE_CONFIG` names), your user config `~/.cache/mutagate/config.json`, then the defaults. If the config is invalid, mutagate warns once per session and uses only the defaults.
 
@@ -347,7 +348,7 @@ The Kotlin compiler generates code you never wrote, and mutants in that code wou
 
 ## Sessions
 
-mutagate tracks targets per agent session, so the gate checks only what this session touched. Hooks take the session id from the harness. CLI commands the agent runs join the same session on their own, through `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID`, or `MUTAGATE_HOOK_SESSION` (set for OpenCode and Pi). Without hooks, export one `MUTAGATE_SESSION=<any id>` so `run` and `check` in different shells share a session.
+mutagate tracks targets per agent session, so the gate checks only what this session touched. Hooks take the session id from the harness. CLI commands the agent runs join the same session on their own, through `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID`, `COPILOT_AGENT_SESSION_ID` (Copilot CLI), or `MUTAGATE_HOOK_SESSION` (set for OpenCode and Pi). In a Copilot CLI shell (`COPILOT_CLI` set), `waive --apply` is refused as in any agent session. Copilot hooks use the Git top level as the repo; so do `run`, `check`, `status` and `waive` in the Copilot root agent shell, with a `run` test path relative to the shell's directory, else to the Git top level. Without hooks, export one `MUTAGATE_SESSION=<any id>` so `run` and `check` in different shells share a session.
 
 ## Cache, logs and housekeeping
 

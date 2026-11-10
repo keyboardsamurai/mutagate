@@ -9,7 +9,9 @@ export const BUILD=new Set(['node_modules','.venv','target','build','.gradle','b
 // The copy a live eval run makes: no answer key at the top (expected.json, reference/, prompt.*.md) and no build output at any depth.
 export const copyRepo=(src,repo)=>fs.cpSync(src,repo,{recursive:true,filter:p=>{const rel=path.relative(src,p);return !['expected.json','reference'].includes(rel)&&!/^prompt\.[a-z0-9-]+\.md$/.test(rel)&&!rel.split(path.sep).some(s=>BUILD.has(s));}});
 // process.env minus inherited harness, mutagate and token vars. context() takes CODEX_THREAD_ID and CLAUDE_CODE_SESSION_ID before MUTAGATE_SESSION, and CLAUDE_PLUGIN_DATA moves the cache root; callers set back what they need.
-export const scrubEnv=(env=process.env)=>Object.fromEntries(Object.entries(env).filter(([k])=>!/^(CLAUDE|CODEX_|OPENCODE|PI_|MUTAGATE_|COPILOT_)|^(GH_TOKEN|GITHUB_TOKEN|OPENROUTER_API_KEY)$/.test(k)));
+export const scrubEnv=(env=process.env)=>Object.fromEntries(Object.entries(env).filter(([k])=>!/^(CLAUDE|CODEX_|OPENCODE|PI_|MUTAGATE_|COPILOT_)|^(GH_TOKEN|GITHUB_TOKEN|GITHUB_COPILOT_API_TOKEN|OPENROUTER_API_KEY)$/.test(k)));
+// A recorded hook payload (test/payloads/) with its /repo placeholder replaced by repo.
+export const recordedPayload=(file,repo)=>JSON.parse(fs.readFileSync(file,'utf8'),(k,v)=>typeof v==='string'?v.replaceAll('/repo',repo):v);
 // A copy of a fixture or eval task at a real temp path (macOS tmpdir is a /private symlink), with its own cache root and CLI session; s.env is read at each cli call.
 export function scratch(src,{session='scratch',env={}}={}){
  const dir=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-scratch-'))),repo=path.join(dir,'repo'),cache=path.join(dir,'cache');
