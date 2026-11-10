@@ -6,9 +6,10 @@ Report privately through GitHub Security Advisories: <https://github.com/keyboar
 
 ## Threat model
 
-- **Hooks run your code.** A mutation run builds the project and runs its tests (Gradle, Maven, `go test`, `dotnet test`, pytest, Jest, Vitest) as your user, **outside the agent sandbox**. Build scripts, test code and dependencies that the agent wrote or changed run with your permissions. Do not install mutagate in a repo whose build you would not run yourself.
+- **Hooks run your code.** A mutation run builds the project and runs its tests (Gradle, Maven, `go test`, `dotnet test`, pytest, Jest, Vitest) as your user. With Claude Code, Codex, OpenCode and Pi this runs **outside the agent sandbox**. Build scripts, test code and dependencies that the agent wrote or changed run with your permissions. Do not install mutagate in a repo whose build you would not run yourself.
+- **GitHub Copilot sandbox and cloud agent.** Copilot runs hooks inside its sandbox (CLI `--sandbox`, VS Code `chat.agent.sandbox.enabled`); mutagate does not support it, and when the sandbox blocks writes to the cache root, mutagate is inactive and says so. The Copilot cloud coding agent runs the committed `.github/hooks` files, and its hook environment holds Copilot tokens that a mutagate worker and your build would inherit. mutagate does nothing there unless `.mutagate/config.json` has `"copilotCloud": true` ([ADR-0021](docs/adr/0021-copilot-boundaries.md)).
 - **The gate is workflow control, not enforcement.** It keeps an agent honest; it does not stop a hostile agent or user. Agents can edit config; waiver approval (`waive --apply`) is refused in agent sessions unless `allowAgentWaivers: true`.
-- **Fail open.** Hook exceptions, malformed payloads and infrastructure errors (missing toolchain, download failure) never block. Only a deliberate gate decision blocks.
+- **Fail open.** Hook exceptions, malformed payloads and infrastructure errors (missing toolchain, download failure) never block. Only a deliberate gate decision blocks. Copilot fails closed: it denies the tool call when a `preToolUse` hook crashes or exits non-zero. So every Copilot hook command exits 0, also without the skill dir, Git or Node (` || true`, and a PowerShell no-op outside Windows). Copilot also runs the hooks in the repo `.claude/settings.json`; the Claude commands that cannot block end in ` || true`, and mutagate ignores these calls under Copilot ([ADR-0013](docs/adr/0013-project-hooks-use-repo-relative-paths.md), [ADR-0015](docs/adr/0015-inherited-claude-hooks-are-inert-under-copilot.md)).
 - **Bounded blocking.** After `maxRounds` (default 2) blocks per target, completion warns and allows.
 - **Kill switch.** `MUTAGATE_MODE=advise` (env) or `"mode": "advise"` (`.mutagate/config.json`) reports without blocking. `uninstall --agent <harness>` removes the hooks.
 
@@ -22,6 +23,9 @@ Report privately through GitHub Security Advisories: <https://github.com/keyboar
 | Codex CLI | `.codex/hooks.json` | `$CODEX_HOME/hooks.json` or `~/.codex/hooks.json` |
 | OpenCode | `.opencode/plugins/mutagate.js` | `$XDG_CONFIG_HOME/opencode/plugins/mutagate.js` or `~/.config/opencode/plugins/mutagate.js` |
 | Pi | `.pi/extensions/mutagate.ts` | `~/.pi/agent/extensions/mutagate.ts` |
+| GitHub Copilot | `.github/hooks/mutagate.json` | `$COPILOT_HOME/hooks/mutagate.json` or `~/.copilot/hooks/mutagate.json` (Windows `%USERPROFILE%\.copilot\hooks\mutagate.json`) |
+
+The Copilot file belongs to mutagate: `uninstall` deletes it when only mutagate entries are left, and `install` refuses a second scope. `install` never writes a Copilot `settings.json`.
 
 `install` also writes `scripts/.node-path` (the absolute Node path, gitignored) in the skill dir. `waive --apply` writes `.mutagate/waivers.json`. mutagate never changes project build files or mutation-engine configs; runners use scratch configs.
 

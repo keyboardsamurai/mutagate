@@ -98,7 +98,7 @@ npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
 To see scores without ever blocking the agent, set `"mode": "advise"` in `.mutagate/config.json` (or `MUTAGATE_MODE=advise`).
 
 <details>
-<summary>Codex CLI, OpenCode and Pi</summary>
+<summary>Codex CLI, OpenCode, Pi and GitHub Copilot CLI</summary>
 
 Same three steps, different skill dir:
 
@@ -123,10 +123,17 @@ npx skills add keyboardsamurai/mutagate#skill -a pi --copy
 .pi/skills/mutagate/scripts/mutagate doctor
 ```
 
+```sh
+# GitHub Copilot CLI: writes .github/hooks/mutagate.json, loaded in a trusted folder
+npx skills add keyboardsamurai/mutagate#skill -a github-copilot --copy
+.agents/skills/mutagate/scripts/mutagate install --agent copilot
+.agents/skills/mutagate/scripts/mutagate doctor
+```
+
 OpenCode and Pi have no native way to block the agent from finishing. mutagate sends the survivors as a new message instead, and the session continues.
 </details>
 
-**Share it with your team.** Commit the skill dir, the harness config (`.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/mutagate.js` or `.pi/extensions/mutagate.ts`) and `.mutagate/config.json`. On macOS and Linux the hook commands use paths relative to the repo, so every clone gets the same gate. Each teammate needs Node 22+ and the toolchain. Without them, the hooks do nothing and never block.
+**Share it with your team.** Commit the skill dir, the harness config (`.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/mutagate.js`, `.pi/extensions/mutagate.ts` or `.github/hooks/mutagate.json`) and `.mutagate/config.json`. On macOS and Linux the hook commands use paths relative to the repo, so every clone gets the same gate. Each teammate needs Node 22+ and the toolchain. Without them, the hooks do nothing and never block.
 
 **Update.** Run the `npx skills add` line and `install` again (Codex: trust the hooks again). If you update the skill and forget `install`, each session starts with `Hooks are from mutagate X, skill is Y: rerun … install` and the exact command.
 
@@ -211,7 +218,7 @@ Limits per harness:
 - OpenCode passes only its write, edit, patch and apply_patch tools to mutagate; Pi only write and edit.
 - OpenCode and Pi need a session that stays open (interactive, `opencode serve`, `pi --mode rpc`). One-shot `opencode run` and `pi -p` cannot take the follow-up message.
 - `claude -p` without streaming input waits for the background run after each test write.
-- GitHub Copilot CLI is not supported yet. It also runs the hooks in `.claude/settings.json`; mutagate detects this and does nothing there (no runs, no blocks), and the session starts with `mutagate inactive under Copilot`.
+- GitHub Copilot CLI uses its own hook file (`install --agent copilot`). It also runs the hooks in `.claude/settings.json`; mutagate keeps those calls inert (no runs, no blocks), and without a Copilot hook file the session starts with `mutagate inactive under Copilot`.
 
 ## Configuration
 
@@ -255,9 +262,9 @@ The agent runs these through the skill; you can run them too. `<skill>` is the s
 | `check [--wait <sec>] [--json]` | Checks every target in the session, like the gate at finish. Reuses finished results and waits for running ones. `--wait` allows more time than the default 120 s. |
 | `status [--json]` | Scores, stale targets, survivors with their ids, waivers, tests without a target, and production edits no test covers. |
 | `detect` | Shows what mutagate found: harness, language, build tool, runner, Kotlin tier (JSON). |
-| `doctor [--json]` | Checks the setup and runs one real mutation. Also warns (without failing) when your harness version differs from the tested one, or when the installed hooks are from another mutagate version. |
+| `doctor [--json]` | Checks the setup and runs one real mutation. Also warns (without failing) when your harness version differs from the tested one, or when the installed hooks are from another mutagate version. For Copilot it warns about a missing or second hook file or a skill copy of another version, and fails when the cache root is not writable. |
 | `waive <id> --reason <text>` | Proposes a waiver. See [Waivers](#waivers). |
-| `install` / `uninstall` | Adds or removes the hooks. `--agent claude\|codex\|opencode\|pi\|auto`, `--scope project\|user`. |
+| `install` / `uninstall` | Adds or removes the hooks. `--agent claude\|codex\|opencode\|pi\|copilot\|auto`, `--scope project\|user`. |
 | `version` / `--version` | Prints `mutagate <version>`. |
 
 Exit codes of `run --sync` and `check`:

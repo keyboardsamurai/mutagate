@@ -4,6 +4,12 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added
+
+- `install --agent copilot` installs the GitHub Copilot hooks in their own file: `.github/hooks/mutagate.json`, or with `--scope user` `$COPILOT_HOME/hooks/mutagate.json` (else `~/.copilot/hooks/mutagate.json`). Every hook command exits 0, also without the skill dir, Git or Node. `install` refuses a second scope and names the existing file; `uninstall --agent copilot` deletes the file when only mutagate entries are left.
+- `install --agent auto` selects Copilot when the shell has `COPILOT_CLI` or `COPILOT_AGENT_SESSION_ID`, or the repo has `.github/hooks/` or `.github/copilot/` (with `--scope user`, also `COPILOT_HOME` or `~/.copilot`). A `.claude/` dir that holds only `skills/` no longer selects Claude when one of these is present. The `no harness detected` list names `copilot`.
+- `doctor` checks the Copilot install when a Copilot hook file or signal is present. It warns when Copilot runs more than one mutagate hook file (both scopes, or another file in a hooks dir), when a Claude project install has no Copilot hook file, and when the skill copy that Copilot loads (`.github/skills`, else `.agents/skills`, else `.claude/skills`) has another `VERSION` than the copy that its hooks run. It fails when the cache root is not writable, and gives the folder trust, managed hooks and VS Code Local hints. It also warns when `copilot --version` is not the tested Copilot CLI 1.0.107.
+
 ### Changed
 
 - CLI commands in a Copilot CLI shell join its session through `COPILOT_AGENT_SESSION_ID`, after `CLAUDE_CODE_SESSION_ID` and `CODEX_THREAD_ID`. `waive --apply` is refused when `COPILOT_CLI` is set, as in other agent sessions. In the Copilot root agent shell, `run`, `check`, `status` and `waive` use the Git top level as the repo (its data dir and `.mutagate/config.json`), not the shell's directory; `run` reads a relative test path against the shell's directory, else against the Git top level.

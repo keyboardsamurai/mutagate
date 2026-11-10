@@ -87,7 +87,7 @@ export function configFor(repo, root, args = {}, env = process.env) {
   for (const key of ['testGlobs', 'exclude']) for (const pattern of Array.isArray(cfg[key]) ? cfg[key] : []) { try { glob(pattern); } catch { errors.push(`invalid ${key} glob: ${pattern}`); } }
   return { config: errors.length ? structuredClone(DEFAULTS) : cfg, errors: [...new Set(errors)] };
 }
-const HARNESSES = ['claude', 'codex', 'opencode', 'pi']; // installable harnesses: context() keeps them and copilot, doctor and the no-harness hint list them
+const HARNESSES = ['claude', 'codex', 'opencode', 'pi', 'copilot']; // installable harnesses: context() keeps them, doctor and the no-harness hint list them
 const SESSION_CMDS = ['run', 'check', 'status', 'waive']; // CLI commands on the session state
 export function context(args = {}, payload = {}) {
   const real = p => fs.realpathSync(path.resolve(p));
@@ -109,7 +109,7 @@ export function context(args = {}, payload = {}) {
   // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`, and only its native hook commands carry the --harness tag. No env makes them `claude` (ADR-0015).
   const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : [...HARNESSES, 'copilot'].includes(named) ? named : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
@@ -830,10 +830,6 @@ export const install = (c, agent, scope, remove) => runtimeRequire('./install.cj
 const rerunNotice = (c, stamp, agent, known) => { const [v, s] = String(stamp ?? '').split(':'), scope = known || s;
   return v === VERSION ? '' : `Hooks are from ${/^\d[\w.+-]*$/.test(v) ? 'mutagate ' + v : 'an older mutagate'}, skill is ${VERSION}: rerun ${cliName(c)} install --agent ${agent}${scope === 'user' ? ' --scope user' : scope ? '' : ' (add --scope user for a user install)'}`; };
 
-function agents(c) {
-  return [...new Set([...(process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_PLUGIN_ROOT || exists(path.join(c.repo, '.claude')) ? [ 'claude' ] : []), ...(process.env.CODEX_HOME || exists(path.join(c.repo, '.codex')) ? ['codex'] : []), ...(exists(path.join(c.repo, '.opencode')) || exists(
-    path.join(c.repo, 'opencode.json')) ? ['opencode'] : []), ...(exists(path.join(c.repo, '.pi')) ? ['pi'] : [])])];
-}
 async function doctor(c) {
   const dr = runtimeRequire('./doctor.cjs'), step = dr.progress, { command, javaExe, jars, selectGo, tool, toolInstall } = runners(); step('Node 22+ and configuration');
   const checks = [{ name: 'Node 22+', pass: Number(process.versions.node.split('.')[0]) >= 22, hint: 'Install Node 22 or later, or set MUTAGATE_NODE to its path.' }, {
@@ -865,15 +861,16 @@ async function doctor(c) {
     } catch (e) { checks.push({ name: 'mutation toolchain', pass: false, hint: e.message }); }
     if (d.language === 'csharp' && c.config.runBudgetSec === DEFAULTS.runBudgetSec) checks.push({ name: '.NET run budget', pass: true, note: 'Cold runs can take 2 to 5 minutes; set runBudgetSec: 600 in .mutagate/config.json.' });
   }
-  step('adapter'); const found = HARNESSES // each harness in both scopes; pass needs a detected one, any when none is detected
-    .flatMap(a => ['project', 'user'].map(s => [a, s, runtimeRequire('./install.cjs').installStamp(c, a, s)])).filter(x => x[2] !== null), detected = agents(c);
+  step('adapter'); const inst = runtimeRequire('./install.cjs'), found = HARNESSES // each harness in both scopes; pass needs a detected one, any when none is detected
+    .flatMap(a => ['project', 'user'].map(s => [a, s, inst.installStamp(c, a, s)])).filter(x => x[2] !== null), detected = inst.agents(c, found.some(([a, s]) => a === 'copilot' && s === 'user') && 'user', true); // a Copilot user install: its dir is a Copilot signal (ADR-0021)
   checks.push({ name: 'adapter installed', pass: found.some(([a]) => !detected.length || detected.includes(a)), hint: 'Run mutagate install --agent <harness>.' },
-    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: rerunNotice(c, stamp, a, s) })).filter(x => x.note)); step('harness versions');
+    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: rerunNotice(c, stamp, a, s) })).filter(x => x.note),
+    ...dr.copilotChecks(c, { inst, cp: copilot(), found, detected, cli: cliName(c) })); step('harness versions');
   const versions = json(path.join(ROOT, 'references/versions.json'), { note: 'Version manifest excluded from skill installation; see README.' }); checks.push(...await dr.harnessChecks(versions)); step('synthetic scoped mutation smoke');
   const dir = path.join(c.data, 'doctor', crypto.randomUUID());
-  mkdir(dir);
   let smoke;
   try {
+    mkdir(dir); // in the try: an unwritable cache root fails the smoke, not doctor
     const put = (f, text) => atomic(path.join(dir, f), text);
     if (d.runner === 'pitest') {
       put('src/main/java/Probe.java', 'public class Probe { public boolean eligible(int n) { return n >= 18; } }');
@@ -941,7 +938,7 @@ async function doctor(c) {
 export async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv),
     cmd = args._[0] || 'help',
-    all = 'run <test> [--target <target>] [--sync] [--json], check [--wait seconds], status [--json], detect, doctor, waive <id> --reason <reason> [--apply (human only)], install|uninstall --agent auto|claude|codex|opencode|pi [--scope project|user], version',
+    all = 'run <test> [--target <target>] [--sync] [--json], check [--wait seconds], status [--json], detect, doctor, waive <id> --reason <reason> [--apply (human only)], install|uninstall --agent auto|claude|codex|opencode|pi|copilot [--scope project|user], version',
     usage = 'mutagate: ' + (all.split(', ').find(u => u.split(' ')[0].split('|').includes(cmd)) || all + '. All commands accept --repo.');
   if (args.help || args._.includes('-h')) { console.log(usage); return 0; }
   if (args.version || cmd === 'version') { console.log('mutagate ' + VERSION); return 0; }
@@ -1060,7 +1057,7 @@ export async function main(argv = process.argv.slice(2)) {
       return 0;
     }
     if (cmd === 'install' || cmd === 'uninstall') {
-      const selected = !args.agent || args.agent === 'auto' ? agents(c) : [args.agent];
+      const selected = !args.agent || args.agent === 'auto' ? runtimeRequire('./install.cjs').agents(c, args.scope) : [args.agent];
       const script = path.join(HERE, process.platform === 'win32' ? 'mutagate.cmd' : 'mutagate'), repoArg = args.repo ? ' --repo ' + c.repo : '';
       if (!selected.length) { console.error([`no harness detected in ${c.repo}; run one of:`, ...HARNESSES.map(a => `${script} ${cmd} --agent ${a}${repoArg}`)].join('\n')); return 2; }
       for (const a of selected) console.log(install(c, a, args.scope || 'project', cmd === 'uninstall'));

@@ -1,6 +1,6 @@
 'use strict';
 // GitHub Copilot native hook calls (`--harness copilot`, #35, ADR-0020): origin, payload normalization, the subagent chain, the agentStop gate and its output, the outbox and the write probe;
-// `top` also serves session commands in the Copilot root agent shell. Loaded only for those calls. Not hashed into fingerprint: it maps payloads and session ids, not results.
+// `top` also serves session commands in the Copilot root agent shell. Loaded only for those calls, doctor and install (TOOLS, DRAIN: the hook matchers). Not hashed into fingerprint: it maps payloads and session ids, not results.
 const fs = require('node:fs'), path = require('node:path');
 // Cloud coding agent markers (ADR-0021), UNCONFIRMED until spike S16 names the marker.
 const CLOUD = ['COPILOT_AGENT_PROMPT', 'GITHUB_COPILOT_API_TOKEN'];
@@ -84,3 +84,4 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
   };
   return cp;
 };
+Object.assign(module.exports, { TOOLS, DRAIN }); // the Copilot hook matchers of install.cjs

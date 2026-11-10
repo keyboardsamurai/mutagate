@@ -20,7 +20,7 @@
 - [ADR-0018](0018-copilot-completion-gate.md) Copilot completion gate - accepted 2026-11-09
 - [ADR-0019](0019-copilot-outbox-delivery.md) Copilot outbox delivery - accepted 2026-11-09
 - [ADR-0020](0020-copilot-payloads-and-sessions.md) Copilot payloads and sessions - accepted 2026-11-09
-- [ADR-0021](0021-copilot-boundaries.md) Copilot boundaries - accepted 2026-11-09
+- [ADR-0021](0021-copilot-boundaries.md) Copilot support boundaries - accepted 2026-11-09
 
 ## Withdrawn
 
