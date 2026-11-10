@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs sessionStart github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs sessionEnd github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs userPromptSubmitted github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs preToolUse github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs postToolUse github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs postToolUseFailure github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs agentStop github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "subagentStart": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs subagentStart github-hooks || true",
+        "timeoutSec": 30
+      }
+    ],
+    "subagentStop": [
+      {
+        "type": "command",
+        "bash": "node .github/s16/probe.cjs subagentStop github-hooks || true",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
