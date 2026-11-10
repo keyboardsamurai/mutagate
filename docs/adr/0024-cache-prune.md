@@ -1,0 +1,8 @@
+# ADR-0024: Cache prune
+Status: accepted 2026-11-10
+Concern: Report dirs, session state, results, Copilot `agents/` records and the trace grow without bound. A data dir name is a hash, so nothing tells which repo path it belongs to.
+Decision: `register`, and SessionStart in a data dir that exists, write the repo path to `<data>/repo-path` once (`markRepo`). SessionStart starts the internal `prune` command detached when the mtime of `repos/.pruned` is a day or more from now (`schedulePrune`; a clock jump also starts it; `.pruned` is written before the prune runs). The prune works only under `repos/`. It skips a data dir with a live lock. It deletes `reports/*` after 1 day; `agents/*` and `state/*.json` after 14 days (state under the state lock with budget 0, with the age checked again); a result only when its state is gone; a marked data dir whose repo path is gone (ENOENT or ENOTDIR only, so a repo that a sandbox hides stays); an unmarked data dir after 14 days without a write to the dir or its direct entries, never file by file. It renames `trace.jsonl` to `trace.jsonl.1` at 10 MiB. It never touches `jars/`, `tools/`, `recorded/` or `config.json`.
+Rationale: The marker makes a stale data dir identifiable. A result goes with its state, so a session that edits only production code keeps its results. A detached process keeps SessionStart fast.
+Alternatives: A prune in each hook call. Rejected: latency. A time to live per file in an unmarked dir. Rejected: each deletion moves the mtimes that the idle check reads.
+Consequences: A failed prune waits a day. A data dir written before the marker existed waits 14 idle days.
+Related: ADR-0020, ADR-0021, ADR-0023

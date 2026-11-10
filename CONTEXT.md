@@ -73,7 +73,7 @@ The detached process that runs one target under its lock and publishes the resul
 _Avoid_: background job, runner process, daemon
 
 **Abandoned lock**:
-A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight.
+A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight (ADR-0023).
 _Avoid_: stale lock, expired lock
 
 **Data dir**:
@@ -81,7 +81,7 @@ The directory under the cache root that holds the session state, results, logs a
 _Avoid_: repo cache, state dir
 
 **Cache prune**:
-The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist.
+The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist (ADR-0024).
 _Avoid_: garbage collection, cache eviction
 
 **Scoped copy** (Python):
