@@ -10,7 +10,7 @@ A ✅ in the README harness × language matrix needs both the `natural` and the 
 
 The records are public on purpose. Transcripts are not committed, only their hashes; home paths and the work repo path are replaced (`~`, `<repo>`), and GitHub tokens (`github_pat_`, `gh[opsur]_`) are scrubbed even when no secret value names them.
 
-Reproduce a cell with the pinned harness on PATH (`test/harness-versions.json`), Node 22, the language toolchain, and credentials: `CLAUDE_CODE_OAUTH_TOKEN` (Claude) and `OPENROUTER_API_KEY` (OpenCode, Pi) in the repo-root `.env`, the existing `~/.codex` login (Codex), or the host `copilot` login (Copilot; an optional `COPILOT_GITHUB_TOKEN` in `.env` wins):
+Reproduce a cell with the pinned harness on PATH (`test/harness-versions.json`), Node 22, the language toolchain, and credentials: `CLAUDE_CODE_OAUTH_TOKEN` (Claude) and `OPENROUTER_API_KEY` (OpenCode, Pi) in the repo-root `.env`, the existing `~/.codex` login (Codex), or the host `copilot` login (Copilot; an optional `COPILOT_GITHUB_TOKEN` in `.env` is passed to it; precedence over the login unconfirmed):
 
 ```sh
 npm run eval -- --harness opencode --lang java                 # both scenarios, 2 runs each

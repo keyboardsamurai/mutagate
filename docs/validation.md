@@ -18,7 +18,7 @@ Still open before v1: remaining M7 findings (`test/eval/TRIAGE.md`), Windows CI 
 ```sh
 npm test                    # deterministic suites
 npm run test:integration    # real runners (set MUTAGATE_FIXTURES to select)
-npm run test:driver         # scripted gate E2E, all four harness envelopes
+npm run test:driver         # scripted gate E2E, all five harness envelopes (Copilot: not on Windows)
 npm run test:performance    # hook latency budget
 npm run eval -- --harness claude --lang java --scenario forced   # live agent runs (credentials in .env; all flags optional)
 npm run eval -- --report test/.cache/eval/<sweepId>   # re-render a sweep's report.md, no agent runs
@@ -46,9 +46,23 @@ gomutants also ships a Claude Code plugin that proposes Go tests for survivors; 
 |---|---|
 | Linux | ✅ full suite + Java/Kotlin/Python/TS runners (ARM64, JDK 21) |
 | macOS | ✅ deterministic suite + Go/C# runners (Node 22) |
-| Windows | 🟡 `scripts\mutagate.cmd`; CI runs only the `java-gradle` integration fixture (no `npm test`, installer or driver E2E) · ❌ Go and C# unqualified |
+| Windows | 🟡 `scripts\mutagate.cmd`; CI runs only the `java-gradle` integration fixture (no `npm test`, installer or driver E2E) · ❌ Go and C# unqualified · Copilot hooks experimental, no claim |
 
 Go: verified with a `go 1.22` module under Go 1.26.
+
+## GitHub Copilot
+
+Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`) and on the checks below. The live eval has not run for Copilot, so its README matrix row is ⏳.
+
+| Case | Status |
+|---|---|
+| Copilot CLI, macOS and Linux | 🟡 deterministic tests (payloads, subagent chain, gate deadline and watchdog, outbox, install, doctor) and the scripted `test:driver` Copilot envelope (weak test blocks, strong test allows, through the installed bash commands; CI runs it on Linux and macOS) · ⏳ live eval |
+| Hook latency (macOS, 100 samples) | ✅ installed hook p95 43.0 ms; Copilot test edit 39.1 ms; delivery point with an outbox entry 38.4 ms. In a 15,000-file tree the delivery point takes 439 ms, once per background result, outside the 80 ms budget ([ADR-0019](adr/0019-copilot-outbox-delivery.md)) |
+| VS Code Copilot harness | ⏳ not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` |
+| VS Code Local harness | inert by design |
+| Copilot cloud coding agent | inert unless `copilotCloud: true`; its environment markers are unconfirmed until spike S16, which gates the release |
+| Copilot sandbox | ❌ unsupported: mutagate says `mutagate inactive: cannot write <path>` (follow-up after spike S17) |
+| Windows | 🟡 experimental, no claim: only an install made on Windows writes a real PowerShell command; `test:driver` skips Copilot there |
 
 ## Post-M7 review validation
 

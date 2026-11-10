@@ -104,7 +104,7 @@ Add `"eval": "node test/eval/run.mjs"` to package.json. `.env` is gitignored.
    from agent end. Keep the repo.
 8. **Scrub** secret values from every file in the run dir and the repo:
    `<redacted>` in text, same-length `x` bytes in binaries. The OpenCode
-   driver deletes `opencode.db` after its message export. The run's cacheRoot data
+   `opencode.db` and the per-run Copilot dir are deleted after collection (`dropTransient`), also after a failed setup. The run's cacheRoot data
    dir (trace, results, runner logs) and its recorded payloads are scrubbed in place;
    `stdout.log` and `copilot-logs/` are scrubbed at any size, `copilot-logs/` with the
    GitHub login and the home dir replaced. Ctrl-C, SIGTERM and SIGHUP delete every started run's `opencode.db` and

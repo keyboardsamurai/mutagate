@@ -570,7 +570,7 @@ Modules under test and how:
   lines.
 - **Live drivers** (launch and done-detection) are validated only by the smoke
   run in M1 and the sweeps themselves. The scripted driver suite already proves
-  the hook envelopes for all four harnesses without a model and stays as is.
+  the hook envelopes for all five harnesses without a model and stays as is.
 
 Seams, from highest to lowest:
 

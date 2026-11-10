@@ -103,11 +103,11 @@ _Avoid_: user error, test error, agent fault
 ### Gate and budgets
 
 **Hook**:
-A harness event that mutagate handles: PreToolUse, PostToolUse, Stop, SubagentStop, TaskCompleted. Hooks fail open.
+A harness event that mutagate handles: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TaskCompleted, and for Copilot SubagentStart. A native Copilot event maps to one of these (`agentStop` is Stop). Hooks fail open.
 _Avoid_: callback, trigger, plugin event
 
 **Gate**:
-The check over every target in the session that decides block or allow and the exit code. Stop, SubagentStop, TaskCompleted and `check` run it.
+The check over every target in the session that decides block or allow and the exit code. Stop, SubagentStop, TaskCompleted, the Copilot `agentStop` of the root agent and `check` run it.
 _Avoid_: completion check, verdict, blocker
 
 **Run budget** (`runBudgetSec`):

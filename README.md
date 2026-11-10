@@ -12,7 +12,7 @@ A passing test proves little. A test with no assertions passes too. mutagate fin
 
 This runs in the background each time the agent writes a test. When the agent tries to finish, mutagate checks the scores. If the tests catch fewer than 80% of the bugs, it stops the agent from ending its turn and gives it the list of bugs that got through. The agent then writes better tests. You do nothing.
 
-Works with Claude Code, Codex CLI, OpenCode and Pi, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.1): config keys and report text can change before 1.0.
+Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.1): config keys and report text can change before 1.0.
 
 ## Why you want this
 
@@ -29,7 +29,7 @@ Mutation testing has a reputation for being slow, because a full run mutates the
 - **Fails open.** A missing toolchain or a crashing mutation tool never blocks the agent. mutagate only blocks on problems the agent can fix.
 - **Humans keep control of exceptions.** Some mutants change nothing a test could see. The agent can propose to waive them. Only a person can approve that.
 - **Nothing added to your build.** It drives proven mutation tools (PIT, mutmut, Stryker, gomutants, Stryker.NET). It has no npm dependencies and does not edit your build files or mutation-tool configs.
-- **Tested with real agents.** Every harness and language combination below passed live runs with a real model.
+- **Tested with real agents.** Every ✅ harness and language combination below passed live runs with a real model.
 
 ## What it looks like
 
@@ -201,6 +201,7 @@ npm i -D @stryker-mutator/core@9 @stryker-mutator/jest-runner@9    # TS/JS with 
 | [Codex CLI](https://developers.openai.com/codex) | hooks in `.codex/hooks.json` (trust them in `/hooks`) | blocks the finish | denied |
 | [OpenCode](https://opencode.ai) | plugin `.opencode/plugins/mutagate.js` | sends survivors, session continues | denied |
 | [Pi](https://pi.dev) | extension `.pi/extensions/mutagate.ts` | sends survivors, session continues | denied |
+| [GitHub Copilot CLI](https://github.com/github/copilot-cli) | hooks in `.github/hooks/mutagate.json` (trusted folder) | blocks the finish | denied |
 
 Live eval results (`npm run eval`), both the `natural` and the `forced` scenario:
 
@@ -219,7 +220,17 @@ Limits per harness:
 - OpenCode passes only its write, edit, patch and apply_patch tools to mutagate; Pi only write and edit.
 - OpenCode and Pi need a session that stays open (interactive, `opencode serve`, `pi --mode rpc`). One-shot `opencode run` and `pi -p` cannot take the follow-up message.
 - `claude -p` without streaming input waits for the background run after each test write.
-- GitHub Copilot CLI uses its own hook file (`install --agent copilot`). It also runs the hooks in `.claude/settings.json`; mutagate keeps those calls inert (no runs, no blocks), and without a Copilot hook file the session starts with `mutagate inactive under Copilot`.
+
+### GitHub Copilot CLI
+
+A test edit starts a background run; its report reaches the agent with its next edit or shell call. When the agent stops, the gate works for up to `gateBudgetSec` (120 s) of the 600 s `agentStop` timeout and blocks like Claude Code; if it is still busy at 570 s, it allows and stops its runs. Copilot also runs the hooks in `.claude/settings.json`; mutagate keeps those calls inert (payload `timestamp`), and without a Copilot hook file the session starts with `mutagate inactive under Copilot`.
+
+- `-p` and text mode show nothing while the gate waits. When the gate allows, its messages (round cap, warnings, `advise` reports) are progress lines that the model does not see; `status` shows the scores.
+- Subagent edits are gated when the root agent stops. CLI calls in a subagent's shell do not join the root session.
+- `install` refuses a second scope. A blocking `agentStop` hook of another tool that runs after mutagate's replaces mutagate's reason.
+- Not supported: Copilot sandbox sessions (`mutagate inactive: cannot write …`), Windows (experimental) and the cloud coding agent (inert unless `"copilotCloud": true`). VS Code is not claimed until it has a smoke record.
+
+Details: [docs/copilot.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/copilot.md).
 
 ## Configuration
 
@@ -369,7 +380,7 @@ mutagate tracks targets per agent session, so the gate checks only what this ses
 
 ## Security and privacy
 
-mutagate sends no telemetry and uploads nothing. It downloads only missing tools, as listed in [Runners](#runners); `MUTAGATE_OFFLINE=1` turns that off. The hooks run your build and your tests outside the agent's sandbox, with your permissions. Details: [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
+mutagate sends no telemetry and uploads nothing. It downloads only missing tools, as listed in [Runners](#runners); `MUTAGATE_OFFLINE=1` turns that off. The hooks run your build and your tests with your permissions, with Claude Code, Codex, OpenCode and Pi outside the agent's sandbox; in a Copilot sandbox mutagate is inactive. Details: [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
 
 ## Troubleshooting
 
@@ -379,6 +390,8 @@ mutagate sends no telemetry and uploads nothing. It downloads only missing tools
 | Codex never runs the hooks | Codex does not run new or changed hooks until you trust them | Open `/hooks` in Codex and trust mutagate (after every install) |
 | Claude ignores the hooks | Claude started in a subdirectory and did not load the root `.claude/settings.json` | Start `claude` in the repo's top-level directory |
 | `Hooks are from mutagate X, skill is Y: rerun … install` at session start, or `WARN <harness> <scope> install` in doctor | The skill was updated, but `install` did not run again | Run the command the message names. Codex: trust mutagate in `/hooks` again |
+| Copilot never runs the hooks | The folder is not trusted, or a policy allows only managed hooks | Trust the folder (`copilot -p`: `--trust-folder`), or ask your admin to allow repo hooks |
+| `mutagate inactive: cannot write <path>` under Copilot | The Copilot sandbox blocks the cache root | Run Copilot without its sandbox |
 | GitHub Copilot denies every file edit in a repo with a Claude install | `.claude/settings.json` has hooks from an older mutagate, which fail when a clone has no skill dir, Git or Node | `<skill>/scripts/mutagate install --agent claude`, then commit `.claude/settings.json` |
 | `mutagate inactive: hooks run Node …; need 22+` | The hooks found Node older than 22 | Set `MUTAGATE_NODE=/path/to/node22`, or run `install` again under Node 22+ |
 | `jar download failed` or `offline: missing …` | No access to Maven Central | See [Proxy and offline setup](#runners) |

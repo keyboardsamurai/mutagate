@@ -21,7 +21,7 @@ records the evidence per fix, the Go/C# runner design is in `docs/go_csharp_runn
 the live eval suite plan (language × harness agent runs) is in `docs/eval_suite.md`, and its spec
 `docs/eval_suite_spec.md` is implemented in `test/eval/`.
 The user-facing behavior (commands, config, exit codes, runner caveats) is in
-`README.md`.
+`README.md`; the GitHub Copilot details (gate, reports, sessions, limits) are in `docs/copilot.md`.
 
 ## Decisions
 
@@ -112,7 +112,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   stdin), which queues each run's report in the session `outbox` instead of
   printing it. A root-agent write or shell `postToolUse` (`read_bash` too) is a
   delivery point: it drains the fresh, unreported entries as `additionalContext`
-  and sets `reported`; a gate block or a `check` report drops the key, and a
+  and sets `reported`; a gate block or a `check` or `run --sync` report drops the key, and a
   recorded pass resets `reported` (ADR-0019).
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An

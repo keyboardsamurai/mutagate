@@ -47,11 +47,11 @@ npx skills add /tmp/mg-skill -a claude-code --copy        # in a test project
 .claude/skills/mutagate/scripts/mutagate install --agent claude
 ```
 
-`npm run test:installer` tests this path for all four harnesses. Users install from the generated `skill` branch ([ADR-0014](docs/adr/0014-skill-branch-distribution.md)); releases are in [docs/releasing.md](docs/releasing.md).
+`npm run test:installer` tests this path for all five harnesses. Users install from the generated `skill` branch ([ADR-0014](docs/adr/0014-skill-branch-distribution.md)); releases are in [docs/releasing.md](docs/releasing.md).
 
 ## Live evals
 
-`npm run eval` drives real agents (`test/eval/`, ADR-0011). It needs the pinned harnesses (`test/harness-versions.json`), all language toolchains, and **your own credentials**: `CLAUDE_CODE_OAUTH_TOKEN` or `OPENROUTER_API_KEY` in the repo-root `.env`, or an existing `~/.codex` login. Runs cost model tokens and take up to 30 min each. Pull requests do not need eval runs; a maintainer runs them before a matrix change. See [test/evidence/README.md](test/evidence/README.md).
+`npm run eval` drives real agents (`test/eval/`, ADR-0011). It needs the pinned harnesses (`test/harness-versions.json`), all language toolchains, and **your own credentials**: `CLAUDE_CODE_OAUTH_TOKEN` or `OPENROUTER_API_KEY` in the repo-root `.env`, an existing `~/.codex` login, or the host `copilot` login (an optional `COPILOT_GITHUB_TOKEN` in `.env` is passed to it; its precedence over the host login is unconfirmed; never a classic `ghp_`). Runs cost model tokens and take up to 30 min each. A Copilot run costs premium requests: one for the prompt and one more per gate block (24 runs for 6 languages × 2 scenarios × `--repeat 2`: about 50 to 100). Pull requests do not need eval runs; a maintainer runs them before a matrix change. See [test/evidence/README.md](test/evidence/README.md).
 
 ## Pull requests
 

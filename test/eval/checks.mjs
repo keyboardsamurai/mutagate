@@ -111,7 +111,7 @@ export function checkRun(runDir, expected) {
   warn('tiny-mutants', status.filter(s => s.result && !['error', 'unscored'].includes(s.result.status) && (s.result.killed || 0) + (s.result.survived || 0) < 5)
     .map(s => ev('status.json', 1, `${s.target}: ${(s.result.killed || 0) + (s.result.survived || 0)} mutants`)), 'fewer than 5 mutants on a target');
   // Only a run/check call after the first transcript mention of a registered test file counts (status/waive/install before any test are not).
-  // User lines are skipped: the prompt (echoed by OpenCode and Pi) can name the test file before it exists. Tool results are agent lines.
+  // User lines are skipped: the prompt (echoed by OpenCode, Pi and Copilot) can name the test file before it exists. Tool results are agent lines.
   const runs = cli.filter(c => ['run', 'check'].includes(c.cmd)), first = runs[0], registered = tests.filter(d => !unregistered.includes(d)), mention = out.findIndex(l => !l.user && registered.some(d => l.text.includes(d.file)));
   // Nothing to deliver: there were Results before the first agent CLI call and all passed (no Result at all still warns). CLI calls trace a cli event
   // in the hook session; older run dirs mark them only by a non-hook session.

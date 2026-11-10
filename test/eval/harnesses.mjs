@@ -25,7 +25,7 @@ export function pinned(bin, pkg, home = os.homedir(), env = process.env) {
   const exe = which(bin);
   return exe ? probe(exe) : { reason: `${bin} not on PATH` };
 }
-// Process groups of live harness processes, killed by run.mjs on SIGINT.
+// Process groups of live harness processes, killed by run.mjs trap() on SIGINT, SIGTERM and SIGHUP.
 export const procs = new Set();
 // Spawn detached with stdout/stderr streamed to the run dir; the whole process group is SIGKILLed on timeout and after exit.
 export function spawnRun(exe, args, { cwd, env, runDir, timeoutMs, stdin = 'ignore' }) {
@@ -209,7 +209,7 @@ export const harnesses = {
       final: objs => { const m = objs.findLast(o => o.type === 'message_end' && o.message?.role === 'assistant' && !(o.message.stopReason === 'aborted' && !o.message.content?.length))?.message;
         return m && [m.content].flat().filter(c => c?.type === 'text').map(c => c.text).join('').trim(); } }),
   },
-  // GitHub Copilot CLI (#35 D29, D30). The host login (keychain), as Codex uses ~/.codex; COPILOT_GITHUB_TOKEN from .env wins when set, and a classic ghp_ token does not work.
+  // GitHub Copilot CLI (#35 D29, D30). The host login (keychain), as Codex uses ~/.codex; COPILOT_GITHUB_TOKEN from .env is passed when set (precedence over the login unconfirmed, S12), and a classic ghp_ token does not work.
   copilot: {
     agent: 'github-copilot', skillDir: '.agents/skills/mutagate',
     // The version probe runs under the driver env, so it names the package a run executes, not the launcher's version.
