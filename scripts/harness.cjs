@@ -28,7 +28,7 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     deliveries: async () => [], // reports a PostToolUse delivers
     rerun() {}, // after a sync PostToolUse; else the async --mutate hook reruns
     // A --mutate run: the report to deliver now, or null. Redeliver changed results; a pass resets delivery.
-    survivor: async (c, key, r, text) => text && await updateState(c, s => deliver(s, key, text)) && text || null, // a pass has no text; runTarget cleared the delivered report
+    survivor: async (c, key, r, text) => await updateState(c, s => deliver(s, key, text)) && text || null, // a pass has no text: deliver clears the delivered report
     async stop(c) { const g = await gate(c, { hook: true }); return g.block ? { block: g.reason } : g.reason ? { warn: g.reason } : {}; },
     write(i, event) {
       const own = x => json({ hookSpecificOutput: { hookEventName: event, ...x } }), text = i.context ?? i.survivors;

@@ -517,10 +517,10 @@ export const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({
 export const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, deliver }); // pick and the profiles (ADR-0022)
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
-// The delivered report of a target (ADR-0019), inside updateState: false for a gone target or the same report again, else text becomes it.
-export const deliver = (s, key, text) => { const t = s.targets[key], k = reportKey(text); if (!t || t.reported === k) return false; t.reported = k; return true; };
+// The only writer of the delivered report of a target (ADR-0019), inside updateState: no text (a pass) clears it; false for a gone target, no text or the same report again, else text becomes it.
+const deliver = (s, key, text) => { const t = s.targets[key], k = text ? reportKey(text) : null; if (!t || t.reported === k) return false; t.reported = k; return !!k; };
 // A result that reached the agent: its key leaves the Copilot outbox, and sent text is the delivered report.
-const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
+const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
 export async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -578,7 +578,7 @@ export async function runTarget(c, key, runner) {
           latest.fingerprint = fp;
           latest.resultGeneration = t.generation;
           latest.rerun_requested = false;
-          if (result.status === 'pass') latest.reported = null; // a later regression goes out again (ADR-0019)
+          if (result.status === 'pass') deliver(s, key, null); // a later regression goes out again (ADR-0019)
           published = true;
         }
       });

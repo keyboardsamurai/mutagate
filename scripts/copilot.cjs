@@ -33,8 +33,8 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
       return p.sessionId;
     },
     // The spawned handler queues the report of a run for the next delivery point (ADR-0019): one entry per target, from its newest run;
-    // run is the run's started_at. A pass empties it (runTarget resets reported).
-    queue(s, key, text, run) { if (!s.targets[key]) return; s.outbox = (s.outbox || []).filter(e => e.key !== key); if (text) s.outbox.push({ key, run, text }); },
+    // run is the run's started_at. A pass (no text) empties it and clears the delivered report through deliver.
+    queue(s, key, text, run) { if (!s.targets[key]) return; s.outbox = (s.outbox || []).filter(e => e.key !== key); if (text) s.outbox.push({ key, run, text }); else deliver(s, key, null); },
     // A delivery point (ADR-0019), a root-agent write or shell postToolUse, takes the outbox entries whose run still gives the current result
     // (a later run, a change or a pass makes an entry stale) and that are not yet reported, and marks them reported; stale entries leave too.
     // Results are checked before the state lock (fingerprint); an entry queued since stays.

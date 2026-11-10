@@ -518,9 +518,9 @@ const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNES
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 
-const deliver = (s, key, text) => { const t = s.targets[key], k = reportKey(text); if (!t || t.reported === k) return false; t.reported = k; return true; };
+const deliver = (s, key, text) => { const t = s.targets[key], k = text ? reportKey(text) : null; if (!t || t.reported === k) return false; t.reported = k; return !!k; };
 
-const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
+const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -578,7 +578,7 @@ async function runTarget(c, key, runner) {
           latest.fingerprint = fp;
           latest.resultGeneration = t.generation;
           latest.rerun_requested = false;
-          if (result.status === 'pass') latest.reported = null; // a later regression goes out again (ADR-0019)
+          if (result.status === 'pass') deliver(s, key, null); // a later regression goes out again (ADR-0019)
           published = true;
         }
       });
