@@ -1,0 +1,16 @@
+{
+ "sessionId": "c25140d3-e7a3-47de-8353-e47617e0d5d9",
+ "timestamp": 1794251917325,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01CyGJV6Td74hqW3cS6oDr6W",
+ "toolName": "bash",
+ "toolArgs": {
+  "command": "sh -c \"sleep 200; echo done > long.txt\"",
+  "description": "Run sleep then write long.txt",
+  "initial_wait": 240
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "\n<shellId: 0 completed with exit code 0>"
+ }
+}

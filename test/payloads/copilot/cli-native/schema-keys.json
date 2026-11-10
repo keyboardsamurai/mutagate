@@ -1,0 +1,132 @@
+{
+ "sessionStart": [
+  "cwd",
+  "initialPrompt",
+  "sessionId",
+  "source",
+  "timestamp"
+ ],
+ "sessionEnd": [
+  "cwd",
+  "reason",
+  "sessionId",
+  "timestamp"
+ ],
+ "userPromptSubmitted": [
+  "agentId",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "prompt",
+  "sessionId",
+  "timestamp"
+ ],
+ "preToolUse": [
+  "agentId",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "sessionId",
+  "timestamp",
+  "toolArgs",
+  "toolCallId",
+  "toolName"
+ ],
+ "postToolUseFailure": [
+  "agentId",
+  "agentType",
+  "cwd",
+  "error",
+  "parentAgentId",
+  "sessionId",
+  "timestamp",
+  "toolArgs",
+  "toolCallId",
+  "toolName"
+ ],
+ "postToolUse": [
+  "agentId",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "sessionId",
+  "timestamp",
+  "toolArgs",
+  "toolCallId",
+  "toolName",
+  "toolResult"
+ ],
+ "agentStop": [
+  "agentId",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "sessionId",
+  "stopReason",
+  "stop_hook_active",
+  "timestamp",
+  "transcriptPath"
+ ],
+ "subagentStart": [
+  "agentDescription",
+  "agentDisplayName",
+  "agentId",
+  "agentName",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "sessionId",
+  "timestamp",
+  "transcriptPath"
+ ],
+ "subagentStop": [
+  "agentDisplayName",
+  "agentId",
+  "agentName",
+  "agentType",
+  "cwd",
+  "parentAgentId",
+  "response",
+  "sessionId",
+  "stopReason",
+  "stop_hook_active",
+  "timestamp",
+  "transcriptPath"
+ ],
+ "toolArgs": {
+  "apply_patch": "string",
+  "bash": [
+   "command",
+   "description",
+   "initial_wait",
+   "mode",
+   "shellId"
+  ],
+  "create": [
+   "file_text",
+   "path"
+  ],
+  "edit": [
+   "new_str",
+   "old_str",
+   "path"
+  ],
+  "read_bash": [
+   "delay",
+   "shellId"
+  ],
+  "skill": [
+   "skill"
+  ],
+  "task": [
+   "agent_type",
+   "description",
+   "mode",
+   "name",
+   "prompt"
+  ],
+  "view": [
+   "path"
+  ]
+ }
+}

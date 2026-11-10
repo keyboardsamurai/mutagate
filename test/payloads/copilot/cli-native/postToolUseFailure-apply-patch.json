@@ -1,0 +1,9 @@
+{
+ "sessionId": "7e9a9165-5eb8-4e7d-a6ec-135340e7e0b4",
+ "timestamp": 1794251736937,
+ "cwd": "/repo",
+ "toolCallId": "custom_call_KLYLKztXGJk0UgV0zPiUyWIG",
+ "toolName": "apply_patch",
+ "toolArgs": "*** Begin Patch\n*** Update File: calc.js\n@@\n-NO_SUCH_LINE_123\n+x\n*** End Patch\n",
+ "error": "Failed to apply patch: Error: Failed to find expected lines in /repo/calc.js:\nNO_SUCH_LINE_123"
+}

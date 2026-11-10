@@ -313,6 +313,19 @@ test('portable hook command fails open without Git, the skill dir or Node, also 
     if (command.includes('|| true')) assert.deepEqual([status, stdout], [0, ''], `${shell} in ${cwd}: ${command}`);
     else assert.ok(status !== 0 && status !== 2, `${shell} in ${cwd}: ${status}`);
   }
+  // Copilot denies every edit on a failed preToolUse and runs `command` under PowerShell too: never `command`, every entry exits 0 (#35 D24).
+  const copilot = Object.values(m.hookConfig('copilot', { repo: root }).hooks).flat(), pwsh = !spawnSync('pwsh', ['-Version']).error;
+  assert.equal(copilot.length, 5); assert.ok(copilot.every(h => !('command' in h) && h.bash.startsWith('f="$(git rev-parse --show-toplevel)/scripts/hook" ') && h.bash.endsWith(' --harness copilot || true # mutagate') && h.powershell === 'exit 0 # mutagate'));
+  for (const shell of ['sh', ...(fs.existsSync('/bin/dash') ? ['/bin/dash'] : [])]) for (const cwd of [noGit, noSkill]) for (const { bash } of copilot) {
+    const { status, stdout } = spawnSync(shell, ['-c', bash], { cwd, env, input: '{}', encoding: 'utf8' });
+    assert.deepEqual([status, stdout], [0, ''], `${shell} in ${cwd}: ${bash}`);
+  }
+  if (pwsh) for (const { powershell } of copilot) assert.deepEqual((({ status, stdout }) => [status, stdout])(spawnSync('pwsh', ['-NoProfile', '-Command', powershell], { input: '{}', encoding: 'utf8' })), [0, '']);
+  const platform = process.platform; t.after(() => Object.defineProperty(process, 'platform', { value: platform }));
+  Object.defineProperty(process, 'platform', { value: 'win32' }); const win = Object.values(m.hookConfig('copilot', { repo: root }).hooks).flat(); Object.defineProperty(process, 'platform', { value: platform });
+  const q = s => `'${s.replaceAll("'", "''")}'`; // only a win32 install writes a real powershell command
+  assert.deepEqual(win.map(h => [h.bash, h.command, h.powershell]), ['SessionStart --installed ' + m.VERSION, 'PreToolUse', 'PostToolUse', 'SubagentStart', 'Stop --timeout 600'].map(a => [undefined, undefined, `& ${q(process.execPath)} ${q(path.join(root, 'scripts/mutagate-hook.cjs'))} hook ${a} --harness copilot; exit 0`]));
+  if (pwsh) for (const { powershell } of win) assert.deepEqual((({ status, stdout }) => [status, stdout])(spawnSync('pwsh', ['-NoProfile', '-Command', powershell.replace(process.execPath, path.join(noGit, 'node'))], { encoding: 'utf8' })), [0, '']);
   const noNode = spawnSync('/bin/sh', [path.join(root, 'scripts/hook'), 'Stop'], { env: { ...env, MUTAGATE_NODE: path.join(noGit, 'node'), PATH: env.PATH.split(path.delimiter).filter(d => !fs.existsSync(path.join(d, 'node'))).join(path.delimiter) }, input: '{}', encoding: 'utf8' });
   assert.deepEqual([noNode.status, noNode.stdout], [0, ''], noNode.stderr);
 });

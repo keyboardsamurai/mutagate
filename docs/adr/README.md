@@ -17,6 +17,10 @@
 - [ADR-0015](0015-inherited-claude-hooks-are-inert-under-copilot.md) Inherited Claude hooks are inert under Copilot - accepted 2026-11-08
 - [ADR-0016](0016-detection-uses-the-git-file-list.md) Detection and target resolution use the Git file list - accepted 2026-11-07
 - [ADR-0017](0017-install-stamp-in-the-hook-config.md) The install stamp travels with each install - accepted 2026-11-07
+- [ADR-0018](0018-copilot-completion-gate.md) Copilot completion gate - accepted 2026-11-09
+- [ADR-0019](0019-copilot-outbox-delivery.md) Copilot outbox delivery - accepted 2026-11-09
+- [ADR-0020](0020-copilot-payloads-and-sessions.md) Copilot payloads and sessions - accepted 2026-11-09
+- [ADR-0021](0021-copilot-boundaries.md) Copilot support boundaries - accepted 2026-11-09
 
 ## Withdrawn
 

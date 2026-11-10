@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { runners, cacheRoot } from '../../scripts/mutagate.mjs';
+import { copyRepo } from '../scratch.mjs';
 const { command } = runners();
 const root = path.resolve(import.meta.dirname, '../..');
 const output = process.argv[2];
@@ -12,9 +13,7 @@ fs.mkdirSync(output, { recursive: true });
 const work = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-kotlin-corpus-'))); // macOS: Gradle reports /private/var, PIT matches paths literally
 try {
   const repo = path.join(work, 'fixture');
-  fs.cpSync(path.join(root, 'test/fixtures/kotlin-gradle'), repo, {
-    recursive: true, filter: p => !p.split(path.sep).some(s => ['build', '.gradle', '.cache'].includes(s))
-  });
+  copyRepo(path.join(root, 'test/fixtures/kotlin-gradle'), repo);
   const init = path.join(work, 'corpus.gradle');
   fs.writeFileSync(init, `import groovy.json.JsonOutput
 allprojects { p -> p.plugins.withId('java') { p.tasks.register('corpusClasspath') {
@@ -28,7 +27,7 @@ allprojects { p -> p.plugins.withId('java') { p.tasks.register('corpusClasspath'
   const javac = path.join(process.env.JAVA_HOME, 'bin', process.platform === 'win32' ? 'javac.exe' : 'javac');
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'references/jars.json')));
   const jars = manifest.filter(x => !x.optional && x.artifact !== 'pitest-junit5-plugin').map(x => path.join(cacheRoot(), 'jars', path.basename(x.path)));
-  const engine = jars.find(p => path.basename(p) === 'pitest-1.21.0.jar');
+  const engine = path.join(cacheRoot(), 'jars', path.basename(manifest.find(x => x.artifact === 'pitest').path));
   await command(javac, ['-cp', engine, '-d', work, path.join(import.meta.dirname, 'ExposeSynthetics.java')], { timeout: 30000 });
   const classes = path.join(repo, 'build/classes/kotlin/main');
   await command(java, ['-cp', [work, engine].join(path.delimiter), 'ExposeSynthetics', classes], { timeout: 30000 });

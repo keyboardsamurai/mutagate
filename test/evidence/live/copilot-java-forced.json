@@ -1,0 +1,2008 @@
+{
+  "harness": "copilot",
+  "version": "1.0.107",
+  "model": "claude-sonnet-5",
+  "mutagate": "0.9.1",
+  "package": "c441087e2e950b4480b8dd003708a87146cb7628a16906b3be2ca5711b025660",
+  "lang": "java",
+  "task": "small",
+  "scenario": "forced",
+  "passed": true,
+  "checked_at": "2026-11-10T07:28:15.623Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 821279,
+      "finalResponse": "Done. Summary:\n\n**Production changes (step 3, as required):**\n- `MatrixService`: added `sum()` method (iterates cells, `Math.addExact`/`Math.toIntExact`).\n- `MatrixController`: added `GET /api/matrix/sum` endpoint.\n\n**Tests added** (`src/test/java/com/example/matrix/`): `MatrixServiceTest` (26 cases covering constructor/cell boundaries, conditionals, get/set/add/clear/snapshot/sum with exact-value assertions), `MatrixControllerTest` (9, MockMvc standalone, incl. new sum endpoint and error paths), `MatrixPageControllerTest` (2), `MatrixApplicationTest` (4, bean-factory parsing logic). All 41 tests pass (`mvn test` → BUILD SUCCESS). Every production source file now has its own test file.\n\n**Note:** `MatrixService.cell()`'s inner `index >= cells.length` check is unreachable through the public API (row/col bounds already guarantee `index < cells.length`), so its boundary mutant can't be killed by a behavioral test — flagging as likely equivalent/defensive dead code for your review rather than modifying it.",
+      "transcript_sha256": "be11c0a4fc4f17a830d3eff0d7ec0e01962fa4fa7664d25111c6a1cd19570f63",
+      "trace": [
+        {
+          "ts": "2026-11-10T07:14:39.389Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:14:41.045Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:47.374Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:49.672Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:54.529Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:57.340Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:57.465Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 38,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:02.939Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.39473684210526316,
+          "decision": "below",
+          "duration_ms": 4206,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:15:02.943Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 4276,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:15:03.621Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6124,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:36.680Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:39.574Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:22.859Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:25.711Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:47.543Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:47.617Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:52.314Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:56.624Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9210526315789473,
+          "decision": "pass",
+          "duration_ms": 2808,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:56.625Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8980,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:57.155Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:03.620Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:03.696Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:07.269Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:07.336Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:09.764Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6039,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:16.780Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.8974358974358975,
+          "decision": "pass",
+          "duration_ms": 3240,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:16.781Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9417,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:17.125Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:22.932Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:23.018Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:32.547Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 3323,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:32.548Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9502,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:35.975Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:36.046Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:39.189Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:44.558Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 2272,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:45.788Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:45.861Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:46.548Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "stale",
+          "duration_ms": 1905,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:46.548Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10474,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:49.419Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:49.498Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:51.914Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6025,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:56.937Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:57.040Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:58.892Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "stale",
+          "duration_ms": 3146,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:58.893Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9352,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:18:02.235Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:18:05.063Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9230769230769231,
+          "decision": "pass",
+          "duration_ms": 1800,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:18:06.292Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1156,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:18:07.060Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:18:08.745Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1312,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:18:09.888Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:18:10.063Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1238,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:18:10.064Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12988,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:18:14.348Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 58,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:28:15.663Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:28:15.757Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "155bfb2f-c758-469d-b22a-3d10aec7fc96",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "forced-order": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 204462,
+      "finalResponse": "All 28 tests pass. Added two tests to `MatrixPageControllerTest`: one asserting the exact `r+1` row label (killing the arithmetic mutant), and one asserting value `0` renders as `class='zero'` not `'negative'` (killing the `<`→`<=` boundary and conditional mutants). No production code was changed for this gate.",
+      "transcript_sha256": "29e90b7d854ab3b04b96f5c4808c387d19f91775716d01e48f585498c5e3af61",
+      "trace": [
+        {
+          "ts": "2026-11-10T07:14:39.306Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:14:41.074Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:42.736Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:50.467Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:53.021Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:14:53.104Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:00.438Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.39473684210526316,
+          "decision": "below",
+          "duration_ms": 5168,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:15:00.442Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 5233,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:15:00.495Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7361,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:04.192Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 42,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:08.297Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:25.591Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:25.666Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:30.409Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:33.266Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:33.343Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:34.766Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.9210526315789473,
+          "decision": "stale",
+          "duration_ms": 2913,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:15:34.766Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9072,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:36.178Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:36.246Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:39.408Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixService.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6036,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:44.092Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:45.544Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.875,
+          "decision": "pass",
+          "duration_ms": 3100,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:15:45.544Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/main/java/com/example/matrix/MatrixController.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9271,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:50.156Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:52.676Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:56.542Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:15:56.607Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:05.781Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2981,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:05.782Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixServiceTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9147,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:08.390Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:08.461Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:11.537Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:11.601Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:14.505Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6016,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:17.326Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:17.395Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:17.647Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6019,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:22.939Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:23.014Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:23.440Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6018,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:27.518Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:30.107Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:31.821Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2618,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:32.769Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:32.968Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1078,
+          "error": "java failed (1): 8:16:32 AM PIT >> INFO : MINION : java.lang.IllegalStateException: ApplicationContext failure threshold (1) exceeded: skipping repeated attempt to load context for [WebMergedContextConfiguration@7d0d91a1 testClass = com.example.matrix.MatrixControllerTest, locations = [], classes = [com.example.matrix.MatrixApplication, com.example.matrix.MatrixControllerTest.MatrixTestConfig], contextInitializerC; 8:16:32 AM PIT >> SEVERE : Description [testClass=com.example.matrix.MatrixControllerTest, name=[engine:junit-jupiter]/[class:com.example.matrix.MatrixControllerTest]/[method:getCellReturnsStoredValue()]] did not pass without mutation.; log: ~/.cache/mutagate/repos/dc45abd63d820d91f113ab4756f18ddbeb7caf3f/logs/99dd52ec0183144f42f71fde134bb00d7efcebba.log"
+        },
+        {
+          "ts": "2026-11-10T07:16:34.158Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1127,
+          "error": "java failed (1): 8:16:34 AM PIT >> INFO : MINION : Caused by: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'matrixService' defined in com.example.matrix.MatrixPageControllerTest$MatrixTestConfig: Cannot register bean definition [Root bean: class=null; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; pri; 8:16:34 AM PIT >> SEVERE : Description [testClass=com.example.matrix.MatrixPageControllerTest, name=[engine:junit-jupiter]/[class:com.example.matrix.MatrixPageControllerTest]/[method:pageRendersTableWithDimensionsAndCellClasses()]] did not pass without mutation.; log: ~/.cache/mutagate/repos/dc45abd63d820d91f113ab4756f18ddbeb7caf3f/logs/59a4f5449a0e1d63e887877cd12bf9a355aef07e.log"
+        },
+        {
+          "ts": "2026-11-10T07:16:35.327Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1101,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:35.328Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixApplicationTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12285,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:41.508Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:41.578Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:51.275Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 3499,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:53.843Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:53.913Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:16:55.015Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "stale",
+          "duration_ms": 3657,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:16:55.017Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13411,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:02.099Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 1992,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:03.492Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:03.557Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:05.786Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "stale",
+          "duration_ms": 3611,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:05.788Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11844,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:08.964Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:12.324Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 2566,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:14.341Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:16.317Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1791,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:17.168Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:19.836Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 0.5714285714285714,
+          "decision": "below",
+          "duration_ms": 3438,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:21.351Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1475,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:21.352Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "file": [],
+          "decision": "block",
+          "exit": 0,
+          "duration_ms": 1651,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T07:17:21.390Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17804,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:40.670Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:40.745Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:50.503Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:50.709Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixService",
+          "score": 0.925,
+          "decision": "pass",
+          "duration_ms": 3749,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:52.753Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixController",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1955,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:56.665Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixPageController",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3847,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:57.690Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "target": "com.example.matrix.MatrixApplication",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 991,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T07:17:57.692Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5477,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:57.718Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/test/java/com/example/matrix/MatrixPageControllerTest.java"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16944,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T07:17:58.855Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T07:17:58.965Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "e307fa89-7757-4aea-8ee9-f554c71d7aca",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

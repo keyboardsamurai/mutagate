@@ -12,17 +12,17 @@ const { createRequire } = require('node:module');
 const runtimeRequire = createRequire(__filename);
 const HERE = path.dirname(__filename),
   ROOT = path.dirname(HERE);
-const VERSION = '0.9.1';
+const VERSION = '0.9.2';
 const DEFAULTS = {
   schema: 1, mode: 'gate', threshold: .8, maxSurvivors: 10, maxRounds: 2, runBudgetSec: 300, gateBudgetSec: 120, gateWaitSec: 60,
   countNoCoverage: true, gateSecondaries: false, languages: ['java', 'kotlin', 'python', 'typescript', 'go', 'csharp'], testGlobs: [], mainRoots: [],
-  exclude: [ '**/generated/**', '**/build/**' ], javaRunner: 'standalone', kotlinTier: 'auto', goRunner: 'auto', goTags: '', allowAgentWaivers: false
+  exclude: [ '**/generated/**', '**/build/**' ], javaRunner: 'standalone', kotlinTier: 'auto', goRunner: 'auto', goTags: '', allowAgentWaivers: false, copilotCloud: false
 };
 const hash = (s) => crypto.createHash('sha1').update(s).digest('hex');
 const read = (p) => fs.readFileSync(p, 'utf8');
 const exists = (p) => fs.existsSync(p);
 const json = (p, fallback = {}) => exists(p) ? JSON.parse(read(p)) : fallback;
-// atomic() does not fsync, so a crash can leave cache JSON torn; torn cache JSON reads as the fallback (missing), after calling torn() if given.
+
 const cacheJson = (p, fallback = null, torn) => { try { return json(p, fallback); } catch (e) { if (!(e instanceof SyntaxError)) throw e; torn?.(); return fallback; } };
 const mkdir = (p) => fs.mkdirSync(p, { recursive: true });
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -35,13 +35,13 @@ function atomic(p, data) {
   fs.writeFileSync(tmp, typeof data === 'string' ? data : JSON.stringify(data, null, 2) + '\n', { mode: 0o600 });
   fs.renameSync(tmp, p);
 }
-// Real path of the deepest existing ancestor plus the missing rest, so an alias (macOS /tmp, /var) resolves; null for a Windows unmapped drive or share root.
+
 const realPath = (p, a = p) => { // one realpath when p exists (the hook path), else walk up
   for (;;) try { return path.join(fs.realpathSync(a), path.relative(a, p)); } catch { if (a === path.dirname(a)) return null; a = path.dirname(a); }
 };
 function safePath(repo, input) {
   if (typeof input !== 'string' || !input || input.includes('\0')) return null;
-  // repo is a realpath: resolve the input the same way before the containment check.
+
   const real = realPath(path.resolve(repo, input));
   if (!real) return null;
   const rel = path.relative(repo, real);
@@ -87,34 +87,38 @@ function configFor(repo, root, args = {}, env = process.env) {
   for (const key of ['testGlobs', 'exclude']) for (const pattern of Array.isArray(cfg[key]) ? cfg[key] : []) { try { glob(pattern); } catch { errors.push(`invalid ${key} glob: ${pattern}`); } }
   return { config: errors.length ? structuredClone(DEFAULTS) : cfg, errors: [...new Set(errors)] };
 }
-const HARNESSES = ['claude', 'codex', 'opencode', 'pi']; // installable harnesses: context() keeps them, doctor and the no-harness hint list them
+const HARNESSES = ['claude', 'codex', 'opencode', 'pi', 'copilot']; // installable harnesses: context() keeps them, doctor and the no-harness hint list them
+const SESSION_CMDS = ['run', 'check', 'status', 'waive']; // CLI commands on the session state
 function context(args = {}, payload = {}) {
   const real = p => fs.realpathSync(path.resolve(p));
   let repo;
-  // A deleted hook cwd (cd build/x, then a clean) must not skip every hook, Stop included.
+
   try { repo = real(args.repo || payload.cwd || process.cwd()); } catch (e) { if (args.repo || !payload.cwd || e.code !== 'ENOENT') throw e; repo = real(process.env.CLAUDE_PROJECT_DIR || process.cwd()); }
-  // Claude cwd follows `cd`; project dir stays fixed.
-  if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
-  const root = cacheRoot();
-  // Session id precedence: README Sessions. ponytail: subagent Bash env carries the parent id, so subagent CLI runs gate at the parent's Stop.
-  const e = process.env, agentId = payload.agent_id || payload.session_id || e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID, sid = String(agentId ||
-    e.MUTAGATE_SESSION || `ppid-${process.ppid}-${Math.floor(Date.now()/43200000)}`);
-  const session = hash(sid),
-    data = path.join(root, 'repos', hash(repo));
+
+
+  const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID,
+    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : SESSION_CMDS.includes(args._?.[0]) && !envId && e.COPILOT_AGENT_SESSION_ID) && copilot().top(repo);
+  if (top) repo = top; else if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
+  const root = cacheRoot(), data = path.join(root, 'repos', hash(repo));
+
+
+  const agentId = (args.harness === 'copilot' ? copilot().session(data, payload) : payload.agent_id || payload.session_id) || envId ||
+    e.COPILOT_AGENT_SESSION_ID, sid = String(agentId || e.MUTAGATE_SESSION || `ppid-${process.ppid}-${Math.floor(Date.now()/43200000)}`);
+  const session = hash(sid);
   const { config, errors } = configFor(repo, root, args);
-  // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`. No env makes them `claude` (ADR-0015).
-  const inherited = payload.timestamp !== undefined, named = process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+
+  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
 let noted; // one note per corrupt state file
 function state(c) {
-  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
+  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile && c.args?.harness !== 'copilot') { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
 }
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
-// Holders touch the lock every 10 s; a lock is abandoned when that heartbeat is over 60 s old or its pid is dead.
+
 const owner = p => { try { return json(p); } catch { return {}; } }, dead = o => !!o.pid && !alive(o.pid);
 const abandoned = (p, o = owner(p), st = fs.statSync(p, { throwIfNoEntry: false })) => !!st && (Date.now() - st.mtimeMs > 60000 || dead(o));
 async function lock(p, budget = 5000) {
@@ -130,9 +134,9 @@ async function lock(p, budget = 5000) {
       return () => { clearInterval(beat); try { if (owner(p).token === token) fs.unlinkSync(p); } catch {} };
     } catch (e) {
       if (e.code !== 'EEXIST') throw e;
-      // Only the waiter holding <lock>.break removes an abandoned lock, and only while the lock still holds the token it saw.
-      // Timers do not count system sleep, so after a wake a live holder heartbeats up to 10 s late: break a live pid's
-      // lock only after this waiter saw its mtime unchanged for 15 s of monotonic time (half its budget if shorter).
+
+
+
       const o = owner(p), st = fs.statSync(p, { throwIfNoEntry: false }), now = performance.now();
       if (st?.mtimeMs !== seen.m) seen = { m: st?.mtimeMs, at: now };
       const unbreak = abandoned(p, o, st) && (dead(o) || now - seen.at >= Math.min(15000, budget / 2)) && await lock(p + '.break', 0);
@@ -210,7 +214,7 @@ function resolveTargets(c, test, explicit) {
     pre = main.filter(x => jvm ? stem.startsWith(simple(x)) : ['_', '.'].some(b => stem.startsWith(simple(x) + b))); // non-JVM: test_api_unit.py -> api.py at a word boundary
   let primary = main.filter(x => simple(x) === stem);
   if (!primary.length && jvm && stem) primary = main.filter(x => simple(x).startsWith(stem)); // ponytail: prefix guess; exact match still wins
-  // FooSmokeTest -> Foo: longest local prefix.
+
   if (!primary.length && pre.length) { const set = [x => !jvm && path.dirname(x.file) === path.dirname(test), near].map(f => pre.filter(f)).find(s => s.length) || pre, max = Math.max(...set.map(x => simple(x).length)); primary = set.filter(x => simple(x).length === max); }
   if (jvm) {
     const local = primary.filter(near);
@@ -240,11 +244,12 @@ function resolveTargets(c, test, explicit) {
     }))
   };
 }
+const PATCH_HEADER = /^(\*\*\* (?:Add File|Update File|Delete File|Move to): )(.+)$/gm; // apply_patch file headers; copilot.cjs resolves them against cwd
 function extractPaths(p) {
   const input = p.tool_input || {},
     out = [input.file_path, input.filePath, input.path].filter(x => typeof x === 'string');
   if (p.tool_name === 'apply_patch')
-    for (const m of String(input.command || '').matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)\r?$/gm)) out.push(m[1].trim());
+    for (const m of String(input.command || '').matchAll(PATCH_HEADER)) out.push(m[2].trim());
   return [...new Set(out)];
 }
 function fingerprint(c,t) {
@@ -257,26 +262,26 @@ const resultFile = (c, key) => path.join(c.data, 'results', c.session, key + '.j
 const targetLock = (c, key) => path.join(c.data, 'locks', key + '.lock');
 
 function inFlight(c, key) { const p = targetLock(c, key); return exists(p) && !abandoned(p); }
-// Find repo builds by their launcher command line.
-// ponytail: POSIX ps only; misses Windows, mvnd and a system gradle without the wrapper.
+
+
 function buildRunning(c) {
   if (process.platform === 'win32') return false;
   const ps = spawnSync('ps', ['-Aww', '-o', 'args='], { encoding: 'utf8', timeout: 2000 }).stdout || '';
   return ps.split('\n').some(l => [c.repo + '/', c.repo + ' '].some(p => (l + ' ').includes(p)) && /plexus\.classworlds\.launcher\.Launcher|gradle-wrapper\.jar/.test(l));
 }
-// Drop unresolved warnings for deleted tests.
+
 const liveWarnings = c => state(c).warnings.filter(w => { const f = w.match(/^mutagate: target unresolved for (.+?)\. Candidates:/)?.[1]; return !f || exists(path.join(c.repo, f)); });
-// Edited files without targets: hints, not obligations.
+
 const untargeted = c => { const s = state(c), l = (s.edited || []).filter(f => !CONFIG.test(f) && !(f.endsWith('.cs') && runtimeRequire('./dotnet.cjs').inTestProject(c.repo)(f)) && !Object.values(s.targets).some(t => t.file === f) && exists(path.join(c.repo, f)));
   return l.length ? `mutagate: not mutation-tested, no test targets them: ${l.slice(0, 8).join(', ')}${l.length > 8 ? ` (+${l.length - 8} more)` : ''}. Write tests for them to gate them.` : ''; };
 const gone = (c, t) => !exists(path.join(c.repo, t.file));
 function status(c, json) {
-  const s = state(c), targets = Object.entries(s.targets).filter(([, t]) => !gone(c, t)).map(([key, t]) => ({
-    target: t.target, file: t.file, tests: t.tests, secondary: t.secondary, blocks: t.blocks, stale: !loadResult(c, key, t), in_flight: inFlight(c, key),
-    result: loadResult(c, key, t)
-  }));
+  const s = state(c), targets = Object.entries(s.targets).filter(([, t]) => !gone(c, t)).map(([key, t]) => { const { result, running } = verdict(c, key, t); return {
+    target: t.target, file: t.file, tests: t.tests, secondary: t.secondary, blocks: t.blocks, stale: !result, in_flight: running,
+    result
+  }; });
   if (json) return JSON.stringify(targets);
-  // List survivors, waiver ids and unresolved tests.
+
   return [...targets.flatMap(({ target, result: r, stale, in_flight }) => {
     const flags = `${stale?' stale':''}${in_flight?' running':''}`;
     if (!r) return [`${target}: unscored${flags}`];
@@ -286,12 +291,12 @@ function status(c, json) {
       ...r.survivors.map(m => `  ${m.file}:${m.line} ${m.method}: ${m.plain} [${m.short}] id ${m.id}`), ...(r.warnings || []).map(w => `  ${w}`)];
   }), ...liveWarnings(c), untargeted(c)].filter(Boolean).join('\n') || 'mutagate: no targets touched this session.';
 }
-// prune.cjs removes a data dir whose marked repo path is gone.
+
 const markRepo = c => { const f = path.join(c.data, 'repo-path'); if (!exists(f)) atomic(f, c.repo); };
 async function register(c, test, explicit) {
   const r = resolveTargets(c, test, explicit);
   if (!c.config.languages.includes(language(test))) return { test, targets: [], disabled: true, message: 'mutagate: language disabled by configuration' };
-  // Keep unresolved warnings per test for the gate.
+
   const others = s => s.warnings.filter(w => !w.startsWith(`mutagate: target unresolved for ${test}.`));
   if (r.ambiguous) { await updateState(c, s => { s.warnings = [...others(s), r.message]; }); return r; }
   markRepo(c);
@@ -303,7 +308,7 @@ async function register(c, test, explicit) {
       const key = targetKey(t),
         old = s.targets[key],
         tests = [...new Set([...(old?.tests || []), ...t.tests])], testNames = [...new Set([...(old?.testNames || []), ...t.testNames])],
-        // Same tests keep fresh results; fingerprints cover contents.
+
         same = old && JSON.stringify([old.tests, old.testNames]) === JSON.stringify([tests, testNames]);
       s.targets[key] = {
         ...old, ...t, tests, testNames,
@@ -321,11 +326,12 @@ function parsePitXML(text) {
   return [...text.matchAll( /<mutation\s+([^>]+)>([\s\S]*?)<\/mutation>/g)].map(m => {
     const field = n => xmlText(m[2].match(new RegExp('<' + n + '>([\\s\\S]*?)</' + n + '>'))?.[
       1
-    ] || '');
-    return {
+    ] || ''), status = m[1].match(/status=['"]([^'"]+)/)?.[1];
+    return { // PIT 1.25+ EQUIVALENT: like Stryker Ignored
       file: field('sourceFile'), class: field('mutatedClass'), method: field('mutatedMethod'), line: Number(field('lineNumber')),
       mutator: field('mutator'), description: field('description'),
-      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'), status: m[1].match(/status=['"]([^'"]+)/)?.[1]
+      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'),
+      ...status === 'EQUIVALENT' ? { status: 'NON_VIABLE', ignored: true } : { status }
     };
   });
 }
@@ -402,8 +408,8 @@ function plainMutation(m, c) {
   if (m.mutator.startsWith('mutmut:')) { const edits = m.description.split('; '),
       old = edits.find(x => x.startsWith('-')),
       next = edits.find(x => x.startsWith('+')); if (old && next) return `${old.slice(1).trim()} became ${next.slice(1).trim()} and no test noticed`; }
-  // Mutation-testing-elements columns are 1-based and end-exclusive; gomutants counts bytes, Stryker UTF-16 units, so ASCII lines only.
-  // Padded replacements such as gomutants RANGE_BREAK " break;" are insertions, not substitutions.
+
+
   try { const [loc, next] = JSON.parse(m.mutation_key), old = line.slice(loc.start.column - 1, loc.end.column - 1).trim();
     if (loc.start.line === m.line && loc.end.line === m.line && typeof next === 'string' && !/^\s|\s$|[\n\r]/.test(next) && !/[^\x00-\x7f]/.test(line) && old && old.length <= 60 && next.length <= 60) return `${old} became ${next} and no test noticed`; } catch {}
   const mapped = MUTATORS.find(x => x[0].test(m.mutator));
@@ -485,7 +491,7 @@ function normalize(raw, c, t, meta = {}) {
   };
 }
 const FOOTER = "Kill survivors with tests; don't weaken reachable code to pass, and tell the user about any production change made for the gate. Details: mutagate status. Playbook: references/survivor-playbook.md.";
-// One final footer and one first invalid-waivers line (a repo-wide fact) avoid repeated-message noise.
+
 function joinReports(list, max = Infinity) {
   const footer = list.some(s => s.endsWith('\n' + FOOTER)), bad = list.some(s => s.includes('\n' + BAD_WAIVERS)),
     text = [...bad ? [BAD_WAIVERS] : [], ...list.map(s => (s.endsWith('\n' + FOOTER) ? s.slice(0, -FOOTER.length - 1) : s).replace('\n' + BAD_WAIVERS, ''))].join('\n');
@@ -498,7 +504,7 @@ function report(r, cfg = DEFAULTS) {
   let shown = 0;
   const heading = n =>
     `mutagate: ${clean(r.target)} score ${r.score===null?'unscored':r.score.toFixed(2)} (${r.killed}/${r.killed+r.survived}), threshold ${r.threshold.toFixed(2)}. ${n} survivors shown of ${r.survived}.`;
-  // Dedupe survivor lines.
+
   for (const m of r.survivors) { const k = `${clean(m.file)}:${m.line} ${clean(m.method)}: ${clean(m.plain)} [${clean(m.short)}]${m.in_diff?' (changed in this diff)':''}`; groups.set(k, (groups.get(k) || 0) + 1); }
   for (const [k, n] of [...groups].slice(0, cfg.maxSurvivors)) {
     const line = n > 1 ? `${k} ×${n}` : k;
@@ -507,11 +513,14 @@ function report(r, cfg = DEFAULTS) {
   }
   return [heading(shown), ...lines, ...(r.warnings || [])].join('\n').slice(0, 1800 - footer.length) + footer;
 }
-// Runners live in runners.cjs, loaded on first use.
-let loaded;
+
+let loaded, copilotLoaded;
 const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
+const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, reportKey, gate }); // --harness copilot hook calls, session commands in the Copilot root agent shell, and the inherited SessionStart notice check
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
+
+const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) s.targets[key].reported = reportKey(text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -520,7 +529,7 @@ async function runTarget(c, key, runner) {
     const cached = loadResult(c, key, current);
     if (cached && !runner && !retryable(cached)) return cached;
     for (let attempt = 0; attempt < 2; attempt++) {
-      // Retry after edits; async settle waits for edits/builds.
+
       if (attempt && c.settle && !await c.settle()) return null;
       const t = state(c).targets[key];
       if (!t || gone(c, t)) return null;
@@ -569,6 +578,7 @@ async function runTarget(c, key, runner) {
           latest.fingerprint = fp;
           latest.resultGeneration = t.generation;
           latest.rerun_requested = false;
+          if (result.status === 'pass') latest.reported = null; // a later regression goes out again (ADR-0019)
           published = true;
         }
       });
@@ -581,11 +591,11 @@ async function runTarget(c, key, runner) {
     return null;
   } finally { release(); }
 }
-// Retry errors once (e.g. concurrent builds).
+
 const retryable = r => r?.status === 'error' && (r.attempts ?? 1) < 2;
 const normalized = new Map(), statKeyOrEmpty = p => { try { return runtimeRequire('./inputs.cjs').statKey(p); } catch { return ''; } };
 function loadResult(c, key, t, expectedFingerprint) {
-  // Normalize once per process while the result file, the fingerprint and waivers.json are unchanged; stat keys are taken before the reads.
+
   const file = resultFile(c, key), memoKey = [statKeyOrEmpty(file), t?.fingerprint, statKeyOrEmpty(path.join(c.repo, '.mutagate/waivers.json'))].join('|'), r = cacheJson(file);
   if (!t || !r || t.resultGeneration !== t.generation || t.fingerprint !==
     (expectedFingerprint ?? fingerprint(c, t))) return null;
@@ -594,32 +604,47 @@ function loadResult(c, key, t, expectedFingerprint) {
   return normalized.get(file).r;
 }
 
-const detached = (run, args, env) => run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}).unref(); // a failed spawn emits 'error' later; hooks fail open
+
+function verdict(c, key, t, r = loadResult(c, key, t)) {
+  const [code, obligation, once] = !r || r.tests_deleted ? [1, 'block', 'pendingBlocked'] : r.status === 'unscored' ? r.error?.startsWith(NO_MUTANTS) ? [0, 'none'] : [1, 'warn'] :
+    r.status === 'error' ? r.agent_caused ? [3, 'block', 'errorBlocked'] : [3, 'warn'] : r.status === 'below' ? [1, 'block'] : [0, 'none'];
+  return { kind: !r ? 'pending' : retryable(r) ? 'retry' : r.status, running: inFlight(c, key), result: r, code, obligation, once };
+}
+
+const exitCode = (code, v) => v.kind === 'below' ? 1 : code || v.code;
+
+const pendingText = (c, t, needed, s = `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`) =>
+  c.harness === 'copilot' ? s.replace(/check --wait (\d+)/, (w, n) => `${w} (set bash initial_wait >= ${+n + 30})`) : s;
+
+
+const detached = (run, args, env, input) => { const ch = run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: input ? ['pipe', 'ignore', 'ignore'] : 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}); ch.stdin?.on('error', () => {}).end(input); ch.unref(); }; // a failed spawn emits 'error' later; hooks fail open
 function schedule(c, key, run = spawn) {
   detached(run, ['worker', '--repo', c.repo, '--session', c.sid, '--key', key], { MUTAGATE_HOOK_SESSION: c.sid, MUTAGATE_HARNESS: c.harness });
 }
-// SessionStart starts the cache prune (prune.cjs) at most once a day; the mtime of repos/.pruned records the last start (a clock jump also restarts it).
+
 function schedulePrune(c, run = spawn) {
   const pruned = path.join(c.root, 'repos', '.pruned'), st = fs.statSync(pruned, { throwIfNoEntry: false });
   if (st && Math.abs(Date.now() - st.mtimeMs) < 86400000) return;
   atomic(pruned, new Date().toISOString());
   detached(run, ['prune'], { CLAUDE_PLUGIN_DATA: c.root });
 }
-// once names a one-time block flag; otherwise maxRounds applies.
-async function claimBlock(c, key, once) {
+
+async function claimBlock(c, key, once, streak) {
   if (c.config.mode !== 'gate') return false;
   return updateState(c, s => {
     const t = s.targets[key];
     if (!t || t.blocks >= c.config.maxRounds || once && t[once]) return false;
     t.blocks++;
     if (once) t[once] = true;
+    if (streak !== undefined) s.stopStreak = streak + 1;
     return true;
   });
 }
 const reportKey = s => hash(s.replace(/\x1b\[[0-9;]*m/g, '').replace(/\d{4}-\d\d-\d\dT[\d:.]+Z|\bpid \d+|\d+ ms\b|log: \S+/g, ''));
-async function gate(c, { wait, hook = false, runner } = {}) {
-  const start = Date.now(),
-    end = start + Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0) * 1000,
+
+async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
+  const start = Date.now(), limited = streak >= 8,
+    end = start + (budget ?? Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0)) * 1000,
     reports = [],
     warnings = liveWarnings(c),
     blocks = [];
@@ -629,53 +654,40 @@ async function gate(c, { wait, hook = false, runner } = {}) {
     if (gone(c, original)) { await updateState(c, s => { if (s.targets[key] && gone(c, s.targets[key])) delete s.targets[key]; }); continue; }
     if (original.secondary && !c.config.gateSecondaries) continue;
     let t = state(c).targets[key]; if (!t) continue;
-    const expectedFingerprint = fingerprint(c, t);
-    let r = loadResult(c, key, t, expectedFingerprint);
+    const expectedFingerprint = fingerprint(c, t), open = v => ['pending', 'retry'].includes(v.kind);
+    let v = verdict(c, key, t, loadResult(c, key, t, expectedFingerprint));
     let needed = '', advice = b => runtimeRequire('./errors.cjs').gateAdvice(b, c.config.runBudgetSec, t.lastRunMs, Date.now() - start, cliName(c));
     const until = Math.min(end, Date.now() + (wait ?? c.config.gateWaitSec) * 1000);
-    while (t && (!r || retryable(r)) && inFlight(c, key) && Date.now() < until) {
+    while (t && open(v) && v.running && Date.now() < until) {
       await sleep(100);
       t = state(c).targets[key];
-      r = loadResult(c, key, t, expectedFingerprint);
+      v = verdict(c, key, t, loadResult(c, key, t, expectedFingerprint));
     }
-    if (r) r = loadResult(c, key, t);
-    for (let retry = 0; retry < 2 && t && (!r || retryable(r)) && !inFlight(c, key) && Date.now() < end; retry++) {
+    if (v.result) v = verdict(c, key, t);
+    for (let retry = 0; retry < 2 && t && open(v) && !v.running && Date.now() < end; retry++) {
       const scoped = {
         ...c, deadline: end, budgetSec: Math.max(1, Math.min(c.config.runBudgetSec, Math.floor((end - Date .now()) / 1000)))
       };
       needed = advice(scoped.budgetSec);
       if (needed) break;
-      r = await runTarget(scoped, key, runner) || r && loadResult(c, key, state(c).targets[key]);
+      const r = await runTarget(scoped, key, runner);
       t = state(c).targets[key]; if (!t) break;
-      if (!r) { needed = advice(0); break; }
+      v = verdict(c, key, t, r || v.result && loadResult(c, key, t));
+      if (!v.result) { needed = advice(0); break; }
     }
     if (!t) continue;
+    if (hook && c.harness === 'copilot' && v.kind === 'pending' && !v.running) schedule(c, key, c.spawn); // the session can end with no later tool call (ADR-0018); c.spawn: test seam
+    const r = v.result, text = r ? report(r, r.status === 'unscored' ? DEFAULTS : c.config) : pendingText(c, t, needed);
     if (needed && r) warnings.push(`mutagate: ${t.target}${needed}`);
-    if (!r || r.tests_deleted) {
-      code = Math.max(code, 1);
-      const msg = r?.tests_deleted ? report(r) : `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`;
-      if (
-        hook && await claimBlock(c, key, 'pendingBlocked')) blocks.push(msg);
-      else warnings.push(msg);
-      continue;
-    }
-    if (r.status === 'unscored') { const text = report(r); if (r.error?.startsWith(NO_MUTANTS)) reports.push(text); else { code = Math.max(code, 1); warnings.push(text); } continue; }
-    reports.push(report(r, c.config));
-    if (['below', 'error'].includes(r.status)) await updateState(c, s => { if (s.targets[key]) s.targets[key].reported = reportKey(report(r, c.config)); });
-    if (r.status === 'error') {
-      if (!code) code = 3;
-      // Block fixable test failures once; infrastructure errors fail open.
-      // ponytail: once per target per session, never reset, like pendingBlocked.
-      if (hook && r.agent_caused && await claimBlock(c, key, 'errorBlocked')) blocks.push(report(r, c.config));
-      else warnings.push(report(r, c.config));
-      continue;
-    }
-    if (r.status === 'below') {
-      code = 1;
-      if (hook && await claimBlock(c, key)) blocks.push(report(r, c.config));
-      else if (hook) warnings.push(c.config.mode === 'advise' ? report(r, c.config) :
-        `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}`);
-    }
+    code = exitCode(code, v);
+    if (r && (r.status !== 'unscored' || v.obligation === 'none')) reports.push(text);
+
+    const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
+      sent = r && (blocked || ['below', 'error'].includes(r.status) && !(hook && c.harness === 'copilot')); // ADR-0019: a Copilot agentStop shows the model only a block
+    if (sent || r && !hook) await shown(c, key, sent && text); // a sent key, and each key whose result check prints, leaves the Copilot outbox
+    if (blocked) blocks.push(text);
+    else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(limited && v.obligation === 'block' ? `mutagate: Copilot block limit (8 in a row) reached for ${t.target}` : v.kind === 'below' && c.config.mode !== 'advise' ?
+      `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
   } catch (e) { if (!code) code = 3; warnings.push(`mutagate: ${clean(original.target)} skipped: ${clean(e.message)}`); trace(c, 'Result', { target: original.target, decision: 'skipped', error: clean(e.message) }); }
   const reason = joinReports([...blocks, ...warnings], 1800);
   return {
@@ -683,30 +695,28 @@ async function gate(c, { wait, hook = false, runner } = {}) {
     report: joinReports([...new Set([...reports, ...warnings]), untargeted(c)].filter(Boolean)) || 'mutagate: no below-threshold targets.', warnings
   };
 }
-async function handleHook(c, p, event) {
-  const contextOutput = text => ({ code: 0, out: { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
-    notice = text => [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
-  if (c.inherited) return event === 'SessionStart' && ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) ? // inert until a native Copilot install
-    { code: 0, out: { additionalContext: 'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).' } } : { code: 0 };
+
+async function handleHook(c, p, event, raw = p) {
+  if (c.inherited) return event === 'SessionStart' && // inert until a native Copilot install; no notice to the cloud agent (ADR-0021)
+    ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) && (c.config.copilotCloud || !copilot().cloud()) ?
+    { code: 0, out: { additionalContext: `mutagate inactive under Copilot: this repo has only the Claude Code install; run \`${cliName(c)} install --agent copilot\`.` } } : { code: 0 };
+  const cp = c.args.harness === 'copilot' && copilot(), // native Copilot output (#35 D12): top-level fields, exit 0, no plain text or stderr
+    contextOutput = text => ({ code: 0, out: cp ? { additionalContext: text.slice(0, 1800) } : { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
+    notice = text => cp ? contextOutput(text) : [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
   if (Number(process.versions.node.split('.')[0]) < 22) return event === 'SessionStart' ? notice(`mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.`) : { code: 0 };
+  if (event === 'SubagentStart') { copilot().link(c.data, p); return { code: 0 }; } // Copilot only (main): the subagent chain (ADR-0020)
   if (event === 'PreToolUse') {
     const waiver = extractPaths(p).some(f => safePath(c.repo, f) === path.join(c.repo, '.mutagate/waivers.json'));
     if (!waiver ||
       c.config.allowAgentWaivers) return { code: 0 };
     const proposed = clean(p.tool_input?.content || p.tool_input?.new_string || p.tool_input?.command || p.tool_input?.newText || 'waiver edit').slice(0, 1000);
-    return {
-      code: 0,
-      out: {
-        hookSpecificOutput: {
-          hookEventName: event,
-          permissionDecision: c.harness === 'claude' ? 'ask' : 'deny',
-          permissionDecisionReason: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.`
-        }
-      }
-    };
+    const decision = { permissionDecision: c.harness === 'claude' ? 'ask' : 'deny', permissionDecisionReason: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.` };
+    return { code: 0, out: cp ? decision : { hookSpecificOutput: { hookEventName: event, ...decision } } };
   }
   if (event === 'SessionStart') {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
+    const off = cp && cp.probe(path.join(c.data, 'state')); // ADR-0021
+    if (off) return notice(off);
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
     const rerunText = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
@@ -715,8 +725,9 @@ async function handleHook(c, p, event) {
   }
   if (event === 'PostToolUse') {
     if (p.tool_response?.success === false || p.tool_response?.isError) return { code: 0 };
+    const msgs = cp ? await cp.drain(c, p) : []; // a Copilot delivery point (ADR-0019)
     const paths = extractPaths(p).map(f => safePath(c.repo, f)).filter(Boolean).map(f => slash(path.relative(c.repo, f)));
-    if (!paths.length) return { code: 0 };
+    if (!paths.length) return msgs.length ? contextOutput(joinReports(msgs, 1800)) : { code: 0 };
     const src = c.args.mutate ? [] : paths.filter(f => !isTest(f, c.config) && /\.(java|kt|py|tsx?|jsx?|go|cs)$/.test(f) && !GENERATED.test(f) && !CONFIG.test(f) && c.config.languages.includes(language(f)));
     if (src.length) await updateState(c, s => { s.edited = [...new Set([...(s.edited || []), ...src])].slice(-200); });
     if (!Object.keys(state(c).targets).length && !paths.some(f => isTest(f, c.config))) return { code: 0 };
@@ -736,14 +747,13 @@ async function handleHook(c, p, event) {
       }
     });
     let wake = false;
-    const msgs = [],
-      keys = [];
+    const keys = [];
     for (const file of paths.filter(f => isTest(f, c.config) && !SUPPORT.test(f) && exists(path.join(c.repo, f)))) {
       let r;
       if (!seen) r = await register(c, file);
       else r = resolveTargets(c, file);
       if (r.ambiguous) {
-        // Only sync announces changed candidates.
+
         if (!c.args.mutate) await updateState(c, s => {
           s.notified ??= [];
           if (s.notified.includes(r.message)) return;
@@ -755,15 +765,15 @@ async function handleHook(c, p, event) {
       for (const t of r.targets) keys.push(targetKey(t));
     }
     if (c.args.mutate) {
-      // Any project edit stales all targets. The newest handler waits for
-      // 6 s quiet (builds start 2-3 s after edits), then refreshes all; older handlers yield.
-      // ponytail: reruns every stale session target; narrow to dependents if large sessions get slow.
-      // Agent builds share output directories; wait for them,
-      // at most gateWaitSec total and not past `end`: `spring-boot:run` may never finish.
-      // The handler ends by `end`, inside the 900 s async hook timeout (install.cjs).
+
+
+
+
+
+
       const newest = () => state(c).events.at(-1) === token, end = Date.now() + 850000, giveUp = Math.min(end, Date.now() + c.config.gateWaitSec * 1000);
       const settle = async () => {
-        // editedAt changes only with a newer event, which makes this handler yield: wait for quiet once, at most 6 s (clock jumps).
+
         for (let quiet = Math.min(6000, 6000 - (Date.now() - (state(c).editedAt || 0))); ; quiet = 0) {
           if (!newest()) return false;
           const due = Math.max(quiet, Date.now() < giveUp && buildRunning(c) ? 1000 : 0);
@@ -773,19 +783,21 @@ async function handleHook(c, p, event) {
       };
       if (!await settle()) return { code: 0 };
       for (const [key, t] of Object.entries(state(c).targets)) {
-        if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || loadResult(c, key, t)) continue;
+        if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || verdict(c, key, t).kind !== 'pending') continue;
         if (!await settle()) break;
-        // Start a target only when its last run fits before `end`, like the gate; the gate runs the rest.
+
         const budgetSec = Math.min(c.config.runBudgetSec, Math.floor((end - Date.now()) / 1000));
         if (budgetSec < 1) break;
         if (runtimeRequire('./errors.cjs').gateAdvice(budgetSec, c.config.runBudgetSec, t.lastRunMs)) continue;
         const r = await runTarget({ ...c, settle, deadline: end, budgetSec }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
-        // Redeliver changed results; a pass resets delivery.
+        if (cp) { if (r) await updateState(c, s => cp.queue(s, key, text, r.started_at)); continue; } // Copilot: the next delivery point sends it and sets reported (ADR-0019)
+
         if (r && await updateState(c, s => { const t = s.targets[key], next = text && reportKey(text); if (!t || t.reported === next) return false; t.reported = next; return true; }) && text) {
           msgs.push(text);
           wake ||= r.status === 'below' || r.agent_caused; }
       }
-    } else if (c.harness === 'unknown')
+    } else if (cp) { if (!seen) detached(c.spawn || spawn, ['hook', 'PostToolUse', '--mutate', '--harness', 'copilot'], {}, JSON.stringify(raw)); } // no async hooks: a spawned handler (ADR-0019); c.spawn: test seam
+    else if (c.harness === 'unknown')
       for (const key of [...new Set(keys)]) schedule(c, key);
     if (!msgs.length) return { code: 0 };
     const text = joinReports(msgs, 1800);
@@ -793,6 +805,7 @@ async function handleHook(c, p, event) {
     return contextOutput(text);
   }
   if (['Stop', 'SubagentStop', 'TaskCompleted'].includes(event)) {
+    if (cp) return cp.agentStop(c, p); // ADR-0018
     const g = await gate(c, { hook: true });
     return g.block ? {
       code: 2, out: { decision: 'block', reason: g.reason }, err: g.reason
@@ -814,14 +827,10 @@ function detect(c) {
 }
 const hookConfig = (agent, c) => runtimeRequire('./install.cjs').hookConfig(agent, c, VERSION);
 const install = (c, agent, scope, remove) => runtimeRequire('./install.cjs').install(c, agent, scope, remove, VERSION);
-// SessionStart and doctor text when the install stamp <version>:<scope> is missing or not VERSION, else ''; known: the scope doctor read (ADR-0017).
+
 const rerunNotice = (c, stamp, agent, known) => { const [v, s] = String(stamp ?? '').split(':'), scope = known || s;
   return v === VERSION ? '' : `Hooks are from ${/^\d[\w.+-]*$/.test(v) ? 'mutagate ' + v : 'an older mutagate'}, skill is ${VERSION}: rerun ${cliName(c)} install --agent ${agent}${scope === 'user' ? ' --scope user' : scope ? '' : ' (add --scope user for a user install)'}`; };
 
-function agents(c) {
-  return [...new Set([...(process.env.CLAUDE_PROJECT_DIR || process.env.CLAUDE_PLUGIN_ROOT || exists(path.join(c.repo, '.claude')) ? [ 'claude' ] : []), ...(process.env.CODEX_HOME || exists(path.join(c.repo, '.codex')) ? ['codex'] : []), ...(exists(path.join(c.repo, '.opencode')) || exists(
-    path.join(c.repo, 'opencode.json')) ? ['opencode'] : []), ...(exists(path.join(c.repo, '.pi')) ? ['pi'] : [])])];
-}
 async function doctor(c) {
   const dr = runtimeRequire('./doctor.cjs'), step = dr.progress, { command, javaExe, jars, selectGo, tool, toolInstall } = runners(); step('Node 22+ and configuration');
   const checks = [{ name: 'Node 22+', pass: Number(process.versions.node.split('.')[0]) >= 22, hint: 'Install Node 22 or later, or set MUTAGATE_NODE to its path.' }, {
@@ -853,15 +862,16 @@ async function doctor(c) {
     } catch (e) { checks.push({ name: 'mutation toolchain', pass: false, hint: e.message }); }
     if (d.language === 'csharp' && c.config.runBudgetSec === DEFAULTS.runBudgetSec) checks.push({ name: '.NET run budget', pass: true, note: 'Cold runs can take 2 to 5 minutes; set runBudgetSec: 600 in .mutagate/config.json.' });
   }
-  step('adapter'); const found = HARNESSES // each harness in both scopes; pass needs a detected one, any when none is detected
-    .flatMap(a => ['project', 'user'].map(s => [a, s, runtimeRequire('./install.cjs').installStamp(c, a, s)])).filter(x => x[2] !== null), detected = agents(c);
+  step('adapter'); const inst = runtimeRequire('./install.cjs'), found = HARNESSES // each harness in both scopes; pass needs a detected one, any when none is detected
+    .flatMap(a => ['project', 'user'].map(s => [a, s, inst.installStamp(c, a, s)])).filter(x => x[2] !== null), detected = inst.agents(c, found.some(([a, s]) => a === 'copilot' && s === 'user') && 'user', true); // a Copilot user install: its dir is a Copilot signal (ADR-0021)
   checks.push({ name: 'adapter installed', pass: found.some(([a]) => !detected.length || detected.includes(a)), hint: 'Run mutagate install --agent <harness>.' },
-    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: rerunNotice(c, stamp, a, s) })).filter(x => x.note)); step('harness versions');
+    ...found.map(([a, s, stamp]) => ({ name: `${a} ${s} install`, pass: true, warn: true, note: rerunNotice(c, stamp, a, s) })).filter(x => x.note),
+    ...dr.copilotChecks(c, { inst, cp: copilot(), found, detected, cli: cliName(c) })); step('harness versions');
   const versions = json(path.join(ROOT, 'references/versions.json'), { note: 'Version manifest excluded from skill installation; see README.' }); checks.push(...await dr.harnessChecks(versions)); step('synthetic scoped mutation smoke');
   const dir = path.join(c.data, 'doctor', crypto.randomUUID());
-  mkdir(dir);
   let smoke;
   try {
+    mkdir(dir); // in the try: an unwritable cache root fails the smoke, not doctor
     const put = (f, text) => atomic(path.join(dir, f), text);
     if (d.runner === 'pitest') {
       put('src/main/java/Probe.java', 'public class Probe { public boolean eligible(int n) { return n >= 18; } }');
@@ -929,7 +939,7 @@ async function doctor(c) {
 async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv),
     cmd = args._[0] || 'help',
-    all = 'run <test> [--target <target>] [--sync] [--json], check [--wait seconds], status [--json], detect, doctor, waive <id> --reason <reason> [--apply (human only)], install|uninstall --agent auto|claude|codex|opencode|pi [--scope project|user], version',
+    all = 'run <test> [--target <target>] [--sync] [--json], check [--wait seconds], status [--json], detect, doctor, waive <id> --reason <reason> [--apply (human only)], install|uninstall --agent auto|claude|codex|opencode|pi|copilot [--scope project|user], version',
     usage = 'mutagate: ' + (all.split(', ').find(u => u.split(' ')[0].split('|').includes(cmd)) || all + '. All commands accept --repo.');
   if (args.help || args._.includes('-h')) { console.log(usage); return 0; }
   if (args.version || cmd === 'version') { console.log('mutagate ' + VERSION); return 0; }
@@ -940,26 +950,34 @@ async function main(argv = process.argv.slice(2)) {
       p = JSON.parse(fs.readFileSync(0, 'utf8'));
       if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error(
         'expected object');
-    } catch { console.error('mutagate: malformed hook JSON'); return 0; }
+    } catch { if (args.harness !== 'copilot') console.error('mutagate: malformed hook JSON'); return 0; } // a native Copilot hook writes no stderr (#35 D12)
   }
-  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'].includes(args._[1] || p.hook_event_name))
+  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted', ...(args.harness === 'copilot' ? ['SubagentStart'] : [])].includes(args._[1] || p.hook_event_name))
     return 0;
   try {
     if (cmd === 'prune') { await runtimeRequire('./prune.cjs')(cacheRoot(), { lock, abandoned }); return 0; } // internal, started by schedulePrune
+
+    const cp = cmd === 'hook' && args.harness === 'copilot' && copilot(), origin = cp && cp.origin(p, args), raw = p;
+    if (origin === 'local') return 0;
+    if (cp) p = cp.normalize(p);
     c = context(args, p);
-    if (['run', 'check', 'status', 'waive'].includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
+    if (SESSION_CMDS.includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
     if (cmd === 'hook') {
       const event = args._[1] || p.hook_event_name,
         start = Date.now();
-      if (!c.inherited && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
-        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), p);
-      const r = await handleHook(c, p, event);
+      if (origin === 'cloud' && !c.config.copilotCloud) return 0; // the cloud agent is inert unless the repo opts in (ADR-0021)
+      if (!c.inherited && origin !== 'spawned' && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
+        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
+      if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return 0; } // never a ppid- session (ADR-0020)
+      const r = await handleHook(c, p, event, raw);
       if (r.out) console.log(JSON.stringify(r.out));
       if (r.text) console.log(r.text);
       if (r.err) console.error(r.err);
       trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.code === 2 ? 'block' : 'allow', duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err)
+        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
+        ...(cp && p.agentId && { agent: p.agentId, ...(c.sid === p.agentId && { chain: 'unresolved' }) }) // a Copilot subagent call (its agentStop never gates), unresolved: outside its root session
       });
+      if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
       return r.code;
     }
     if (cmd === 'worker') {
@@ -971,14 +989,16 @@ async function main(argv = process.argv.slice(2)) {
         if (!t) return 0;
         const delay = Math.min(3000, 3000 - (Date.now() - t.changedAt)); // clock jumps
         if (delay > 0) await sleep(delay);
-        if (loadResult(c, key, state(c).targets[key])) return 0;
+        if (verdict(c, key, state(c).targets[key]).kind !== 'pending') return 0;
         await runTarget(c, key);
       }
       return 0;
     }
     if (cmd === 'detect') { console.log(JSON.stringify(detect(c))); return 0; }
     if (cmd === 'run') {
-      const r = await register(c, args._[1], args.target);
+
+      const cwd = !args.repo && args._[1] && fs.realpathSync('.'), rel = cwd && cwd !== c.repo && slash(path.relative(c.repo, path.resolve(cwd, args._[1]))), test = rel && fs.existsSync(path.join(c.repo, rel)) ? rel : args._[1];
+      const r = await register(c, test, args.target);
       if (r.disabled) { console.log(args.json ? JSON.stringify({ status: 'disabled', message: r.message }) : r.message); return 0; }
       if (r.ambiguous) {
         console.log(args.json ? JSON.stringify(r) : r.message);
@@ -993,17 +1013,13 @@ async function main(argv = process.argv.slice(2)) {
       let code = 0;
       const results = [];
       for (const t of r.targets) {
-        const result = await runTarget(c, targetKey(t)) || normalize([], c, t, { error: 'results pending after source changes' });
-        if (result) {
-          results.push(result);
-          if (t.secondary && !c.config.gateSecondaries) continue;
-          if (result.status === 'below') code = 1;
-          else if (result.status === 'error' && !code) code = 3;
-          else if (result.status === 'unscored' && !result.error?.startsWith(NO_MUTANTS) && !code) code = 1;
-        }
+        const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
+        if (v.result && state(c).outbox?.some(e => e.key === key)) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
+        results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
+        if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }
       console.log(args.json ? JSON.stringify(results.length === 1 ? results[0] : results) :
-        joinReports(results.map(r => report(r, c.config))));
+        joinReports(results.map(r => r.status === 'pending' ? r.message : report(r, c.config))));
       return code;
     }
     if (cmd === 'check') {
@@ -1042,7 +1058,7 @@ async function main(argv = process.argv.slice(2)) {
       return 0;
     }
     if (cmd === 'install' || cmd === 'uninstall') {
-      const selected = !args.agent || args.agent === 'auto' ? agents(c) : [args.agent];
+      const selected = !args.agent || args.agent === 'auto' ? runtimeRequire('./install.cjs').agents(c, args.scope) : [args.agent];
       const script = path.join(HERE, process.platform === 'win32' ? 'mutagate.cmd' : 'mutagate'), repoArg = args.repo ? ' --repo ' + c.repo : '';
       if (!selected.length) { console.error([`no harness detected in ${c.repo}; run one of:`, ...HARNESSES.map(a => `${script} ${cmd} --agent ${a}${repoArg}`)].join('\n')); return 2; }
       for (const a of selected) console.log(install(c, a, args.scope || 'project', cmd === 'uninstall'));
@@ -1058,7 +1074,7 @@ async function main(argv = process.argv.slice(2)) {
     return cmd === 'help' ? 0 : 2;
   } catch (e) { // Usage errors (e.usage) exit 2 and are not traced as errors.
     if (c && (cmd === 'hook' || !e.usage)) trace(c, cmd, { error: clean(e.message), decision: 'error' });
-    console.error('mutagate: ' + clean(e.message));
+    if (cmd !== 'hook' || args.harness !== 'copilot') console.error('mutagate: ' + clean(e.message));
     return cmd === 'hook' ? 0 : e.usage ? 2 : 3;
   }
 }

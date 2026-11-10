@@ -1,0 +1,58 @@
+{
+ "agentStop": [
+  "cwd",
+  "sessionId",
+  "stopReason",
+  "stop_hook_active",
+  "timestamp",
+  "transcriptPath"
+ ],
+ "postToolUse": [
+  "cwd",
+  "sessionId",
+  "timestamp",
+  "toolArgs",
+  "toolName",
+  "toolResult"
+ ],
+ "preToolUse": [
+  "cwd",
+  "sessionId",
+  "timestamp",
+  "toolArgs",
+  "toolName"
+ ],
+ "sessionEnd": [
+  "cwd",
+  "reason",
+  "sessionId",
+  "timestamp"
+ ],
+ "sessionStart": [
+  "cwd",
+  "initialPrompt",
+  "sessionId",
+  "source",
+  "timestamp"
+ ],
+ "userPromptSubmitted": [
+  "cwd",
+  "prompt",
+  "sessionId",
+  "timestamp"
+ ],
+ "toolArgs": {
+  "bash": [
+   "command",
+   "description"
+  ],
+  "apply_patch": "string",
+  "runtime-tools-secret_scanning": [
+   "paths"
+  ],
+  "engine-tools-report_progress": [
+   "commitMessage",
+   "prDescription"
+  ]
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "sessionId": "76bf5d09-c554-4518-9e0b-46d000a7dc39",
+ "timestamp": 1794251835221,
+ "cwd": "/repo",
+ "toolCallId": "toolu_015sWYuGzgw74UVK7sKucGgR",
+ "toolName": "task",
+ "toolArgs": {
+  "agent_type": "general-purpose",
+  "description": "Create nested test file",
+  "prompt": "Create the file tests/nested.test.js containing console.log('nested'); using the create tool, then stop."
+ },
+ "error": "\"name\": Required",
+ "agentId": "76bf5d09-c554-4518-9e0b-46d000a7dc39",
+ "agentType": "writer",
+ "parentAgentId": "b738a909-8f72-41f4-8cc6-7e07895006a8"
+}

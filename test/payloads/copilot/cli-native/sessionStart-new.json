@@ -1,0 +1,7 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251671138,
+ "cwd": "/repo",
+ "source": "new",
+ "initialPrompt": "Do exactly these steps in order, one tool call per step, without extra exploration, then stop:\n1. Use the create tool to create tests/calc.test.js with this content: const { add } = require('../calc'); console.log(add(1, 2));\n2. Use the edit tool on calc.js to replace the text \"return a + b;\" with \"return b + a;\".\n3. Use the edit tool on calc.js to replace the text \"NO_SUCH_TEXT_123\" with \"x\". This edit will fail; that is expected. Do not retry and do not investigate.\n4. Run this shell command in the repo root: env | grep -iE \"copilot|session|claude\" > shellenv.txt\n5. Use the create tool to create notes.txt containing the single line: hello\nThen stop."
+}

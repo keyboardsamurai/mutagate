@@ -1,0 +1,14 @@
+{
+ "sessionId": "f1d22adf-df92-4270-97cb-a20f35dff07f",
+ "timestamp": 1794251587390,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01NkiHdkyNgPaBtAAMZiQNow",
+ "toolName": "skill",
+ "toolArgs": {
+  "skill": "probe-skill"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "Skill \"probe-skill\" loaded successfully. Follow the instructions in the skill context."
+ }
+}

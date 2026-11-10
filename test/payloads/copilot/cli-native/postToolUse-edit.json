@@ -1,0 +1,16 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251674630,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01Nwdtu4TYV8VF27KiM69waj",
+ "toolName": "edit",
+ "toolArgs": {
+  "path": "/repo/calc.js",
+  "old_str": "return a + b;",
+  "new_str": "return b + a;"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "File /repo/calc.js updated with changes."
+ }
+}

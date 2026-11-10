@@ -242,21 +242,29 @@ report and runs nothing.
 **Preflight.** Per cell: harness binary present and its version equal to the
 pin in the harness-versions file; credential present (Claude: subscription
 token env var; Codex: cached login reported by the CLI; OpenCode and Pi:
-OpenRouter key); language toolchain present. Any miss marks the cell
+OpenRouter key; Copilot: no classic `ghp_` value in `COPILOT_GITHUB_TOKEN`,
+and `copilot --version` names the pin under the driver env, because the
+launcher can run another package); language toolchain present. Any miss marks the cell
 `skipped (<reason>)`. Skips do not affect exit status. A sweep in which no cell
 executed exits 1 and says so, mirroring `check` on an empty session.
 
-**Secrets.** The subscription token and OpenRouter key are loaded from the
-repo-root `.env` (gitignored) with Node's built-in env-file loader. Before any
-artifact is checked, every occurrence of either value in the run directory and
-the repo is replaced: with a fixed placeholder in text files, and with the
-same number of `x` bytes in binary files so their length and structure stay
-valid (`.git`, `node_modules` and files over 5 MB are skipped). The OpenCode
-session database is deleted after the transcript export. The diff is taken
-with intent-to-add, so agent-written file content never reaches the git object
-store. Ctrl-C kills the harness processes, deletes `opencode.db` and scrubs every run directory and repo
-started so far, and exits 130. Codex authenticates through the user's real
-Codex home; that directory is never copied.
+**Secrets.** The subscription token, the OpenRouter key and an optional
+`COPILOT_GITHUB_TOKEN` are loaded from the repo-root `.env` (gitignored) with
+Node's built-in env-file loader. Before any artifact is checked, every
+occurrence of a value, and every GitHub token pattern (`github_pat_`,
+`gh[opsur]_`) with or without a value, in the run directory, the repo, the
+repo's cacheRoot data directory and the run's recorded payloads is replaced:
+with a fixed placeholder in text files, and with the same number of `x` bytes
+in binary files so their length and structure stay valid (`.git`,
+`node_modules` and files over 5 MB are skipped, except `stdout.log` (the raw
+Copilot JSONL can pass 5 MB) and `copilot-logs/`, which are scrubbed at any
+size; `copilot-logs/` also loses the GitHub login and the home directory). The OpenCode session database is deleted after the transcript
+export. The diff is taken with intent-to-add, so agent-written file content
+never reaches the git object store. SIGINT, SIGTERM and SIGHUP kill the
+harness processes, delete `opencode.db` and the per-run Copilot home, scrub
+every run started so far, and exit 128+signo. Codex authenticates through the
+user's real Codex home and Copilot through the host `copilot` login; neither
+is copied.
 
 **Run lifecycle.** Each run has a run directory under the test cache
 (`test/.cache/eval/<sweep>/<run>`) and a repo at
@@ -278,16 +286,24 @@ each step gets the remaining time. After the agent returns, `check`,
 counted from agent end, so a run killed at the deadline still has artifacts.
 A run lasts at most the deadline plus the grace plus driver teardown.
 
-**Environment for the agent process.** `MUTAGATE_TRACE=1`, `MUTAGATE_DEBUG=1`,
+**Environment for the agent process.** The inherited env loses `CLAUDE*`,
+`CODEX_*`, `OPENCODE*`, `PI_*`, `MUTAGATE_*`, `COPILOT_*`, `GH_TOKEN`,
+`GITHUB_TOKEN` and `OPENROUTER_API_KEY` (`scrubEnv` in `test/scratch.mjs`).
+Then it gets `MUTAGATE_TRACE=1`, `MUTAGATE_DEBUG=1`,
 `MUTAGATE_RECORD=1`, `MUTAGATE_NODE` pointing at a Node 22 binary (the host's
 PATH node is 21), `JAVA_HOME` at JDK 21, plus the harness-specific isolation
 below. `MUTAGATE_HARNESS` is deliberately **not** set: the SessionStart label
 check must exercise real harness detection, otherwise the known "harness
 unknown inside Claude Code" bug is masked. `CODEX_HOME` is exported only for
-Codex because detection keys on it.
+Codex because detection keys on it, and `COPILOT_GITHUB_TOKEN` only for
+Copilot, when set.
 
 **Harness drivers.** One module, one entry per harness, each exposing
-preflight, environment, launch, and done-detection:
+preflight, environment, launch, done-detection, and a transcript reader. The
+reader is the only parser of the harness transcript: it returns the final
+text, the executed shell commands, and the raw transcript lines, each marked
+as a user line (a user-role message such as the prompt or a re-prompt, never
+a tool result) or not:
 
 - Claude: headless print mode with streamed JSON output, verbose, hook events
   included, permissions bypassed, model from config, fresh config directory
@@ -321,18 +337,37 @@ preflight, environment, launch, and done-detection:
   message on stdin, which must be a pipe. Per-run agent directory and
   telemetry off. Done when polled state reports not streaming and zero
   pending messages for the settle period and no worker lock is held.
+- Copilot: `-p` with JSON output, `--trust-folder` (it loads the repo hooks
+  and the project skill in `.agents/skills`, and rejects `--session-id`; the
+  trace gives the session), all tools allowed, no questions, no auto-update,
+  built-in MCP servers off, `--log-dir <run>/copilot-logs`, model from config.
+  Host Copilot login; per-run `COPILOT_HOME` and `COPILOT_CACHE_HOME`,
+  deleted after the run; `install` also runs with that `COPILOT_HOME`, so a
+  host user install does not make it refuse the project scope. Done on process exit, then when no mutagate process
+  of the repo is alive, because spawned `--mutate` handlers outlive `-p`.
 
 One-shot `opencode run` and `pi -p` are not used: both tear down the session
 before the continuation gate can re-prompt. That gap is filed as a mutagate
 issue and noted in the README, not worked around in the suite.
 
 **Run directory contract (the seam).** Every driver writes the same layout, and
-the checker reads nothing else except the task's expected file:
+the checker reads nothing else except the task's expected file. It reads the
+transcript only through the driver's transcript reader:
 
 - `meta.json`: harness, harness version, model, language, scenario, task, run
   number, start and end timestamps, wall time, process exit code, how the run
   ended (`exit`, `idle`, `killed`).
-- `stdout.log`, `stderr.log`: the raw harness transcript streams.
+- `stdout.log`, `stderr.log`: the raw harness transcript streams. One exception:
+  Pi's `stdout.log` leaves out the streaming deltas (`message_update`,
+  `tool_execution_update`) and the `get_state` poll responses. `message_end` and
+  `tool_execution_end` carry the same content, and a raw RPC stream grows to tens
+  of MB per run.
+- `copilot-logs/` (Copilot only): the CLI's `--log-dir` logs at the default
+  level.
+- `messages.jsonl` (OpenCode only): the server's message export over all
+  sessions, one part per line in time order. `run` exits at the first idle, so
+  turns re-prompted by the gate are only here.
+- `final.txt`: the last assistant text, from the driver's transcript reader.
 - `trace.jsonl`: mutagate's trace, copied from the data directory for the
   run's repo.
 - `runner-logs/`: mutagate's per-target runner logs.
@@ -392,7 +427,8 @@ directory.
 matching the task's production globs), waivers proposed or applied, manual
 `run --target` or `--sync` in the transcript, mutagate source read, a hook
 slower than one second (except the async `--mutate` PostToolUse handler,
-marked `mutate: true` in the trace), stale or unresolved messages about files
+marked `mutate: true` in the trace, and a Copilot Stop shorter than the
+watchdog time `W` of the installed `agentStop` timeout, 570 s of 600 s), stale or unresolved messages about files
 no longer in the repo (message templates in dumped mutagate source skipped),
 agent text claiming a pass or scores that `check.json` does not confirm (a
 number equal to the threshold is not a score), the task's test command not green, fewer than five mutants
@@ -405,9 +441,9 @@ scored or no-mutants result (`recovered-error`), and final `unscored` results ca
 detection includes `errors.cjs`, `dotnet.cjs`, `mutmut-bridge.cjs` and `runners.cjs`; escaped
 newlines end shell matches and reads redirected to `/dev/null` do not warn.
 
-Executed CLI commands come from Claude Bash tool uses, Codex command-execution
-items, OpenCode bash parts, Pi tool-execution starts, or top-level command fields.
-Command IDs deduplicate repeated events; suggestions and nested Pi toolCall replays
+Executed CLI commands come from the run's transcript reader: Claude Bash tool
+uses, Codex command-execution items, OpenCode bash parts, or Pi tool-execution
+starts. Command IDs deduplicate repeated events; suggestions and nested Pi toolCall replays
 do not count. A PostToolUse with `delivered: true` before the CLI boundary counts
 as async delivery; older trace/transcript heuristics remain fallbacks.
 
@@ -528,9 +564,13 @@ Modules under test and how:
 - **Task validation** (integration, opt-in): per task, reference tests in,
   `run --sync` out, every declared target scored. Prior art: the runner
   fixtures with weak/strong variants and `expected.json`.
-- **Live drivers** are validated only by the smoke run in M1 and the sweeps
-  themselves. The scripted driver suite already proves the hook envelopes for
-  all four harnesses without a model and stays as is.
+- **Transcript readers**: each driver's `read(runDir)` on an abridged, scrubbed
+  real transcript per harness in `test/eval/transcripts/<harness>/`: final
+  text, executed commands (id dedupe), user lines (prompt echo) apart from agent
+  lines.
+- **Live drivers** (launch and done-detection) are validated only by the smoke
+  run in M1 and the sweeps themselves. The scripted driver suite already proves
+  the hook envelopes for all five harnesses without a model and stays as is.
 
 Seams, from highest to lowest:
 

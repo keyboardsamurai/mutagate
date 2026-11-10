@@ -58,8 +58,8 @@ jobs:
         with:
           node-version: '22'
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with: { go-version: '1.26.x' }
-      - run: go install github.com/szhekpisov/gomutants@v0.6.1
+        with: { go-version: '1.26.10' }
+      - run: go install github.com/gomutants/gomutants@v0.7.2
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with: { dotnet-version: '10.0.x' }
       - run: |
@@ -68,7 +68,7 @@ jobs:
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
       - run: |
           uv venv test/.cache/py2 --python 3.12
-          uv pip install --python test/.cache/py2/bin/python 'mutmut==2.5.1' 'pytest==8.4.2'
+          uv pip install --python test/.cache/py2/bin/python 'mutmut==2.5.1' 'pytest==9.2.0'
           uv sync --project test/fixtures/python-uv --python 3.12 --frozen
           npm ci --prefix test/fixtures/ts-jest
           npm ci --prefix test/fixtures/ts-vitest

@@ -4,6 +4,28 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-11-10
+
+### Added
+
+- GitHub Copilot CLI is a supported harness ([docs/copilot.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/copilot.md), #35). Its own hooks pass `--harness copilot`, and mutagate maps the Copilot payloads (`create`, `edit`, `apply_patch`, `bash`) to its own. A test edit starts a background run in a detached process, because Copilot has no async hooks; the report reaches the agent as `additionalContext` with its next edit or shell call (`read_bash` too). `agentStop` is the gate, inside its 600 s hook timeout: it works for up to `gateBudgetSec`, starts a worker for a target still pending, asks the agent to set bash `initial_wait` above `check --wait N`, allows after 8 blocks in a row (the Copilot limit), and at 570 s allows and stops its runs. Messages of an allow are progress lines that the model does not see. Subagent edits join the root session (through `parentAgentId`) and are gated at the root `agentStop`. The Copilot cloud coding agent is inert unless the new config key `copilotCloud` is `true` (experimental). In a Copilot sandbox mutagate says `mutagate inactive: cannot write <path>` and does nothing else. The live eval passes for all six languages (README matrix), and VS Code is not claimed.
+- `install --agent copilot` installs the GitHub Copilot hooks in their own file: `.github/hooks/mutagate.json`, or with `--scope user` `$COPILOT_HOME/hooks/mutagate.json` (else `~/.copilot/hooks/mutagate.json`). Every hook command exits 0, also without the skill dir, Git or Node. `install` refuses a second scope and names the existing file; `uninstall --agent copilot` deletes the file when only mutagate entries are left.
+- `install --agent auto` selects Copilot when the shell has `COPILOT_CLI` or `COPILOT_AGENT_SESSION_ID`, or the repo has `.github/hooks/` or `.github/copilot/` (with `--scope user`, also `COPILOT_HOME` or `~/.copilot`). A `.claude/` dir that holds only `skills/` no longer selects Claude when one of these is present. The `no harness detected` list names `copilot`.
+- `doctor` checks the Copilot install when a Copilot hook file or signal is present. It warns when Copilot runs more than one mutagate hook file (both scopes, or another file in a hooks dir), when a Claude project install has no Copilot hook file, and when the skill copy that Copilot loads (`.github/skills`, else `.agents/skills`, else `.claude/skills`) has another `VERSION` than the copy that its hooks run. It fails when the cache root is not writable, and gives the folder trust and managed hooks hints. It also warns when `copilot --version` is not the tested Copilot CLI 1.0.107.
+- Live eval: `npm run eval -- --harness copilot` drives Copilot CLI 1.0.107 with `claude-sonnet-5`, the host `copilot` login or `COPILOT_GITHUB_TOKEN` from `.env`, and a fresh `COPILOT_HOME` per run. `npm run test:driver` also runs the Copilot hook file (not on Windows), and `test:drift` skips missing Copilot recordings.
+
+### Changed
+
+- CLI commands in a Copilot CLI shell join its session through `COPILOT_AGENT_SESSION_ID`, after `CLAUDE_CODE_SESSION_ID` and `CODEX_THREAD_ID`. `waive --apply` is refused when `COPILOT_CLI` is set, as in other agent sessions. In the Copilot root agent shell, `run`, `check`, `status` and `waive` use the Git top level as the repo (its data dir and `.mutagate/config.json`), not the shell's directory; `run` reads a relative test path against the shell's directory, else against the Git top level.
+- The Copilot cloud coding agent also runs the Claude hooks of `.claude/settings.json`. These inherited calls no longer give the SessionStart notice `mutagate inactive under Copilot` in a cloud job, unless the config has `copilotCloud: true`.
+- Without a Copilot hook file, the SessionStart notice under Copilot is now ``mutagate inactive under Copilot: this repo has only the Claude Code install; run `<skill>/scripts/mutagate install --agent copilot`.`` It named mutagate 0.9.2 before.
+- Hook rows in `trace.jsonl` (`MUTAGATE_TRACE=1`) have an `exit` field with the hook exit code; rows of Copilot subagent calls also have `agent`. A Copilot gate stopped by its watchdog has the decision `deadline`.
+- `run --sync` prints a pending target with the gate's message, `mutagate: <target> results pending; run <skill>/scripts/mutagate check --wait <gateBudgetSec>` (with `--json`: `{"target": …, "status": "pending", "message": …}`), not as an unscored result with "results pending after source changes". The exit code stays 1.
+- Tool updates: PIT 1.21.0 → 1.30.2, the Arcmutate Kotlin plugin 1.4.0 → 1.5.2 and gomutants 0.6.1 → 0.7.2; the tested StrykerJS is 9.6.1 (was 9.1.1) with Vitest 4.1.12 (was 3.2.4), and the tested pytest is 9.2.0 (was 8.4.2) with mutmut 2.5.1 and 3.8.1. Kotlin Tier A (Arcmutate licence) is not tested with plugin 1.5.2, and of the live agent evals only the Copilot CLI ones ran with these updates.
+- Since PIT 1.23, incremental history is a plugin: mutagate now downloads `org.pitest:pitest-history-plugin` 0.0.1 (SHA-256 pinned) with the PIT jars, so PIT keeps its history between runs. Proxy or offline setups: run `node <skill>/scripts/cache-jars.mjs` again after the update; until then, with `MUTAGATE_OFFLINE=1`, Java and Kotlin runs fail with `offline: missing pitest-command-line`. PIT `EQUIVALENT` mutants are now ignored like Stryker `Ignored` ones: they are not scored and not counted as errors.
+- gomutants moved to `github.com/gomutants/gomutants`; mutagate installs 0.7.2 on first use unless a `gomutants` is on PATH, which it uses whatever its version: replace an older one with `go install github.com/gomutants/gomutants@v0.7.2`. It builds with Go 1.26.10 or later; an earlier Go downloads that version (`GOTOOLCHAIN=auto`, the default). gomutants 0.7 keeps a variable or import in use when a mutant removes its last use, so these mutants now run instead of failing to compile, and you can see new survivors of this kind (on the Go eval task 15 more mutants are killed and no score drops).
+- Test fixtures and eval tasks: the dependency updates above, plus an npm `overrides` pin of `qs` 6.16.1 (typed-rest-client 2.3.1 pins 6.15.1), clear the reported advisories in the lockfiles (@babel/core, ajv, zod, vitest, @vitest/mocker, tinypool, qs, pytest CVE-2025-71176). minimatch 10.2.6 and deepmerge 4.3.1 (Jest 29) have no upstream fix and stay.
+
 ## [0.9.1] - 2026-11-08
 
 ### Added
@@ -67,6 +89,7 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...HEAD
+[0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/keyboardsamurai/mutagate/releases/tag/v0.9.0

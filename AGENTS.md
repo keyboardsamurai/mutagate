@@ -21,7 +21,7 @@ records the evidence per fix, the Go/C# runner design is in `docs/go_csharp_runn
 the live eval suite plan (language × harness agent runs) is in `docs/eval_suite.md`, and its spec
 `docs/eval_suite_spec.md` is implemented in `test/eval/`.
 The user-facing behavior (commands, config, exit codes, runner caveats) is in
-`README.md`.
+`README.md`; the GitHub Copilot details (gate, reports, sessions, limits) are in `docs/copilot.md`.
 
 ## Decisions
 
@@ -36,7 +36,7 @@ node --test --test-name-pattern '<regex>' test/core.test.mjs   # one test
 npm run test:integration                          # real mutation runs on test/fixtures (needs toolchains)
 MUTAGATE_FIXTURES=go-module,java-maven npm run test:integration   # select fixtures
 MUTAGATE_TEST_ENTRY=mutagate-hook.cjs npm run test:integration    # run through the generated CJS runtime (CI does this)
-npm run test:driver                               # scripted gate E2E for all four harness envelopes
+npm run test:driver                               # scripted gate E2E for all five harness envelopes (Copilot: not on Windows)
 npm run test:performance                          # hook p95 <= 80 ms; 15k-file Git repo: SessionStart, test edit <= 300 ms (MUTAGATE_PERF_COUNT sets samples, max 100 there)
 npm run test:installer
 npm run generate:runtime                          # regenerate scripts/mutagate-hook.cjs
@@ -48,12 +48,14 @@ npm run eval -- --harness claude --lang java --scenario forced   # live agent ru
 The repo has no linter or formatter. Other scripts: `test:opencode-discovery`
 needs `MUTAGATE_OPENCODE_BIN`. `eval` (alias `test:live`) needs the
 pinned harness, the language toolchains, and `CLAUDE_CODE_OAUTH_TOKEN` or
-`OPENROUTER_API_KEY` in the repo-root `.env` (Codex uses `~/.codex`); flags
+`OPENROUTER_API_KEY` in the repo-root `.env` (Codex uses `~/.codex`, Copilot the
+host `copilot` login or an optional `COPILOT_GITHUB_TOKEN` there, never a classic
+`ghp_`); flags
 `--harness --lang --scenario --task --repeat --jobs --model`, all optional;
 `--repeat` below 2 writes no evidence record (ADR-0011);
 `--report <sweepDir>` only re-renders that sweep's `report.md`.
 `test:drift` needs payloads recorded earlier with `MUTAGATE_RECORD=1`, which
-eval runs set. Integration toolchains follow CI (`.github/workflows/ci.yml`):
+eval runs set (missing Copilot recordings are skipped, not failed). Integration toolchains follow CI (`.github/workflows/ci.yml`):
 JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 5.0.0, and uv. Python fixtures use venvs under `test/.cache/py2` and
 `test/.cache/py3`, and TS fixtures need `npm ci` in their fixture directory.
@@ -72,6 +74,10 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     needs; tests reach runner symbols through `m.runners().x`.
   - `normalize` converts runner output into the shared result shape, and
     `report` turns that result into survivor text.
+  - `verdict` gives the Target verdict (pending, retry or the final Result
+    status, its obligation and exit code) to `gate`, `run --sync`, `status`,
+    the worker and the async hook; `exitCode` folds the codes for `gate` and
+    `run --sync`.
   - `gate`, `install`, and `doctor` implement the matching commands.
 - Hook path: on POSIX the harness runs the `scripts/hook` wrapper, through a
   Git-top-level command for a portable project install (skill inside the Git
@@ -83,10 +89,11 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   POSIX the Claude SessionStart, PreToolUse and sync PostToolUse commands end
   in `|| true`, because Copilot also runs them (ADR-0013). Copilot CLI payloads
   have a top-level `timestamp` (no other harness sends it): `context` marks such a
-  call `inherited` (harness `copilot`, whatever the `CLAUDE_*` env). `main`
+  call without `--harness` `inherited` (harness `copilot`, whatever the `CLAUDE_*` env). `main`
   skips recording and traces decision `inherited`; `handleHook` returns first,
   exit 0 with no state or stdout, except one SessionStart `additionalContext`
-  notice while no native Copilot hook file exists (ADR-0015, payloads in
+  notice while no native Copilot hook file exists and, without `copilotCloud`,
+  no cloud marker is set (ADR-0015, ADR-0021, payloads in
   `test/payloads/copilot/cli/`). Under Node < 22 hooks exit 0 and SessionStart says so.
   `install` stamps `<VERSION>:<scope>` into the SessionStart command
   (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
@@ -100,11 +107,23 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s
   quiet and ends by 850 s after its start (hook timeout 900 s): like `gate`, it
   passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
-  target only when `gateAdvice` says its `lastRunMs` fits.
+  target only when `gateAdvice` says its `lastRunMs` fits. Copilot has no async
+  hooks: a new native write `postToolUse` with targets or a test path spawns that
+  handler detached (`hook PostToolUse --mutate --harness copilot`, raw payload on
+  stdin), which queues each run's report in the session `outbox` instead of
+  printing it. A root-agent write or shell `postToolUse` (`read_bash` too) is a
+  delivery point: it drains the fresh, unreported entries as `additionalContext`
+  and sets `reported`; a gate block or a `check` or `run --sync` report drops the key, and a
+  recorded pass resets `reported` (ADR-0019).
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`
-  exit 3). Session state is JSON under `cacheRoot()` (a real path, resolved
+  exit 3). A native Copilot `hook Stop --timeout T` (`agentStop`) ends the gate
+  by G = min(`gateBudgetSec`, T − 2M), M = min(30, ⌊T/4⌋), schedules a worker
+  for a target left pending with nothing in flight, allows after 8 blocks in a row
+  (state `stopStreak`), and at W = T − M allows, traces `deadline` and exits so
+  `runners.cjs` kills the runner groups; a subagent `agentStop` exits 0 (ADR-0018).
+  Session state is JSON under `cacheRoot()` (a real path, resolved
   like `safePath`, so tools get no symlinked alias), written through
   `updateState` with a lock and atomic writes; compute `fingerprint` before
   `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
@@ -123,14 +142,37 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - Sessions: `context` takes the id from payload `agent_id`, then `session_id`,
   then env `MUTAGATE_HOOK_SESSION` (set by `schedule` for workers, by the OpenCode
   `shell.env` hook and by Pi at `session_start`), `CODEX_THREAD_ID`,
-  `CLAUDE_CODE_SESSION_ID`, `MUTAGATE_SESSION` (bare CLI use only), then a
-  `ppid-…` fallback, so the agent's CLI calls join the hook session.
-- Harnesses: Claude and Codex use native hook config generated by `hookConfig`
-  and merged in by `install`. OpenCode (`scripts/adapters/opencode.js`) and Pi
+  `CLAUDE_CODE_SESSION_ID`, `COPILOT_AGENT_SESSION_ID` (Copilot root agent shell),
+  `MUTAGATE_SESSION` (bare CLI use only), then a `ppid-…` fallback, so the
+  agent's CLI calls join the hook session. `COPILOT_CLI` alone also marks an agent
+  session (`waive --apply` refused). A native Copilot hook call takes payload
+  `sessionId` in place of `agent_id`/`session_id`; a Copilot subagent call (payload
+  `agentId`) walks `parentAgentId` through the `agents/` records in the data dir,
+  which `hook SubagentStart --harness copilot` writes, to the root `sessionId`
+  (ADR-0020). A Copilot hook call without `sessionId` exits 0 with a trace `error`.
+- Harnesses: Claude, Codex and Copilot use native hook config generated by `hookConfig`
+  and merged in by `install` (Copilot: the flat file `.github/hooks/mutagate.json`,
+  user `$COPILOT_HOME/hooks/`, else `~/.copilot/hooks/`; ADR-0021). OpenCode (`scripts/adapters/opencode.js`) and Pi
   (`scripts/adapters/pi.ts`) are thin translators that forward only file-writing
   tools, spawning the CLI with a Claude-shaped payload containing a `harness` field. `install` replaces
   `__MUTAGATE_CLI__` in these adapters with the runtime path, relative to the
   adapter file when portable, else absolute; adapters pick Node like `scripts/hook`.
+  GitHub Copilot: native hook commands carry `--harness copilot` (ADR-0020); the
+  tag beats payload `timestamp` (else inherited, ADR-0015) and `CLAUDE_*` env.
+  `copilot` is in the installable `HARNESSES`; `install` refuses (exit 2) a second
+  Copilot scope, and its matchers come from the `copilot.cjs` tool lists (ADR-0021).
+  A native hook call exits 0 and writes no stderr, also on malformed JSON and
+  exceptions (the catch still traces `error`): other events print one JSON object
+  with top-level fields (`additionalContext`, `permissionDecision`); Stop prints
+  one `{"decision":"block",…}` object or only `{"type":"progress",…}` lines. SessionStart and Stop
+  first probe a write to `<data>/state` (the probe removes the empty dirs it made)
+  and on failure say `mutagate inactive: cannot write <path>` (ADR-0021). The repo
+  of a native call is the Git top of payload `cwd` (`top`), not `CLAUDE_PROJECT_DIR`;
+  outside Git it is resolved as for Claude. `run`, `check`, `status` and `waive`
+  (`SESSION_CMDS`) in the root agent shell (session `COPILOT_AGENT_SESSION_ID`)
+  also use the Git top of cwd; `run` reads a relative test path against cwd, else the Git top.
+  `normalize` gives only the write tools (`TOOLS`) a `tool_input`. The trace `decision` is `block` for a block (`r.block`) or
+  exit 2, and the trace has `exit`; a Copilot subagent call (payload `agentId`) also has `agent`.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
   keep hook latency low. `inputs.cjs` lists repo files (`files`, for detect and
   resolution: the Git file list in a Git repo, else a walk, with the same name
@@ -152,15 +194,23 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `tool`, `TOOLS`, `jars`) and returns raw mutants. `command` starts each tool in
   its own process group (Windows: a `taskkill /T` tree) and kills it at its deadline; on the first spawn it
   installs handlers that kill all live groups on `exit` and exit 128+signo on
-  SIGINT, SIGTERM and SIGHUP. `install.cjs` holds `hookConfig` and `install`; it is not on the
+  SIGINT, SIGTERM and SIGHUP. `install.cjs` holds `hookConfig`, `install`, `configFile`,
+  `installStamp` and `agents` (`--agent auto`, ADR-0021); it is not on the
   hook path and not hashed into `fingerprint`. `doctor.cjs` renders the doctor
   text, writes `checking <name>…` progress to stderr and adds a WARN check when an
-  installed harness differs from its pin; it is lazy, not on the hook path and not
-  hashed into `fingerprint`. `prune.cjs` is the cache prune: `register`, and
+  installed harness differs from its pin, and the Copilot checks (`copilotChecks`:
+  hook files, skill copy, cache root); it is lazy, not on the hook path and not
+  hashed into `fingerprint`. `copilot.cjs` (`copilot()`, loaded only for
+  `--harness copilot` hook calls, session commands in the Copilot root agent shell, an inherited SessionStart without a native hook file, `doctor` and `install`, not hashed into `fingerprint`) classifies a call
+  (`origin`: native, spawned `--mutate` handler, VS Code Local payload with
+  `hook_event_name` that `main` drops, cloud agent (env markers, `cloud`) that stays inert unless config
+  `copilotCloud: true`, ADR-0021), maps the camelCase payload to the internal shape after `main`
+  records the raw one (`normalize`), keeps the subagent chain (`link`,
+  `session`), and gives the repo (`top`), the agentStop gate call (`agentStop`) and its output (`stop`), deadlines and watchdog (`clamp`, `watchdog`), the outbox (`queue`, `drain`) and the write probe (`probe`). `prune.cjs` is the cache prune: `register`, and
   SessionStart in an existing data dir, write a `repo-path` marker into it, and `schedulePrune`
   spawns the internal `prune` command detached when the mtime of
   `repos/.pruned` is a day old. It deletes `reports/*` after 24 h, session state
-  after 14 days and its results with it, and data dirs whose marked repo path is gone
+  and Copilot `agents/` records after 14 days, results with their state, and data dirs whose marked repo path is gone
   (unmarked: 14 days idle), rotates `trace.jsonl` at 10 MB, skips a data dir with
   a held lock and never touches `jars/`, `tools/` or `recorded/`. It is not hashed
   into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
@@ -172,8 +222,17 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - Each runner fixture `test/fixtures/<name>/` has an `expected.json` with the
   test path, weak and strong score ranges, and required survivor methods. Its
   `variants/<Stem>.weak|strong.<ext>` files are swapped in over the test. The
-  integration test copies the fixture to a temp dir and asserts that build files
-  are unchanged.
+  integration test copies the fixture to a scratch repo and asserts that build
+  files are unchanged.
+- `test/scratch.mjs` makes the scratch repo for the integration, driver,
+  clipped and performance scripts: the live eval copy (`copyRepo`: no top-level
+  `expected.json`, `reference/` or `prompt.*.md`, no build dirs), the variant
+  swap, a temp cache root whose `jars/` and `tools/` link to the real cache
+  root, one CLI call, and `scrubEnv`, which removes the
+  inherited harness, `MUTAGATE_*` and token vars (the integration test sets
+  `MUTAGATE_GO_RUNNER`, `MUTAGATE_DEBUG` and `MUTAGATE_TRACE` back).
+  `test/installer.mjs` and the eval `agentEnv` use `scrubEnv` too, and
+  `test/corpus/generate.mjs` uses `copyRepo`.
 - `test/eval/` is the live eval suite, not part of the skill package:
   - `run.mjs` plans the sweep (`parseArgs`, `planSweep`, `aggregate` are pure
     exports) and runs each cell: copy `tasks/<lang>` to a repo at
@@ -183,7 +242,11 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     That run dir is the seam: drivers write it, the checker reads it, and tests
     use canned run dirs.
   - `harnesses.mjs` has one self-contained driver per harness: preflight
-    against the pins, isolated config env, launch and done-detection.
+    against the pins, isolated config env, launch, done-detection (OpenCode,
+    Pi and Copilot share one settle loop) and `read`, the transcript reader. Only the
+    reader parses a harness transcript: it returns the final text (written to
+    `final.txt`), the executed commands and the raw lines with a user flag;
+    `transcripts/<harness>/` holds the canned real transcripts its tests use.
   - `checks.mjs` turns a run dir into `result.json` (hard checks) and
     `anomalies.json` (warnings with file:line evidence), renders the sweep
     `report.md`, scrubs secrets, and builds `test/evidence/live/` records.
@@ -198,12 +261,12 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 
 - Never edit `scripts/mutagate-hook.cjs` by hand. Edit `mutagate.mjs`, then run
   `npm run generate:runtime`; `test/review.test.mjs` asserts byte equality. The
-  generator converts ESM to CJS with regexes, so `mutagate.mjs` can use only
+  generator converts ESM to CJS with regexes and blanks comment-only lines (line numbers stay aligned), so `mutagate.mjs` can use only
   top-level single-line `import x from '...'` statements and
   `export function`/`export const`. Any other module syntax makes the generator
   throw.
 - Every `scripts/*.cjs` that affects results is in the `fingerprint` helper list;
-  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`) are listed as exceptions in
+  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`, `copilot.cjs`) are listed as exceptions in
   `test/protocol.test.mjs`.
 - `scripts/hooks.json` is generated from `hookConfig('codex')`. Regenerate it
   after changing hook wiring.
@@ -215,7 +278,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - Every ✅ in the README harness × language matrix needs passing `natural`
   and `forced` records in `test/evidence/live/` (`test/eval.test.mjs`).
 - Hooks fail open: exceptions and malformed payloads exit 0. Hook exit 2 is only
-  for deliberate blocks and Claude async survivor delivery. CLI `run --sync` and
+  for deliberate blocks and Claude async survivor delivery; a native Copilot hook
+  call exits 0 always. CLI `run --sync` and
   `check` exit 0 on pass (including final unscored with no mutants to test),
   1 when below threshold or otherwise unscored, 2 on usage errors,
   3 on error results and infrastructure errors, and 128+signo after a signal

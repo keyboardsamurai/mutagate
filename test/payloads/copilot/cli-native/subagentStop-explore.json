@@ -1,0 +1,13 @@
+{
+ "sessionId": "b738a909-8f72-41f4-8cc6-7e07895006a8",
+ "timestamp": 1794251826999,
+ "cwd": "/repo",
+ "transcriptPath": "~/.copilot/session-state/b738a909-8f72-41f4-8cc6-7e07895006a8/events.jsonl",
+ "agentId": "00ba68d8-530d-4412-ac9b-b545dca27f53",
+ "agentType": "explore",
+ "agentName": "explore",
+ "response": "The functions in `/repo/calc.js` are `add` and `clamp`.",
+ "stopReason": "end_turn",
+ "stop_hook_active": false,
+ "parentAgentId": "b738a909-8f72-41f4-8cc6-7e07895006a8"
+}

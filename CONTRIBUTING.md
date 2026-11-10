@@ -33,10 +33,10 @@ Record architectural decisions as numbered ADRs in [docs/adr/](docs/adr/README.m
 `npm run test:integration` runs real mutation runs on `test/fixtures/`. Select fixtures with `MUTAGATE_FIXTURES=go-module,java-maven`. Versions follow CI (`.github/workflows/ci.yml`):
 
 - JDK 21 with Gradle 8.14.3 (Java, Kotlin)
-- Go 1.26 with `go install github.com/szhekpisov/gomutants@v0.6.1`
+- Go 1.26 (1.26.10 or later, else `GOTOOLCHAIN=auto` downloads it) with `go install github.com/gomutants/gomutants@v0.7.2`
 - .NET 10 with `dotnet tool install dotnet-stryker --version 5.0.0`
-- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.1)
-- `npm ci` in each `test/fixtures/ts-*` directory
+- uv; Python venvs in `test/.cache/py2` (mutmut 2.5.1) and `test/.cache/py3` (mutmut 3.8.1), both with pytest 9.2.0
+- `npm ci` in each `test/fixtures/ts-*` directory. To regenerate the `ts-vitest` or `test/eval/tasks/typescript` lockfile, use npm 11 (`npx -y npm@11 install`): npm 10 crashes resolving Vitest 4.1 (`edgesOut`). `npm ci` from the lockfile works with npm 10.
 
 ## Build and install the package locally
 
@@ -47,11 +47,11 @@ npx skills add /tmp/mg-skill -a claude-code --copy        # in a test project
 .claude/skills/mutagate/scripts/mutagate install --agent claude
 ```
 
-`npm run test:installer` tests this path for all four harnesses. Users install from the generated `skill` branch ([ADR-0014](docs/adr/0014-skill-branch-distribution.md)); releases are in [docs/releasing.md](docs/releasing.md).
+`npm run test:installer` tests this path for all five harnesses. Users install from the generated `skill` branch ([ADR-0014](docs/adr/0014-skill-branch-distribution.md)); releases are in [docs/releasing.md](docs/releasing.md).
 
 ## Live evals
 
-`npm run eval` drives real agents (`test/eval/`, ADR-0011). It needs the pinned harnesses (`test/harness-versions.json`), all language toolchains, and **your own credentials**: `CLAUDE_CODE_OAUTH_TOKEN` or `OPENROUTER_API_KEY` in the repo-root `.env`, or an existing `~/.codex` login. Runs cost model tokens and take up to 30 min each. Pull requests do not need eval runs; a maintainer runs them before a matrix change. See [test/evidence/README.md](test/evidence/README.md).
+`npm run eval` drives real agents (`test/eval/`, ADR-0011). It needs the pinned harnesses (`test/harness-versions.json`), all language toolchains, and **your own credentials**: `CLAUDE_CODE_OAUTH_TOKEN` or `OPENROUTER_API_KEY` in the repo-root `.env`, an existing `~/.codex` login, or the host `copilot` login (an optional `COPILOT_GITHUB_TOKEN` in `.env` is passed to it; its precedence over the host login is unconfirmed; never a classic `ghp_`). Runs cost model tokens and take up to 30 min each. A Copilot run costs premium requests: one for the prompt and one more per gate block (24 runs for 6 languages × 2 scenarios × `--repeat 2`: about 50 to 100). Pull requests do not need eval runs; a maintainer runs them before a matrix change. See [test/evidence/README.md](test/evidence/README.md).
 
 ## Pull requests
 

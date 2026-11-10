@@ -18,7 +18,7 @@ Still open before v1: remaining M7 findings (`test/eval/TRIAGE.md`), Windows CI 
 ```sh
 npm test                    # deterministic suites
 npm run test:integration    # real runners (set MUTAGATE_FIXTURES to select)
-npm run test:driver         # scripted gate E2E, all four harness envelopes
+npm run test:driver         # scripted gate E2E, all five harness envelopes (Copilot: not on Windows)
 npm run test:performance    # hook latency budget
 npm run eval -- --harness claude --lang java --scenario forced   # live agent runs (credentials in .env; all flags optional)
 npm run eval -- --report test/.cache/eval/<sweepId>   # re-render a sweep's report.md, no agent runs
@@ -46,9 +46,24 @@ gomutants also ships a Claude Code plugin that proposes Go tests for survivors; 
 |---|---|
 | Linux | ✅ full suite + Java/Kotlin/Python/TS runners (ARM64, JDK 21) |
 | macOS | ✅ deterministic suite + Go/C# runners (Node 22) |
-| Windows | 🟡 `scripts\mutagate.cmd`; CI runs only the `java-gradle` integration fixture (no `npm test`, installer or driver E2E) · ❌ Go and C# unqualified |
+| Windows | 🟡 `scripts\mutagate.cmd`; CI runs only the `java-gradle` integration fixture (no `npm test`, installer or driver E2E) · ❌ Go and C# unqualified · Copilot hooks experimental, no claim |
 
 Go: verified with a `go 1.22` module under Go 1.26.
+
+## GitHub Copilot
+
+Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`), the cloud agent spike S16 of 2026-11-10 (`test/payloads/copilot/cloud/`) and the checks below. The live eval passed both scenarios for all six languages on 2026-11-10 (Copilot CLI 1.0.107, `claude-sonnet-5`, macOS; records `test/evidence/live/copilot-*.json`).
+
+| Case | Status |
+|---|---|
+| Copilot CLI, macOS and Linux | 🟡 deterministic tests (payloads, subagent chain, gate deadline and watchdog, outbox, install, doctor) and the scripted `test:driver` Copilot envelope (weak test blocks, strong test allows, through the installed bash commands; CI runs it on Linux and macOS) · ✅ live eval on macOS |
+| Fail open without the skill dir | ✅ 2026-11-10, Copilot CLI 1.0.107, macOS: project install, then `.agents/skills/mutagate` renamed. A `bash` write and a `create` write succeeded; every hook (`sessionStart`, `preToolUse`, `postToolUse`, `agentStop`) exited 0 with no output, and mutagate wrote no data dir |
+| Hook latency (macOS, 100 samples) | ✅ installed hook p95 43.0 ms; Copilot test edit 39.1 ms; delivery point with an outbox entry 38.4 ms. In a 15,000-file tree the delivery point takes 439 ms, once per background result, outside the 80 ms budget ([ADR-0019](adr/0019-copilot-outbox-delivery.md)) |
+| VS Code Copilot harness | ⏳ not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` (#48) |
+| VS Code Local harness | ⏳ inert by design, not checked (#48) |
+| Copilot cloud coding agent | 🟡 experimental: inert unless `copilotCloud: true`. Spike S16 (one cloud session, 2026-11-10) confirmed the markers `COPILOT_AGENT_JOB_ID` and `COPILOT_AGENT_CALLBACK_URL` (in no local record) and that the agent runs `.github/hooks`, `.github/copilot/settings.json` and `.claude/settings.json`. Three cloud sessions (2026-11-10, PRs #49, #50 and #51) passed: without config the hooks did no work and gave no output; with `copilotCloud: true` a test edit started a StrykerJS run (score 1.00) and `agentStop` allowed on the pass; with a weak test (score 0.60) the outbox gave the agent the two survivors, `agentStop` blocked, the agent added the missing assertion and `agentStop` allowed on the pass. Not checked in the cloud: the hook text that the agent got (the session log does not show hook output), a subagent and the gate deadline ([cloud sessions](../test/payloads/copilot/cloud/README.md#cloud-sessions)) |
+| Copilot sandbox | ❌ unsupported: mutagate says `mutagate inactive: cannot write <path>` (follow-up after spike S17) |
+| Windows | 🟡 experimental, no claim: only an install made on Windows writes a real PowerShell command; `test:driver` skips Copilot there |
 
 ## Post-M7 review validation
 

@@ -1,0 +1,3646 @@
+{
+  "harness": "copilot",
+  "version": "1.0.107",
+  "model": "claude-sonnet-5",
+  "mutagate": "0.9.1",
+  "package": "8bfd61110fe7e23577077ef5f3f191cf77fe9a58f35163682baa306bacbf3468",
+  "lang": "typescript",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-11-10T08:53:21.444Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 477652,
+      "finalResponse": "All 4 targets pass the 0.80 gate (0.96, 1.00, 1.00, 0.96) with no production code weakened; `npm test` and `tsc` are clean.\n\n**Summary:**\n- Unit tests added for every module: `matrixService.test.ts`, `matrixController.test.ts`, `matrixPage.test.ts`, `app.test.ts`.\n- Integration tests in `matrixApi.test.ts` cover the REST API and HTML page end-to-end (supertest), including invalid cells, overflow, missing params, and the max matrix size.\n- Added `GET /api/matrix/sum` (new `sumMatrix` in `matrixService.ts`), with unit + integration tests.\n- Mutation gate: 5 remaining survivors are genuinely equivalent/unreachable mutants (dead `cellIndex` bounds-check branch, no-op `.slice()` on a never-aliased local array, and Express treating `''`/`'/'` identically); I proposed `mutagate waive` entries with reasons for human review rather than weakening production code.",
+      "transcript_sha256": "119b80cf3d2ccad8cc3699e52251301a7430d8a44aa74ca53887d6beecb332fa",
+      "trace": [
+        {
+          "ts": "2026-11-10T08:45:28.537Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:45:39.831Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:00.125Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:00.190Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:10.514Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.860655737704918,
+          "decision": "pass",
+          "duration_ms": 4090,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:10.516Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10300,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:10.750Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:10.814Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:17.687Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:17.756Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:18.686Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.860655737704918,
+          "decision": "stale",
+          "duration_ms": 1654,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:18.687Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7846,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:25.834Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.860655737704918,
+          "decision": "pass",
+          "duration_ms": 1862,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:27.983Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 0.5454545454545454,
+          "decision": "below",
+          "duration_ms": 2077,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:28.621Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:28.691Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:29.865Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "stale",
+          "duration_ms": 1812,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:29.865Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12080,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:34.483Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:39.219Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.860655737704918,
+          "decision": "pass",
+          "duration_ms": 4296,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:40.888Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 0.5454545454545454,
+          "decision": "below",
+          "duration_ms": 1565,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:42.313Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1350,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:49.491Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 7108,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:49.491Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20774,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:55.457Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:55.523Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:46:58.257Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:03.402Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.860655737704918,
+          "decision": "pass",
+          "duration_ms": 1669,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:03.817Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:03.885Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:04.889Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 0.5454545454545454,
+          "decision": "stale",
+          "duration_ms": 1407,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:04.890Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Write",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9341,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:08.128Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:08.192Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:09.955Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6043,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:11.511Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:11.558Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:14.256Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6037,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:15.323Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:15.390Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:17.622Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6039,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:22.078Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:22.138Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:26.974Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:27.041Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:27.254Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.8682170542635659,
+          "decision": "stale",
+          "duration_ms": 5603,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:27.254Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11835,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:28.195Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6030,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:30.047Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:32.590Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:47:34.157Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.8682170542635659,
+          "decision": "pass",
+          "duration_ms": 1543,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:35.715Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 0.5217391304347826,
+          "decision": "below",
+          "duration_ms": 1544,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:37.354Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 0.8518518518518519,
+          "decision": "pass",
+          "duration_ms": 1627,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:38.912Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1545,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:38.926Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11855,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:38.978Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:46.221Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:52.614Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:47:52.682Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:54.914Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:48:00.227Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 4517,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:03.103Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 8132,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:11.082Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 0.8913043478260869,
+          "decision": "pass",
+          "duration_ms": 15398,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:11.183Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:02.847Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:49:02.948Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:22.913Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:02.859Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:02.919Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:08.322Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:08.378Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:08.969Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6024,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:12.702Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:12.759Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:14.425Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6022,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:18.471Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:18.526Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:18.811Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6026,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:23.042Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:23.100Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:24.611Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6056,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:27.080Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:27.137Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:29.152Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6025,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:32.123Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:32.186Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:33.213Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6050,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:36.245Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:36.446Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 58,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:38.254Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6038,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:40.222Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:42.684Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:50:49.658Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.9224806201550387,
+          "decision": "pass",
+          "duration_ms": 6945,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:56.181Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 6519,
+          "error": "node failed (1): innerError: undefined |  [91m09:50:56 (15166) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m09:50:56 (15166) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/14c05ca421eb67888c57983e36e2a55b0d0d16bc/logs/571bd8f8f83883097a9e1bd08887ca229918374f.log"
+        },
+        {
+          "ts": "2026-11-10T08:51:08.705Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 12509,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:10.912Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 2194,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:12.692Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:13.596Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 2670,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:13.625Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 37120,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:14.392Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "read_bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:27.176Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:41.795Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:52.046Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:52.103Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:58.129Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:02.618Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.937984496124031,
+          "decision": "pass",
+          "duration_ms": 4274,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:02.633Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:04.685Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1981,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:04.953Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:06.229Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1461,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:07.825Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 1527,
+          "error": "node failed (1): innerError: undefined |  [91m09:52:07 (97517) ERROR DryRunExecutor [39m One or more tests failed in the initial test run: |  [91m09:52:07 (97517) ERROR Stryker [39m There were failed tests in the initial test run.; log: ~/.cache/mutagate/repos/14c05ca421eb67888c57983e36e2a55b0d0d16bc/logs/216381173f187cf4c2baf119193855699f4bc616.log"
+        },
+        {
+          "ts": "2026-11-10T08:52:07.826Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15696,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:09.464Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1595,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:09.512Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:17.223Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:28.399Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:35.532Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:35.591Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:42.026Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:44.867Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:45.456Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.9612403100775194,
+          "decision": "stale",
+          "duration_ms": 3665,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:47.169Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixService.ts",
+          "score": 0.9612403100775194,
+          "decision": "pass",
+          "duration_ms": 1629,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:47.235Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:48.805Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1538,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:50.215Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1334,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:51.658Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "target": "src/app.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1419,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:51.683Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16065,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:51.704Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:57.084Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:57.180Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:10.356Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:10.451Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:10.587Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:10.694Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:10.814Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:10.939Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:11.053Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:16.074Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:16.173Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:20.315Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 49,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:21.485Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:53:21.565Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "a950c76a-4f61-4065-a846-ad88278f7618",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 378045,
+      "finalResponse": "Done. Summary:\n\n- Added `test/matrixService.ts`, `test/matrixController.test.ts`, `test/matrixPage.test.ts`, `test/app.test.ts` — unit tests for every production module.\n- Added `test/matrixApi.test.ts` — single-file HTTP integration suite (REST API + HTML page) via supertest against the assembled app, covering invalid cells, overflow/underflow, bounds, missing params.\n- Added `GET /api/matrix/sum` (new `sumMatrix` in `matrixService.ts`, wired in `matrixController.ts`) with dedicated tests.\n- `npm test`: 116/116 passing; `tsc` clean.\n- `mutagate check`: all 4 resolved targets pass threshold 0.80 (matrixPage 1.00, matrixController 1.00, matrixService 0.93, app.ts 0.93); gate exit code 0. `test/matrixApi.test.ts` has no auto-resolved single-file target (expected for a cross-module integration file) but doesn't block the gate.",
+      "transcript_sha256": "6e18eaf70fa75b646bcfddfdebe7bc1e2d577401e7ec54e2aa6c341eba50963f",
+      "trace": [
+        {
+          "ts": "2026-11-10T08:45:28.571Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:45:32.338Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:45:38.419Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:45:41.664Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:45:44.501Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:05.850Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:05.917Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:13.941Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:14.013Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:16.173Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8934426229508197,
+          "decision": "stale",
+          "duration_ms": 4048,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:16.174Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10231,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:22.112Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8934426229508197,
+          "decision": "pass",
+          "duration_ms": 1893,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:24.054Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1868,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:24.054Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10011,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:24.476Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:24.542Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:32.115Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8934426229508197,
+          "decision": "pass",
+          "duration_ms": 1367,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:33.539Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1350,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:36.094Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.45454545454545453,
+          "decision": "below",
+          "duration_ms": 2474,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:36.095Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11527,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:37.161Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:37.391Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 35,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:45.992Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8934426229508197,
+          "decision": "pass",
+          "duration_ms": 2375,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:46.523Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:46.584Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:47.471Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "stale",
+          "duration_ms": 1405,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:47.473Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10032,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:46:55.013Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8934426229508197,
+          "decision": "pass",
+          "duration_ms": 2229,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:56.427Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1338,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:46:57.902Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.45454545454545453,
+          "decision": "below",
+          "duration_ms": 1398,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:00.661Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "pass",
+          "duration_ms": 2665,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:00.662Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/app.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14049,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:11.311Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:11.380Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:47:16.238Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:16.305Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:17.431Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Write",
+          "file": [
+            "<repo>/test/matrixApi.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6025,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:21.346Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:21.413Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:22.393Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixService.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6058,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:26.730Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:26.824Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 29,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:27.502Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/src/matrixController.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6058,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:31.727Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:31.785Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:32.878Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6021,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:34.945Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:38.115Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:43.495Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:44.228Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 6237,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:45.770Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1463,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:47.437Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.43478260869565216,
+          "decision": "below",
+          "duration_ms": 1580,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:49.144Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "pass",
+          "duration_ms": 1631,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:47:49.145Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17335,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:50.215Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:47:56.135Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:04.959Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:08.768Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:48:08.872Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:13.223Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:48:13.318Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:17.943Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:20.728Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:48:20.785Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:24.421Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:48.693Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:48.757Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:51.374Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:55.200Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:55.259Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:56.877Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "stale",
+          "duration_ms": 1925,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:56.878Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8095,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:02.976Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 1519,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:04.370Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1319,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:06.549Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.5217391304347826,
+          "decision": "below",
+          "duration_ms": 2104,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:07.057Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:07.118Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:08.079Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "stale",
+          "duration_ms": 1454,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:08.079Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12793,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:11.164Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:14.031Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:49:16.042Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 2728,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:17.446Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1358,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:29.669Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.8260869565217391,
+          "decision": "pass",
+          "duration_ms": 12209,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:31.066Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "pass",
+          "duration_ms": 1385,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:31.092Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23946,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:31.111Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:35.175Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:49:35.272Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:20.401Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:20.458Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:30.124Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 3468,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:32.020Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 0.9629629629629629,
+          "decision": "pass",
+          "duration_ms": 1819,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:39.267Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:39.416Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 25,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:45.504Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:45.627Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:45.872Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 0.9130434782608695,
+          "decision": "stale",
+          "duration_ms": 13767,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:45.873Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 25389,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:49.682Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.8992248062015504,
+          "decision": "pass",
+          "duration_ms": 3997,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:49.684Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixController.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 10238,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:50.023Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:50.087Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:51.720Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixPage.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6062,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:54.069Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:01.831Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.9069767441860465,
+          "decision": "pass",
+          "duration_ms": 5542,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:01.926Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:01.987Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:03.802Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1901,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:03.803Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13690,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:08.144Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:08.208Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:12.629Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:13.769Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixService.ts",
+          "score": 0.9302325581395349,
+          "decision": "pass",
+          "duration_ms": 5585,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:13.770Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11756,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:15.436Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:51:16.249Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixPage.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 1836,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:28.772Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/matrixController.ts",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 12468,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:30.116Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "target": "src/app.ts",
+          "score": 0.9259259259259259,
+          "decision": "pass",
+          "duration_ms": 1331,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:30.128Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Edit",
+          "file": [
+            "<repo>/test/matrixService.test.ts"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21894,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:30.159Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:36.469Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:41.059Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 57,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:51:41.884Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:51:41.965Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "0577e4d8-cce7-411e-8d76-7113b96aa9c8",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

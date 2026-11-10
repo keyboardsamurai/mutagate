@@ -24,6 +24,7 @@ module.exports = async function prune(root, { lock, abandoned }, now = Date.now(
       if (marked ? gone(repo) : now - Math.max(at(), ...list(d).map(f => at(f))) > IDLE) { rm(d); continue; }
       if (!marked) continue;
       for (const f of list(path.join(d, 'reports'))) if (old(DAY, 'reports', f)) rm(path.join(d, 'reports', f));
+      for (const f of list(path.join(d, 'agents'))) if (old(IDLE, 'agents', f)) rm(path.join(d, 'agents', f)); // Copilot subagent chain records
       for (const f of list(path.join(d, 'state')).filter(f => f.endsWith('.json') && old(IDLE, 'state', f))) {
         const p = path.join(d, 'state', f), release = await lock(p + '.lock', 0);
         if (release) try { if (old(IDLE, 'state', f)) fs.rmSync(p, { force: true }); } finally { release(); }

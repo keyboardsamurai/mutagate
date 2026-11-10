@@ -1,0 +1,13 @@
+{
+ "sessionId": "bd7e79f8-4086-4242-a8fa-42c4b40ffb87",
+ "timestamp": 1794251839936,
+ "cwd": "/repo",
+ "transcriptPath": "~/.copilot/session-state/b738a909-8f72-41f4-8cc6-7e07895006a8/events.jsonl",
+ "agentId": "20a9a7dc-e1a7-45df-9825-9aa7200a3195",
+ "agentType": "general-purpose",
+ "agentName": "general-purpose",
+ "response": "I created `tests/nested.test.js` containing `console.log('nested');`. I didn't run it.",
+ "stopReason": "end_turn",
+ "stop_hook_active": false,
+ "parentAgentId": "76bf5d09-c554-4518-9e0b-46d000a7dc39"
+}

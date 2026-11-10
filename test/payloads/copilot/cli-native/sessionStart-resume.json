@@ -1,0 +1,7 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251926892,
+ "cwd": "/repo",
+ "source": "resume",
+ "initialPrompt": "Run this shell command in the repo root: env | grep -iE \"copilot|session|claude\" > shellenv-resume.txt . Then stop."
+}

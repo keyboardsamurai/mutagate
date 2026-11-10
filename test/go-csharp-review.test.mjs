@@ -75,14 +75,14 @@ test('tool pin changes use a new installation and ignore legacy unversioned cach
 });
 
 test('concurrent first-use workers install a tool once', async t => {
-  const { c } = isolatedTools(t), install = installer(c, '0.6.1');
+  const { c } = isolatedTools(t), install = installer(c, '0.7.2');
   const results = await Promise.allSettled([m.runners().tool(c, 'gomutants', install), m.runners().tool(c, 'gomutants', install)]);
   assert.equal(fs.readFileSync(path.join(c.repo, 'installs'), 'utf8'), 'install\n');
   assert.ok(results.every(r => r.status === 'fulfilled')); assert.equal(results[0].value, results[1].value);
 });
 
 test('tool installation lock serializes separate worker processes', async t => {
-  const { c } = isolatedTools(t), install = installer(c, '0.6.1');
+  const { c } = isolatedTools(t), install = installer(c, '0.7.2');
   const code = `import { runners } from ${JSON.stringify(new URL('../scripts/mutagate.mjs', import.meta.url).href)}; await runners().tool(${JSON.stringify(c)}, 'gomutants', ${JSON.stringify(install)});`;
   const worker = () => new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['--input-type=module', '-e', code]);
@@ -94,9 +94,9 @@ test('tool installation lock serializes separate worker processes', async t => {
 });
 
 test('waiting for another installer obeys the worker deadline and preserves its lock', async t => {
-  const { c, put } = isolatedTools(t), lock = '.cache/tools/gomutants@0.6.1.lock';
+  const { c, put } = isolatedTools(t), lock = '.cache/tools/gomutants@0.7.2.lock';
   put(lock, JSON.stringify({ pid: process.pid, at: Date.now() }));
-  await assert.rejects(m.runners().tool(c, 'gomutants', installer(c, '0.6.1'), { deadline: Date.now() + 75 }), /budget exceeded waiting/);
+  await assert.rejects(m.runners().tool(c, 'gomutants', installer(c, '0.7.2'), { deadline: Date.now() + 75 }), /budget exceeded waiting/);
   assert.ok(fs.existsSync(path.join(c.repo, lock)));
   assert.ok(!fs.existsSync(path.join(c.repo, 'installs')));
 });

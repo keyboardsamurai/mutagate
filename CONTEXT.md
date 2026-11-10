@@ -58,6 +58,10 @@ _Avoid_: pending, empty result, null score
 The final unscored reason for a target whose file yields no eligible mutant. It is no obligation: no block, counted as pass.
 _Avoid_: zero mutants, empty run, nothing to mutate
 
+**Target verdict**:
+The classification of one target: pending, retry (an error result with a second attempt left) or the final result status, with its obligation (block, warn or none) and its exit code. The gate, `run --sync`, `status`, the worker and the async hook take it from one function.
+_Avoid_: target state, decision
+
 ### Runs
 
 **Runner**:
@@ -99,11 +103,11 @@ _Avoid_: user error, test error, agent fault
 ### Gate and budgets
 
 **Hook**:
-A harness event that mutagate handles: PreToolUse, PostToolUse, Stop, SubagentStop, TaskCompleted. Hooks fail open.
+A harness event that mutagate handles: SessionStart, PreToolUse, PostToolUse, Stop, SubagentStop, TaskCompleted, and for Copilot SubagentStart. A native Copilot event maps to one of these (`agentStop` is Stop). Hooks fail open.
 _Avoid_: callback, trigger, plugin event
 
 **Gate**:
-The check over every target in the session that decides block or allow and the exit code. Stop, SubagentStop, TaskCompleted and `check` run it.
+The check over every target in the session that decides block or allow and the exit code. Stop, SubagentStop, TaskCompleted, the Copilot `agentStop` of the root agent and `check` run it.
 _Avoid_: completion check, verdict, blocker
 
 **Run budget** (`runBudgetSec`):
@@ -111,7 +115,7 @@ The longest time one mutation run may take. A run that reaches it is a final uns
 _Avoid_: run timeout, execution budget, target budget
 
 **Gate deadline** (`gateBudgetSec`):
-The time after the start of the gate past which it makes no new attempt. Hooks always use it; only `check --wait N` raises it, to N when N is larger.
+The time after the start of the gate past which it makes no new attempt. Hooks always use it; only `check --wait N` raises it, to N when N is larger. A Copilot `agentStop` with timeout T lowers it to T − 2M when that is smaller, M = min(30, ⌊T/4⌋) s, and its watchdog allows at T − M (ADR-0018).
 _Avoid_: gate budget, hook budget, check budget
 
 **In-flight wait** (`gateWaitSec`):
@@ -137,12 +141,28 @@ The unit of state that groups registrations, results and blocks under one id fro
 _Avoid_: conversation, thread, run (for this)
 
 **Harness**:
-The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode or Pi.
+The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode, Pi or GitHub Copilot (through a native install).
 _Avoid_: agent, host tool, IDE
 
 **Inherited hook call**:
 A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
 _Avoid_: foreign hook, Copilot hook
+
+**Native install**:
+mutagate's own Copilot hook file, `.github/hooks/mutagate.json` or the user hook dir. Each command gives `--harness copilot`, so its calls are native hook calls: mutagate normalizes their camelCase payloads and handles them, unlike inherited hook calls (ADR-0020).
+_Avoid_: Copilot hook, tagged install
+
+**Spawned handler**:
+The detached `hook PostToolUse --mutate --harness copilot` process that a native hook call starts with its raw payload, because Copilot has no async hooks. It puts its reports in the outbox. No hook file installs it, so mutagate never treats its payload as a VS Code Local payload and does not record it.
+_Avoid_: async hook, worker (for this)
+
+**Outbox**:
+The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry already reported, leave it without delivery (ADR-0019).
+_Avoid_: queue, inbox, pending reports
+
+**Delivery point**:
+A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not yet reported as `additionalContext` (ADR-0019).
+_Avoid_: drain hook, flush point
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).

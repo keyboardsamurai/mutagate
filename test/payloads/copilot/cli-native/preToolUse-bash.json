@@ -1,0 +1,11 @@
+{
+ "sessionId": "485a016c-6323-41a0-ae4d-50290ef97a37",
+ "timestamp": 1794251631398,
+ "cwd": "/repo",
+ "toolCallId": "toolu_015uUSebsMk6yVuAKu65GFdX",
+ "toolName": "bash",
+ "toolArgs": {
+  "command": "echo first-call",
+  "description": "Echo first-call"
+ }
+}

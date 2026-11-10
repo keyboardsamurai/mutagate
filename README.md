@@ -12,7 +12,7 @@ A passing test proves little. A test with no assertions passes too. mutagate fin
 
 This runs in the background each time the agent writes a test. When the agent tries to finish, mutagate checks the scores. If the tests catch fewer than 80% of the bugs, it stops the agent from ending its turn and gives it the list of bugs that got through. The agent then writes better tests. You do nothing.
 
-Works with Claude Code, Codex CLI, OpenCode and Pi, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.1): config keys and report text can change before 1.0.
+Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.2): config keys and report text can change before 1.0.
 
 ## Why you want this
 
@@ -29,7 +29,7 @@ Mutation testing has a reputation for being slow, because a full run mutates the
 - **Fails open.** A missing toolchain or a crashing mutation tool never blocks the agent. mutagate only blocks on problems the agent can fix.
 - **Humans keep control of exceptions.** Some mutants change nothing a test could see. The agent can propose to waive them. Only a person can approve that.
 - **Nothing added to your build.** It drives proven mutation tools (PIT, mutmut, Stryker, gomutants, Stryker.NET). It has no npm dependencies and does not edit your build files or mutation-tool configs.
-- **Tested with real agents.** Every harness and language combination below passed live runs with a real model.
+- **Tested with real agents.** Every ✅ harness and language combination below passed live runs with a real model.
 
 ## What it looks like
 
@@ -92,13 +92,13 @@ npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
 1. The first line copies the skill into `.claude/skills/mutagate`. `npx skills` sends its own install telemetry; set `DISABLE_TELEMETRY=1` to turn it off.
 2. `install` adds the mutagate hooks to `.claude/settings.json`. It keeps your other hooks.
 3. `doctor` checks config, toolchain, mutation tool and adapter, then runs one real mutation. The first time, it downloads the mutation tool where needed and does a cold build, so expect a few minutes (C# takes longer, see [Runners](#runners)). A full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
-4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.1 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
+4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.2 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
 5. Ask it to write a test for one production file. If the test is weak, it gets blocked with the survivors.
 
 To see scores without ever blocking the agent, set `"mode": "advise"` in `.mutagate/config.json` (or `MUTAGATE_MODE=advise`).
 
 <details>
-<summary>Codex CLI, OpenCode and Pi</summary>
+<summary>Codex CLI, OpenCode, Pi and GitHub Copilot CLI</summary>
 
 Same three steps, different skill dir:
 
@@ -123,10 +123,17 @@ npx skills add keyboardsamurai/mutagate#skill -a pi --copy
 .pi/skills/mutagate/scripts/mutagate doctor
 ```
 
+```sh
+# GitHub Copilot CLI: writes .github/hooks/mutagate.json, loaded in a trusted folder
+npx skills add keyboardsamurai/mutagate#skill -a github-copilot --copy
+.agents/skills/mutagate/scripts/mutagate install --agent copilot
+.agents/skills/mutagate/scripts/mutagate doctor
+```
+
 OpenCode and Pi have no native way to block the agent from finishing. mutagate sends the survivors as a new message instead, and the session continues.
 </details>
 
-**Share it with your team.** Commit the skill dir, the harness config (`.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/mutagate.js` or `.pi/extensions/mutagate.ts`) and `.mutagate/config.json`. On macOS and Linux the hook commands use paths relative to the repo, so every clone gets the same gate. Each teammate needs Node 22+ and the toolchain. Without them, the hooks do nothing and never block.
+**Share it with your team.** Commit the skill dir, the harness config (`.claude/settings.json`, `.codex/hooks.json`, `.opencode/plugins/mutagate.js`, `.pi/extensions/mutagate.ts` or `.github/hooks/mutagate.json`) and `.mutagate/config.json`. On macOS and Linux the hook commands use paths relative to the repo, so every clone gets the same gate. Each teammate needs Node 22+ and the toolchain. Without them, the hooks do nothing and never block.
 
 **Update.** Run the `npx skills add` line and `install` again (Codex: trust the hooks again). If you update the skill and forget `install`, each session starts with `Hooks are from mutagate X, skill is Y: rerun … install` and the exact command.
 
@@ -171,11 +178,11 @@ Details, failures and platforms: [docs/validation.md](https://github.com/keyboar
 
 | Language | Mutation tool | Build / test runner | You provide | Tool install | Validated |
 |---|---|---|---|---|---|
-| Java | [PIT](https://pitest.org) 1.21.0 | Gradle/Maven · JUnit 4/5 | JDK 11+ | automatic, SHA-256 pinned | ✅ Gradle, Gradle multi-module, Maven |
+| Java | [PIT](https://pitest.org) 1.30.2 | Gradle/Maven · JUnit 4/5 | JDK 11+ | automatic, SHA-256 pinned | ✅ Gradle, Gradle multi-module, Maven |
 | Kotlin | PIT + junk filter ([Tier B](#kotlin)), Arcmutate ([Tier A](#kotlin), licensed) | Gradle/Maven · JUnit 4/5 | JDK 11+ | automatic, SHA-256 pinned | ✅ Gradle, Kotlin/Java mixed · ⏳ Tier A |
 | Python | [mutmut](https://github.com/boxed/mutmut) 2.5.1 / 3.8.1 | pytest · pip or uv | mutmut + pytest in the project env | you | ✅ pip, uv |
-| TypeScript / JavaScript | [Stryker](https://stryker-mutator.io) 9.1.1 | Jest 29 or Vitest 3 | `@stryker-mutator/core` + its test runner in the project | you | ✅ Jest, Vitest |
-| Go | [gomutants](https://github.com/szhekpisov/gomutants) 0.6.1, gremlins 0.6.0 fallback | `go test` | Go 1.26+ | automatic, cached | ✅ nested-package module · 🟡 [scoping caveats](#runners) |
+| TypeScript / JavaScript | [Stryker](https://stryker-mutator.io) 9.6.1 | Jest 29 or Vitest 4 | `@stryker-mutator/core` + its test runner in the project | you | ✅ Jest, Vitest |
+| Go | [gomutants](https://github.com/gomutants/gomutants) 0.7.2, gremlins 0.6.0 fallback | `go test` | Go 1.26+ | automatic, cached | ✅ nested-package module · 🟡 [scoping caveats](#runners) |
 | C# | Stryker.NET 5.0.0 | `dotnet test` · xUnit | .NET SDK 10 | automatic, cached | ✅ xUnit · 🟡 [slow cold builds](#runners) |
 
 Install the tools you provide yourself:
@@ -194,6 +201,7 @@ npm i -D @stryker-mutator/core@9 @stryker-mutator/jest-runner@9    # TS/JS with 
 | [Codex CLI](https://developers.openai.com/codex) | hooks in `.codex/hooks.json` (trust them in `/hooks`) | blocks the finish | denied |
 | [OpenCode](https://opencode.ai) | plugin `.opencode/plugins/mutagate.js` | sends survivors, session continues | denied |
 | [Pi](https://pi.dev) | extension `.pi/extensions/mutagate.ts` | sends survivors, session continues | denied |
+| [GitHub Copilot CLI](https://github.com/github/copilot-cli) | hooks in `.github/hooks/mutagate.json` (trusted folder) | blocks the finish | denied |
 
 Live eval results (`npm run eval`), both the `natural` and the `forced` scenario:
 
@@ -203,15 +211,26 @@ Live eval results (`npm run eval`), both the `natural` and the `forced` scenario
 | Codex CLI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | OpenCode | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Pi | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Copilot CLI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-✅ both scenarios passed · ⏳ a scenario is missing · ❌ gap in mutagate or the harness. Each scenario runs twice and passes when one run passes ([ADR-0011](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0011-live-eval-local-two-runs-per-cell.md)). One of the two runs failed for OpenCode C# `natural`, Pi C# `natural`, Pi Java `natural`, Pi Python `natural` and Pi Python `forced`. Records: [test/evidence](https://github.com/keyboardsamurai/mutagate/blob/main/test/evidence/README.md).
+✅ both scenarios passed · ⏳ a scenario is missing · ❌ gap in mutagate or the harness. Each scenario runs twice and passes when one run passes ([ADR-0011](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0011-live-eval-local-two-runs-per-cell.md)). One of the two runs failed for OpenCode C# `natural`, Pi C# `natural`, Pi Java `natural`, Pi Python `natural`, Pi Python `forced` and Copilot Python `forced` (premium-request quota). Records: [test/evidence](https://github.com/keyboardsamurai/mutagate/blob/main/test/evidence/README.md).
 
 Limits per harness:
 
 - OpenCode passes only its write, edit, patch and apply_patch tools to mutagate; Pi only write and edit.
 - OpenCode and Pi need a session that stays open (interactive, `opencode serve`, `pi --mode rpc`). One-shot `opencode run` and `pi -p` cannot take the follow-up message.
 - `claude -p` without streaming input waits for the background run after each test write.
-- GitHub Copilot CLI is not supported yet. It also runs the hooks in `.claude/settings.json`; mutagate detects this and does nothing there (no runs, no blocks), and the session starts with `mutagate inactive under Copilot`.
+
+### GitHub Copilot CLI
+
+A test edit starts a background run; its report reaches the agent with its next edit or shell call. When the agent stops, the gate works for up to `gateBudgetSec` (120 s) of the 600 s `agentStop` timeout and blocks like Claude Code; if it is still busy at 570 s, it allows and stops its runs. Copilot also runs the hooks in `.claude/settings.json`; mutagate keeps those calls inert (payload `timestamp`), and without a Copilot hook file the session starts with `mutagate inactive under Copilot`.
+
+- `-p` and text mode show nothing while the gate waits. When the gate allows, its messages (round cap, warnings, `advise` reports) are progress lines that the model does not see; `status` shows the scores.
+- Subagent edits are gated when the root agent stops. CLI calls in a subagent's shell do not join the root session.
+- `install` refuses a second scope. A blocking `agentStop` hook of another tool that runs after mutagate's replaces mutagate's reason.
+- Not supported: Copilot sandbox sessions (`mutagate inactive: cannot write …`) and Windows (experimental). The cloud coding agent is inert unless `"copilotCloud": true` (experimental). VS Code is not claimed until it has a smoke record.
+
+Details: [docs/copilot.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/copilot.md).
 
 ## Configuration
 
@@ -240,6 +259,7 @@ Put shared settings in `.mutagate/config.json` and commit it:
 | `goRunner` | `"auto"` | `"gomutants"` or `"gremlins"`, see [Runners](#runners). |
 | `goTags` | `""` | Go build tags, comma-separated. |
 | `allowAgentWaivers` | `false` | Lets agents approve their own waivers. |
+| `copilotCloud` | `false` | Runs mutagate in the GitHub Copilot cloud coding agent. Without it, its hook calls do nothing. |
 
 Where settings come from, strongest first: command-line flags (`--run-budget-sec 600`), environment variables (`MUTAGATE_RUN_BUDGET_SEC=600`), the project's `.mutagate/config.json` (or the file `MUTAGATE_CONFIG` names), your user config `~/.cache/mutagate/config.json`, then the defaults. If the config is invalid, mutagate warns once per session and uses only the defaults.
 
@@ -250,13 +270,13 @@ The agent runs these through the skill; you can run them too. `<skill>` is the s
 | Command | What it does |
 |---|---|
 | `<skill>/scripts/mutagate run <test> [--target <target>]` | Starts a background run for a test. `--target` picks the target when the name fits several files; the choice lasts for the session. |
-| `run <test> --sync [--json]` | Runs now and prints the report. |
+| `run <test> --sync [--json]` | Runs now and prints the report. A target still pending (its source changed during both attempts, or another run held it past the run budget) prints no report but the gate's message `mutagate: <target> results pending; run <skill>/scripts/mutagate check --wait <gateBudgetSec>`; with `--json` it prints `{"target": …, "status": "pending", "message": …}`. |
 | `check [--wait <sec>] [--json]` | Checks every target in the session, like the gate at finish. Reuses finished results and waits for running ones. `--wait` allows more time than the default 120 s. |
 | `status [--json]` | Scores, stale targets, survivors with their ids, waivers, tests without a target, and production edits no test covers. |
 | `detect` | Shows what mutagate found: harness, language, build tool, runner, Kotlin tier (JSON). |
-| `doctor [--json]` | Checks the setup and runs one real mutation. Also warns (without failing) when your harness version differs from the tested one, or when the installed hooks are from another mutagate version. |
+| `doctor [--json]` | Checks the setup and runs one real mutation. Also warns (without failing) when your harness version differs from the tested one, or when the installed hooks are from another mutagate version. For Copilot it warns about a missing or second hook file or a skill copy of another version, and fails when the cache root is not writable. |
 | `waive <id> --reason <text>` | Proposes a waiver. See [Waivers](#waivers). |
-| `install` / `uninstall` | Adds or removes the hooks. `--agent claude\|codex\|opencode\|pi\|auto`, `--scope project\|user`. |
+| `install` / `uninstall` | Adds or removes the hooks. `--agent claude\|codex\|opencode\|pi\|copilot\|auto`, `--scope project\|user`. |
 | `version` / `--version` | Prints `mutagate <version>`. |
 
 Exit codes of `run --sync` and `check`:
@@ -305,6 +325,7 @@ All languages: your build files and mutation-tool configs are never changed, and
 **Go**
 
 - With `goRunner: "auto"`, mutagate uses gomutants (cached or on PATH), installs it if missing, and falls back to gremlins.
+- gomutants 0.7.2 builds with Go 1.26.10 or later. With an earlier Go, `go install` downloads that Go version (`GOTOOLCHAIN=auto`, the default).
 - gomutants mutates only the target file and skips the other `Test…` functions in the package. `Example` and `Fuzz` functions in other files of the package may still run.
 - gremlins mutates one file but runs the package's tests. With gremlins 0.6.0 the directory name must match the package name, or build failures count as killed mutants.
 - Never mutated: `*.pb.go`, `*_gen.go`, `zz_generated*.go`, `mock_*.go`, `*_mock.go`.
@@ -346,7 +367,7 @@ The Kotlin compiler generates code you never wrote, and mutants in that code wou
 
 ## Sessions
 
-mutagate tracks targets per agent session, so the gate checks only what this session touched. Hooks take the session id from the harness. CLI commands the agent runs join the same session on their own, through `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID`, or `MUTAGATE_HOOK_SESSION` (set for OpenCode and Pi). Without hooks, export one `MUTAGATE_SESSION=<any id>` so `run` and `check` in different shells share a session.
+mutagate tracks targets per agent session, so the gate checks only what this session touched. Hooks take the session id from the harness. CLI commands the agent runs join the same session on their own, through `CLAUDE_CODE_SESSION_ID`, `CODEX_THREAD_ID`, `COPILOT_AGENT_SESSION_ID` (Copilot CLI), or `MUTAGATE_HOOK_SESSION` (set for OpenCode and Pi). In a Copilot CLI shell (`COPILOT_CLI` set), `waive --apply` is refused as in any agent session. Copilot hooks use the Git top level as the repo; so do `run`, `check`, `status` and `waive` in the Copilot root agent shell, with a `run` test path relative to the shell's directory, else to the Git top level. Without hooks, export one `MUTAGATE_SESSION=<any id>` so `run` and `check` in different shells share a session.
 
 ## Cache, logs and housekeeping
 
@@ -359,7 +380,7 @@ mutagate tracks targets per agent session, so the gate checks only what this ses
 
 ## Security and privacy
 
-mutagate sends no telemetry and uploads nothing. It downloads only missing tools, as listed in [Runners](#runners); `MUTAGATE_OFFLINE=1` turns that off. The hooks run your build and your tests outside the agent's sandbox, with your permissions. Details: [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
+mutagate sends no telemetry and uploads nothing. It downloads only missing tools, as listed in [Runners](#runners); `MUTAGATE_OFFLINE=1` turns that off. The hooks run your build and your tests with your permissions, with Claude Code, Codex, OpenCode and Pi outside the agent's sandbox; in a Copilot sandbox mutagate is inactive. Details: [SECURITY.md](https://github.com/keyboardsamurai/mutagate/blob/main/SECURITY.md).
 
 ## Troubleshooting
 
@@ -369,6 +390,8 @@ mutagate sends no telemetry and uploads nothing. It downloads only missing tools
 | Codex never runs the hooks | Codex does not run new or changed hooks until you trust them | Open `/hooks` in Codex and trust mutagate (after every install) |
 | Claude ignores the hooks | Claude started in a subdirectory and did not load the root `.claude/settings.json` | Start `claude` in the repo's top-level directory |
 | `Hooks are from mutagate X, skill is Y: rerun … install` at session start, or `WARN <harness> <scope> install` in doctor | The skill was updated, but `install` did not run again | Run the command the message names. Codex: trust mutagate in `/hooks` again |
+| Copilot never runs the hooks | The folder is not trusted, or a policy allows only managed hooks | Trust the folder (`copilot -p`: `--trust-folder`), or ask your admin to allow repo hooks |
+| `mutagate inactive: cannot write <path>` under Copilot | The Copilot sandbox blocks the cache root | Run Copilot without its sandbox |
 | GitHub Copilot denies every file edit in a repo with a Claude install | `.claude/settings.json` has hooks from an older mutagate, which fail when a clone has no skill dir, Git or Node | `<skill>/scripts/mutagate install --agent claude`, then commit `.claude/settings.json` |
 | `mutagate inactive: hooks run Node …; need 22+` | The hooks found Node older than 22 | Set `MUTAGATE_NODE=/path/to/node22`, or run `install` again under Node 22+ |
 | `jar download failed` or `offline: missing …` | No access to Maven Central | See [Proxy and offline setup](#runners) |

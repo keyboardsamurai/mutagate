@@ -1,6 +1,6 @@
 This is the root folder of a TypeScript Express application that we want to build. Nothing is initialized yet.
 
-Build an Express 5 application in TypeScript (Node 22, npm, ESM) with Vitest 3.2.4 and supertest, that keeps an in-memory matrix of 32-bit integers with atomic cells. `npm test` must run `vitest run`. Add @stryker-mutator/core and @stryker-mutator/vitest-runner 9.1.1 as dev dependencies; Stryker is the project's mutation tester.
+Build an Express 5 application in TypeScript (Node 22, npm, ESM) with Vitest 4.1.12 and supertest (if npm 10 fails to resolve Vitest 4.1.12, install with `--legacy-peer-deps` or `npx npm@11 install`), that keeps an in-memory matrix of 32-bit integers with atomic cells. `npm test` must run `vitest run`. Add @stryker-mutator/core and @stryker-mutator/vitest-runner 9.6.1 as dev dependencies; Stryker is the project's mutation tester.
 
 1. `src/matrixService.ts`: rows and columns from 1 to 1000 (reject anything else), get, set, add a delta (reject 32-bit overflow instead of wrapping), clear, and a snapshot copy of all cells. Reject cells outside the matrix.
 2. `src/matrixController.ts`: REST endpoints under /api/matrix: GET the matrix (rows, cols, cells), GET and PUT `/cells/:row/:col` (`?value=`), POST `/cells/:row/:col/add` (`?delta=`), and DELETE to clear. Invalid cells, overflow and bad input return 400 with a JSON error message.

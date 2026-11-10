@@ -4,14 +4,16 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { parseArgs, planSweep, aggregate, evidenceCells, ids, runRepo, stepTimeout, diffSince } from './eval/run.mjs';
+import { parseArgs, planSweep, aggregate, evidenceCells, ids, runRepo, stepTimeout, diffSince, agentEnv } from './eval/run.mjs';
+import { scratch } from './scratch.mjs';
+import { hash } from '../scripts/mutagate.mjs';
 import { scrubDir } from './eval/checks.mjs';
 import { harnesses, opencodeConfig, pinned } from './eval/harnesses.mjs';
 const config = JSON.parse(fs.readFileSync(new URL('./eval/config.json', import.meta.url)));
 const { harness, lang, scenario } = ids, all = { harness, lang, scenario };
 
 test('config pins models, timeout, jobs, repeat and settle period', () => {
-  assert.deepEqual(config, { models: { claude: 'claude-sonnet-5', codex: 'gpt-5.6-sol', opencode: 'openrouter/deepseek/deepseek-v4.1-flash', pi: 'deepseek/deepseek-v4-flash' }, codexEffort: 'medium', timeoutMs: 1800000, jobs: 4, repeat: 2, settleMs: 20000 });
+  assert.deepEqual(config, { models: { claude: 'claude-sonnet-5', codex: 'gpt-5.6-sol', opencode: 'openrouter/deepseek/deepseek-v4.1-flash', pi: 'deepseek/deepseek-v4-flash', copilot: 'claude-sonnet-5' }, codexEffort: 'medium', timeoutMs: 1800000, jobs: 4, repeat: 2, settleMs: 20000 });
   assert.equal(JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url))).scripts.eval, 'node test/eval/run.mjs');
 });
 
@@ -135,6 +137,25 @@ test('OpenCode allows external directories for skill hooks', () => {
   assert.equal(opencodeConfig('m').model, 'm');
 });
 
+// Canned real transcripts in eval/transcripts/<harness>/: abridged runs of sweep 20261003-214323-0b96, strings cut at 160 characters, repo paths scrubbed to /repo and run-dir paths to <run>.
+// Copilot: the -p JSONL of spike S11 (#35, Copilot CLI 1.0.107: a shell call, a Stop block, the continued turn), strings cut at 160 characters, arrays at 3 entries,
+// personal skills dropped, the session id zeroed and the home dir scrubbed to ~.
+test('each harness reads its own transcript: executed commands (ids dedupe, replays and suggestions skipped), user lines (never tool results), final text', t => {
+  const dir = h => path.join(import.meta.dirname, 'eval/transcripts', h), raw = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-transcript-'));
+  t.after(() => fs.rmSync(raw, { recursive: true, force: true }));
+  const read = (h, d = dir(h)) => { const r = harnesses[h].read(d); return [[...new Set([r.file, ...r.lines.map(l => l.file)])], r.commands.map(c => [r.lines[c.at].line, c.text.slice(0, 24)]), r.lines.filter(l => l.user).map(l => l.line), r.final.slice(0, 24)]; };
+  const zsh = "/bin/zsh -lc \"sed -n '1,";
+  assert.deepEqual(read('claude'), [['stdout.log'], [[2, 'find . -path ./target -p'], [3, 'find . -path ./target -p'], [11, 'mvn -q -o test -Dtest=Ma']], [10], 'Added `GET /api/matrix/s']);
+  assert.deepEqual(read('codex'), [['stdout.log'], [[6, zsh], [8, zsh], [14, zsh], [19, "/bin/zsh -lc 'mvn test'"]], [], 'Implemented:\n\n- Strength']);
+  // OpenCode: the server export holds the re-prompted turns; without it, the raw `run --format json` output.
+  assert.deepEqual(read('opencode'), [['messages.jsonl'], [[3, 'find . -type f -not -pat'], [7, 'ls -la .agents/skills/mu'], [8, 'mvn -q -DskipTests=false']], [1, 2, 6], 'Added `GET /api/matrix/s']);
+  fs.copyFileSync(path.join(dir('opencode'), 'stdout.log'), path.join(raw, 'stdout.log'));
+  assert.deepEqual(read('opencode', raw), [['stdout.log'], [[2, 'find . -type f -not -pat']], [], '']);
+  assert.deepEqual(read('pi'), [['stdout.log'], [[10, 'find . -type f -name "*.'], [11, 'find . -type f \\( -name '], [25, 'cd /repo && mvn test 2>&']], [4, 5, 18, 20, 21], 'All 67 tests pass across']);
+  // Copilot: bash tool.execution_start (assistant.message toolRequests are requests, not calls); user lines: the prompt echo (delivery idle) and the Stop block reason (queued).
+  assert.deepEqual(read('copilot'), [['stdout.log'], [[26, 'echo first-call'], [67, 'echo s11-continued']], [11, 51], 'The command printed `s11']);
+});
+
 test('Claude resolves its executable pin before PATH', t => {
   const pin = JSON.parse(fs.readFileSync(new URL('./harness-versions.json', import.meta.url), 'utf8')).packages['@anthropic-ai/claude-code'];
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-claude-pin-')), exe = path.join(home, '.local/share/claude/versions', pin), oldPath = process.env.PATH;
@@ -143,4 +164,22 @@ test('Claude resolves its executable pin before PATH', t => {
   fs.writeFileSync(exe, `#!/bin/sh\nprintf "${pin} (Claude Code)\\n"\n`, { mode: 0o755 });
   process.env.PATH = home;
   assert.deepEqual(pinned('claude', '@anthropic-ai/claude-code', home), { exe, version: pin });
+});
+
+test('a scratch repo copies like a live run, keeps its CLI session and cache root under an inherited agent session, and shares jars/ and tools/ with the real cache root', t => {
+  const xdg = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-xdg-')), inherited = { CODEX_THREAD_ID: 'codex-thread', CLAUDE_CODE_SESSION_ID: 'claude-session', GH_TOKEN: 'gh' }, saved = Object.fromEntries([...Object.keys(inherited), 'XDG_CACHE_HOME'].map(k => [k, process.env[k]]));
+  Object.assign(process.env, inherited, { XDG_CACHE_HOME: xdg });
+  t.after(() => { for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k]; else process.env[k] = v; fs.rmSync(xdg, { recursive: true, force: true }); });
+  const s = scratch(path.join(import.meta.dirname, 'eval/tasks/python'), { session: 'scratch-1', env: { MUTAGATE_TRACE: '1' } });
+  t.after(s.rm);
+  assert.deepEqual(['expected.json', 'reference', 'prompt.natural.md', 'prompt.pbt.md'].filter(f => fs.existsSync(path.join(s.repo, f))), []);
+  assert.ok(fs.existsSync(path.join(s.repo, 'pyproject.toml')));
+  assert.deepEqual(Object.keys(inherited).filter(k => k in s.env || k in agentEnv()), []);
+  const r = s.cli(['status']);
+  assert.equal(r.status, 0, r.stderr);
+  const trace = fs.readFileSync(path.join(s.env.CLAUDE_PLUGIN_DATA, 'repos', hash(s.repo), 'trace.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+  assert.deepEqual(trace.map(e => [e.event, e.session]), [['status', 'scratch-1']]);
+  for (const n of ['jars', 'tools']) fs.writeFileSync(path.join(s.env.CLAUDE_PLUGIN_DATA, n, 'kept'), n);
+  s.rm();
+  assert.deepEqual([fs.existsSync(s.dir), ...['jars', 'tools'].map(n => fs.readFileSync(path.join(xdg, 'mutagate', n, 'kept'), 'utf8'))], [false, 'jars', 'tools']);
 });

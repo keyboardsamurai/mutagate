@@ -5,9 +5,10 @@ import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {runners} from '../scripts/mutagate.mjs';const {command}=runners();
 import {packageSkill} from './package.mjs';
+import {scrubEnv} from './scratch.mjs';
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'mutagate-installer-')),stage=path.join(dir,'package'),project=path.join(dir,'project'),linked=path.join(dir,'linked project'),moved=path.join(dir,'moved here','linked project 2');
-const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...env,CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir)};
-for(const k of ['MUTAGATE_NODE','MUTAGATE_HARNESS','MUTAGATE_HOOK_SESSION','MUTAGATE_SESSION','CLAUDE_PROJECT_DIR','CLAUDE_CODE_SESSION_ID','CODEX_HOME','CODEX_THREAD_ID'])delete hookEnv[k]; // hooks must find Node through .node-path
+// scrubEnv drops MUTAGATE_NODE too: hooks must find Node through .node-path.
+const env={...process.env,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'},hookEnv={...scrubEnv(env),CLAUDE_PLUGIN_DATA:path.join(dir,'cache'),XDG_CACHE_HOME:path.join(dir,'xdg'),GIT_CEILING_DIRECTORIES:path.dirname(dir),COPILOT_HOME:path.join(dir,'copilot-home')};
 const add=(cwd,...flags)=>command('npx',['--yes','skills@1.5.26','add',stage,'--skill','mutagate','--agent','claude-code','codex','opencode','pi','--yes',...flags],{cwd,timeout:120000,env});
 const cli=(repo,...args)=>{const r=spawnSync(process.execPath,[path.join(repo,'.claude/skills/mutagate/scripts/mutagate.mjs'),...args,'--repo',repo],{cwd:repo,env:hookEnv,encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout;};
 const configs=repo=>['.claude/settings.json','.codex/hooks.json'].filter(f=>fs.existsSync(path.join(repo,f))).map(f=>fs.readFileSync(path.join(repo,f),'utf8'));
@@ -17,6 +18,10 @@ const adapters=repo=>{for(const f of ['.opencode/plugins/mutagate.js','.pi/exten
 function fire(repo,cwd,only){let n=0;for(const [cmd,event] of commands(repo).filter(([,e])=>!only||only.includes(e))){n++;
  const r=spawnSync('sh',['-c',cmd],{cwd,env:hookEnv,encoding:'utf8',timeout:60000,input:JSON.stringify({cwd,session_id:'installer',hook_event_name:event,tool_name:'Write',tool_input:{file_path:path.join(cwd,'notes.md'),content:''},tool_use_id:'installer',stop_hook_active:false})});
  assert.equal(r.status,0,`${cmd} in ${cwd}: ${r.stderr}`);assert.equal(r.stderr,'',`${cmd} in ${cwd}`);if(event==='SessionStart')assert.match(r.stdout,/^mutagate \S+ active\./m,cmd);}return n;}
+// Copilot runs each bash entry under bash -c with a camelCase payload: exit 0, no stderr, one JSON object at sessionStart, else no stdout (#35 D12, D24).
+function fireCopilot(repo,cwd){const hooks=Object.entries(JSON.parse(fs.readFileSync(path.join(repo,'.github/hooks/mutagate.json'),'utf8')).hooks);for(const [event,[h]] of hooks){
+ const r=spawnSync('bash',['-c',h.bash],{cwd,env:hookEnv,encoding:'utf8',timeout:60000,input:JSON.stringify({sessionId:'installer',timestamp:Date.now(),cwd,toolName:'create',toolArgs:{path:path.join(cwd,'notes.md'),file_text:''},stop_hook_active:false})});
+ assert.equal(r.status,0,`${h.bash} in ${cwd}: ${r.stderr}`);assert.equal(r.stderr,'',`${h.bash} in ${cwd}`);if(event==='sessionStart')assert.match(JSON.parse(r.stdout).additionalContext,/^mutagate \S+ active\./,h.bash);else assert.equal(r.stdout,'',h.bash);}return hooks.length;}
 // MUTAGATE_INSTALL_SOURCE (a git ref such as keyboardsamurai/mutagate#skill-v0.9.0, or a local path): install it as users do and compare every skill dir with the current packageSkill tree.
 const source=process.env.MUTAGATE_INSTALL_SOURCE,files=d=>fs.readdirSync(d,{recursive:true}).map(String).filter(f=>fs.statSync(path.join(d,f)).isFile()).sort();
 if(source)try{
@@ -35,11 +40,11 @@ else try {
  for(const location of ['.claude/skills/mutagate','.agents/skills/mutagate','.pi/skills/mutagate'])for(const repo of [project,linked]){const installed=path.join(repo,location);assert.ok(fs.existsSync(path.join(installed,'SKILL.md')));assert.ok(!fs.existsSync(path.join(installed,'test')));assert.equal(fs.readFileSync(path.join(installed,'scripts/mutagate.mjs'),'utf8'),fs.readFileSync(path.join(stage,'scripts/mutagate.mjs'),'utf8'));assert.ok(fs.existsSync(path.join(installed,'scripts/.gitignore')));assert.ok(!fs.existsSync(path.join(installed,'scripts/.node-path')));}
  assert.ok(fs.lstatSync(path.join(linked,'.claude/skills/mutagate')).isSymbolicLink()&&!fs.lstatSync(path.join(project,'.claude/skills/mutagate')).isSymbolicLink());
  // Symlink mode in a Git repo: repo-relative commands that run from the root, a subdirectory and a moved clone.
- for(const agent of ['claude','codex','opencode','pi'])assert.doesNotMatch(cli(linked,'install','--agent',agent),/machine-local/);
- for(const text of configs(linked))for(const s of [dir,fs.realpathSync(dir),process.execPath])assert.ok(!text.includes(s),s);
+ for(const agent of ['claude','codex','opencode','pi','copilot'])assert.doesNotMatch(cli(linked,'install','--agent',agent),/machine-local/);
+ for(const text of [...configs(linked),fs.readFileSync(path.join(linked,'.github/hooks/mutagate.json'),'utf8')])for(const s of [dir,fs.realpathSync(dir),process.execPath])assert.ok(!text.includes(s),s);
  for(const [cmd] of commands(linked))assert.ok(cmd.startsWith('f="$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook" && [ -f "$f" ] && sh "$f" '),cmd);
  adapters(linked);fs.mkdirSync(path.join(linked,'src','deep dir'),{recursive:true});let fired=0;
- for(const repo of [linked,moved]){if(repo===moved){fs.mkdirSync(path.dirname(moved));fs.renameSync(linked,moved);}for(const cwd of [repo,path.join(repo,'src','deep dir')])fired+=fire(repo,cwd);}
+ for(const repo of [linked,moved]){if(repo===moved){fs.mkdirSync(path.dirname(moved));fs.renameSync(linked,moved);}for(const cwd of [repo,path.join(repo,'src','deep dir')])fired+=fire(repo,cwd)+fireCopilot(repo,cwd);}
  adapters(moved);
  // Not a Git repo: absolute commands and the machine-local warning.
  assert.match(cli(project,'install','--agent','claude'),/machine-local/);

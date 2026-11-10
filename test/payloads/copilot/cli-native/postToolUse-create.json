@@ -1,0 +1,15 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251673031,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01XdfvGMo6D6e9RD6q3C9dAh",
+ "toolName": "create",
+ "toolArgs": {
+  "path": "/repo/tests/calc.test.js",
+  "file_text": "const { add } = require('../calc'); console.log(add(1, 2));\n"
+ },
+ "toolResult": {
+  "resultType": "success",
+  "textResultForLlm": "Created file /repo/tests/calc.test.js with 60 characters"
+ }
+}

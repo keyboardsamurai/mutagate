@@ -1,0 +1,11 @@
+{
+ "hook_event_name": "PreToolUse",
+ "session_id": "6b42bf20-8f86-4e9f-bff7-3b539de1a0de",
+ "timestamp": "2026-11-10T08:49:05.621Z",
+ "cwd": "/repo",
+ "tool_name": "Bash",
+ "tool_input": {
+  "command": "ls -la .s16-out",
+  "description": "List .s16-out contents"
+ }
+}

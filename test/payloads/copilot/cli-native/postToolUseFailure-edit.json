@@ -1,0 +1,13 @@
+{
+ "sessionId": "cd7224a0-0295-47fa-a7c8-5c2b4ca69873",
+ "timestamp": 1794251676225,
+ "cwd": "/repo",
+ "toolCallId": "toolu_01NQBzYVRFhuz7ipWrQqSzoK",
+ "toolName": "edit",
+ "toolArgs": {
+  "new_str": "x",
+  "old_str": "NO_SUCH_TEXT_123",
+  "path": "/repo/calc.js"
+ },
+ "error": "No match found"
+}

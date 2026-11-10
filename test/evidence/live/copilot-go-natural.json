@@ -1,0 +1,4035 @@
+{
+  "harness": "copilot",
+  "version": "1.0.107",
+  "model": "claude-sonnet-5",
+  "mutagate": "0.9.1",
+  "package": "8bfd61110fe7e23577077ef5f3f191cf77fe9a58f35163682baa306bacbf3468",
+  "lang": "go",
+  "task": "small",
+  "scenario": "natural",
+  "passed": true,
+  "checked_at": "2026-11-10T08:57:41.933Z",
+  "attempts": [
+    {
+      "n": 1,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 564222,
+      "finalResponse": "Done. Summary:\n\n**Tests added:** `internal/matrix/service_test.go`, `internal/api/controller_test.go`, `internal/api/page_test.go`, `cmd/matrixd/matrix_api_test.go` — covering valid/invalid dimensions, out-of-bounds cells, int32 overflow/underflow boundaries, concurrency, HTML rendering, and the wired-up HTTP API end-to-end.\n\n**New feature:** added `Service.Sum()` (int64, overflow-safe) and `GET /api/matrix/sum` returning `{\"sum\": N}`, with unit and integration tests.\n\n**Validation:** `go build/vet/test -race ./...` all green. Mutation gate (`mutagate check`) passes: service.go 0.94, controller.go 1.00, page.go 1.00, main.go 0.90 (all ≥ 0.80 threshold). Remaining survivors in `service.go` (lines 109/113/114) are genuinely equivalent/dead-code mutants from a defensive double bounds-check that's mathematically unreachable given valid row/col inputs; `main.go` survivors are inside `func main()` itself (process entrypoint calling `log.Fatal`/`ListenAndServe`), not unit-testable without spawning a real process.",
+      "transcript_sha256": "c674bcc92bdd7b298c131f92c9407d69514634eba3bdd0182bd4971cc6879771",
+      "trace": [
+        {
+          "ts": "2026-11-10T08:47:46.670Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:47:51.268Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:47:58.439Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:29.480Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:29.544Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:33.350Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:39.851Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:39.913Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:46.422Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:46.492Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:46.763Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8586956521739131,
+          "decision": "stale",
+          "duration_ms": 11022,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:46.763Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17193,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:50.822Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:50.822Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:50.880Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:52.566Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6045,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:53.975Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:54.026Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 4,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:56.941Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:48:59.224Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "stale",
+          "duration_ms": 12423,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:48:59.224Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19284,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:00.768Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "pass",
+          "duration_ms": 533,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:00.769Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6710,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:25.990Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:26.055Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:32.866Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "pass",
+          "duration_ms": 616,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:33.636Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 709,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api 0.199s | FAIL | gomutants: coverage run failed: exit status 1; --- FAIL: TestControllerGetInvalidCell (0.00s); log: ~/.cache/mutagate/repos/cb80981f76734ca2a68d4baeba7f65d8c14c1e82/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-11-10T08:49:33.637Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 7557,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:36.570Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:36.635Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:41.676Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:43.974Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "pass",
+          "duration_ms": 1131,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:44.821Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 781,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api 0.177s | FAIL | gomutants: coverage run failed: exit status 1; --- FAIL: TestControllerGetInvalidCell (0.00s); log: ~/.cache/mutagate/repos/cb80981f76734ca2a68d4baeba7f65d8c14c1e82/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-11-10T08:49:50.511Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 5615,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:50.511Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13850,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:14.512Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:14.584Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:19.966Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:20.023Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:20.632Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6022,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:23.278Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:26.559Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:26.620Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:26.812Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "stale",
+          "duration_ms": 587,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:26.814Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6765,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:30.904Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:33.495Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8584905660377359,
+          "decision": "pass",
+          "duration_ms": 668,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:43.995Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:44.053Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 0.8695652173913043,
+          "decision": "pass",
+          "duration_ms": 10471,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:47.294Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:50:49.331Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 5190,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:56.274Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.75,
+          "decision": "below",
+          "duration_ms": 6873,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:56.292Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 29644,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:56.337Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:07.236Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:55.165Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:51:55.267Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:10.405Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:10.516Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:43.660Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:43.748Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:48.308Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:02.357Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:02.464Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:17.577Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.8773584905660378,
+          "decision": "pass",
+          "duration_ms": 8891,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:18.639Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 0.8695652173913043,
+          "decision": "pass",
+          "duration_ms": 988,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:19.566Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:19.623Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:19.656Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "stale",
+          "duration_ms": 943,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:19.658Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17167,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:30.582Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:30.658Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:41.463Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:41.614Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 37,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:41.906Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9339622641509434,
+          "decision": "stale",
+          "duration_ms": 16067,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:41.911Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22262,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:45.508Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:48.738Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:59.770Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "pass",
+          "duration_ms": 17841,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:59.772Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 29083,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:00.809Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 0.8695652173913043,
+          "decision": "pass",
+          "duration_ms": 930,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:01.769Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 889,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:02.747Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.75,
+          "decision": "below",
+          "duration_ms": 906,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:02.747Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 21100,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:22.178Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 26,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:32.787Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:32.851Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:39.599Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "pass",
+          "duration_ms": 542,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:39.868Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 199,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller_test.go:5:2: \"fmt\" imported and not used; log: ~/.cache/mutagate/repos/cb80981f76734ca2a68d4baeba7f65d8c14c1e82/logs/6014945f175bc742c3591917b83971e3b09634d4.log"
+        },
+        {
+          "ts": "2026-11-10T08:54:40.165Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": null,
+          "decision": "error",
+          "duration_ms": 231,
+          "error": "gomutants failed (1): FAIL example.com/matrix/internal/api [build failed] | FAIL | gomutants: coverage run failed: exit status 1; internal/api/controller_test.go:5:2: \"fmt\" imported and not used; log: ~/.cache/mutagate/repos/cb80981f76734ca2a68d4baeba7f65d8c14c1e82/logs/a09a127fd0023f20ff670dea7b722ae3f1af9673.log"
+        },
+        {
+          "ts": "2026-11-10T08:54:41.326Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.75,
+          "decision": "below",
+          "duration_ms": 1085,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:41.326Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 8444,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:43.850Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:43.928Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 32,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:49.093Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:49.182Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 31,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:49.982Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6024,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:56.031Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "pass",
+          "duration_ms": 636,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:05.001Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 8871,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:10.420Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9565217391304348,
+          "decision": "pass",
+          "duration_ms": 5329,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:12.137Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.75,
+          "decision": "below",
+          "duration_ms": 1595,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:12.138Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22924,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:28.253Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:28.325Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 24,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:32.023Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:35.124Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "pass",
+          "duration_ms": 593,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:35.387Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:55:36.187Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 986,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:37.484Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 0.9565217391304348,
+          "decision": "pass",
+          "duration_ms": 1232,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:44.708Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 7211,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:44.732Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16379,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:44.750Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:53.430Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:58.041Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:15.798Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:15.902Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:20.183Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:20.244Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:21.958Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6024,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:23.010Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:27.270Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "stale",
+          "duration_ms": 796,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:27.334Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:28.025Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/matrix/service.go",
+          "score": 0.9433962264150944,
+          "decision": "pass",
+          "duration_ms": 664,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:30.927Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:33.972Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:56:37.299Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 9199,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:42.922Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "internal/api/page.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 5541,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:44.170Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9,
+          "decision": "pass",
+          "duration_ms": 1233,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:44.190Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 23919,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:44.227Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:54.182Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:56:54.280Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:59.863Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:04.701Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 58,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:06.218Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:06.304Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "7b46938e-7ba7-4451-9e17-01be5a5d0635",
+          "decision": "cli"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "checks": {
+        "ended": true,
+        "session-start": true,
+        "registration": true,
+        "targets-scored": true,
+        "no-errors": true,
+        "gate": true,
+        "skill-modified": true
+      },
+      "exit": 0,
+      "finalCheck": 0,
+      "duration_ms": 535044,
+      "finalResponse": "All green, no formatting issues. Summary:\n\n**Tests added:** `internal/matrix/service_test.go`, `internal/api/controller_test.go`, `internal/api/page_test.go`, `cmd/matrixd/matrix_api_test.go` (HTTP/HTML integration tests against the wired app) — covering boundaries, invalid cells, overflow, size limits, concurrency.\n\n**Feature added:** `GET /api/matrix/sum` (controller `sum` handler + `Service.Sum()`), with unit + integration tests.\n\n**Production tweak:** refactored `main()` into a testable `run() error` so startup/listen errors are exercised by tests (behavior unchanged).\n\n**Mutagate gate:** all 4 files pass threshold 0.80 — service.go 0.96, controller.go 1.00, page.go 1.00, main.go 0.93. Proposed (unapplied) waivers for 4 truly unreachable defensive-check mutants in `service.go`'s `cell()` (secondary bounds check is dead code given the first guard). `go test ./...` is green.",
+      "transcript_sha256": "15997f599b42e04806af5a9682fd4970f6b581ad8807bfde7f908d792f66c363",
+      "trace": [
+        {
+          "ts": "2026-11-10T08:48:50.771Z",
+          "harness": "copilot",
+          "event": "SessionStart",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 11,
+          "error": null,
+          "mutate": false,
+          "delivered": true
+        },
+        {
+          "ts": "2026-11-10T08:48:55.620Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:27.539Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:27.602Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:30.645Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:30.717Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:33.653Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6024,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:35.381Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:35.444Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:36.787Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6041,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:39.896Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:39.949Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:41.506Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6035,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:49:58.269Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 12097,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:49:58.269Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18290,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:07.335Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:07.398Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 13,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:14.122Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 530,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:18.536Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:18.654Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 24,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:22.047Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "stale",
+          "duration_ms": 7856,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:22.047Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14623,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:50:25.377Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 530,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:32.921Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 7471,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:39.586Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 6579,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:50:39.587Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20903,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:01.158Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:01.239Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:05.013Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:08.056Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 621,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:08.484Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:51:08.544Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:09.133Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 995,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:10.240Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 1026,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:11.284Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:51:18.385Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.75,
+          "decision": "below",
+          "duration_ms": 8068,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:51:18.386Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Write",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17117,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:18.486Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:51:52.061Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:04.104Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:52:04.253Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:51.599Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:51.656Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 5,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:52:58.488Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 590,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:52:59.772Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 1209,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:00.812Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 962,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:04.389Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:04.478Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:08.899Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.8372093023255814,
+          "decision": "stale",
+          "duration_ms": 8013,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:08.900Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/main.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17218,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:11.458Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 742,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:12.693Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 1150,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:13.305Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:13.382Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:13.932Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "stale",
+          "duration_ms": 1160,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:13.932Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 9423,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:16.459Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:19.332Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:19.396Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:19.443Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6034,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:23.467Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:26.191Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.839622641509434,
+          "decision": "pass",
+          "duration_ms": 611,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:27.149Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 882,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:28.182Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 944,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:30.882Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:30.953Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:39.693Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "stale",
+          "duration_ms": 11397,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:39.693Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/cmd/matrixd/matrix_api_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20270,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:53:56.859Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.8773584905660378,
+          "decision": "pass",
+          "duration_ms": 19181,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:58.309Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 1317,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:53:59.535Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 1118,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:00.613Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "pass",
+          "duration_ms": 1006,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:00.613Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 29631,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:21.964Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:22.026Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:24.815Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:27.514Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 0,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:27.576Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:28.085Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6033,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:34.703Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:34.779Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 26,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:41.946Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:42.007Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 14,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:46.228Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9056603773584906,
+          "decision": "stale",
+          "duration_ms": 12438,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:46.230Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18627,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:56.991Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9245283018867925,
+          "decision": "pass",
+          "duration_ms": 10732,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:56.993Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 22181,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:58.142Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8478260869565217,
+          "decision": "pass",
+          "duration_ms": 1054,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:59.180Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 961,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:54:59.443Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:54:59.512Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:00.413Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "stale",
+          "duration_ms": 1149,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:00.413Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18378,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:06.380Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9245283018867925,
+          "decision": "pass",
+          "duration_ms": 666,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:10.342Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:10.493Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 39,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:12.133Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.8888888888888888,
+          "decision": "stale",
+          "duration_ms": 5655,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:12.135Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 12596,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:14.068Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:14.126Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:16.578Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 6040,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:20.930Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9245283018867925,
+          "decision": "pass",
+          "duration_ms": 593,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:24.466Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3449,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:26.487Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:29.637Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9130434782608695,
+          "decision": "pass",
+          "duration_ms": 5090,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:30.317Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:30.378Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:30.729Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "stale",
+          "duration_ms": 1010,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:30.729Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 16577,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:33.904Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:37.130Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:55:37.210Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:37.459Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9245283018867925,
+          "decision": "pass",
+          "duration_ms": 833,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:40.357Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:55:41.248Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 3684,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:46.440Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 0.9565217391304348,
+          "decision": "pass",
+          "duration_ms": 5110,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:47.640Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "pass",
+          "duration_ms": 1127,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:55:47.655Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17249,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:55:47.683Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:03.545Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:03.607Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 15,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:08.416Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:22.294Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9622641509433962,
+          "decision": "pass",
+          "duration_ms": 12489,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:22.748Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:22.817Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 18,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:23.482Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "stale",
+          "duration_ms": 1117,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:23.483Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/matrix/service_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 19848,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:29.643Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9622641509433962,
+          "decision": "pass",
+          "duration_ms": 618,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:31.814Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:35.511Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:38.677Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:56:38.746Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 2,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:39.410Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.9782608695652174,
+          "decision": "stale",
+          "duration_ms": 9688,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:42.094Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:56:42.704Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9622641509433962,
+          "decision": "pass",
+          "duration_ms": 900,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:46.782Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 0.9782608695652174,
+          "decision": "pass",
+          "duration_ms": 7298,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:51.976Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 5145,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:53.005Z",
+          "harness": "unknown",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "pass",
+          "duration_ms": 1017,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:56:53.021Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/page_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 30177,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:53.049Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:56:57.647Z",
+          "harness": "unknown",
+          "event": "status",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:56:57.743Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:08.345Z",
+          "harness": "copilot",
+          "event": "PreToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:08.408Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 17,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:15.182Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/matrix/service.go",
+          "score": 0.9622641509433962,
+          "decision": "pass",
+          "duration_ms": 588,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:57:17.531Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:17.589Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:17.680Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:17.795Z",
+          "harness": "unknown",
+          "event": "waive",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:17.869Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:21.172Z",
+          "harness": "unknown",
+          "event": "run",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:21.233Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:23.600Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/controller.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 8344,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:57:24.034Z",
+          "harness": "unknown",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:28.251Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "internal/api/page.go",
+          "score": 1,
+          "decision": "pass",
+          "duration_ms": 4577,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:57:29.336Z",
+          "harness": "copilot",
+          "event": "Result",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "target": "cmd/matrixd/main.go",
+          "score": 0.9302325581395349,
+          "decision": "pass",
+          "duration_ms": 1013,
+          "error": null
+        },
+        {
+          "ts": "2026-11-10T08:57:29.337Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Edit",
+          "file": [
+            "<repo>/internal/api/controller_test.go"
+          ],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 20902,
+          "error": null,
+          "mutate": true,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:29.394Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:35.652Z",
+          "harness": "copilot",
+          "event": "PostToolUse",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "tool": "Bash",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 1,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:40.300Z",
+          "harness": "copilot",
+          "event": "Stop",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "file": [],
+          "decision": "allow",
+          "exit": 0,
+          "duration_ms": 50,
+          "error": null,
+          "mutate": false,
+          "delivered": false
+        },
+        {
+          "ts": "2026-11-10T08:57:41.983Z",
+          "harness": "copilot",
+          "event": "check",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        },
+        {
+          "ts": "2026-11-10T08:57:42.068Z",
+          "harness": "copilot",
+          "event": "status",
+          "session": "f1ea36d8-13c9-4078-b1ed-a769ce815233",
+          "decision": "cli"
+        }
+      ]
+    }
+  ]
+}

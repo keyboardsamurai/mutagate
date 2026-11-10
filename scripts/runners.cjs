@@ -238,7 +238,7 @@ async function python(c, t, dir, opts) {
   return { raw };
 }
 
-const TOOLS = { gomutants: 'github.com/szhekpisov/gomutants@v0.6.1', gremlins: 'github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0', 'dotnet-stryker': '5.0.0' };
+const TOOLS = { gomutants: 'github.com/gomutants/gomutants@v0.7.2', gremlins: 'github.com/go-gremlins/gremlins/cmd/gremlins@v0.6.0', 'dotnet-stryker': '5.0.0' };
 const toolDirectory = (c, name) => path.join(c.root, 'tools', `${name}@${TOOLS[name]?.split('@v').at(-1) || 'unknown'}`);
 function toolInstall(c, name) {
   const tools = toolDirectory(c, name);
@@ -298,7 +298,7 @@ async function goRunner(c, t, dir, opts) {
         `--cache=${path.join(c.data, 'history', targetKey(t) + '.gomutants.json')}`, workers, ...tags,
         ...(siblings.length ? [`--exclude-files=${siblings.join(',')}`] : []), ...(others.length ? [`--test-flags=-skip=^(${[...new Set(others)].join('|')})$`] : []),
         rel ? './' + rel : '.'], { ...opts, cwd: mod });
-      // gomutants 0.6 keys are package-relative, despite module projectRoot.
+      // gomutants 0.6 and 0.7 keys are package-relative, despite module projectRoot.
       return { runner, raw: parseMutationTestingElements({ ...json(path.join(dir, 'mutation.json')), projectRoot: pkgDir }, c.repo).filter(m => m.file === t.file) };
     }
     await command(exe, ['unleash', `--config=${cfg}`, `--output=${path.join(dir, 'gremlins.json')}`, '--output-statuses=lctkv', workers, ...tags,
