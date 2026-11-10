@@ -122,7 +122,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   and not a pass now as `additionalContext` and makes them the delivered report
   (`deliver`, state `reported`). A gate block or a `check` or `run --sync`
   report makes its text the delivered report and removes only the outbox entry
-  of its run; a recorded pass clears it (ADR-0019).
+  of its run; a recorded pass clears it, and so does a waiver pass that
+  `check`, `run --sync` or a gate sees (ADR-0019).
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`

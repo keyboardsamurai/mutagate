@@ -520,7 +520,9 @@ const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a fil
 
 const deliver = (s, key, text) => { const t = s.targets[key], k = text ? reportKey(text) : null; if (!t || t.reported === k) return false; t.reported = k; return !!k; };
 
-const reached = (c, key, text, run) => (text || state(c).outbox?.some(e => e.key === key && e.run === run)) && updateState(c, s => { if (!s.targets[key]) return; deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key || e.run !== run); });
+
+const reached = (c, key, r, text, printed) => { const s0 = state(c), pass = r.status === 'pass', mine = e => e.key === key && e.run === r.started_at, drop = (text || printed) && s0.outbox?.some(mine);
+  return (text || drop || pass && s0.targets[key]?.reported) && updateState(c, s => { if (!s.targets[key]) return; if (text || pass) deliver(s, key, text); if (drop) s.outbox &&= s.outbox.filter(e => !mine(e)); }); };
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -685,7 +687,7 @@ async function gate(c, { wait, hook = false, runner, budget, streak, schedulePen
 
     const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
       sent = r && (blocked || ['below', 'error'].includes(r.status) && !blocksOnly);
-    if (sent || r && !hook) await reached(c, key, sent && text, r.started_at); // a sent key, and each key whose result check prints, loses the outbox entry of that run
+    if (r) await reached(c, key, r, sent && text, !hook); // a sent key, and each key whose result check prints, loses the outbox entry of that run
     if (blocked) blocks.push(text);
     else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(limited && v.obligation === 'block' ? `mutagate: Copilot block limit (8 in a row) reached for ${t.target}` : v.kind === 'below' && c.config.mode !== 'advise' ?
       `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
@@ -1009,7 +1011,7 @@ async function main(argv = process.argv.slice(2)) {
       const results = [];
       for (const t of r.targets) {
         const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
-        if (v.result) await reached(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config), v.result.started_at); // printed below, like check
+        if (v.result) await reached(c, key, v.result, ['below', 'error'].includes(v.result.status) && report(v.result, c.config), true); // printed below, like check
         results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
         if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }
