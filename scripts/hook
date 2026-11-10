@@ -1,0 +1,6 @@
+#!/bin/sh
+d=$(dirname "$0")
+# MUTAGATE_NODE, then the Node recorded by install, then PATH. No Node: exit 0, hooks fail open.
+n=${MUTAGATE_NODE:-$(cat "$d/.node-path" 2>/dev/null)}
+[ -x "$n" ] || { n=node; command -v node >/dev/null || { echo "mutagate: no Node found; set MUTAGATE_NODE or rerun install" >&2; exit 0; }; }
+exec "$n" "$d/mutagate-hook.cjs" hook "$@"
