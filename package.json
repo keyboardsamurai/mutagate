@@ -1,0 +1,17 @@
+{
+  "name": "ts-vitest",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@stryker-mutator/core": "9.6.1",
+    "@stryker-mutator/vitest-runner": "9.6.1",
+    "typescript": "5.8.3",
+    "vitest": "4.1.12"
+  },
+  "overrides": {
+    "qs": "6.16.1"
+  }
+}

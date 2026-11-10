@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" SessionStart --installed 0.9.1:project --harness copilot || true # mutagate",
+        "powershell": "exit 0 # mutagate",
+        "timeoutSec": 30
+      }
+    ],
+    "preToolUse": [
+      {
+        "type": "command",
+        "matcher": "create|edit|str_replace_editor|apply_patch",
+        "bash": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" PreToolUse --harness copilot || true # mutagate",
+        "powershell": "exit 0 # mutagate",
+        "timeoutSec": 30
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "matcher": "create|edit|str_replace_editor|apply_patch|bash|powershell|read_bash",
+        "bash": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" PostToolUse --harness copilot || true # mutagate",
+        "powershell": "exit 0 # mutagate",
+        "timeoutSec": 30
+      }
+    ],
+    "subagentStart": [
+      {
+        "type": "command",
+        "bash": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" SubagentStart --harness copilot || true # mutagate",
+        "powershell": "exit 0 # mutagate",
+        "timeoutSec": 30
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" Stop --timeout 600 --harness copilot || true # mutagate",
+        "powershell": "exit 0 # mutagate",
+        "timeoutSec": 600
+      }
+    ]
+  }
+}

@@ -1,0 +1,192 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://mutagate.local/result-schema.json",
+ "title": "mutagate result v1",
+ "type": "object",
+ "required": [
+  "schema",
+  "target",
+  "language",
+  "runner",
+  "tests",
+  "started_at",
+  "duration_ms",
+  "score",
+  "threshold",
+  "status",
+  "error",
+  "survivors",
+  "filtered",
+  "killed",
+  "survived",
+  "timed_out",
+  "no_coverage",
+  "filtered_junk",
+  "waived",
+  "error_mutants"
+ ],
+ "properties": {
+  "schema": {
+   "const": 1
+  },
+  "target": {
+   "type": "string"
+  },
+  "language": {
+   "enum": [
+    "java",
+    "kotlin",
+    "python",
+    "typescript",
+    "go",
+    "csharp"
+   ]
+  },
+  "runner": {
+   "enum": [
+    "pitest",
+    "mutmut",
+    "stryker",
+    "gomutants",
+    "gremlins",
+    "stryker-net"
+   ]
+  },
+  "tests": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "started_at": {
+   "type": "string",
+   "format": "date-time"
+  },
+  "duration_ms": {
+   "type": "number",
+   "minimum": 0
+  },
+  "score": {
+   "type": [
+    "number",
+    "null"
+   ],
+   "minimum": 0,
+   "maximum": 1
+  },
+  "threshold": {
+   "type": "number",
+   "minimum": 0,
+   "maximum": 1
+  },
+  "status": {
+   "enum": [
+    "below",
+    "pass",
+    "error",
+    "unscored"
+   ]
+  },
+  "error": {
+   "type": [
+    "string",
+    "null"
+   ]
+  },
+  "survivors": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "file",
+     "line",
+     "method",
+     "mutator",
+     "plain",
+     "severity",
+     "in_diff",
+     "waived"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+     },
+     "file": {
+      "type": "string"
+     },
+     "line": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "method": {
+      "type": "string"
+     },
+     "mutator": {
+      "type": "string"
+     },
+     "plain": {
+      "type": "string"
+     },
+     "severity": {
+      "type": "integer"
+     },
+     "in_diff": {
+      "type": "boolean"
+     },
+     "waived": {
+      "type": "boolean"
+     },
+     "mutation_key": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "filtered": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "id",
+     "rule"
+    ]
+   }
+  },
+  "warnings": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "killed": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "survived": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "timed_out": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "no_coverage": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "filtered_junk": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "waived": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "error_mutants": {
+   "type": "integer",
+   "minimum": 0
+  }
+ }
+}
