@@ -6,27 +6,43 @@ Never commit to the `skill` branch or create `skill-v*` tags by hand.
 
 ## Routine release
 
+The release goes through a pull request from the release branch (`fix/X.Y.Z`) to `main`. The bump commit is on the release branch; the tag is on the merge commit.
+
 ```sh
-OLD=0.9.0 V=0.9.1
-# 1. Bump the version.
+OLD=0.9.1 V=0.9.2                                 # OLD = previous version
+# 1. On the release branch: bump the version.
 npm pkg set version=$V
 sed -i.bak -E "s/^export const VERSION = '[^']+';/export const VERSION = '$V';/" scripts/mutagate.mjs && rm scripts/mutagate.mjs.bak
 # The SessionStart golden payloads carry the version too.
 sed -i.bak -E "s/mutagate [0-9][^ ]* active/mutagate $V active/" test/payloads/*/SessionStart.expected.json && rm test/payloads/*/SessionStart.expected.json.bak
-sed -i.bak -E "s/(mutagate |skill-v)$OLD/\1$V/g" README.md && rm README.md.bak   # OLD = previous version
+# README: "beta (X)" and "mutagate X active"; docs/install.md: "mutagate X" and "skill-vX".
+sed -i.bak -E "s/(mutagate |skill-v|beta \()$OLD/\1$V/g" README.md docs/install.md && rm README.md.bak docs/install.md.bak
+git grep -n -F "$OLD" -- ':!CHANGELOG.md' ':!docs/adr' ':!test/evidence'   # remaining hits must be history
 # 2. Regenerate the generated files.
 npm run generate:runtime
 npm run generate:hooks
-# 3. Test. Add `npm run test:integration` when runners changed.
+# 3. CHANGELOG.md: add "## [$V] - <YYYY-MM-DD>" below "## [Unreleased]", so the Unreleased entries move under it.
+#    Links: "[Unreleased]: …/compare/v$V...HEAD" and a new "[$V]: …/compare/v$OLD...v$V".
+# 4. Test. Add `npm run test:integration` when runners changed.
 npm test
 npm run test:installer
 npm run test:performance
 node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 300 KB
-# 4. CHANGELOG.md: move the Unreleased entries under "## [$V] - <YYYY-MM-DD>" and update the compare links.
-# 5. Commit, tag, push.
+# 5. Commit, push, open the pull request.
 git commit -am "mutagate $V"
-git push origin main
-git tag v$V -m v$V
+git push origin HEAD
+gh pr create --base main --title "mutagate $V"
+```
+
+At merge:
+
+```sh
+# 6. Set the release date in the "## [$V]" heading, then merge with a merge commit.
+git commit -am "changelog: $V release date" && git push origin HEAD
+gh pr merge <number> --merge
+# 7. Tag the merge commit. release.yml makes the skill branch and skill-v$V.
+git switch main && git pull --ff-only
+git tag -a v$V -m v$V
 git push origin v$V
 ```
 
