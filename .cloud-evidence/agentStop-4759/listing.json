@@ -1,0 +1,41 @@
+{
+  "event": "agentStop",
+  "pid": 4759,
+  "at": "2026-11-10T11:55:15.626Z",
+  "cacheRootExists": true,
+  "files": [
+    {
+      "path": "repos/.pruned",
+      "size": 24
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/history/23aa7636961f4e72973dafda78f47bcaa4ea88a8.json",
+      "size": 9584
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/logs/23aa7636961f4e72973dafda78f47bcaa4ea88a8.log",
+      "size": 1667
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/repo-path",
+      "size": 35
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/results/17c282950f7040e3bf74591ec0f0866e9967130a/23aa7636961f4e72973dafda78f47bcaa4ea88a8.json",
+      "size": 2060
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/state/17c282950f7040e3bf74591ec0f0866e9967130a.json",
+      "size": 1425
+    },
+    {
+      "path": "repos/88ab4bad993ef7a58384f63fb5c17aabfdbbccab/trace.jsonl",
+      "size": 3718
+    }
+  ],
+  "errors": [],
+  "markerEnvNames": [
+    "COPILOT_AGENT_CALLBACK_URL",
+    "COPILOT_AGENT_JOB_ID"
+  ]
+}

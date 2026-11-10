@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "targets": {
+    "23aa7636961f4e72973dafda78f47bcaa4ea88a8": {
+      "file": "pricing.ts",
+      "target": "pricing.ts",
+      "language": "typescript",
+      "module": "",
+      "tests": [
+        "pricing.test.ts"
+      ],
+      "testNames": [
+        "pricing.test.ts"
+      ],
+      "secondary": false,
+      "generation": 1,
+      "changedAt": 1794311555511,
+      "blocks": 0,
+      "rerun_requested": false,
+      "lastRunMs": 3678,
+      "fingerprint": "f148c35f2e885d69f13883e8af9cf2bacfa2fd27",
+      "resultGeneration": 1,
+      "reported": null
+    }
+  },
+  "choices": {},
+  "warnings": [],
+  "events": [
+    "96eb560072d0ae9e0ac637e4910dbe0c86b7c6ff"
+  ],
+  "notified": [],
+  "editedAt": 1794311555498,
+  "updated_at": 1794311565269,
+  "config": {
+    "schema": 1,
+    "mode": "gate",
+    "threshold": 0.8,
+    "maxSurvivors": 10,
+    "maxRounds": 2,
+    "runBudgetSec": 300,
+    "gateBudgetSec": 120,
+    "gateWaitSec": 60,
+    "countNoCoverage": true,
+    "gateSecondaries": false,
+    "languages": [
+      "java",
+      "kotlin",
+      "python",
+      "typescript",
+      "go",
+      "csharp"
+    ],
+    "testGlobs": [],
+    "mainRoots": [],
+    "exclude": [
+      "**/generated/**",
+      "**/build/**"
+    ],
+    "javaRunner": "standalone",
+    "kotlinTier": "auto",
+    "goRunner": "auto",
+    "goTags": "",
+    "allowAgentWaivers": false,
+    "copilotCloud": true
+  },
+  "outbox": []
+}
