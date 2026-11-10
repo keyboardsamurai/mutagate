@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "target": "pricing.ts",
+  "language": "typescript",
+  "runner": "stryker",
+  "tests": [
+    "pricing.test.ts"
+  ],
+  "started_at": "2026-11-10T14:03:26.177Z",
+  "duration_ms": 4126,
+  "score": 0.6,
+  "killed": 3,
+  "survived": 2,
+  "timed_out": 0,
+  "no_coverage": 0,
+  "filtered_junk": 0,
+  "filtered": [],
+  "waived": 0,
+  "error_mutants": 0,
+  "threshold": 0.8,
+  "status": "below",
+  "error": null,
+  "survivors": [
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "EqualityOperator",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"count > 10\"]",
+      "description": "EqualityOperator: replaced with count > 10",
+      "status": "SURVIVED",
+      "id": "8cee79c0f454740b84a54924766644fc15610a33",
+      "plain": "count >= 10 became count > 10 and no test noticed",
+      "public": false,
+      "severity": 0,
+      "short": "boundary",
+      "in_diff": false,
+      "waived": false
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "ConditionalExpression",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"false\"]",
+      "description": "ConditionalExpression: replaced with false",
+      "status": "SURVIVED",
+      "id": "0fd3ae5510ed68daab5b5a4119b16c1bce317758",
+      "plain": "count >= 10 became false and no test noticed",
+      "public": false,
+      "severity": 1,
+      "short": "conditional",
+      "in_diff": false,
+      "waived": false
+    }
+  ],
+  "warnings": [],
+  "raw": [
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "EqualityOperator",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"count > 10\"]",
+      "description": "EqualityOperator: replaced with count > 10",
+      "status": "SURVIVED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "ConditionalExpression",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"false\"]",
+      "description": "ConditionalExpression: replaced with false",
+      "status": "SURVIVED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "ConditionalExpression",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"true\"]",
+      "description": "ConditionalExpression: replaced with true",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 1,
+      "method": "",
+      "mutator": "BlockStatement",
+      "mutation_key": "[{\"end\":{\"column\":2,\"line\":4},\"start\":{\"column\":49,\"line\":1}},\"{}\"]",
+      "description": "BlockStatement: replaced with {}",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "EqualityOperator",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"count < 10\"]",
+      "description": "EqualityOperator: replaced with count < 10",
+      "status": "KILLED"
+    }
+  ]
+}
