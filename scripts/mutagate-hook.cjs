@@ -699,7 +699,7 @@ async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
 async function handleHook(c, p, event, raw = p) {
   if (c.inherited) return event === 'SessionStart' && // inert until a native Copilot install; no notice to the cloud agent (ADR-0021)
     ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) && (c.config.copilotCloud || !copilot().cloud()) ?
-    { code: 0, out: { additionalContext: 'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).' } } : { code: 0 };
+    { code: 0, out: { additionalContext: `mutagate inactive under Copilot: this repo has only the Claude Code install; run \`${cliName(c)} install --agent copilot\`.` } } : { code: 0 };
   const cp = c.args.harness === 'copilot' && copilot(), // native Copilot output (#35 D12): top-level fields, exit 0, no plain text or stderr
     contextOutput = text => ({ code: 0, out: cp ? { additionalContext: text.slice(0, 1800) } : { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
     notice = text => cp ? contextOutput(text) : [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };

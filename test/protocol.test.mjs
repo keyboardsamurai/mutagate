@@ -28,7 +28,7 @@ for(const executable of ['mutagate.mjs','mutagate-hook.cjs'])test(executable+' C
  put(path.join(repo,'src/calc.js'),'export const add = (a, b) => a + b;\n');put(path.join(repo,'test/calc.test.js'),"import test from 'node:test';\n");
  const base=Object.fromEntries(Object.entries(process.env).filter(([k])=>!/^(CLAUDE|COPILOT|CODEX|MUTAGATE)_/.test(k)));
  const invoke=(file,extra=[],env={},edit=p=>p)=>{const p=edit(recordedPayload(path.resolve(corpus,file),repo));return spawnSync(process.execPath,[path.join(root,'scripts',executable),'hook',p.hook_event_name,...extra],{input:JSON.stringify(p),env:{...base,HOME:home,USERPROFILE:home,CLAUDE_PLUGIN_DATA:cache,MUTAGATE_TRACE:'1',MUTAGATE_RECORD:'1',...env},encoding:'utf8'});};
- const notice=JSON.stringify({additionalContext:'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).'})+'\n';let calls=0;
+ const notice=JSON.stringify({additionalContext:`mutagate inactive under Copilot: this repo has only the Claude Code install; run \`${m.cliName({repo})} install --agent copilot\`.`})+'\n';let calls=0;
  for(const env of [{},{CLAUDE_PROJECT_DIR:repo,CLAUDE_PLUGIN_ROOT:root}])for(const file of fs.readdirSync(corpus).filter(f=>f.endsWith('.json')&&f!=='schema-keys.json').sort())for(const extra of file.startsWith('PostToolUse')?[[],['--mutate']]:file.startsWith('SessionStart')?[['--installed',m.VERSION]]:[[]]){
   const r=invoke(file,extra,env);calls++;assert.equal(r.status,0,file);assert.equal(r.stdout,file.startsWith('SessionStart')?notice:'',file);assert.deepEqual(fs.readdirSync(data),['trace.jsonl'],file+': no state, lock, result or worker');
  }
