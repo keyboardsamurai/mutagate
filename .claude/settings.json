@@ -1,0 +1,78 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" SessionStart --installed 0.9.1:project || true # mutagate",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" PreToolUse || true # mutagate",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" PostToolUse || true # mutagate",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" PostToolUse --mutate # mutagate",
+            "timeout": 900,
+            "asyncRewake": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" Stop # mutagate",
+            "timeout": 600
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" SubagentStop # mutagate",
+            "timeout": 600
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "export MUTAGATE_TRACE=1; f=\"$(git rev-parse --show-toplevel)/.agents/skills/mutagate/scripts/hook\" && [ -f \"$f\" ] && sh \"$f\" TaskCompleted # mutagate",
+            "timeout": 600
+          }
+        ]
+      }
+    ]
+  }
+}

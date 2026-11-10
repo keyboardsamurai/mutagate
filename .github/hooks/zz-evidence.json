@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "node .github/cloud-evidence.cjs agentStop || true",
+        "timeoutSec": 60
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "node .github/cloud-evidence.cjs sessionEnd || true",
+        "timeoutSec": 60
+      }
+    ]
+  }
+}
