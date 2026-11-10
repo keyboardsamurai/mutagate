@@ -161,11 +161,11 @@ The detached `hook PostToolUse --mutate --harness copilot` process that a native
 _Avoid_: async hook, worker (for this)
 
 **Outbox**:
-The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry that is already the delivered report, leave it without delivery (ADR-0019).
+The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), an entry whose result is now a pass, and an entry that is already the delivered report, leave it without delivery. A report that a gate block, `check` or `run --sync` gives removes only the entry of its run (ADR-0019).
 _Avoid_: queue, inbox, pending reports
 
 **Delivery point**:
-A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not the delivered report as `additionalContext` (ADR-0019).
+A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not a pass now and not the delivered report as `additionalContext` (ADR-0019).
 _Avoid_: drain hook, flush point
 
 **Delivered report**:

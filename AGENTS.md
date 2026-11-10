@@ -118,16 +118,19 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   handler detached (`hook PostToolUse --mutate --harness copilot`, raw payload on
   stdin), which queues each run's report in the session `outbox` instead of
   printing it. A root-agent write or shell `postToolUse` (`read_bash` too) is a
-  delivery point: it drains the fresh entries that are not the delivered report (`deliver`) as `additionalContext`
-  and makes them the delivered report (state `reported`); a gate block or a `check` or `run --sync` report drops the key, and a
-  recorded pass clears it (ADR-0019).
+  delivery point: it sends the fresh entries that are not the delivered report
+  and not a pass now as `additionalContext` and makes them the delivered report
+  (`deliver`, state `reported`). A gate block or a `check` or `run --sync`
+  report makes its text the delivered report and removes only the outbox entry
+  of its run; a recorded pass clears it (ADR-0019).
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`
   exit 3). A native Copilot `hook Stop --timeout T` (`agentStop`) ends the gate
   by G = min(`gateBudgetSec`, T − 2M), M = min(30, ⌊T/4⌋), passes `gate` the
   options `schedulePending` (a worker for a target left pending with nothing in
-  flight) and `blocksOnly` (only a block marks a report shown, ADR-0019); `gate`
+  flight) and `blocksOnly` (only a block makes a report the
+  delivered report, ADR-0019); `gate`
   has no harness branch (its helpers `state` and `pendingText` read `quiet` and `bashWait`). It allows after 8 blocks in a row
   (state `stopStreak`), and at W = T − M allows, traces `deadline` and exits so
   `runners.cjs` kills the runner groups; a subagent `agentStop` exits 0 (ADR-0018).

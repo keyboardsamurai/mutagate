@@ -642,7 +642,7 @@ async function claimBlock(c, key, once, streak) {
 }
 const reportKey = s => hash(s.replace(/\x1b\[[0-9;]*m/g, '').replace(/\d{4}-\d\d-\d\dT[\d:.]+Z|\bpid \d+|\d+ ms\b|log: \S+/g, ''));
 // The Copilot agentStop options: budget, its deadline G; streak, its blocks in a row, at 8 the gate allows; schedulePending: a worker for a pending target
-// (ADR-0018); blocksOnly: only a block marks a report shown (ADR-0019).
+// (ADR-0018); blocksOnly: only a block makes a report the delivered report (ADR-0019).
 export async function gate(c, { wait, hook = false, runner, budget, streak, schedulePending, blocksOnly } = {}) {
   const start = Date.now(), limited = streak >= 8,
     end = start + (budget ?? Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0)) * 1000,
