@@ -115,7 +115,7 @@ The longest time one mutation run may take. A run that reaches it is a final uns
 _Avoid_: run timeout, execution budget, target budget
 
 **Gate deadline** (`gateBudgetSec`):
-The time after the start of the gate past which it makes no new attempt. Hooks always use it; only `check --wait N` raises it, to N when N is larger.
+The time after the start of the gate past which it makes no new attempt. Hooks always use it; only `check --wait N` raises it, to N when N is larger. A Copilot `agentStop` with timeout T lowers it to T − 2M when that is smaller, M = min(30, ⌊T/4⌋) s, and its watchdog allows at T − M (ADR-0018).
 _Avoid_: gate budget, hook budget, check budget
 
 **In-flight wait** (`gateWaitSec`):
@@ -153,8 +153,16 @@ mutagate's own Copilot hook file, `.github/hooks/mutagate.json` or the user hook
 _Avoid_: Copilot hook, tagged install
 
 **Spawned handler**:
-The detached `hook PostToolUse --mutate --harness copilot` process that a native hook call starts with its raw payload, because Copilot has no async hooks. No hook file installs it, so mutagate never treats its payload as a VS Code Local payload and does not record it.
+The detached `hook PostToolUse --mutate --harness copilot` process that a native hook call starts with its raw payload, because Copilot has no async hooks. It puts its reports in the outbox. No hook file installs it, so mutagate never treats its payload as a VS Code Local payload and does not record it.
 _Avoid_: async hook, worker (for this)
+
+**Outbox**:
+The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry already reported, leave it without delivery (ADR-0019).
+_Avoid_: queue, inbox, pending reports
+
+**Delivery point**:
+A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not yet reported as `additionalContext` (ADR-0019).
+_Avoid_: drain hook, flush point
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).

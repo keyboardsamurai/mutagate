@@ -417,10 +417,10 @@ Every runner implements: `detect(repo) -> bool`, `prepare(repo) -> env`, `run(ta
 |---|---|---|
 | FR-5.1 | The gate evaluates every target in `state.targets` that has at least one test file written or edited in this session. Targets touched only on the production side without a test write are not gated (they are invalidated, and a later test write picks them up). | P0 |
 | FR-5.2 | Per target decision: `pass` (fresh result, score at or above threshold, or all survivors waived) allows. `below` blocks with the report. `stale` or `unscored` with no run in flight: run synchronously if remaining `gateBudgetSec` (default 120) allows, else block once with "results pending, run `mutagate check --wait 120`", then on the next gate allow with a system warning. In flight: wait up to `gateWaitSec` (default 60) polling the lock, then decide. `error` allows with a system warning naming the error. | P0 |
-| FR-5.3 | Round cap: each target may block at most `maxRounds` (default 2) times per session. On the cap, allow and emit `systemMessage`. `stop_hook_active: true` alone does not force allow, the count does. | P0 |
+| FR-5.3 | Round cap: each target may block at most `maxRounds` (default 2) times per session. On the cap, allow and emit `systemMessage`. `stop_hook_active: true` alone does not force allow, the count does. Under Copilot, allow-time messages are `{"type":"progress"}` lines that the model does not see, and the gate also allows after 8 blocks in a row (ADR-0018). | P0 |
 | FR-5.4 | `SubagentStop` uses the subagent's own session scope when the payload carries `agent_id`, otherwise the parent. | P1 |
 | FR-5.5 | `TaskCompleted` (Claude only) applies the same decision as Stop. | P1 |
-| FR-5.6 | `mode: advise` turns every block into `additionalContext` or `systemMessage` and never blocks. | P0 |
+| FR-5.6 | `mode: advise` turns every block into `additionalContext` or `systemMessage` and never blocks. Under Copilot `agentStop` it is a progress line that the model does not see (ADR-0018). | P0 |
 | FR-5.7 | The gate never blocks on its own failure. Any exception in gate code logs to trace and exits 0. | P0 |
 
 ### 9.6 Survivor report format

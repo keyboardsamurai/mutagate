@@ -516,9 +516,11 @@ export function report(r, cfg = DEFAULTS) {
 // Runners live in runners.cjs, loaded on first use.
 let loaded, copilotLoaded;
 export const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
-export const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER }); // --harness copilot hook calls and session commands in the Copilot root agent shell
+export const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, reportKey, gate }); // --harness copilot hook calls and session commands in the Copilot root agent shell
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
+// A result that reached the agent: its key leaves the Copilot outbox, and sent text is reported (ADR-0019).
+const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) s.targets[key].reported = reportKey(text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
 export async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -576,6 +578,7 @@ export async function runTarget(c, key, runner) {
           latest.fingerprint = fp;
           latest.resultGeneration = t.generation;
           latest.rerun_requested = false;
+          if (result.status === 'pass') latest.reported = null; // a later regression goes out again (ADR-0019)
           published = true;
         }
       });
@@ -609,10 +612,12 @@ export function verdict(c, key, t, r = loadResult(c, key, t)) {
 }
 // One exit-code mapping for gate and run --sync: a below target gives 1; otherwise the first nonzero code (pending, unscored 1, error 3) holds.
 export const exitCode = (code, v) => v.kind === 'below' ? 1 : code || v.code;
-// The pending text of gate and run --sync; needed is the gate's budget advice.
-const pendingText = (c, t, needed) => `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`;
+// The pending text of gate and run --sync; needed is the gate's budget advice. Copilot's bash tool backgrounds a command after initial_wait (default 30 s, #35 S13).
+const pendingText = (c, t, needed, s = `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`) =>
+  c.harness === 'copilot' ? s.replace(/check --wait (\d+)/, (w, n) => `${w} (set bash initial_wait >= ${+n + 30})`) : s;
 
-const detached = (run, args, env) => run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}).unref(); // a failed spawn emits 'error' later; hooks fail open
+// input: the stdin text of a Copilot spawned handler (ADR-0019).
+const detached = (run, args, env, input) => { const ch = run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: input ? ['pipe', 'ignore', 'ignore'] : 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}); ch.stdin?.on('error', () => {}).end(input); ch.unref(); }; // a failed spawn emits 'error' later; hooks fail open
 export function schedule(c, key, run = spawn) {
   detached(run, ['worker', '--repo', c.repo, '--session', c.sid, '--key', key], { MUTAGATE_HOOK_SESSION: c.sid, MUTAGATE_HARNESS: c.harness });
 }
@@ -623,21 +628,23 @@ export function schedulePrune(c, run = spawn) {
   atomic(pruned, new Date().toISOString());
   detached(run, ['prune'], { CLAUDE_PLUGIN_DATA: c.root });
 }
-// once names a one-time block flag; otherwise maxRounds applies.
-async function claimBlock(c, key, once) {
+// once names a one-time block flag; otherwise maxRounds applies. streak: the Copilot blocks in a row before this agentStop (ADR-0018).
+async function claimBlock(c, key, once, streak) {
   if (c.config.mode !== 'gate') return false;
   return updateState(c, s => {
     const t = s.targets[key];
     if (!t || t.blocks >= c.config.maxRounds || once && t[once]) return false;
     t.blocks++;
     if (once) t[once] = true;
+    if (streak !== undefined) s.stopStreak = streak + 1;
     return true;
   });
 }
 const reportKey = s => hash(s.replace(/\x1b\[[0-9;]*m/g, '').replace(/\d{4}-\d\d-\d\dT[\d:.]+Z|\bpid \d+|\d+ ms\b|log: \S+/g, ''));
-export async function gate(c, { wait, hook = false, runner } = {}) {
-  const start = Date.now(),
-    end = start + Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0) * 1000,
+// budget: the Copilot gate deadline G; streak: the Copilot blocks in a row, at 8 the gate allows (ADR-0018).
+export async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
+  const start = Date.now(), limited = streak >= 8,
+    end = start + (budget ?? Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0)) * 1000,
     reports = [],
     warnings = liveWarnings(c),
     blocks = [];
@@ -669,14 +676,17 @@ export async function gate(c, { wait, hook = false, runner } = {}) {
       if (!v.result) { needed = advice(0); break; }
     }
     if (!t) continue;
+    if (hook && c.harness === 'copilot' && v.kind === 'pending' && !v.running) schedule(c, key, c.spawn); // the session can end with no later tool call (ADR-0018); c.spawn: test seam
     const r = v.result, text = r ? report(r, r.status === 'unscored' ? DEFAULTS : c.config) : pendingText(c, t, needed);
     if (needed && r) warnings.push(`mutagate: ${t.target}${needed}`);
     code = exitCode(code, v);
     if (r && (r.status !== 'unscored' || v.obligation === 'none')) reports.push(text);
-    if (['below', 'error'].includes(r?.status)) await updateState(c, s => { if (s.targets[key]) s.targets[key].reported = reportKey(text); });
     // Block fixable test failures and pending targets once (ponytail: per target per session, never reset), below targets up to maxRounds; infrastructure errors fail open.
-    if (hook && v.obligation === 'block' && await claimBlock(c, key, v.once)) blocks.push(text);
-    else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(v.kind === 'below' && c.config.mode !== 'advise' ?
+    const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
+      sent = r && (blocked || ['below', 'error'].includes(r.status) && !(hook && c.harness === 'copilot')); // ADR-0019: a Copilot agentStop shows the model only a block
+    if (sent || r && !hook) await shown(c, key, sent && text); // a sent key, and each key whose result check prints, leaves the Copilot outbox
+    if (blocked) blocks.push(text);
+    else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(limited && v.obligation === 'block' ? `mutagate: Copilot block limit (8 in a row) reached for ${t.target}` : v.kind === 'below' && c.config.mode !== 'advise' ?
       `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
   } catch (e) { if (!code) code = 3; warnings.push(`mutagate: ${clean(original.target)} skipped: ${clean(e.message)}`); trace(c, 'Result', { target: original.target, decision: 'skipped', error: clean(e.message) }); }
   const reason = joinReports([...blocks, ...warnings], 1800);
@@ -685,7 +695,8 @@ export async function gate(c, { wait, hook = false, runner } = {}) {
     report: joinReports([...new Set([...reports, ...warnings]), untargeted(c)].filter(Boolean)) || 'mutagate: no below-threshold targets.', warnings
   };
 }
-export async function handleHook(c, p, event) {
+// raw: the payload before normalization, which a Copilot spawned handler gets on stdin.
+export async function handleHook(c, p, event, raw = p) {
   if (c.inherited) return event === 'SessionStart' && ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) ? // inert until a native Copilot install
     { code: 0, out: { additionalContext: 'mutagate inactive under Copilot: this repo has only the Claude Code install. Copilot support: `install --agent copilot`, mutagate 0.9.2 (#35).' } } : { code: 0 };
   const cp = c.args.harness === 'copilot' && copilot(), // native Copilot output (#35 D12): top-level fields, exit 0, no plain text or stderr
@@ -713,8 +724,9 @@ export async function handleHook(c, p, event) {
   }
   if (event === 'PostToolUse') {
     if (p.tool_response?.success === false || p.tool_response?.isError) return { code: 0 };
+    const msgs = cp ? await cp.drain(c, p) : []; // a Copilot delivery point (ADR-0019)
     const paths = extractPaths(p).map(f => safePath(c.repo, f)).filter(Boolean).map(f => slash(path.relative(c.repo, f)));
-    if (!paths.length) return { code: 0 };
+    if (!paths.length) return msgs.length ? contextOutput(joinReports(msgs, 1800)) : { code: 0 };
     const src = c.args.mutate ? [] : paths.filter(f => !isTest(f, c.config) && /\.(java|kt|py|tsx?|jsx?|go|cs)$/.test(f) && !GENERATED.test(f) && !CONFIG.test(f) && c.config.languages.includes(language(f)));
     if (src.length) await updateState(c, s => { s.edited = [...new Set([...(s.edited || []), ...src])].slice(-200); });
     if (!Object.keys(state(c).targets).length && !paths.some(f => isTest(f, c.config))) return { code: 0 };
@@ -734,8 +746,7 @@ export async function handleHook(c, p, event) {
       }
     });
     let wake = false;
-    const msgs = [],
-      keys = [];
+    const keys = [];
     for (const file of paths.filter(f => isTest(f, c.config) && !SUPPORT.test(f) && exists(path.join(c.repo, f)))) {
       let r;
       if (!seen) r = await register(c, file);
@@ -778,12 +789,14 @@ export async function handleHook(c, p, event) {
         if (budgetSec < 1) break;
         if (runtimeRequire('./errors.cjs').gateAdvice(budgetSec, c.config.runBudgetSec, t.lastRunMs)) continue;
         const r = await runTarget({ ...c, settle, deadline: end, budgetSec }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
+        if (cp) { if (r) await updateState(c, s => cp.queue(s, key, text, r.started_at)); continue; } // Copilot: the next delivery point sends it and sets reported (ADR-0019)
         // Redeliver changed results; a pass resets delivery.
         if (r && await updateState(c, s => { const t = s.targets[key], next = text && reportKey(text); if (!t || t.reported === next) return false; t.reported = next; return true; }) && text) {
           msgs.push(text);
           wake ||= r.status === 'below' || r.agent_caused; }
       }
-    } else if (c.harness === 'unknown')
+    } else if (cp) { if (!seen) detached(c.spawn || spawn, ['hook', 'PostToolUse', '--mutate', '--harness', 'copilot'], {}, JSON.stringify(raw)); } // no async hooks: a spawned handler (ADR-0019); c.spawn: test seam
+    else if (c.harness === 'unknown')
       for (const key of [...new Set(keys)]) schedule(c, key);
     if (!msgs.length) return { code: 0 };
     const text = joinReports(msgs, 1800);
@@ -791,8 +804,8 @@ export async function handleHook(c, p, event) {
     return contextOutput(text);
   }
   if (['Stop', 'SubagentStop', 'TaskCompleted'].includes(event)) {
-    const off = cp && cp.probe(path.join(c.data, 'state')), g = off ? { reason: off } : await gate(c, { hook: true }); // ADR-0021: no gate without a writable state dir
-    if (cp) return cp.stop(g);
+    if (cp) return cp.agentStop(c, p); // ADR-0018
+    const g = await gate(c, { hook: true });
     return g.block ? {
       code: 2, out: { decision: 'block', reason: g.reason }, err: g.reason
     } : g.reason ? { code: 0, out: { systemMessage: g.reason } } : { code: 0 };
@@ -958,14 +971,15 @@ export async function main(argv = process.argv.slice(2)) {
       if (!c.inherited && origin !== 'spawned' && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
         `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
       if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return 0; } // never a ppid- session (ADR-0020)
-      const r = await handleHook(c, p, event);
+      const r = await handleHook(c, p, event, raw);
       if (r.out) console.log(JSON.stringify(r.out));
       if (r.text) console.log(r.text);
       if (r.err) console.error(r.err);
       trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
+        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
         ...(cp && p.agentId && c.sid === p.agentId && { chain: 'unresolved' }) // a Copilot subagent call outside its root session
       });
+      if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
       return r.code;
     }
     if (cmd === 'worker') {
@@ -1001,7 +1015,8 @@ export async function main(argv = process.argv.slice(2)) {
       let code = 0;
       const results = [];
       for (const t of r.targets) {
-        const v = verdict(c, targetKey(t), t, await runTarget(c, targetKey(t)));
+        const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
+        if (v.result && state(c).outbox?.some(e => e.key === key)) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
         results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
         if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }

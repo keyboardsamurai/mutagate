@@ -104,11 +104,23 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   The async `PostToolUse --mutate` hook reruns stale targets itself after 6 s
   quiet and ends by 850 s after its start (hook timeout 900 s): like `gate`, it
   passes `deadline` and a clipped `budgetSec` to `runTarget` and starts a
-  target only when `gateAdvice` says its `lastRunMs` fits.
+  target only when `gateAdvice` says its `lastRunMs` fits. Copilot has no async
+  hooks: a new native write `postToolUse` with targets or a test path spawns that
+  handler detached (`hook PostToolUse --mutate --harness copilot`, raw payload on
+  stdin), which queues each run's report in the session `outbox` instead of
+  printing it. A root-agent write or shell `postToolUse` (`read_bash` too) is a
+  delivery point: it drains the fresh, unreported entries as `additionalContext`
+  and sets `reported`; a gate block or a `check` report drops the key, and a
+  recorded pass resets `reported` (ADR-0019).
   Stop, SubagentStop, and TaskCompleted call `gate`, which re-runs an `error`
   result once (`attempts`) and blocks once on an `agent_caused` one. An
   exception in one target skips only that target, with a warning (`check`
-  exit 3). Session state is JSON under `cacheRoot()` (a real path, resolved
+  exit 3). A native Copilot `hook Stop --timeout T` (`agentStop`) ends the gate
+  by G = min(`gateBudgetSec`, T − 2M), M = min(30, ⌊T/4⌋), schedules a worker
+  for a target left pending with nothing in flight, allows after 8 blocks in a row
+  (state `stopStreak`), and at W = T − M allows, traces `deadline` and exits so
+  `runners.cjs` kills the runner groups; a subagent `agentStop` exits 0 (ADR-0018).
+  Session state is JSON under `cacheRoot()` (a real path, resolved
   like `safePath`, so tools get no symlinked alias), written through
   `updateState` with a lock and atomic writes; compute `fingerprint` before
   `updateState`, as other hooks wait at most 5 s for the lock. `loadResult`
@@ -187,7 +199,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `hook_event_name` that `main` drops, cloud agent that stays inert unless config
   `copilotCloud: true`, ADR-0021), maps the camelCase payload to the internal shape after `main`
   records the raw one (`normalize`), keeps the subagent chain (`link`,
-  `session`), and gives the repo (`top`), the Stop output (`stop`) and the write probe (`probe`). `prune.cjs` is the cache prune: `register`, and
+  `session`), and gives the repo (`top`), the agentStop gate call (`agentStop`) and its output (`stop`), deadlines and watchdog (`clamp`, `watchdog`), the outbox (`queue`, `drain`) and the write probe (`probe`). `prune.cjs` is the cache prune: `register`, and
   SessionStart in an existing data dir, write a `repo-path` marker into it, and `schedulePrune`
   spawns the internal `prune` command detached when the mtime of
   `repos/.pruned` is a day old. It deletes `reports/*` after 24 h, session state
