@@ -123,48 +123,30 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   profile except Copilot; `copilot.cjs` exports the Copilot `profile`. Method
   and field names: the ADR.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
-  keep hook latency low. `inputs.cjs` lists repo files (`files`, for detect and
-  resolution: the Git file list in a Git repo, else a walk, with the same name
-  rules; ADR-0016), scopes project inputs and computes digests
-  for fingerprints; its `dirEntries` reads a directory for both repo walks
-  (`files` and `inputFiles`) and skips unreadable directories, venvs, noise
-  names and `bin`/`obj` beside a `.csproj`; its `read` gives '' and
-  `fileDigest` a fixed digest for a file it cannot read. `kotlin-source.cjs`
-  provides the source-aware part of the
-  Kotlin Tier B filter, and `references/kotlin-junk.yaml` holds its pattern
-  rules. `glob.cjs` compiles globs, cached per process. `mutmut-bridge.cjs` writes the mutmut
-  config and result bridge per mutmut version (2, 3.0–3.5, 3.6+). `errors.cjs`
-  (`agentCause`) finds the line that makes an error agent-caused (a failing
-  command naming any session test, a glob-matched test or edited production file,
-  or a runner's red-baseline message; Python scoped-copy-only failures fail open).
-  `dotnet.cjs` finds a file's `.csproj` and builds the Stryker.NET test filter,
-  the per-project lock list, the test-project check and the persistent scoped
-  scratch copy. `runners.cjs` drives the mutation tools (runners, `command`,
-  `tool`, `TOOLS`, `jars`) and returns raw mutants. `command` starts each tool in
-  its own process group (Windows: a `taskkill /T` tree) and kills it at its deadline; on the first spawn it
-  installs handlers that kill all live groups on `exit` and exit 128+signo on
-  SIGINT, SIGTERM and SIGHUP. `install.cjs` holds `hookConfig`, `install`, `configFile`,
-  `installStamp` and `agents` (`--agent auto`, ADR-0021); it is not on the
-  hook path and not hashed into `fingerprint`. `harness.cjs` (`harness()`, loaded
-  by `context` and `runHook`, not hashed into `fingerprint`) holds `pick`, `shell`,
-  `base` and the profiles except Copilot. `doctor.cjs` renders the doctor
-  text, writes `checking <name>…` progress to stderr and adds a WARN check when an
-  installed harness differs from its pin, and the Copilot checks (`copilotChecks`:
-  hook files, skill copy, cache root); it is lazy, not on the hook path and not
-  hashed into `fingerprint`. `copilot.cjs` (`copilot()`, the Copilot profile `profile`, loaded only for
-  `--harness copilot` hook calls, session commands in the Copilot root agent shell, an inherited SessionStart without a native hook file, `doctor` and `install`, not hashed into `fingerprint`) classifies a call
-  (`origin`: native, spawned `--mutate` handler, VS Code Local payload with
-  `hook_event_name` that `runHook` drops, cloud agent (env markers, `cloud`) that stays inert unless config
-  `copilotCloud: true`, ADR-0021), maps the camelCase payload to the internal shape after `runHook`
-  records the raw one (`normalize`), keeps the subagent chain (`link`,
-  `session`), and gives the repo (`top`), the agentStop gate call (`agentStop`) and its output (`stop`), deadlines and watchdog (`clamp`, `watchdog`), the outbox (`queue`, `drain`) and the write probe (`probe`). `prune.cjs` is the cache prune: `register`, and
-  SessionStart in an existing data dir, write a `repo-path` marker into it, and `schedulePrune`
-  spawns the internal `prune` command detached when the mtime of
-  `repos/.pruned` is a day old. It deletes `reports/*` after 24 h, session state
-  and Copilot `agents/` records after 14 days, results with their state, and data dirs whose marked repo path is gone
-  (unmarked: 14 days idle), rotates `trace.jsonl` at 10 MB, skips a data dir with
-  a held lock and never touches `jars/`, `tools/` or `recorded/`. It is not hashed
-  into `fingerprint`. Helpers that affect results are hashed into `fingerprint`; add new ones to its list.
+  keep hook latency low. One line per helper: what it owns, its symbols, its ADR.
+  `inputs.cjs`: the repo file list and project inputs for detect, resolution and
+  fingerprints (`files`, `inputFiles`, `dirEntries`, `read`, `fileDigest`;
+  ADR-0016). `kotlin-source.cjs`: the source-aware part of the Kotlin Tier B
+  filter, rules in `references/kotlin-junk.yaml`. `glob.cjs`: globs, compiled
+  once per process. `mutmut-bridge.cjs`: the mutmut config and result bridge per
+  mutmut version (2, 3.0 to 3.5, 3.6+). `errors.cjs`: `agentCause` and
+  `gateAdvice` (ADR-0002, ADR-0005, ADR-0012). `dotnet.cjs`: the `.csproj` of a
+  file, the Stryker.NET test filter, the per-project lock list, the test-project
+  check and the scoped scratch copy (ADR-0001). `runners.cjs`: the mutation tools
+  (the runners, `command`, `tool`, `TOOLS`, `jars`); `command` runs each tool in
+  its own process group, kills it at its deadline and exits 128+signo on a
+  signal. `install.cjs`: `hookConfig`, `install`, `configFile`, `installStamp`,
+  `agents` (ADR-0013, ADR-0017, ADR-0021). `harness.cjs`: `pick`, `shell`, `base`
+  and the profiles except Copilot (ADR-0022). `doctor.cjs`: `render`, `progress`,
+  `harnessChecks`, `copilotChecks`. `copilot.cjs`: the Copilot profile; `origin`,
+  `normalize`, `link`, `session`, `top`, `agentStop`, `stop`, `clamp`,
+  `watchdog`, `queue`, `drain`, `probe` (ADR-0018 to ADR-0021); loaded only for
+  `--harness copilot` hook calls, session commands in the Copilot root agent
+  shell, an inherited SessionStart without a native hook file, `doctor` and
+  `install`. `prune.cjs`: the cache prune that the internal `prune` command runs
+  (ADR-0024). `install.cjs`, `doctor.cjs`, `prune.cjs`, `copilot.cjs` and
+  `harness.cjs` are not hashed into `fingerprint`; every other helper affects
+  results and is in its list. Add new ones there.
 - `references/` ships with the skill:
   - `jars.json` has SHA-256-pinned PIT jars.
   - `versions.json` mirrors `test/harness-versions.json` for `doctor`.
@@ -176,37 +158,19 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   integration test copies the fixture to a scratch repo and asserts that build
   files are unchanged.
 - `test/scratch.mjs` makes the scratch repo for the integration, driver,
-  clipped and performance scripts: the live eval copy (`copyRepo`: no top-level
-  `expected.json`, `reference/` or `prompt.*.md`, no build dirs), the variant
+  clipped and performance scripts: `copyRepo` (the live eval copy), the variant
   swap, a temp cache root whose `jars/` and `tools/` link to the real cache
-  root, one CLI call, and `scrubEnv`, which removes the
-  inherited harness, `MUTAGATE_*` and token vars (the integration test sets
-  `MUTAGATE_GO_RUNNER`, `MUTAGATE_DEBUG` and `MUTAGATE_TRACE` back).
-  `test/installer.mjs` and the eval `agentEnv` use `scrubEnv` too, and
-  `test/corpus/generate.mjs` uses `copyRepo`.
-- `test/eval/` is the live eval suite, not part of the skill package:
-  - `run.mjs` plans the sweep (`parseArgs`, `planSweep`, `aggregate` are pure
-    exports) and runs each cell: copy `tasks/<lang>` to a repo at
-    `~/.cache/mutagate-eval/<sweepId>/<run>-<random16hex>` (outside this tree,
-    so the agent does not load this `AGENTS.md`), install the skill, launch the agent, then
-    collect into `test/.cache/eval/<sweepId>/<run>/` (`repo/` links the repo).
-    That run dir is the seam: drivers write it, the checker reads it, and tests
-    use canned run dirs.
-  - `harnesses.mjs` has one self-contained driver per harness: preflight
-    against the pins, isolated config env, launch, done-detection (OpenCode,
-    Pi and Copilot share one settle loop) and `read`, the transcript reader. Only the
-    reader parses a harness transcript: it returns the final text (written to
-    `final.txt`), the executed commands and the raw lines with a user flag;
-    `transcripts/<harness>/` holds the canned real transcripts its tests use.
-  - `checks.mjs` turns a run dir into `result.json` (hard checks) and
-    `anomalies.json` (warnings with file:line evidence), renders the sweep
-    `report.md`, scrubs secrets, and builds `test/evidence/live/` records.
-  - `tasks/<lang>/` hold production code, `expected.json` (targets, traps,
-    globs, test command), `prompt.natural.md`, and `reference/` tests that
-    `test/integration/eval-tasks.test.mjs` validates without a model
-    (`MUTAGATE_FIXTURES=eval-<lang>`). `tasks/greenfield/` holds the opt-in
-    from-scratch prompts.
-  - `TRIAGE.md` is the prompt for an agent reading a sweep dir.
+  root, one CLI call, and `scrubEnv`, which removes the inherited harness,
+  `MUTAGATE_*` and token vars. `test/installer.mjs` and the eval `agentEnv` use
+  `scrubEnv` too; `test/corpus/generate.mjs` uses `copyRepo`.
+- `test/eval/` is the live eval suite, not part of the skill package. Spec:
+  `docs/eval_suite_spec.md` (Implementation Decisions, Run lifecycle); the run
+  dir is the seam between drivers, checker and tests. `run.mjs` (`parseArgs`,
+  `planSweep`, `aggregate` are pure exports), `harnesses.mjs` (one driver per
+  harness; `read` is the transcript reader, canned transcripts in
+  `transcripts/<harness>/`), `checks.mjs` (`result.json`, `anomalies.json`,
+  `report.md`, evidence records), `tasks/<lang>/` and `tasks/greenfield/`,
+  `TRIAGE.md` (the prompt for an agent reading a sweep dir).
 
 ## Invariants enforced by tests
 
