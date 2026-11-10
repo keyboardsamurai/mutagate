@@ -52,7 +52,7 @@ Go: verified with a `go 1.22` module under Go 1.26.
 
 ## GitHub Copilot
 
-Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`) and on the checks below. The live eval passed both scenarios for all six languages on 2026-11-10 (Copilot CLI 1.0.107, `claude-sonnet-5`, macOS; records `test/evidence/live/copilot-*.json`).
+Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 2026-11-09 (Copilot CLI 1.0.107, macOS, local, Copilot sandbox off; scrubbed payloads in `test/payloads/copilot/cli-native/`), the cloud agent spike S16 of 2026-11-10 (`test/payloads/copilot/cloud/`) and the checks below. The live eval passed both scenarios for all six languages on 2026-11-10 (Copilot CLI 1.0.107, `claude-sonnet-5`, macOS; records `test/evidence/live/copilot-*.json`).
 
 | Case | Status |
 |---|---|
@@ -60,7 +60,7 @@ Copilot support (#35, [docs/copilot.md](copilot.md)) rests on the CLI spikes of 
 | Hook latency (macOS, 100 samples) | ✅ installed hook p95 43.0 ms; Copilot test edit 39.1 ms; delivery point with an outbox entry 38.4 ms. In a 15,000-file tree the delivery point takes 439 ms, once per background result, outside the 80 ms budget ([ADR-0019](adr/0019-copilot-outbox-delivery.md)) |
 | VS Code Copilot harness | ⏳ not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` |
 | VS Code Local harness | inert by design |
-| Copilot cloud coding agent | inert unless `copilotCloud: true`; its environment markers are unconfirmed until spike S16, which gates the release |
+| Copilot cloud coding agent | inert unless `copilotCloud: true`. Spike S16 (one cloud session, 2026-11-10) confirmed the markers `COPILOT_AGENT_JOB_ID` and `COPILOT_AGENT_CALLBACK_URL` (in no local record) and that the agent runs `.github/hooks`, `.github/copilot/settings.json` and `.claude/settings.json`. No cloud run with `copilotCloud: true` |
 | Copilot sandbox | ❌ unsupported: mutagate says `mutagate inactive: cannot write <path>` (follow-up after spike S17) |
 | Windows | 🟡 experimental, no claim: only an install made on Windows writes a real PowerShell command; `test:driver` skips Copilot there |
 

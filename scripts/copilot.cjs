@@ -1,9 +1,9 @@
 'use strict';
 // GitHub Copilot native hook calls (`--harness copilot`, #35, ADR-0020): origin, payload normalization, the subagent chain, the agentStop gate and its output, the outbox and the write probe;
-// `top` also serves session commands in the Copilot root agent shell. Loaded only for those calls, doctor and install (TOOLS, DRAIN: the hook matchers). Not hashed into fingerprint: it maps payloads and session ids, not results.
+// `top` also serves session commands in the Copilot root agent shell. Loaded only for those calls, the inherited SessionStart notice (`cloud`), doctor and install (TOOLS, DRAIN: the hook matchers). Not hashed into fingerprint: it maps payloads and session ids, not results.
 const fs = require('node:fs'), path = require('node:path');
-// Cloud coding agent markers (ADR-0021), UNCONFIRMED until spike S16 names the marker.
-const CLOUD = ['COPILOT_AGENT_PROMPT', 'GITHUB_COPILOT_API_TOKEN'];
+// Cloud coding agent markers (ADR-0021): in the cloud hook env of spike S16, in no local CLI hook or agent shell env.
+const CLOUD = ['COPILOT_AGENT_JOB_ID', 'COPILOT_AGENT_CALLBACK_URL'], cloud = (env = process.env) => CLOUD.some(k => env[k]);
 // str_replace_editor is UNCONFIRMED: no recorded call (S1).
 const TOOLS = { create: 'Write', edit: 'Edit', str_replace_editor: 'Edit', apply_patch: 'apply_patch', bash: 'Bash', powershell: 'Bash' },
   KEYS = { path: 'file_path', file_text: 'content', old_str: 'old_string', new_str: 'new_string' };
@@ -13,11 +13,13 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
   const link = (data, id) => path.join(data, 'agents', hash(id));
   const cp = {
     // 'spawned' (the --mutate handler; never installed, so never Local), 'local' (a VS Code Local payload) or 'cloud' (ADR-0021), or 'native'.
-    origin: (p, args, env = process.env) => args.mutate ? 'spawned' : p.hook_event_name !== undefined ? 'local' : CLOUD.some(k => env[k]) ? 'cloud' : 'native',
+    origin: (p, args, env = process.env) => args.mutate ? 'spawned' : p.hook_event_name !== undefined ? 'local' : cloud(env) ? 'cloud' : 'native', cloud,
     // camelCase payload to the internal shape; the Copilot keys stay. apply_patch sends the raw patch, its paths relative to cwd (S1).
     // Only the TOOLS get a tool_input: a `view {path}` that passes the hook matcher (UNCONFIRMED) names no path, so it stales and denies nothing.
+    // The cloud agent sends toolArgs as JSON text, except for apply_patch (S16).
     normalize(p) {
-      const a = p.toolArgs, tool = TOOLS[p.toolName], input = !tool ? {} : typeof a === 'string' ? p.toolName === 'apply_patch' ? { command: typeof p.cwd === 'string' ? a.replace(PATCH_HEADER, (_, head, f) => head + path.resolve(p.cwd, f.trim())) : a } : {}
+      let a = p.toolArgs; if (typeof a === 'string' && p.toolName !== 'apply_patch') try { a = JSON.parse(a); } catch { a = null; }
+      const tool = TOOLS[p.toolName], input = !tool ? {} : typeof a === 'string' ? p.toolName === 'apply_patch' ? { command: typeof p.cwd === 'string' ? a.replace(PATCH_HEADER, (_, head, f) => head + path.resolve(p.cwd, f.trim())) : a } : {}
         : a && typeof a === 'object' ? Object.fromEntries(Object.entries(a).map(([k, v]) => [KEYS[k] ?? k, v])) : {};
       return { ...p, session_id: p.sessionId, tool_name: tool ?? p.toolName, tool_input: input };
     },

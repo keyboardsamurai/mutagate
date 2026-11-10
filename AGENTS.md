@@ -92,7 +92,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   call without `--harness` `inherited` (harness `copilot`, whatever the `CLAUDE_*` env). `main`
   skips recording and traces decision `inherited`; `handleHook` returns first,
   exit 0 with no state or stdout, except one SessionStart `additionalContext`
-  notice while no native Copilot hook file exists (ADR-0015, payloads in
+  notice while no native Copilot hook file exists and, without `copilotCloud`,
+  no cloud marker is set (ADR-0015, ADR-0021, payloads in
   `test/payloads/copilot/cli/`). Under Node < 22 hooks exit 0 and SessionStart says so.
   `install` stamps `<VERSION>:<scope>` into the SessionStart command
   (`--installed <stamp>`) and replaces `__MUTAGATE_INSTALLED__` in the
@@ -200,9 +201,9 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   installed harness differs from its pin, and the Copilot checks (`copilotChecks`:
   hook files, skill copy, cache root); it is lazy, not on the hook path and not
   hashed into `fingerprint`. `copilot.cjs` (`copilot()`, loaded only for
-  `--harness copilot` hook calls, session commands in the Copilot root agent shell, `doctor` and `install`, not hashed into `fingerprint`) classifies a call
+  `--harness copilot` hook calls, session commands in the Copilot root agent shell, an inherited SessionStart without a native hook file, `doctor` and `install`, not hashed into `fingerprint`) classifies a call
   (`origin`: native, spawned `--mutate` handler, VS Code Local payload with
-  `hook_event_name` that `main` drops, cloud agent that stays inert unless config
+  `hook_event_name` that `main` drops, cloud agent (env markers, `cloud`) that stays inert unless config
   `copilotCloud: true`, ADR-0021), maps the camelCase payload to the internal shape after `main`
   records the raw one (`normalize`), keeps the subagent chain (`link`,
   `session`), and gives the repo (`top`), the agentStop gate call (`agentStop`) and its output (`stop`), deadlines and watchdog (`clamp`, `watchdog`), the outbox (`queue`, `drain`) and the write probe (`probe`). `prune.cjs` is the cache prune: `register`, and
