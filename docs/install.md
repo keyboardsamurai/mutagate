@@ -49,7 +49,7 @@ The Copilot install writes `.github/hooks/mutagate.json`, a file of its own; wit
 
 A successful install ends with `Next: run <skill>/scripts/mutagate doctor, then restart your agent so it loads the hooks.` Codex adds `In Codex, open /hooks and trust mutagate.` Trust again after each install.
 
-`doctor` checks config, toolchain, jars, adapter and one synthetic mutation. Its first line is `mutagate 0.9.1`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.` The first run downloads tools and does a cold build. Expect a few minutes the first time; C# cold builds take longer (see [Runners](https://github.com/keyboardsamurai/mutagate#runners)).
+`doctor` checks config, toolchain, jars, adapter and one synthetic mutation. Its first line is `mutagate 0.9.2`; a full pass ends with `All checks passed. Restart your agent so it loads the hooks.` The first run downloads tools and does a cold build. Expect a few minutes the first time; C# cold builds take longer (see [Runners](https://github.com/keyboardsamurai/mutagate#runners)).
 
 ## `--agent auto`
 
@@ -67,7 +67,7 @@ User scope (`--scope user`), a skill outside Git, and Windows write machine-loca
 
 ## Pinned version
 
-Replace `#skill` with `#skill-v0.9.1` in the `npx skills add` line.
+Replace `#skill` with `#skill-v0.9.2` in the `npx skills add` line.
 
 ## Upgrade
 

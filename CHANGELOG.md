@@ -4,6 +4,8 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-11-10
+
 ### Added
 
 - GitHub Copilot CLI is a supported harness ([docs/copilot.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/copilot.md), #35). Its own hooks pass `--harness copilot`, and mutagate maps the Copilot payloads (`create`, `edit`, `apply_patch`, `bash`) to its own. A test edit starts a background run in a detached process, because Copilot has no async hooks; the report reaches the agent as `additionalContext` with its next edit or shell call (`read_bash` too). `agentStop` is the gate, inside its 600 s hook timeout: it works for up to `gateBudgetSec`, starts a worker for a target still pending, asks the agent to set bash `initial_wait` above `check --wait N`, allows after 8 blocks in a row (the Copilot limit), and at 570 s allows and stops its runs. Messages of an allow are progress lines that the model does not see. Subagent edits join the root session (through `parentAgentId`) and are gated at the root `agentStop`. The Copilot cloud coding agent is inert unless the new config key `copilotCloud` is `true` (experimental). In a Copilot sandbox mutagate says `mutagate inactive: cannot write <path>` and does nothing else. The live eval passes for all six languages (README matrix), and VS Code is not claimed.
@@ -87,6 +89,7 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...HEAD
+[0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/keyboardsamurai/mutagate/releases/tag/v0.9.0

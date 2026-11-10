@@ -12,7 +12,7 @@ A passing test proves little. A test with no assertions passes too. mutagate fin
 
 This runs in the background each time the agent writes a test. When the agent tries to finish, mutagate checks the scores. If the tests catch fewer than 80% of the bugs, it stops the agent from ending its turn and gives it the list of bugs that got through. The agent then writes better tests. You do nothing.
 
-Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.1): config keys and report text can change before 1.0.
+Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.2): config keys and report text can change before 1.0.
 
 ## Why you want this
 
@@ -92,7 +92,7 @@ npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
 1. The first line copies the skill into `.claude/skills/mutagate`. `npx skills` sends its own install telemetry; set `DISABLE_TELEMETRY=1` to turn it off.
 2. `install` adds the mutagate hooks to `.claude/settings.json`. It keeps your other hooks.
 3. `doctor` checks config, toolchain, mutation tool and adapter, then runs one real mutation. The first time, it downloads the mutation tool where needed and does a cold build, so expect a few minutes (C# takes longer, see [Runners](#runners)). A full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
-4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.1 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
+4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.2 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
 5. Ask it to write a test for one production file. If the test is weak, it gets blocked with the survivors.
 
 To see scores without ever blocking the agent, set `"mode": "advise"` in `.mutagate/config.json` (or `MUTAGATE_MODE=advise`).

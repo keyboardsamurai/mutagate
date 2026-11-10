@@ -12,7 +12,7 @@ const { createRequire } = require('node:module');
 const runtimeRequire = createRequire(__filename);
 const HERE = path.dirname(__filename),
   ROOT = path.dirname(HERE);
-const VERSION = '0.9.1';
+const VERSION = '0.9.2';
 const DEFAULTS = {
   schema: 1, mode: 'gate', threshold: .8, maxSurvivors: 10, maxRounds: 2, runBudgetSec: 300, gateBudgetSec: 120, gateWaitSec: 60,
   countNoCoverage: true, gateSecondaries: false, languages: ['java', 'kotlin', 'python', 'typescript', 'go', 'csharp'], testGlobs: [], mainRoots: [],
