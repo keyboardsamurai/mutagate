@@ -69,7 +69,7 @@ test('doctor checks the Copilot hook files, a Claude project install that stays 
  const repo=tmp(t),home=tmp(t),data=tmp(t),ro=tmp(t),run=(args,cache=data)=>cli('mutagate.mjs',[...args,'--repo',repo],{env:{...env,HOME:home,PATH:path.dirname(process.execPath),CLAUDE_PLUGIN_DATA:cache}});
  const checks=cache=>JSON.parse(run(['doctor','--json'],cache).stdout).checks.filter(x=>/^(copilot (hook files|skill copy|setup)|cache root writable)$/.test(x.name)).map(x=>[x.name,x.warn?'WARN':x.pass?'PASS':'FAIL',x.note??x.hint]);
  const proj=path.join(repo,'.github/hooks/mutagate.json'),user=path.join(home,'.copilot/hooks/mutagate.json'),old=path.join(repo,'.github/hooks/old.json'),put=(f,s)=>{fs.mkdirSync(path.dirname(path.join(repo,f)),{recursive:true});fs.writeFileSync(path.join(repo,f),s);};
- const ok=['cache root writable','PASS',undefined],setup=['copilot setup','PASS','Copilot loads repo hooks only in a trusted folder (copilot -p: --trust-folder), not under a managed-hooks-only policy. VS Code: the Local harness is inert; use the Copilot harness.'];
+ const ok=['cache root writable','PASS',undefined],setup=['copilot setup','PASS','Copilot loads repo hooks only in a trusted folder (copilot -p: --trust-folder), not under a managed-hooks-only policy.'];
  assert.deepEqual(checks(),[],'no Copilot install or signal: no Copilot checks');assert.equal(run(['install','--agent','claude']).status,0);assert.deepEqual(checks(),[]);
  fs.mkdirSync(path.join(repo,'.github/hooks'),{recursive:true});
  assert.deepEqual(checks(),[['copilot hook files','WARN','none; mutagate keeps its hooks in .claude/settings.json inert under Copilot: run mutagate install --agent copilot'],ok,setup],'a Copilot signal and a Claude project install');

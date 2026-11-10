@@ -37,7 +37,7 @@ function copilotChecks(c, { inst, cp, found, detected, cli }) {
       ? [{ name, pass: true, warn: true, note: `none; mutagate keeps its hooks in .claude/settings.json inert under Copilot: run ${cli} install --agent copilot` }] : [],
     ...a && b && a !== b ? [{ name: 'copilot skill copy', pass: true, warn: true, note: `Copilot loads ${copies[0]} (mutagate ${a}), its hooks run ${copies[1]} (mutagate ${b}): keep one copy` }] : [],
     { name: 'cache root writable', pass: !off, hint: off },
-    { name: 'copilot setup', pass: true, note: 'Copilot loads repo hooks only in a trusted folder (copilot -p: --trust-folder), not under a managed-hooks-only policy. VS Code: the Local harness is inert; use the Copilot harness.' }];
+    { name: 'copilot setup', pass: true, note: 'Copilot loads repo hooks only in a trusted folder (copilot -p: --trust-folder), not under a managed-hooks-only policy.' }];
 }
 const progress = name => process.stderr.write(`checking ${name}…\n`);
 const render = d => [`mutagate ${d.version}`, ...d.checks.map(x => `${x.warn ? 'WARN' : x.pass ? 'PASS' : 'FAIL'} ${x.name}${x.pass ? (x.note ? ': ' + x.note : '') : ': ' + x.hint}`),
