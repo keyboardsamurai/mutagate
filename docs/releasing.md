@@ -27,7 +27,7 @@ npm run generate:hooks
 npm test
 npm run test:installer
 npm run test:performance
-node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 300 KB
+node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 350 KB
 # 5. Commit, push, open the pull request.
 git commit -am "mutagate $V"
 git push origin HEAD

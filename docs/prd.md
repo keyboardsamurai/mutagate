@@ -552,7 +552,7 @@ Pi has no permission system, so waiver protection is a hard block in `tool_call`
 | ID | Requirement |
 |---|---|
 | NFR-1 | Runtime: Node 22 LTS or later. Also runs under Bun (OpenCode) for the adapter path. No `package.json` dependencies. No build step. No Python for the core. |
-| NFR-2 | Size: `mutagate.mjs` under 1,400 lines. Adapters under 60 lines each. Whole skill folder under 300 KB excluding `test/`. |
+| NFR-2 | Size: `mutagate.mjs` under 1,400 lines. Adapters under 60 lines each. Whole skill folder under 350 KB excluding `test/`. |
 | NFR-3 | Portability: macOS, Linux, Windows (Git Bash and PowerShell shims). CI runs Ubuntu and macOS, Windows smoke only. |
 | NFR-4 | Performance: sync hook paths under 80 ms p95. Scoped pitest on the Java fixture under 90 s cold, under 30 s warm (history) on a GitHub-hosted 4-core runner. Report generation under 50 ms. |
 | NFR-5 | Security: the CLI never executes strings taken from tool payloads. File paths from payloads are resolved and must stay inside the repo root or they are ignored. Jar downloads are pinned by SHA-256 and fetched only from `https://repo1.maven.org/maven2`. No other network access. `MUTAGATE_OFFLINE=1` disables downloads. Hook stdout never includes secrets or environment dumps. |

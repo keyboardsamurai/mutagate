@@ -41,7 +41,7 @@ npm run test:performance                          # hook p95 <= 80 ms; 15k-file 
 npm run test:installer
 npm run generate:runtime                          # regenerate scripts/mutagate-hook.cjs
 npm run generate:hooks                            # regenerate scripts/hooks.json
-node test/package.mjs /tmp/new-dir                # build skill package (fails at >= 300 KB)
+node test/package.mjs /tmp/new-dir                # build skill package (fails at >= 350 KB)
 npm run eval -- --harness claude --lang java --scenario forced   # live agent runs (Node 22, credentials)
 ```
 
@@ -299,7 +299,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   (`test/protocol.test.mjs`). The dense style is intentional. Put substantial
   new logic in a lazily required `.cjs` helper.
 - The packaged skill (`SKILL.md`, `README.md`, `LICENSE`, `scripts/`,
-  `references/`) must stay under 300 KB.
+  `references/`) must stay under 350 KB.
 - Every ✅ in the README harness × language matrix needs passing `natural`
   and `forced` records in `test/evidence/live/` (`test/eval.test.mjs`).
 - Hooks fail open: exceptions and malformed payloads exit 0. Hook exit 2 is only

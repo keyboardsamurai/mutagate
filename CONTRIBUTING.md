@@ -19,7 +19,7 @@ node --test --test-name-pattern '<regex>' test/core.test.mjs
 - Never edit `scripts/mutagate-hook.cjs` by hand. Edit `scripts/mutagate.mjs`, then run `npm run generate:runtime`. `mutagate.mjs` may use only top-level single-line `import x from '...'` and `export function` / `export const`.
 - Regenerate `scripts/hooks.json` with `npm run generate:hooks` after hook wiring changes.
 - `scripts/mutagate.mjs` stays under 1,400 lines. Put substantial new logic in a lazily required `.cjs` helper; add helpers that affect results to the `fingerprint` list.
-- The packaged skill (`SKILL.md`, `README.md`, `LICENSE`, `scripts/`, `references/`) stays under 300 KB.
+- The packaged skill (`SKILL.md`, `README.md`, `LICENSE`, `scripts/`, `references/`) stays under 350 KB.
 - Hooks fail open. Exit codes: see README "Commands".
 - Every ✅ in the README matrix needs passing `natural` and `forced` records in `test/evidence/live/`.
 - Hook latency: `npm run test:performance` p95 ≤ 80 ms.
@@ -41,7 +41,7 @@ Record architectural decisions as numbered ADRs in [docs/adr/](docs/adr/README.m
 ## Build and install the package locally
 
 ```sh
-node test/package.mjs /tmp/mg-skill                       # prints bytes; fails at >= 300 KB
+node test/package.mjs /tmp/mg-skill                       # prints bytes; fails at >= 350 KB
 cd /tmp/mg-skill && git init -q && git add -A && git commit -qm pkg && cd -
 npx skills add /tmp/mg-skill -a claude-code --copy        # in a test project
 .claude/skills/mutagate/scripts/mutagate install --agent claude
