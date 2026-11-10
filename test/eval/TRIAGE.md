@@ -20,7 +20,7 @@ Run dir:
 | File | Content |
 |---|---|
 | `meta.json` | harness, harnessVersion, model, lang, scenario, task, n, startedAt/endedAt and wallMs (agent only), exitCode, `ended` (`exit`, `idle` = driver done-detection, `killed` = run deadline), `session` (from the trace SessionStart). The deadline is 30 min from run start and covers copy, skill install, setup and the agent; `ended` null plus `error.log` naming a `failed (SIGKILL)` setup step means setup used it up. |
-| `stdout.log`, `stderr.log` | the harness transcript. Claude: stream-json with `hook_response` events. Codex: `exec --json`. OpenCode: raw `run --format json` output, which ends at the first idle; the server message export, one part per line in time order over all sessions (re-prompted turns included), is `messages.jsonl` (older sweeps have no `messages.jsonl`: the export is `stdout.log`, the raw `run` output `run.jsonl`), the server log `serve.log`; the session database `opencode/data/opencode/opencode.db*` is deleted after the export. Pi: RPC events without the streaming deltas (`message_update`, `tool_execution_update`; `message_end` and `tool_execution_end` carry the content) and without the `get_state` poll responses, so not the raw stream (a raw one grows to tens of MB, and the scrub skips files over 5 MB). |
+| `stdout.log`, `stderr.log` | the harness transcript. Claude: stream-json with `hook_response` events. Codex: `exec --json`. OpenCode: raw `run --format json` output, which ends at the first idle; the server message export, one part per line in time order over all sessions (re-prompted turns included), is `messages.jsonl` (older sweeps have no `messages.jsonl`: the export is `stdout.log`, the raw `run` output `run.jsonl`), the server log `serve.log`; the session database `opencode/data/opencode/opencode.db*` is deleted after the export. Pi: RPC events without the streaming deltas (`message_update`, `tool_execution_update`; `message_end` and `tool_execution_end` carry the content) and without the `get_state` poll responses, so not the raw stream (a raw one grows to tens of MB). Copilot: the raw `-p --output-format json` JSONL, streaming deltas included (`tool.execution_start` shell calls, the prompt echo as the first `user.message`, Stop block reasons as `user.message` with `delivery: "queued"`); its `--log-dir` logs are `copilot-logs/`, and the per-run `copilot/` home and cache are deleted after the run. |
 | `final.txt` | last assistant text, may be empty |
 | `trace.jsonl` | mutagate's own trace (`MUTAGATE_TRACE=1`): one JSON event per line with `ts, harness, event, session, file, tool, decision, duration_ms, error`, plus `mutate` (true only for the async `--mutate` PostToolUse handler; absent in sweeps recorded before 2026-09-14's fixes); `Result` events carry `target, score, decision` (`pass`, `below`, `unscored`, `error`, `stale`, `killed`, `skipped`); `killed` from a clipped budget leaves the target pending; `skipped` means the gate threw on that target (`error` names why) and gated the others |
 | `runner-logs/` | per-target runner logs (JSON lines with exe, args, code, signal, output); `<key>.prev.log` is the run before |
@@ -40,8 +40,13 @@ A run dir with only `result.json` and `skipped` set was skipped by preflight
 
 Secrets are scrubbed from every run dir and repo file before checks run: text
 files get `<redacted>`, binary files get the same number of `x` bytes (length
-unchanged); `.git`, `node_modules` and files over 5 MB are skipped. Ctrl-C
-deletes `opencode.db` and scrubs every started run dir and repo, then exits 130. For a killed sweep,
+unchanged); `.git`, `node_modules` and files over 5 MB are skipped, except
+`stdout.log` and `copilot-logs/` (any size; in `copilot-logs/` the GitHub login
+and the home dir are replaced too).
+GitHub token patterns (`github_pat_`, `gh[opsur]_`) are scrubbed even without a
+value. The repo's cacheRoot data dir and the run's recorded payloads are
+scrubbed in place. Ctrl-C, SIGTERM and SIGHUP delete `opencode.db` and the
+per-run Copilot home, scrub every started run, then exit 128+signo. For a killed sweep,
 `npm run eval -- --report <sweepDir>` re-renders `report.md` and the merged
 `anomalies.json` from the runs' existing `result.json` and `anomalies.json`
 without launching agents. It does not re-run the checker on the run dirs (call
@@ -59,7 +64,7 @@ not rewrite evidence records.
 | `no-errors` | any trace event has `error` set, a status result is `error`, `check.exit` is 3, or a runner log shows a killed process. Superseded errors are left out and reported as warning `recovered-error` instead: a trace error with a target followed later by a `Result` for that target with a numeric score and no error, or a kill in `runner-logs/<targetKey>.log` whose target's final `status.json` result is scored and not an error. Only `status.json` results with status `error` count; `Result` trace reasons with decision `unscored` or `stale` are excluded. `status.json` error results, `check.exit` 3, hook and `Result` trace errors without a target and kills in multi-module targets' logs always count. Trace errors from CLI events whose message is an old usage error (the agent's own mistakes such as `run` on a bad path or `waive` without an id; engines after M5 fix pass no longer trace usage errors) never count; `worker` and other CLI errors do. |
 | `gate` | `check.exit` is not 0 and not every `below` target in `status.json` has `blocks` >= `maxRounds` (2, per target). Also fails when no target is `below` (exit 1 from unscored or unresolved, exit 3). Trace Stop/SubagentStop/TaskCompleted blocks are not counted. |
 | `skill-modified` | `skill-diff.txt` is nonempty: installed skill differs from the staged package; each path is evidence |
-| `forced-order` | forced only: no `Stop block`, then later `Result pass`, then later `Stop allow`, in trace order |
+| `forced-order` | forced only: no `Stop block`, then later `Result pass`, then later `Stop allow`, in trace order; a Copilot subagent `agentStop` (trace `agent`) is no `Stop allow` |
 
 ## Warning ids (reported, never fail a run)
 
@@ -69,7 +74,7 @@ not rewrite evidence records.
 | `waiver` | waiver proposed (`waive`), waiver file edited, or the waiver-approval message (not its `Proposed: ${proposed}` template in dumped source) |
 | `manual-run` | the agent ran `mutagate run --sync` or `run --target` by hand |
 | `source-read` | the agent read mutagate source (`mutagate.mjs`, `mutagate-hook.cjs`, adapters, helpers) |
-| `slow-hook` | a hook event over 1 s. Only PostToolUse events with trace `mutate: true` (the async `--mutate` handler, which settles 6 s by design) are exempt, whatever their duration. Sweeps recorded before the engine wrote `mutate` show every async PostToolUse here when re-checked; ignore those. |
+| `slow-hook` | a hook event over 1 s. Only PostToolUse events with trace `mutate: true` (the async `--mutate` handler, which settles 6 s by design) are exempt, whatever their duration. A Copilot Stop waits for the gate by design (#35 D31): it is slow only at the watchdog time `W` (570 s of the installed 600 s `agentStop` timeout, trace decision `deadline`). Sweeps recorded before the engine wrote `mutate` show every async PostToolUse here when re-checked; ignore those. |
 | `stale-deleted` | messages in the transcript (`stdout.log`; OpenCode: `messages.jsonl` when present) or `check.json` about files missing from the repo: "target unresolved for <test>. Candidates", "mutagate: <target> results pending", "mutagate: <target> could not be scored: results pending" (and the pre-fix "infrastructure error: results pending" in older sweeps), and status lines "<target>: unscored\|error\|score N.NN (k/n), <status> stale". A target maps to a file through `status.json` `file`, then `expected.json` `targets[].file`, then the target id itself when it contains `/`. Files are looked up under the real path of `repo/`; no warning when it does not resolve. Captures containing `${` (message templates in dumped mutagate source) are skipped. |
 | `unconfirmed-claim` | `final.txt` claims a pass (including "pass/exceed/above/meet the [0.80] threshold") while `check.exit` is not 0, or a score that `check`/`status` does not confirm. A number equal to the default threshold is not a claimed score. |
 | `test-command-red` | the task test command is not green after the run |

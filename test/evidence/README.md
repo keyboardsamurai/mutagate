@@ -8,9 +8,9 @@ These files are the proof behind the README harness × language matrix. Each is 
 
 A ✅ in the README harness × language matrix needs both the `natural` and the `forced` record for that pair with `passed: true`; `test/eval.test.mjs` enforces it, and checks that every record holds both runs. An attempt with `ok: false` is a failed repeat; the README names the cells that have one. Records from before 0.9.0 have no `mutagate` or `package` field. Before 1.0 the test will also fail a release whose ✅ cells have a stale package digest or harness pin (`docs/releasing.md`).
 
-The records are public on purpose. Transcripts are not committed, only their hashes; home paths and the work repo path are replaced (`~`, `<repo>`).
+The records are public on purpose. Transcripts are not committed, only their hashes; home paths and the work repo path are replaced (`~`, `<repo>`), and GitHub tokens (`github_pat_`, `gh[opsur]_`) are scrubbed even when no secret value names them.
 
-Reproduce a cell with the pinned harness on PATH (`test/harness-versions.json`), Node 22, the language toolchain, and credentials: `CLAUDE_CODE_OAUTH_TOKEN` (Claude) and `OPENROUTER_API_KEY` (OpenCode, Pi) in the repo-root `.env`, or the existing `~/.codex` login (Codex):
+Reproduce a cell with the pinned harness on PATH (`test/harness-versions.json`), Node 22, the language toolchain, and credentials: `CLAUDE_CODE_OAUTH_TOKEN` (Claude) and `OPENROUTER_API_KEY` (OpenCode, Pi) in the repo-root `.env`, the existing `~/.codex` login (Codex), or the host `copilot` login (Copilot; an optional `COPILOT_GITHUB_TOKEN` in `.env` wins):
 
 ```sh
 npm run eval -- --harness opencode --lang java                 # both scenarios, 2 runs each

@@ -48,12 +48,14 @@ npm run eval -- --harness claude --lang java --scenario forced   # live agent ru
 The repo has no linter or formatter. Other scripts: `test:opencode-discovery`
 needs `MUTAGATE_OPENCODE_BIN`. `eval` (alias `test:live`) needs the
 pinned harness, the language toolchains, and `CLAUDE_CODE_OAUTH_TOKEN` or
-`OPENROUTER_API_KEY` in the repo-root `.env` (Codex uses `~/.codex`); flags
+`OPENROUTER_API_KEY` in the repo-root `.env` (Codex uses `~/.codex`, Copilot the
+host `copilot` login or an optional `COPILOT_GITHUB_TOKEN` there, never a classic
+`ghp_`); flags
 `--harness --lang --scenario --task --repeat --jobs --model`, all optional;
 `--repeat` below 2 writes no evidence record (ADR-0011);
 `--report <sweepDir>` only re-renders that sweep's `report.md`.
 `test:drift` needs payloads recorded earlier with `MUTAGATE_RECORD=1`, which
-eval runs set. Integration toolchains follow CI (`.github/workflows/ci.yml`):
+eval runs set (missing Copilot recordings are skipped, not failed). Integration toolchains follow CI (`.github/workflows/ci.yml`):
 JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 5.0.0, and uv. Python fixtures use venvs under `test/.cache/py2` and
 `test/.cache/py3`, and TS fixtures need `npm ci` in their fixture directory.
@@ -169,7 +171,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   (`SESSION_CMDS`) in the root agent shell (session `COPILOT_AGENT_SESSION_ID`)
   also use the Git top of cwd; `run` reads a relative test path against cwd, else the Git top.
   `normalize` gives only the write tools (`TOOLS`) a `tool_input`. The trace `decision` is `block` for a block (`r.block`) or
-  exit 2, and the trace has `exit`.
+  exit 2, and the trace has `exit`; a Copilot subagent call (payload `agentId`) also has `agent`.
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
   keep hook latency low. `inputs.cjs` lists repo files (`files`, for detect and
   resolution: the Git file list in a Git repo, else a walk, with the same name
@@ -239,8 +241,8 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
     That run dir is the seam: drivers write it, the checker reads it, and tests
     use canned run dirs.
   - `harnesses.mjs` has one self-contained driver per harness: preflight
-    against the pins, isolated config env, launch, done-detection (OpenCode
-    and Pi share one settle loop) and `read`, the transcript reader. Only the
+    against the pins, isolated config env, launch, done-detection (OpenCode,
+    Pi and Copilot share one settle loop) and `read`, the transcript reader. Only the
     reader parses a harness transcript: it returns the final text (written to
     `final.txt`), the executed commands and the raw lines with a user flag;
     `transcripts/<harness>/` holds the canned real transcripts its tests use.

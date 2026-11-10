@@ -974,7 +974,7 @@ export async function main(argv = process.argv.slice(2)) {
       if (r.err) console.error(r.err);
       trace(c, event, {
         tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
-        ...(cp && p.agentId && c.sid === p.agentId && { chain: 'unresolved' }) // a Copilot subagent call outside its root session
+        ...(cp && p.agentId && { agent: p.agentId, ...(c.sid === p.agentId && { chain: 'unresolved' }) }) // a Copilot subagent call (its agentStop never gates), unresolved: outside its root session
       });
       if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
       return r.code;

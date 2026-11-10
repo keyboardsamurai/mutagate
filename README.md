@@ -210,6 +210,7 @@ Live eval results (`npm run eval`), both the `natural` and the `forced` scenario
 | Codex CLI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | OpenCode | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Pi | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Copilot CLI | ⏳ | ⏳ | ⏳ | ⏳ | ⏳ | ⏳ |
 
 ✅ both scenarios passed · ⏳ a scenario is missing · ❌ gap in mutagate or the harness. Each scenario runs twice and passes when one run passes ([ADR-0011](https://github.com/keyboardsamurai/mutagate/blob/main/docs/adr/0011-live-eval-local-two-runs-per-cell.md)). One of the two runs failed for OpenCode C# `natural`, Pi C# `natural`, Pi Java `natural`, Pi Python `natural` and Pi Python `forced`. Records: [test/evidence](https://github.com/keyboardsamurai/mutagate/blob/main/test/evidence/README.md).
 

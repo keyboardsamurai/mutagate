@@ -31,14 +31,14 @@ flag can be added later.
 | 4 | Budget | No spend cap. One 30 min deadline per run, from run start, covers setup and the agent to catch hangs; collection after the agent gets a fixed 5 min grace so a killed run still has artifacts. |
 | 5 | Judging | Deterministic checks only. Wiring checks are hard failures; behaviour checks are warnings. No LLM judge. |
 | 6 | Isolation | Runs on the host, with isolated config per harness (see Harness drivers). |
-| 7 | Models | Pinned in `test/eval/config.json` and overridable with `--model <harness>=<id>`. Claude `claude-sonnet-5`. Codex `gpt-5.6-sol` with medium reasoning effort. OpenCode uses `deepseek/deepseek-v4.1-flash` and Pi `deepseek/deepseek-v4-flash` (in Pi's model registry) via OpenRouter. |
+| 7 | Models | Pinned in `test/eval/config.json` and overridable with `--model <harness>=<id>`. Claude `claude-sonnet-5`. Codex `gpt-5.6-sol` with medium reasoning effort. OpenCode uses `deepseek/deepseek-v4.1-flash` and Pi `deepseek/deepseek-v4-flash` (in Pi's model registry) via OpenRouter. Copilot `claude-sonnet-5`. |
 | 8 | Code | New `test/eval/`, which absorbs and deletes `test/live.mjs`. `live-auth.mjs` and `install-harness.mjs` are deleted (no remaining users). No npm dependencies. Not part of the skill package. |
 | 9 | Evidence | Each passing cell writes `test/evidence/live/<harness>-<lang>-<scenario>.json`. The README gains a harness × language table that is edited by hand. A deterministic test fails when a ✅ lacks passing `natural` and `forced` evidence files. |
 | 10 | Logs | A folder per run plus `anomalies.json`, a sweep `report.md`, and a checked-in `TRIAGE.md` prompt. |
 | 11 | Traps | All 7 (see Traps). |
 | 12 | Stacks | One combination per language (see Tasks). Build-tool variants stay covered by `test/integration`. |
 | 13 | Repeats | 2 runs per cell every time. A cell passes if either run passes. Anomalies from both runs are reported. `--repeat N`. |
-| 14 | Secrets | `CLAUDE_CODE_OAUTH_TOKEN` (Claude subscription, from `claude setup-token`) and `OPENROUTER_API_KEY` live in the repo-root `.env`, which is gitignored. Load it with `process.loadEnvFile`. Every artifact is scrubbed of those values before it is written. Codex uses the existing ChatGPT login in `~/.codex`. |
+| 14 | Secrets | `CLAUDE_CODE_OAUTH_TOKEN` (Claude subscription, from `claude setup-token`) and `OPENROUTER_API_KEY` live in the repo-root `.env`, which is gitignored. Load it with `process.loadEnvFile`. Every artifact is scrubbed of those values before it is written. Codex uses the existing ChatGPT login in `~/.codex`, Copilot the host `copilot` login; an optional `COPILOT_GITHUB_TOKEN` in `.env` (fine-grained PAT or OAuth, never a classic `ghp_`) goes to the Copilot driver only. GitHub token patterns (`github_pat_`, `gh[opsur]_`) are scrubbed even without a value. |
 | 15 | Pass rule | See Checks. |
 | 16 | OpenCode/Pi | Long-lived drivers (`opencode serve`, `pi --mode rpc`), not one-shot runs. The gap in one-shot headless mode is filed as a mutagate issue. |
 
@@ -74,8 +74,9 @@ Add `"eval": "node test/eval/run.mjs"` to package.json. `.env` is gitignored.
    dir because that does not survive a reboot.
 3. **Install.** Reuse `packageSkill` (test/package.mjs), then
    `npx --yes skills@1.5.26 add <stage> --skill mutagate --agent <a> --yes --copy`,
-   then `mutagate.mjs install --agent <h> --repo <repo>`. This is the same flow
-   as live.mjs:27-30.
+   then `mutagate.mjs install --agent <h> --repo <repo>` in the driver env (for
+   Copilot the per-run `COPILOT_HOME`, so a host user install is not a second
+   scope). This is the same flow as live.mjs:27-30.
 4. **Baseline.** `git init` and commit a baseline (live.mjs:46-47).
 5. **Env.** Set:
    - `MUTAGATE_TRACE=1`, `MUTAGATE_DEBUG=1`, `MUTAGATE_RECORD=1`
@@ -83,12 +84,13 @@ Add `"eval": "node test/eval/run.mjs"` to package.json. `.env` is gitignored.
    - `JAVA_HOME` = JDK 21 (sdkman `21.0.2-open`)
    - the harness-specific isolation below
 
-   Only export `CODEX_HOME` for Codex, because `detectHarness` keys on it.
+   Only export `CODEX_HOME` for Codex, because `detectHarness` keys on it, and
+   `COPILOT_GITHUB_TOKEN` (when set) for Copilot.
 6. **Launch.** Start the harness with whatever remains of the 30 min run
    deadline (it started before step 2 and also bounds steps 3 and 4). Stream
    stdout and stderr to files.
 7. **Collect.** Save:
-   - the raw transcript
+   - the raw transcript (Copilot also writes its `--log-dir` logs to `copilot-logs/`)
    - `cacheRoot()/repos/<hash>/trace.jsonl` and the runner logs
    - recorded payloads
    - `status --json`
@@ -102,7 +104,11 @@ Add `"eval": "node test/eval/run.mjs"` to package.json. `.env` is gitignored.
    from agent end. Keep the repo.
 8. **Scrub** secret values from every file in the run dir and the repo:
    `<redacted>` in text, same-length `x` bytes in binaries. The OpenCode
-   driver deletes `opencode.db` after its message export. Ctrl-C deletes every started run's `opencode.db` and scrubs the run before exiting.
+   driver deletes `opencode.db` after its message export. The run's cacheRoot data
+   dir (trace, results, runner logs) and its recorded payloads are scrubbed in place;
+   `stdout.log` and `copilot-logs/` are scrubbed at any size, `copilot-logs/` with the
+   GitHub login and the home dir replaced. Ctrl-C, SIGTERM and SIGHUP delete every started run's `opencode.db` and
+   per-run Copilot home, scrub the run and exit 128+signo.
 9. **Checks** write `result.json` and `anomalies.json`.
 
 Cache caveat: OpenCode's `XDG_CACHE_HOME` relocation also moves mutagate's
@@ -119,6 +125,7 @@ OpenCode. Per-run state isolation is still required so traces don't mix.
 | Codex 0.154.0 | `codex exec --json --dangerously-bypass-hook-trust --dangerously-bypass-approvals-and-sandbox --ignore-user-config --ignore-rules --ephemeral -m gpt-5.6-sol -c model_reasoning_effort=medium -c 'projects={"<repo>"={trust_level="trusted"}}' -c 'skills.config=[{path="<user SKILL.md>",enabled=false},...]' -C <repo> <prompt>` | Real `~/.codex` for auth, user config ignored. Project trust is passed with `-c` because Codex loads the project `.codex/hooks.json` only for trusted projects, and trust lives in the ignored `config.toml`. Every skill in `~/.codex/skills` and `~/.agents/skills` is disabled by path, since Codex loads those whatever the config says. | process exit |
 | OpenCode 1.18.30 | `opencode serve --port <free>` in the repo, then `opencode run --attach <url> --format json --auto -m openrouter/deepseek/deepseek-v4.1-flash <prompt>` | Per-run `XDG_*` (see Cache caveat), `OPENCODE_DISABLE_CLAUDE_CODE=1` (otherwise it reads `~/.claude/CLAUDE.md` and skills), `OPENROUTER_API_KEY`, `SHELL=/bin/bash` (the bash tool runs `$SHELL`) | The session stays idle for a settle period and no mutagate worker holds a lock. Then kill serve. |
 | Pi 0.73.1 | `pi --mode rpc --provider openrouter --model deepseek/deepseek-v4-flash`, send `{"type":"prompt",...}` | Per-run `PI_CODING_AGENT_DIR`, `PI_TELEMETRY=0`, `OPENROUTER_API_KEY`. stdin must be piped: Pi reads a non-TTY stdin until EOF. | Poll `get_state` until `isStreaming:false` and `pendingMessageCount:0` hold for the settle period and no worker lock is held |
+| Copilot CLI 1.0.107 | `copilot -p <prompt> --output-format json --trust-folder --allow-all --no-ask-user --no-auto-update --disable-builtin-mcps --log-dir <run>/copilot-logs --model claude-sonnet-5`. No `--session-id` (`--trust-folder` rejects it; the trace gives the session) and no `COPILOT_ALLOW_ALL` (`--trust-folder` alone loads repo hooks and project skills). | Host login; per-run `COPILOT_HOME` and `COPILOT_CACHE_HOME`, deleted after the run (~226 MB package extraction, ~3 s); `COPILOT_AUTO_UPDATE=false`; `COPILOT_GITHUB_TOKEN` when set. No `ignoredSkillsLocations`: the per-run home alone keeps `~/.agents/skills` and `~/.copilot/skills` out (S12, 1.0.107); `session.skills_loaded` in `stdout.log` lists the loaded skills. Preflight probes `copilot --version` in that env. Skill in `.agents/skills`. | process exit, then no mutagate process for the repo (spawned `--mutate` handlers outlive `-p`) |
 
 Facts behind these choices (research 2026-09-14; items marked src come from
 reading harness source, not observed runs):
@@ -212,7 +219,8 @@ A run **passes** when every hard check passes.
   blocked up to the per-target retry cap. Below threshold without that is a
   gate bug and fails the run.
 - `forced` only: the trace shows Stop block, then a later Result pass, then
-  Stop allow, in that order.
+  Stop allow, in that order. A Copilot subagent `agentStop` (trace `agent`)
+  never gates and does not count as the Stop allow.
 
 **Warnings** (report only, all go to `anomalies.json`):
 - Production files changed (from the diff against `prodFiles`)

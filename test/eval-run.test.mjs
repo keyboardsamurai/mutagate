@@ -13,7 +13,7 @@ const config = JSON.parse(fs.readFileSync(new URL('./eval/config.json', import.m
 const { harness, lang, scenario } = ids, all = { harness, lang, scenario };
 
 test('config pins models, timeout, jobs, repeat and settle period', () => {
-  assert.deepEqual(config, { models: { claude: 'claude-sonnet-5', codex: 'gpt-5.6-sol', opencode: 'openrouter/deepseek/deepseek-v4.1-flash', pi: 'deepseek/deepseek-v4-flash' }, codexEffort: 'medium', timeoutMs: 1800000, jobs: 4, repeat: 2, settleMs: 20000 });
+  assert.deepEqual(config, { models: { claude: 'claude-sonnet-5', codex: 'gpt-5.6-sol', opencode: 'openrouter/deepseek/deepseek-v4.1-flash', pi: 'deepseek/deepseek-v4-flash', copilot: 'claude-sonnet-5' }, codexEffort: 'medium', timeoutMs: 1800000, jobs: 4, repeat: 2, settleMs: 20000 });
   assert.equal(JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url))).scripts.eval, 'node test/eval/run.mjs');
 });
 
@@ -138,6 +138,8 @@ test('OpenCode allows external directories for skill hooks', () => {
 });
 
 // Canned real transcripts in eval/transcripts/<harness>/: abridged runs of sweep 20261003-214323-0b96, strings cut at 160 characters, repo paths scrubbed to /repo and run-dir paths to <run>.
+// Copilot: the -p JSONL of spike S11 (#35, Copilot CLI 1.0.107: a shell call, a Stop block, the continued turn), strings cut at 160 characters, arrays at 3 entries,
+// personal skills dropped, the session id zeroed and the home dir scrubbed to ~.
 test('each harness reads its own transcript: executed commands (ids dedupe, replays and suggestions skipped), user lines (never tool results), final text', t => {
   const dir = h => path.join(import.meta.dirname, 'eval/transcripts', h), raw = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-transcript-'));
   t.after(() => fs.rmSync(raw, { recursive: true, force: true }));
@@ -150,6 +152,8 @@ test('each harness reads its own transcript: executed commands (ids dedupe, repl
   fs.copyFileSync(path.join(dir('opencode'), 'stdout.log'), path.join(raw, 'stdout.log'));
   assert.deepEqual(read('opencode', raw), [['stdout.log'], [[2, 'find . -type f -not -pat']], [], '']);
   assert.deepEqual(read('pi'), [['stdout.log'], [[10, 'find . -type f -name "*.'], [11, 'find . -type f \\( -name '], [25, 'cd /repo && mvn test 2>&']], [4, 5, 18, 20, 21], 'All 67 tests pass across']);
+  // Copilot: bash tool.execution_start (assistant.message toolRequests are requests, not calls); user lines: the prompt echo (delivery idle) and the Stop block reason (queued).
+  assert.deepEqual(read('copilot'), [['stdout.log'], [[26, 'echo first-call'], [67, 'echo s11-continued']], [11, 51], 'The command printed `s11']);
 });
 
 test('Claude resolves its executable pin before PATH', t => {

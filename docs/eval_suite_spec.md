@@ -242,21 +242,29 @@ report and runs nothing.
 **Preflight.** Per cell: harness binary present and its version equal to the
 pin in the harness-versions file; credential present (Claude: subscription
 token env var; Codex: cached login reported by the CLI; OpenCode and Pi:
-OpenRouter key); language toolchain present. Any miss marks the cell
+OpenRouter key; Copilot: no classic `ghp_` value in `COPILOT_GITHUB_TOKEN`,
+and `copilot --version` names the pin under the driver env, because the
+launcher can run another package); language toolchain present. Any miss marks the cell
 `skipped (<reason>)`. Skips do not affect exit status. A sweep in which no cell
 executed exits 1 and says so, mirroring `check` on an empty session.
 
-**Secrets.** The subscription token and OpenRouter key are loaded from the
-repo-root `.env` (gitignored) with Node's built-in env-file loader. Before any
-artifact is checked, every occurrence of either value in the run directory and
-the repo is replaced: with a fixed placeholder in text files, and with the
-same number of `x` bytes in binary files so their length and structure stay
-valid (`.git`, `node_modules` and files over 5 MB are skipped). The OpenCode
-session database is deleted after the transcript export. The diff is taken
-with intent-to-add, so agent-written file content never reaches the git object
-store. Ctrl-C kills the harness processes, deletes `opencode.db` and scrubs every run directory and repo
-started so far, and exits 130. Codex authenticates through the user's real
-Codex home; that directory is never copied.
+**Secrets.** The subscription token, the OpenRouter key and an optional
+`COPILOT_GITHUB_TOKEN` are loaded from the repo-root `.env` (gitignored) with
+Node's built-in env-file loader. Before any artifact is checked, every
+occurrence of a value, and every GitHub token pattern (`github_pat_`,
+`gh[opsur]_`) with or without a value, in the run directory, the repo, the
+repo's cacheRoot data directory and the run's recorded payloads is replaced:
+with a fixed placeholder in text files, and with the same number of `x` bytes
+in binary files so their length and structure stay valid (`.git`,
+`node_modules` and files over 5 MB are skipped, except `stdout.log` (the raw
+Copilot JSONL can pass 5 MB) and `copilot-logs/`, which are scrubbed at any
+size; `copilot-logs/` also loses the GitHub login and the home directory). The OpenCode session database is deleted after the transcript
+export. The diff is taken with intent-to-add, so agent-written file content
+never reaches the git object store. SIGINT, SIGTERM and SIGHUP kill the
+harness processes, delete `opencode.db` and the per-run Copilot home, scrub
+every run started so far, and exit 128+signo. Codex authenticates through the
+user's real Codex home and Copilot through the host `copilot` login; neither
+is copied.
 
 **Run lifecycle.** Each run has a run directory under the test cache
 (`test/.cache/eval/<sweep>/<run>`) and a repo at
@@ -287,7 +295,8 @@ PATH node is 21), `JAVA_HOME` at JDK 21, plus the harness-specific isolation
 below. `MUTAGATE_HARNESS` is deliberately **not** set: the SessionStart label
 check must exercise real harness detection, otherwise the known "harness
 unknown inside Claude Code" bug is masked. `CODEX_HOME` is exported only for
-Codex because detection keys on it.
+Codex because detection keys on it, and `COPILOT_GITHUB_TOKEN` only for
+Copilot, when set.
 
 **Harness drivers.** One module, one entry per harness, each exposing
 preflight, environment, launch, done-detection, and a transcript reader. The
@@ -328,6 +337,14 @@ a tool result) or not:
   message on stdin, which must be a pipe. Per-run agent directory and
   telemetry off. Done when polled state reports not streaming and zero
   pending messages for the settle period and no worker lock is held.
+- Copilot: `-p` with JSON output, `--trust-folder` (it loads the repo hooks
+  and the project skill in `.agents/skills`, and rejects `--session-id`; the
+  trace gives the session), all tools allowed, no questions, no auto-update,
+  built-in MCP servers off, `--log-dir <run>/copilot-logs`, model from config.
+  Host Copilot login; per-run `COPILOT_HOME` and `COPILOT_CACHE_HOME`,
+  deleted after the run; `install` also runs with that `COPILOT_HOME`, so a
+  host user install does not make it refuse the project scope. Done on process exit, then when no mutagate process
+  of the repo is alive, because spawned `--mutate` handlers outlive `-p`.
 
 One-shot `opencode run` and `pi -p` are not used: both tear down the session
 before the continuation gate can re-prompt. That gap is filed as a mutagate
@@ -344,7 +361,9 @@ transcript only through the driver's transcript reader:
   Pi's `stdout.log` leaves out the streaming deltas (`message_update`,
   `tool_execution_update`) and the `get_state` poll responses. `message_end` and
   `tool_execution_end` carry the same content, and a raw RPC stream grows to tens
-  of MB per run, too large for the secret scrub (it skips files over 5 MB).
+  of MB per run.
+- `copilot-logs/` (Copilot only): the CLI's `--log-dir` logs at the default
+  level.
 - `messages.jsonl` (OpenCode only): the server's message export over all
   sessions, one part per line in time order. `run` exits at the first idle, so
   turns re-prompted by the gate are only here.
@@ -408,7 +427,8 @@ directory.
 matching the task's production globs), waivers proposed or applied, manual
 `run --target` or `--sync` in the transcript, mutagate source read, a hook
 slower than one second (except the async `--mutate` PostToolUse handler,
-marked `mutate: true` in the trace), stale or unresolved messages about files
+marked `mutate: true` in the trace, and a Copilot Stop shorter than the
+watchdog time `W` of the installed `agentStop` timeout, 570 s of 600 s), stale or unresolved messages about files
 no longer in the repo (message templates in dumped mutagate source skipped),
 agent text claiming a pass or scores that `check.json` does not confirm (a
 number equal to the threshold is not a score), the task's test command not green, fewer than five mutants

@@ -10,8 +10,8 @@ const {command}=runners();
 import {packageSkill} from '../package.mjs';
 import {BUILD,copyRepo,scrubEnv} from '../scratch.mjs';
 import {harnesses,which,procs} from './harnesses.mjs';
-import {writeChecks,writeSweep,scrubDir,evidenceRecord} from './checks.mjs';
-export const ids={harness:['claude','codex','opencode','pi'],lang:['java','kotlin','python','typescript','go','csharp'],scenario:['natural','forced'],task:['small','greenfield']};
+import {writeChecks,writeSweep,scrubDir,scrubFile,secretValues,evidenceRecord} from './checks.mjs';
+export const ids={harness:['claude','codex','opencode','pi','copilot'],lang:['java','kotlin','python','typescript','go','csharp'],scenario:['natural','forced'],task:['small','greenfield']};
 const known=(kind,v)=>{if(!ids[kind].includes(v))throw Error(`unknown ${kind} "${v}" (expected ${ids[kind].join('|')})`);return v;};
 const count=(flag,v)=>{if(!/^[1-9]\d*$/.test(v))throw Error(`${flag} must be a positive integer, got "${v}"`);return +v;};
 
@@ -85,6 +85,28 @@ export function agentEnv(){
   PATH:[path.dirname(process.execPath),java&&path.join(java,'bin'),path.join(home,'go/bin'),dotnet,path.join(dotnet,'tools'),process.env.PATH].filter(Boolean).join(path.delimiter)};
 }
 
+// This run's payloads in the shared cacheRoot()/recorded/<harness>/ (MUTAGATE_RECORD), relative to rec: by time and repo path.
+export const recordedFiles=({rec,repo,since})=>(rec&&fs.existsSync(rec)?fs.readdirSync(rec,{recursive:true}).map(String):[]).filter(f=>{
+ try{const p=path.join(rec,f),s=fs.statSync(p);return s.isFile()&&s.mtimeMs>=since&&fs.readFileSync(p,'utf8').includes(JSON.stringify(repo).slice(1,-1));}catch{return false;}});
+// Scrub one run in place: its run dir, its repo, the repo's cacheRoot data dir (trace, results, runner logs) and its payloads in the shared recorded/ dir (#35 D30),
+// found here, so a run killed or failed before collection loses them too. Every path is tried; the first failure is rethrown.
+export function scrubRun(run,secrets){
+ const failed=[];
+ for(const p of [run.dir,run.repo,run.data,...recordedFiles(run).map(f=>path.join(run.rec,f))])try{if(p&&fs.existsSync(p))(fs.statSync(p).isDirectory()?scrubDir:scrubFile)(p,secrets);}catch(e){failed.push(e);}
+ if(failed.length)throw failed[0];
+}
+// Delete the run's transient harness files (the OpenCode session database, the per-run Copilot homes) from its run dir.
+export const dropTransient=run=>{for(const f of harnesses[run.harness]?.transient??[])fs.rmSync(path.join(run.dir,f),{recursive:true,force:true});};
+// Runs killed mid-way never reach execute()'s scrub: on SIGINT, SIGTERM or SIGHUP kill the harness processes, delete the transient harness files,
+// scrub every run started so far, and exit 128+signo.
+export function trap(started,secrets){
+ for(const sig of ['SIGINT','SIGTERM','SIGHUP'])process.on(sig,()=>{
+  for(const pid of procs)try{process.kill(-pid,'SIGKILL');}catch{}
+  for(const run of started){try{dropTransient(run);}catch{}try{scrubRun(run,secrets);}catch{}}
+  process.exit(128+os.constants.signals[sig]);
+ });
+}
+
 async function execute(run,{sweepDir,config,base,pre,secrets,started}){
  const {harness,lang,scenario,task,n,model,variant}=run,dir=path.join(sweepDir,run.name),write=(f,s)=>fs.writeFileSync(path.join(dir,f),s??'');
  fs.mkdirSync(dir,{recursive:true});
@@ -92,13 +114,16 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
  const h=harnesses[harness],taskDir=path.join(tasks,lang),expected=readJson(path.join(taskDir,'expected.json')),node=process.execPath,budget={start:Date.now(),timeoutMs:config.timeoutMs};
  const meta={harness,harnessVersion:pre.get(harness).version,model,lang,scenario,task,variant:variant??null,n,startedAt:null,endedAt:null,wallMs:null,exitCode:null,ended:null,session:null};
  const repoDir=runRepo(path.basename(sweepDir),run.name);fs.mkdirSync(path.dirname(repoDir),{recursive:true,mode:0o311});fs.mkdirSync(repoDir,{mode:0o700});
- const repo=fs.realpathSync(repoDir);fs.symlinkSync(repo,path.join(dir,'repo'));started.push({dir,repo});
+ const repo=fs.realpathSync(repoDir);fs.symlinkSync(repo,path.join(dir,'repo'));
+ const own={harness,dir,repo,data:path.join(cacheRoot(base),'repos',hash(repo)),rec:path.join(cacheRoot(base),'recorded'),since:budget.start};started.push(own);
  const cli=path.join(repo,h.skillDir,'scripts/mutagate.mjs'),sh=(exe,args,o={})=>command(exe,args,{cwd:repo,env:base,timeout:stepTimeout(budget),...o});
  try{
   if(task==='small')copyRepo(taskDir,repo);
   const stage=path.join(dir,'stage');packageSkill(stage);
   await sh('npx',['--yes','skills@1.5.26','add',stage,'--skill','mutagate','--agent',h.agent,'--yes','--copy'],{env:{...base,DISABLE_TELEMETRY:'1',DO_NOT_TRACK:'1'}});
-  await sh('git',['init','-q']);await sh(node,[cli,'install','--agent',harness,'--repo',repo]); // in Git first: install writes the portable form users get
+  // The driver env before install: Copilot's per-run COPILOT_HOME, not the host one, is the user scope install checks (ADR-0021).
+  const henv=h.env({runDir:dir,repo});
+  await sh('git',['init','-q']);await sh(node,[cli,'install','--agent',harness,'--repo',repo],{env:{...base,...henv}}); // in Git first: install writes the portable form users get
   if(task==='small')for(const [exe,...args] of expected.setup||[])await sh(exe,args);
   fs.appendFileSync(path.join(repo,'.gitignore'),IGNORE);
   for(const args of [['add','-A'],['-c','user.name=mutagate','-c','user.email=mutagate@example.invalid','commit','-qm','eval baseline']])await sh('git',args);
@@ -106,11 +131,11 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
   // Greenfield: the language plan, plus the shared build-order addendum when forced.
   const read=f=>fs.readFileSync(f,'utf8'),green=f=>path.join(tasks,'greenfield',f);
   const prompt=task==='greenfield'?read(green(lang+'.md'))+(scenario==='forced'?read(green('forced.md')):''):read(scenario==='forced'?path.join(tasks,'prompt.forced.md'):path.join(taskDir,`prompt.${variant??'natural'}.md`));
-  const env={...base,PWD:repo,...h.env({runDir:dir,repo})},start=Date.now();meta.startedAt=new Date(start).toISOString();
+  const env={...base,PWD:repo,...henv},start=Date.now();meta.startedAt=new Date(start).toISOString();
   console.log(`start ${run.name}`);
   const r=await h.launch({exe:pre.get(harness).exe,repo,runDir:dir,prompt,model,env,timeoutMs:stepTimeout(budget),config});budget.agentEnd=Date.now();
   Object.assign(meta,{endedAt:new Date().toISOString(),wallMs:Date.now()-start,exitCode:r.exitCode,ended:r.ended});write('final.txt',h.read(dir).final);
-  const cache=cacheRoot(env),data=path.join(cache,'repos',hash(repo)),trace=path.join(data,'trace.jsonl');
+  const data=own.data,trace=path.join(data,'trace.jsonl');
   const events=(fs.existsSync(trace)?fs.readFileSync(trace,'utf8'):'').split('\n').flatMap(l=>{try{return [JSON.parse(l)];}catch{return [];}}),starts=events.filter(e=>e.event==='SessionStart');
   meta.session=(starts.find(e=>e.harness===harness)??starts[0])?.session??null;
   const cliEnv={...env,MUTAGATE_HARNESS:harness,...(meta.session&&{MUTAGATE_SESSION:meta.session})};
@@ -121,10 +146,10 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
   write('test-command.log',t.output+t.error);write('test-command.exit',String(t.code??t.signal));
   if(fs.existsSync(trace))fs.copyFileSync(trace,path.join(dir,'trace.jsonl'));
   if(fs.existsSync(path.join(data,'logs')))fs.cpSync(path.join(data,'logs'),path.join(dir,'runner-logs'),{recursive:true});
-  // MUTAGATE_RECORD writes to the shared cacheRoot()/recorded/<harness>/; keep this run's payloads by time and repo path.
-  const rec=path.join(cache,'recorded'),needle=JSON.stringify(repo).slice(1,-1);
-  for(const f of fs.existsSync(rec)?fs.readdirSync(rec,{recursive:true}).map(String):[]){const p=path.join(rec,f),s=fs.statSync(p);if(s.isFile()&&s.mtimeMs>=start&&fs.readFileSync(p,'utf8').includes(needle))fs.cpSync(p,path.join(dir,'recorded',f));}
+  // Copy this run's payloads out of the shared cacheRoot()/recorded/.
+  for(const f of recordedFiles(own))fs.cpSync(path.join(own.rec,f),path.join(dir,'recorded',f));
  }catch(e){meta.error=String(e.stack||e);write('error.log',meta.error);console.error(`${run.name}: ${e.message}`);}
+ try{dropTransient(own);}catch(e){meta.error??=String(e.stack||e);write('error.log',meta.error);} // also after a failed setup: the driver env is made before install
  const stage=path.join(dir,'stage'),modified=[];
  if(fs.existsSync(stage))for(const f of fs.readdirSync(stage,{recursive:true}).map(String).sort()){
   if(!/^(?:SKILL\.md$|README\.md$|scripts\/|references\/)/.test(f)||/^scripts\/(?:adapters\/|\.node-path$)/.test(f)||!fs.statSync(path.join(stage,f)).isFile())continue;
@@ -133,7 +158,7 @@ async function execute(run,{sweepDir,config,base,pre,secrets,started}){
  }
  write('skill-diff.txt',modified.length?modified.join('\n')+'\n':'');
  write('meta.json',JSON.stringify(meta,null,2));
- scrubDir(dir,secrets);scrubDir(repo,secrets);
+ scrubRun(own,secrets);
  // Greenfield starts empty: the small task's targets and production globs do not apply (targets-scored is vacuous); testFiles and testCommand still do.
  const {result}=writeChecks(dir,task==='greenfield'?{...expected,targets:[],prodFiles:[],expectedProdEdits:[]}:expected);
  console.log(`${result.passed?'PASS':'FAIL'} ${run.name} (${((meta.wallMs||0)/60000).toFixed(1)}m)`);
@@ -147,7 +172,7 @@ async function main(){
  if(fs.existsSync(path.join(root,'.env')))process.loadEnvFile(path.join(root,'.env'));
  if(+process.versions.node.split('.')[0]<22)throw Error(`run the eval under Node 22+ (this is ${process.version}); it becomes MUTAGATE_NODE`);
  const config=readJson(path.join(import.meta.dirname,'config.json')),base=agentEnv(),pre=new Map();
- const secrets=[process.env.CLAUDE_CODE_OAUTH_TOKEN,process.env.OPENROUTER_API_KEY].filter(Boolean);
+ const secrets=secretValues();
  const stamp=new Date().toISOString().replace(/\D/g,''),sweepId=`${stamp.slice(0,8)}-${stamp.slice(8,14)}-${crypto.randomBytes(2).toString('hex')}`,sweepDir=path.join(root,'test/.cache/eval',sweepId);
  const preflight=(h,lang,task,variant)=>{
   const t=path.join(tasks,lang);
@@ -161,9 +186,8 @@ async function main(){
  };
  const plan=planSweep({flags,config,preflight});
  console.log(`sweep ${sweepId}: ${plan.length} runs, ${plan.filter(r=>!r.skip).length} to execute`);
- // Runs killed mid-way never reach execute()'s scrub: scrub every run dir and repo started so far before exiting.
  const results=[],queue=[...plan],started=[];
- process.on('SIGINT',()=>{for(const pid of procs)try{process.kill(-pid,'SIGKILL');}catch{}for(const {dir,repo} of started){for(const f of ['opencode.db','opencode.db-wal','opencode.db-shm'])fs.rmSync(path.join(dir,'opencode/data/opencode',f),{force:true});for(const d of [dir,repo])try{scrubDir(d,secrets);}catch{}}process.exit(130);});
+ trap(started,secrets);
  await Promise.all(Array.from({length:flags.jobs??config.jobs},async()=>{for(let run;(run=queue.shift());)results.push(await execute(run,{sweepDir,config,base,pre,secrets,started}));}));
  results.sort((a,b)=>plan.findIndex(r=>r.name===a.run)-plan.findIndex(r=>r.name===b.run));
  writeSweep(sweepDir);

@@ -2,6 +2,7 @@
 //  agent, skillDir            skills installer --agent id and where it puts the skill in the repo
 //  preflight({env})           -> {exe, version} or {reason}; env is the agent env, exe must come from the original PATH
 //  env({runDir, repo})        -> harness-specific env merged over the agent env
+//  transient                  optional run-dir paths that run.mjs deletes after the run, also on a failed setup or a signal
 //  launch({exe, repo, runDir, prompt, model, env, timeoutMs, config})
 //                             -> {exitCode, ended: 'exit'|'idle'|'killed'}; writes stdout.log (the raw transcript; Pi drops deltas and get_state polls) and stderr.log, owns done-detection
 //  read(runDir)               -> {file, final, lines: [{file, line, text, user}], commands: [{text, at}]}: the transcript reader, the only parser of this harness's
@@ -13,10 +14,10 @@ import path from 'node:path';
 import { spawn, spawnSync } from 'node:child_process';
 const pins = JSON.parse(fs.readFileSync(new URL('../harness-versions.json', import.meta.url))).packages;
 export const which = (bin, PATH = process.env.PATH) => (PATH || '').split(path.delimiter).filter(Boolean).map(d => path.join(d, bin)).find(p => { try { fs.accessSync(p, fs.constants.X_OK); return fs.statSync(p).isFile(); } catch { return false; } }) ?? null;
-// Prefer Claude's installed version pin, then the original PATH; --version must name the pin from test/harness-versions.json.
-export function pinned(bin, pkg, home = os.homedir()) {
-  const probe = exe => { const r = spawnSync(exe, ['--version'], { encoding: 'utf8', timeout: 20000 }), out = `${r.stdout || ''}${r.stderr || ''}`.trim();
-    return out.split(/\s+/).includes(pins[pkg]) ? { exe, version: pins[pkg] } : { reason: `${bin} version "${out.split('\n')[0] || 'unknown'}" is not pin ${pins[pkg]}` }; };
+// Prefer Claude's installed version pin, then the original PATH; --version under env must name the pin from test/harness-versions.json (a word, or one ending a sentence).
+export function pinned(bin, pkg, home = os.homedir(), env = process.env) {
+  const probe = exe => { const r = spawnSync(exe, ['--version'], { encoding: 'utf8', timeout: 20000, env }), out = `${r.stdout || ''}${r.stderr || ''}`.trim();
+    return out.split(/\s+/).some(w => w.replace(/\.$/, '') === pins[pkg]) ? { exe, version: pins[pkg] } : { reason: `${bin} version "${out.split('\n')[0] || 'unknown'}" is not pin ${pins[pkg]}` }; };
   if (bin === 'claude') {
     const local = which(pins[pkg], path.join(home, '.local/share/claude/versions'));
     if (local) { const result = probe(local); if (!result.reason) return result; }
@@ -43,7 +44,7 @@ export function spawnRun(exe, args, { cwd, env, runDir, timeoutMs, stdin = 'igno
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-// Done-detection of the long-lived harnesses (OpenCode serve, Pi RPC): poll once a second until the deadline ('killed'), the harness is gone ('exit'), or for settleMs
+// Done-detection of the long-lived harnesses (OpenCode serve, Pi RPC) and of Copilot after -p exits: poll once a second until the deadline ('killed'), the harness is gone ('exit'), or for settleMs
 // idle() holds and no mutagate process of this repo is alive ('idle'). That is a superset of "no target lock held": locks are taken only inside hook and worker
 // processes, and a --mutate hook settles before it locks.
 const hooksAlive = scripts => (spawnSync('ps', ['-Aww', '-o', 'args='], { encoding: 'utf8', timeout: 5000 }).stdout || '').includes(scripts);
@@ -113,6 +114,8 @@ export const harnesses = {
   opencode: {
     agent: 'opencode', skillDir: '.agents/skills/mutagate',
     preflight() { const p = pinned('opencode', 'opencode-ai'); return p.reason || process.env.OPENROUTER_API_KEY ? p : { reason: 'OPENROUTER_API_KEY not set' }; },
+    // The session database duplicates the messages.jsonl export and cannot be string-scrubbed (SQLite pages, WAL); run.mjs deletes it after launch (serve is dead).
+    transient: ['opencode.db', 'opencode.db-wal', 'opencode.db-shm'].map(f => `opencode/data/opencode/${f}`),
     // Per-run config, data and state; XDG_CACHE_HOME stays shared because it is mutagate's cacheRoot. OPENCODE_TEST_HOME moves opencode's own home lookups
     // (~/.agents/skills, ~/.claude) off the user's home without touching the agent's HOME; project .agents/skills still load. The bash tool runs $SHELL: pin bash, not the user's zsh.
     env({ runDir }) { const d = s => path.join(runDir, 'opencode', s); return { SHELL: '/bin/bash', XDG_CONFIG_HOME: d('config'), XDG_DATA_HOME: d('data'), XDG_STATE_HOME: d('state'), OPENCODE_TEST_HOME: d('home'), OPENCODE_DISABLE_CLAUDE_CODE: '1', OPENCODE_DISABLE_AUTOUPDATE: '1', OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY }; },
@@ -150,8 +153,6 @@ export const harnesses = {
       kill(serve.pid); procs.delete(serve.pid);
       if (run) { kill(run.child.pid); code = (await run.done).code; }
       fs.rmSync(path.join(env.XDG_CONFIG_HOME, 'opencode/node_modules'), { recursive: true, force: true }); // ~60 MB plugin SDK install per run
-      // The session database duplicates the messages.jsonl export and cannot be string-scrubbed (SQLite pages, WAL); delete it once serve is dead.
-      for (const f of ['opencode.db', 'opencode.db-wal', 'opencode.db-shm']) fs.rmSync(path.join(env.XDG_DATA_HOME, 'opencode', f), { force: true });
       return { exitCode: code, ended };
     },
     // messages.jsonl when the export was written, else stdout.log: older run dirs hold the export there, and a run whose serve died has only the raw `run`
@@ -207,5 +208,37 @@ export const harnesses = {
       user: o => [o.message, o.messages].flat().some(m => m?.role === 'user'),
       final: objs => { const m = objs.findLast(o => o.type === 'message_end' && o.message?.role === 'assistant' && !(o.message.stopReason === 'aborted' && !o.message.content?.length))?.message;
         return m && [m.content].flat().filter(c => c?.type === 'text').map(c => c.text).join('').trim(); } }),
+  },
+  // GitHub Copilot CLI (#35 D29, D30). The host login (keychain), as Codex uses ~/.codex; COPILOT_GITHUB_TOKEN from .env wins when set, and a classic ghp_ token does not work.
+  copilot: {
+    agent: 'github-copilot', skillDir: '.agents/skills/mutagate',
+    // The version probe runs under the driver env, so it names the package a run executes, not the launcher's version.
+    preflight({ env }) {
+      if (process.env.COPILOT_GITHUB_TOKEN?.startsWith('ghp_')) return { reason: 'COPILOT_GITHUB_TOKEN is a classic ghp_ token; Copilot CLI needs a fine-grained PAT ("Copilot Requests") or an OAuth token' };
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mutagate-copilot-'));
+      try { return pinned('copilot', '@github/copilot', os.homedir(), { ...env, ...this.env({ runDir: dir }) }); } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+    },
+    // Fresh COPILOT_HOME (no user config, personal skills or session state; ~/.agents/skills and ~/.copilot/skills do not load with it, S12, so no
+    // ignoredSkillsLocations) and COPILOT_CACHE_HOME (a 226 MB package extraction) per run, both deleted after the run (transient); no auto-update.
+    transient: ['copilot'],
+    env({ runDir }) {
+      const d = s => path.join(runDir, 'copilot', s); for (const s of ['home', 'cache']) fs.mkdirSync(d(s), { recursive: true });
+      return { COPILOT_HOME: d('home'), COPILOT_CACHE_HOME: d('cache'), COPILOT_AUTO_UPDATE: 'false', ...(process.env.COPILOT_GITHUB_TOKEN && { COPILOT_GITHUB_TOKEN: process.env.COPILOT_GITHUB_TOKEN }) };
+    },
+    // -p continues the session after a Stop block (S11). --trust-folder alone loads the repo hooks and project skills; it rejects --session-id (the trace gives
+    // the session). Done: the process exits, then no mutagate process of this repo is alive, because spawned --mutate handlers outlive -p (S6).
+    async launch({ exe, repo, runDir, prompt, model, env, timeoutMs }) {
+      const deadline = Date.now() + timeoutMs, args = ['-p', prompt, '--output-format', 'json', '--trust-folder', '--allow-all', '--no-ask-user', '--no-auto-update', '--disable-builtin-mcps', '--log-dir', path.join(runDir, 'copilot-logs'), '--model', model];
+      const r = await spawnRun(exe, args, { cwd: repo, env, runDir, timeoutMs }).done;
+      const ended = r.killed || await settle({ deadline, settleMs: 0, exited: () => false, idle: () => true, scripts: path.join(repo, this.skillDir, 'scripts') + path.sep }) === 'killed' ? 'killed' : 'exit';
+      return { exitCode: r.code, ended };
+    },
+    // --output-format json: {type, data, id, timestamp, parentId} lines (S11). Shell calls: bash tool.execution_start (assistant.message toolRequests are
+    // requests; tool.execution_complete repeats the id). User lines: user.message, the prompt echo (delivery 'idle') and Stop block reasons ('queued').
+    // Final: the content of the last assistant.message without toolRequests.
+    read: runDir => transcript(runDir, 'stdout.log', {
+      cmd: o => o.type === 'tool.execution_start' && o.data?.toolName === 'bash' ? [[o.data.toolCallId, o.data.arguments?.command]] : [],
+      user: o => o.type === 'user.message',
+      final: objs => objs.findLast(o => o.type === 'assistant.message' && !o.data?.toolRequests?.length)?.data?.content }),
   },
 };

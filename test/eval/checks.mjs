@@ -8,10 +8,12 @@ import { DEFAULTS, targetKey, NO_MUTANTS, VERSION } from '../../scripts/mutagate
 // run.mjs imports this module: use ids only inside functions (TDZ when run.mjs is the entry).
 import { ids } from './run.mjs';
 import { harnesses } from './harnesses.mjs';
-const { glob } = createRequire(import.meta.url)('../../scripts/glob.cjs');
+const require = createRequire(import.meta.url), { glob } = require('../../scripts/glob.cjs');
+// A Copilot Stop waits for the gate up to the watchdog time W of the installed agentStop timeout (ADR-0018, #35 D31), in ms.
+const COPILOT_W = require('../../scripts/copilot.cjs')({}).clamp(require('../../scripts/install.cjs').hookConfig('copilot').hooks.agentStop[0].timeoutSec).W * 1000;
 export const HARD = ['ended', 'session-start', 'registration', 'targets-scored', 'no-errors', 'gate', 'forced-order', 'skill-modified'];
 export const WARN = ['prod-changed', 'waiver', 'manual-run', 'source-read', 'slow-hook', 'stale-deleted', 'unconfirmed-claim', 'test-command-red', 'tiny-mutants', 'async-missing', 'recovered-error', 'unscored-final', 'scaffold-unregistered'];
-const HOOKS = ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'];
+const HOOKS = ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStart', 'SubagentStop', 'TaskCompleted'];
 const read = (dir, f) => { try { return fs.readFileSync(path.join(dir, f), 'utf8'); } catch { return ''; } };
 const json = (dir, f, d) => { try { return JSON.parse(read(dir, f)); } catch { return d; } };
 const ev = (file, line, text) => ({ file, line, text: String(text).slice(0, 300) });
@@ -20,7 +22,7 @@ const matches = (globs = [], f) => globs.some(g => glob(g).test(f));
 // An agent CLI call: a path ending in /mutagate[.mjs|.cmd] not quoted in backticks (skill docs) and not bare "mutagate check" (hook messages).
 const CLI = /(?:^|[\s"'=(])[\w./~-]*\/mutagate(?:\.mjs|\.cmd)?\s+(run|check|status|waive)\b([^\n"`;&|]*)/;
 const ASSERT = /Assert|assert|expect|should|Verify|require|t\.(?:Error|Fatal|Fail)|pytest\.raises/, DELETE = /\b(?:rm|mv)\b/;
-const SOURCE = /(?:"(?:file_path|filePath|path)"\s*:\s*"|(?:^|[\s"'])(?:cat|sed|head|tail|less|more|grep|rg|awk|nl|bat)\s(?:(?!\\n)[^\n"])*?)(?:(?!\\n)[^\n"])*?(?:mutagate\.mjs|mutagate-hook\.cjs|adapters\/(?:opencode\.js|pi\.ts)|scripts\/(?:inputs|glob|kotlin-source|errors|dotnet|mutmut-bridge|runners)\.cjs)(?![^\n"]*>\s*\/dev\/null)/;
+const SOURCE = /(?:"(?:file_path|filePath|path)"\s*:\s*"|(?:^|[\s"'])(?:cat|sed|head|tail|less|more|grep|rg|awk|nl|bat)\s(?:(?!\\n)[^\n"])*?)(?:(?!\\n)[^\n"])*?(?:mutagate\.mjs|mutagate-hook\.cjs|adapters\/(?:opencode\.js|pi\.ts)|scripts\/(?:inputs|glob|kotlin-source|errors|dotnet|mutmut-bridge|runners|copilot|install|doctor|prune)\.cjs)(?![^\n"]*>\s*\/dev\/null)/;
 // Negated statements ("does not meet the threshold", "mutation testing has not passed") are not claims.
 const PASS_CLAIM = /\bmutation(?:(?!\bnot\b|\bnever\b|n't\b|\bfail)[^\n.]){0,40}?\b(?:pass(?:es|ed|ing)?|green|above (?:the )?threshold)\b|\ball (?:the )?(?:mutants|survivors) (?:were |are )?killed\b|\bgate (?:pass(?:es|ed)|is green|released)\b|(?<!(?:\bnot|\bnever|n't|\bfail(?:s|ed)? to)\s+(?:\w+\s+){0,2})\b(?:pass(?:es|ed)?|exceed(?:s|ed)?|above|meets?) (?:the )?(?:\d+(?:\.\d+)?%? )?threshold\b/i;
 // Target-less CLI usage mistakes that run dirs from before the engine stopped tracing them hold (run on a bad path, waive without an id).
@@ -74,7 +76,8 @@ export function checkRun(runDir, expected) {
   hard('gate', checkExit === '0' || belowT.length > 0 && !short.length, [ev('check.exit', 1, checkExit || 'missing'), ...belowT.map(s => ev('status.json', 1, `${s.target}: below, blocks ${s.blocks || 0}`))],
     `check exited ${checkExit || 'missing'}${belowT.length ? `; below the block cap ${DEFAULTS.maxRounds}: ${short.map(s => `${s.target} (blocks ${s.blocks || 0})`).join(', ')}` : ' with no below target'}`);
   if (meta.scenario === 'forced') {
-    const at = (from, event, decision) => trace.findIndex((e, k) => k > from && e.event === event && e.decision === decision);
+    // A Copilot subagent's own agentStop (trace agent) is traced as a Stop allow but never gates (ADR-0018): only root rows count.
+    const at = (from, event, decision) => trace.findIndex((e, k) => k > from && e.event === event && e.decision === decision && !e.agent);
     const i = at(-1, 'Stop', 'block'), j = i < 0 ? -1 : at(i, 'Result', 'pass'), k = j < 0 ? -1 : at(j, 'Stop', 'allow');
     hard('forced-order', k >= 0, or([i, j, k].filter(x => x >= 0).map(x => trace[x]._ev), 'trace.jsonl', 0, 'no Stop block'), 'no Stop block -> Result pass -> Stop allow sequence in trace');
   }
@@ -88,8 +91,8 @@ export function checkRun(runDir, expected) {
     ...cli.filter(c => c.cmd === 'waive').map(c => c.ev), ...out.filter(l => /Waivers require human approval(?!\. Proposed: \$\{)/.test(l.text)).map(at)], 'waiver proposed or applied');
   warn('manual-run', cli.filter(c => c.cmd === 'run' && /--sync\b|--target\s+[^<\s]/.test(c.args)).map(c => c.ev), 'agent ran mutagate run --target/--sync by hand');
   warn('source-read', out.filter(l => SOURCE.test(l.text)).map(at), 'agent read mutagate source');
-  // Async --mutate PostToolUse handlers (trace mutate: true) wait >= 6 s of quiet by design.
-  warn('slow-hook', trace.filter(e => HOOKS.includes(e.event) && e.duration_ms > 1000 && !(e.event === 'PostToolUse' && e.mutate === true)).map(e => e._ev), 'hook slower than 1 s');
+  // Async --mutate PostToolUse handlers (trace mutate: true) wait >= 6 s of quiet by design; a Copilot Stop is slow only at the watchdog time W.
+  warn('slow-hook', trace.filter(e => HOOKS.includes(e.event) && e.duration_ms > 1000 && !(e.event === 'PostToolUse' && e.mutate === true) && !(e.harness === 'copilot' && e.event === 'Stop' && e.duration_ms < COPILOT_W)).map(e => e._ev), 'hook slower than 1 s');
   // Unresolved messages name test files (not the ${test} template of mutagate source dumped by sed/grep); pending/stale messages (gate, run --sync, status) name targets, mapped to files via status.json, expected.targets or a path-like id.
   const fileOf = t => status.find(s => s.target === t)?.file || expected.targets.find(x => x.target === t)?.file || (t.includes('/') ? t : null);
   // i: index into out for transcript lines, null for check.json (no deletion order).
@@ -163,19 +166,35 @@ export function writeSweep(sweepDir) {
   return md;
 }
 
-export const scrub = (text, secrets) => secrets.filter(Boolean).reduce((t, s) => t.replaceAll(s, '<redacted>'), text);
+// The secret values of the sweep (repo-root .env), and GitHub token patterns, which are scrubbed whether or not a value names them (#35 D30).
+export const secretValues = (env = process.env) => [env.CLAUDE_CODE_OAUTH_TOKEN, env.OPENROUTER_API_KEY, env.COPILOT_GITHUB_TOKEN].filter(Boolean);
+const TOKENS = /\bgithub_pat_\w{20,}|\bgh[opsur]_[A-Za-z0-9]{20,}/g;
+export const scrub = (text, secrets) => secrets.filter(Boolean).reduce((t, s) => t.replaceAll(s, '<redacted>'), text).replace(TOKENS, '<redacted>');
+// A dir that a live worker deletes mid-walk (a Stryker sandbox under the cacheRoot data dir) is skipped, as is a released lock file in scrubFile.
 export function scrubDir(dir, secrets) {
-  if (!secrets.some(Boolean)) return;
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+  let entries;
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { if (e.code === 'ENOENT') return; throw e; }
+  for (const e of entries) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) { if (!['.git', 'node_modules'].includes(e.name)) scrubDir(p, secrets); continue; }
-    if (!e.isFile() || fs.statSync(p).size > 5 * 1024 * 1024) continue;
-    const b = fs.readFileSync(p);
-    // Binaries (e.g. opencode.db) get a same-length 'x' fill so their structure stays valid; text gets '<redacted>'.
-    if (b.includes(0)) { let hit = false; for (const s of secrets.filter(Boolean).map(x => Buffer.from(x))) for (let i = b.indexOf(s); i >= 0; i = b.indexOf(s, i + s.length)) { b.fill(0x78, i, i + s.length); hit = true; } if (hit) fs.writeFileSync(p, b); continue; }
-    const text = b.toString('utf8'), clean = scrub(text, secrets);
-    if (clean !== text) fs.writeFileSync(p, clean);
+    if (e.isFile()) scrubFile(p, secrets);
   }
+}
+// Files over 5 MB are skipped, except the transcript stdout.log (Copilot's raw -p JSONL with its streaming deltas can pass 5 MB) and Copilot's --log-dir
+// logs (copilot-logs/), which pass 5 MB and also lose the GitHub login (keyring account https://github.com:<login>:…) and the home dir (#35 D30).
+export function scrubFile(p, secrets) {
+  const logs = p.split(path.sep).includes('copilot-logs');
+  let b;
+  try { if (!logs && path.basename(p) !== 'stdout.log' && fs.statSync(p).size > 5 * 1024 * 1024) return; b = fs.readFileSync(p); } catch (e) { if (e.code === 'ENOENT') return; throw e; } // a lock file a worker released
+  // Binaries (e.g. opencode.db) get a same-length 'x' fill so their structure stays valid; text gets '<redacted>'.
+  if (b.includes(0)) {
+    let hit = false; const fill = (i, n) => { b.fill(0x78, i, i + n); hit = true; };
+    for (const s of secrets.filter(Boolean).map(x => Buffer.from(x))) for (let i = b.indexOf(s); i >= 0; i = b.indexOf(s, i + s.length)) fill(i, s.length);
+    for (const m of b.toString('latin1').matchAll(TOKENS)) fill(m.index, m[0].length);
+    if (hit) fs.writeFileSync(p, b); return;
+  }
+  const text = b.toString('utf8'), clean = logs ? scrub(text, secrets).replace(/(github\.com:)[\w-]+(?=:)/g, '$1<login>').replaceAll(os.homedir(), '~') : scrub(text, secrets);
+  if (clean !== text) fs.writeFileSync(p, clean);
 }
 
 // sha256 over each file's relative POSIX path and bytes, paths sorted, NUL-separated; null when the tree is missing.
@@ -187,7 +206,7 @@ export function packageDigest(dir) {
 }
 
 // Evidence record for one cell (<harness>-<lang>-<scenario>), shaped like test/evidence/codex-continuation.json.
-export function evidenceRecord(cell, runDirs, secrets = [process.env.CLAUDE_CODE_OAUTH_TOKEN, process.env.OPENROUTER_API_KEY]) {
+export function evidenceRecord(cell, runDirs, secrets = secretValues()) {
   const runs = runDirs.map(dir => ({ dir, meta: json(dir, 'meta.json', {}), result: json(dir, 'result.json', {}) })).sort((a, b) => (a.meta.n ?? 0) - (b.meta.n ?? 0));
   const [harness, lang, scenario] = cell.split('-'), m = runs[0]?.meta || {};
   const attempts = runs.map(({ dir, meta, result }) => {
