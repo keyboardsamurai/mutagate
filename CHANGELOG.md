@@ -9,6 +9,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 - `run --sync`, `check` and `status` in the Copilot root agent shell now count as Copilot calls, so their pending message asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
 - A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a queued report, so the Claude Code async hook woke the agent again with the same report.
 - Copilot: a pass that `runTarget` returns from a cached result (no new run) now clears the delivered report, so the same regression is delivered again after a waiver turns it into a pass and back.
+- Copilot: a queued report whose run a waiver has since turned into a pass is no longer sent at the next delivery point. A report that `check` or `run --sync` prints removes only the outbox entry of the run it shows, so a newer queued report stays.
 
 ## [0.9.2] - 2026-11-10
 

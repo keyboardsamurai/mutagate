@@ -519,8 +519,8 @@ const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 // The only writer of the delivered report of a target (ADR-0019), inside updateState: no text (a pass) clears it; false for a gone target, no text or the same report again, else text becomes it.
 const deliver = (s, key, text) => { const t = s.targets[key], k = text ? reportKey(text) : null; if (!t || t.reported === k) return false; t.reported = k; return !!k; };
-// A result that reached the agent: its key leaves the Copilot outbox, and sent text is the delivered report.
-const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
+// A result that reached the agent: sent text is the delivered report, and the Copilot outbox entry of that run (e.run) leaves; an entry of a newer run stays (ADR-0019).
+const reached = (c, key, text, run) => (text || state(c).outbox?.some(e => e.key === key && e.run === run)) && updateState(c, s => { if (!s.targets[key]) return; deliver(s, key, text); s.outbox &&= s.outbox.filter(e => e.key !== key || e.run !== run); });
 export async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -685,7 +685,7 @@ export async function gate(c, { wait, hook = false, runner, budget, streak, sche
     // Block fixable test failures and pending targets once (ponytail: per target per session, never reset), below targets up to maxRounds; infrastructure errors fail open.
     const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
       sent = r && (blocked || ['below', 'error'].includes(r.status) && !blocksOnly);
-    if (sent || r && !hook) await shown(c, key, sent && text); // a sent key, and each key whose result check prints, leaves the Copilot outbox
+    if (sent || r && !hook) await reached(c, key, sent && text, r.started_at); // a sent key, and each key whose result check prints, loses the outbox entry of that run
     if (blocked) blocks.push(text);
     else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(limited && v.obligation === 'block' ? `mutagate: Copilot block limit (8 in a row) reached for ${t.target}` : v.kind === 'below' && c.config.mode !== 'advise' ?
       `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
@@ -1009,7 +1009,7 @@ export async function main(argv = process.argv.slice(2)) {
       const results = [];
       for (const t of r.targets) {
         const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
-        if (v.result) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
+        if (v.result) await reached(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config), v.result.started_at); // printed below, like check
         results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
         if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }
