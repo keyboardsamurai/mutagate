@@ -54,9 +54,8 @@ Copilot also runs the hooks in `.claude/settings.json`. mutagate keeps those cal
 | Case | Status |
 |---|---|
 | Copilot CLI, macOS and Linux | Supported. Live eval passed on macOS. |
-| VS Code, Copilot harness | Same hook file. Not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` exists for the release. |
-| VS Code, Local harness | Inert: its payloads have `hook_event_name`, and mutagate exits 0 with no state or output. |
-| Copilot cloud coding agent | Inert unless `.mutagate/config.json` has `"copilotCloud": true`. mutagate detects it by `COPILOT_AGENT_JOB_ID` or `COPILOT_AGENT_CALLBACK_URL` in the hook environment (seen in a cloud job, spike S16). The cloud agent also runs the hooks in `.github/copilot/settings.json` and `.claude/settings.json`. Its hook environment holds tokens (`COPILOT_SDK_AUTH_TOKEN`, `GITHUB_VERIFICATION_TOKEN`) that a run would inherit. |
+| VS Code, Copilot harness | Same hook file. Not claimed until a passing smoke record `test/evidence/vscode/copilot-<os>.json` exists for the release (#48). |
+| Copilot cloud coding agent | Inert by default. Experimental opt-in: `"copilotCloud": true` in `.mutagate/config.json`; two cloud sessions passed with it ([validation](validation.md)). mutagate detects it by `COPILOT_AGENT_JOB_ID` or `COPILOT_AGENT_CALLBACK_URL` in the hook environment (seen in a cloud job, spike S16). The cloud agent also runs the hooks in `.github/copilot/settings.json` and `.claude/settings.json`. Its hook environment holds tokens (`COPILOT_SDK_AUTH_TOKEN`, `GITHUB_VERIFICATION_TOKEN`) that a run would inherit. |
 | Copilot sandbox (CLI `--sandbox`, VS Code `chat.agent.sandbox.enabled`) | Not supported. When the cache root is not writable, SessionStart and each `agentStop` say `mutagate inactive: cannot write <path>`. |
 | Windows | Experimental, no claim. Only an install made on Windows writes a real PowerShell command; a project file from macOS or Linux does nothing there. |
 | Remote hosts, dev containers, Codespaces | Not tested. Install and run `doctor` where the agent runtime runs. |
@@ -71,6 +70,5 @@ Copilot also runs the hooks in `.claude/settings.json`. mutagate keeps those cal
 | `mutagate inactive: cannot write <path>` | The Copilot sandbox | Run Copilot without its sandbox |
 | The session waits silently at the end | The gate, up to 570 s | Wait; `MUTAGATE_TRACE=1` records each decision |
 | `check --wait` goes to the background | The bash `initial_wait` is shorter than the wait | Set `initial_wait` to N + 30 or more, as the message says |
-| Nothing happens in VS Code | The Local harness is inert | Use the Copilot harness |
 | With a Claude Code install, the agent waits for a mutation run after each test edit | A `.claude/settings.json` hook call without a top-level `timestamp` runs as Claude Code: `MUTAGATE_TRACE=1` shows harness `claude`, not decision `inherited` | Open an issue with the payload (`MUTAGATE_RECORD=1` records it) |
 | `WARN copilot hook files: Copilot runs each of …` in `doctor` | Two mutagate hook files | `uninstall --agent copilot` in one scope |

@@ -228,7 +228,7 @@ A test edit starts a background run; its report reaches the agent with its next 
 - `-p` and text mode show nothing while the gate waits. When the gate allows, its messages (round cap, warnings, `advise` reports) are progress lines that the model does not see; `status` shows the scores.
 - Subagent edits are gated when the root agent stops. CLI calls in a subagent's shell do not join the root session.
 - `install` refuses a second scope. A blocking `agentStop` hook of another tool that runs after mutagate's replaces mutagate's reason.
-- Not supported: Copilot sandbox sessions (`mutagate inactive: cannot write …`), Windows (experimental) and the cloud coding agent (inert unless `"copilotCloud": true`). VS Code is not claimed until it has a smoke record.
+- Not supported: Copilot sandbox sessions (`mutagate inactive: cannot write …`) and Windows (experimental). The cloud coding agent is inert unless `"copilotCloud": true` (experimental). VS Code is not claimed until it has a smoke record.
 
 Details: [docs/copilot.md](https://github.com/keyboardsamurai/mutagate/blob/main/docs/copilot.md).
 
