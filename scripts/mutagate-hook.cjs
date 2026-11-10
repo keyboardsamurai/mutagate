@@ -97,7 +97,8 @@ function context(args = {}, payload = {}) {
 
 
   const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID,
-    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : SESSION_CMDS.includes(args._?.[0]) && !envId && e.COPILOT_AGENT_SESSION_ID) && copilot().top(repo);
+    shell = !payload.cwd && SESSION_CMDS.includes(args._?.[0]) && !envId && !!e.COPILOT_AGENT_SESSION_ID, // the Copilot root agent shell, whatever its CLAUDE_* env
+    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : shell) && copilot().top(repo);
   if (top) repo = top; else if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
   const root = cacheRoot(), data = path.join(root, 'repos', hash(repo));
 
@@ -107,7 +108,7 @@ function context(args = {}, payload = {}) {
   const session = hash(sid);
   const { config, errors } = configFor(repo, root, args);
 
-  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (shell ? 'copilot' : process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
   return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };

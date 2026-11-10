@@ -97,7 +97,8 @@ export function context(args = {}, payload = {}) {
   // Claude cwd follows `cd`; project dir stays fixed. A native Copilot call uses the Git top of cwd, not the launch dir in CLAUDE_PROJECT_DIR, and so does a
   // session command in the Copilot root agent shell (session COPILOT_AGENT_SESSION_ID), which starts in the launch dir: both reach one data dir (ADR-0020).
   const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID,
-    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : SESSION_CMDS.includes(args._?.[0]) && !envId && e.COPILOT_AGENT_SESSION_ID) && copilot().top(repo);
+    shell = !payload.cwd && SESSION_CMDS.includes(args._?.[0]) && !envId && !!e.COPILOT_AGENT_SESSION_ID, // the Copilot root agent shell, whatever its CLAUDE_* env
+    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : shell) && copilot().top(repo);
   if (top) repo = top; else if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
   const root = cacheRoot(), data = path.join(root, 'repos', hash(repo));
   // Session id precedence: README Sessions, ADR-0009. ponytail: subagent Bash env carries the parent id, so subagent CLI runs gate at the parent's Stop.
@@ -107,7 +108,7 @@ export function context(args = {}, payload = {}) {
   const session = hash(sid);
   const { config, errors } = configFor(repo, root, args);
   // Copilot CLI runs the Claude project hooks; only its payloads carry `timestamp`, and only its native hook commands carry the --harness tag. No env makes them `claude` (ADR-0015).
-  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
+  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (shell ? 'copilot' : process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
     process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
   return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
     stateFile: path.join(data, 'state', session + '.json') };
