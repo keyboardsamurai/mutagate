@@ -251,9 +251,10 @@ test('hooks under Node older than 22 stay inactive and say so at session start',
   const { c } = fixture(t), versions = process.versions;
   t.after(() => Object.defineProperty(process, 'versions', { value: versions }));
   Object.defineProperty(process, 'versions', { value: { ...versions, node: '21.7.3' } });
-  assert.deepEqual(await m.handleHook(c, {}, 'SessionStart'), { code: 0, text: 'mutagate inactive: hooks run Node 21.7.3; need 22+. Set MUTAGATE_NODE or rerun install.' });
-  assert.deepEqual(await m.handleHook({ ...c, harness: 'pi' }, {}, 'SessionStart'), { code: 0, out: { systemMessage: 'mutagate inactive: hooks run Node 21.7.3; need 22+. Set MUTAGATE_NODE or rerun install.' } });
-  assert.deepEqual(await m.handleHook(c, { tool_name: 'Write', tool_input: { file_path: 'src/test/java/acme/FooTest.java' } }, 'PostToolUse'), { code: 0 });
+  const hook = async (x, p, event) => { const w = x.profile.write(await m.handleHook(x, p, event), event), o = w.stdout && w.stdout.startsWith('{') ? { out: JSON.parse(w.stdout) } : w.stdout ? { text: w.stdout.slice(0, -1) } : {}; return { code: w.code, ...o }; };
+  assert.deepEqual(await hook(c, {}, 'SessionStart'), { code: 0, text: 'mutagate inactive: hooks run Node 21.7.3; need 22+. Set MUTAGATE_NODE or rerun install.' });
+  assert.deepEqual(await hook({ ...c, harness: 'pi', profile: m.harness().profiles.pi }, {}, 'SessionStart'), { code: 0, out: { systemMessage: 'mutagate inactive: hooks run Node 21.7.3; need 22+. Set MUTAGATE_NODE or rerun install.' } });
+  assert.deepEqual(await hook(c, { tool_name: 'Write', tool_input: { file_path: 'src/test/java/acme/FooTest.java' } }, 'PostToolUse'), { code: 0 });
   assert.deepEqual(m.state(c).targets, {});
 });
 

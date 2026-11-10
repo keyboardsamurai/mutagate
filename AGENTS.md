@@ -266,7 +266,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
   `export function`/`export const`. Any other module syntax makes the generator
   throw.
 - Every `scripts/*.cjs` that affects results is in the `fingerprint` helper list;
-  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`, `copilot.cjs`) are listed as exceptions in
+  helpers that do not (`install.cjs`, `doctor.cjs`, `prune.cjs`, `copilot.cjs`, `harness.cjs`) are listed as exceptions in
   `test/protocol.test.mjs`.
 - `scripts/hooks.json` is generated from `hookConfig('codex')`. Regenerate it
   after changing hook wiring.
