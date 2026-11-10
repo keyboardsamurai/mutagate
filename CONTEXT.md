@@ -144,6 +144,10 @@ _Avoid_: conversation, thread, run (for this)
 The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode, Pi or GitHub Copilot (through a native install).
 _Avoid_: agent, host tool, IDE
 
+**Harness profile**:
+The rules of one harness for a mutagate call: how its payload maps to the internal shape, how the session and repo are found, and how output and exit code go back. Each call uses exactly one; an inherited hook call has its own.
+_Avoid_: harness adapter (an adapter is the OpenCode or Pi translator), harness driver, harness mode
+
 **Inherited hook call**:
 A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
 _Avoid_: foreign hook, Copilot hook
