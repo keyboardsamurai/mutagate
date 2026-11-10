@@ -937,6 +937,43 @@ async function doctor(c) {
   }
   return { version: VERSION, checks: checks.map(({ hint, ...check }) => check.pass ? check : { ...check, hint }), versions };
 }
+// One hook call (ADR-0022): argv and the stdin text in, {code, stdout, stderr, deadline?} out; main does only the process I/O. Hooks fail open: exit 0.
+export async function runHook(argv, text, env = process.env) {
+  const args = parseArgs(argv), out = [], err = [], done = (code, x) => ({ code, stdout: out.join(''), stderr: err.join(''), ...x });
+  let p, c;
+  try {
+    p = JSON.parse(text);
+    if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error('expected object');
+  } catch { if (args.harness !== 'copilot') err.push('mutagate: malformed hook JSON\n'); return done(0); } // a native Copilot hook writes no stderr (#35 D12)
+  let event = args._[1] || p.hook_event_name;
+  if (!['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted', ...(args.harness === 'copilot' ? ['SubagentStart'] : [])].includes(event)) return done(0);
+  try {
+    // Native Copilot hook calls carry --harness copilot (ADR-0020): a VS Code Local payload stays inert (ADR-0021); the raw payload is recorded, the normalized one used.
+    const cp = args.harness === 'copilot' && copilot(), origin = cp && cp.origin(p, args), raw = p;
+    if (origin === 'local') return done(0);
+    if (cp) p = cp.normalize(p);
+    c = context(args, p);
+    event = args._[1] || p.hook_event_name;
+    const start = Date.now();
+    if (origin === 'cloud' && !c.config.copilotCloud) return done(0); // the cloud agent is inert unless the repo opts in (ADR-0021)
+    if (!c.inherited && origin !== 'spawned' && (args.record || env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
+      `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
+    if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return done(0); } // never a ppid- session (ADR-0020)
+    const r = await handleHook(c, p, event, raw);
+    if (r.out) out.push(JSON.stringify(r.out) + '\n');
+    if (r.text) out.push(r.text + '\n');
+    if (r.err) err.push(r.err + '\n');
+    trace(c, event, {
+      tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
+      ...(cp && p.agentId && { agent: p.agentId, ...(c.sid === p.agentId && { chain: 'unresolved' }) }) // a Copilot subagent call (its agentStop never gates), unresolved: outside its root session
+    });
+    return done(r.code, r.deadline && { deadline: true });
+  } catch (e) {
+    if (c) trace(c, 'hook', { error: clean(e.message), decision: 'error' });
+    if (args.harness !== 'copilot') err.push('mutagate: ' + clean(e.message) + '\n');
+    return done(0);
+  }
+}
 export async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv),
     cmd = args._[0] || 'help',
@@ -944,43 +981,20 @@ export async function main(argv = process.argv.slice(2)) {
     usage = 'mutagate: ' + (all.split(', ').find(u => u.split(' ')[0].split('|').includes(cmd)) || all + '. All commands accept --repo.');
   if (args.help || args._.includes('-h')) { console.log(usage); return 0; }
   if (args.version || cmd === 'version') { console.log('mutagate ' + VERSION); return 0; }
-  let p = {},
-    c;
   if (cmd === 'hook') {
-    try {
-      p = JSON.parse(fs.readFileSync(0, 'utf8'));
-      if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error(
-        'expected object');
-    } catch { if (args.harness !== 'copilot') console.error('mutagate: malformed hook JSON'); return 0; } // a native Copilot hook writes no stderr (#35 D12)
+    let text = '';
+    try { text = fs.readFileSync(0, 'utf8'); } catch {} // unreadable stdin reads as malformed JSON
+    const r = await runHook(argv, text);
+    if (r.stdout) process.stdout.write(r.stdout);
+    if (r.stderr) process.stderr.write(r.stderr);
+    if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
+    return r.code;
   }
-  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted', ...(args.harness === 'copilot' ? ['SubagentStart'] : [])].includes(args._[1] || p.hook_event_name))
-    return 0;
+  let c;
   try {
     if (cmd === 'prune') { await runtimeRequire('./prune.cjs')(cacheRoot(), { lock, abandoned }); return 0; } // internal, started by schedulePrune
-    // Native Copilot hook calls carry --harness copilot (ADR-0020): a VS Code Local payload stays inert (ADR-0021); the raw payload is recorded, the normalized one used.
-    const cp = cmd === 'hook' && args.harness === 'copilot' && copilot(), origin = cp && cp.origin(p, args), raw = p;
-    if (origin === 'local') return 0;
-    if (cp) p = cp.normalize(p);
-    c = context(args, p);
+    c = context(args);
     if (SESSION_CMDS.includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
-    if (cmd === 'hook') {
-      const event = args._[1] || p.hook_event_name,
-        start = Date.now();
-      if (origin === 'cloud' && !c.config.copilotCloud) return 0; // the cloud agent is inert unless the repo opts in (ADR-0021)
-      if (!c.inherited && origin !== 'spawned' && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
-        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
-      if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return 0; } // never a ppid- session (ADR-0020)
-      const r = await handleHook(c, p, event, raw);
-      if (r.out) console.log(JSON.stringify(r.out));
-      if (r.text) console.log(r.text);
-      if (r.err) console.error(r.err);
-      trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
-        ...(cp && p.agentId && { agent: p.agentId, ...(c.sid === p.agentId && { chain: 'unresolved' }) }) // a Copilot subagent call (its agentStop never gates), unresolved: outside its root session
-      });
-      if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
-      return r.code;
-    }
     if (cmd === 'worker') {
       c.config = state(c).config || c.config;
       await sleep(3000);
@@ -1074,9 +1088,9 @@ export async function main(argv = process.argv.slice(2)) {
     console.log(usage);
     return cmd === 'help' ? 0 : 2;
   } catch (e) { // Usage errors (e.usage) exit 2 and are not traced as errors.
-    if (c && (cmd === 'hook' || !e.usage)) trace(c, cmd, { error: clean(e.message), decision: 'error' });
-    if (cmd !== 'hook' || args.harness !== 'copilot') console.error('mutagate: ' + clean(e.message));
-    return cmd === 'hook' ? 0 : e.usage ? 2 : 3;
+    if (c && !e.usage) trace(c, cmd, { error: clean(e.message), decision: 'error' });
+    console.error('mutagate: ' + clean(e.message));
+    return e.usage ? 2 : 3;
   }
 }
 if (process.argv[1] && fs.realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) process.exitCode = await main();
