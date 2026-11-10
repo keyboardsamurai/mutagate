@@ -1009,7 +1009,7 @@ async function main(argv = process.argv.slice(2)) {
       const results = [];
       for (const t of r.targets) {
         const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
-        if (v.result && state(c).outbox?.some(e => e.key === key)) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
+        if (v.result) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
         results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
         if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }

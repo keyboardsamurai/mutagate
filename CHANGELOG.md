@@ -7,6 +7,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 ### Fixed
 
 - `run --sync`, `check` and `status` in the Copilot root agent shell now count as Copilot calls, so their pending message asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
+- A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a queued report, so the Claude Code async hook woke the agent again with the same report.
 
 ## [0.9.2] - 2026-11-10
 
