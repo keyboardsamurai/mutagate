@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "target": "pricing.ts",
+  "language": "typescript",
+  "runner": "stryker",
+  "tests": [
+    "pricing.test.ts"
+  ],
+  "started_at": "2026-11-10T14:05:17.504Z",
+  "duration_ms": 3422,
+  "score": 1,
+  "killed": 5,
+  "survived": 0,
+  "timed_out": 0,
+  "no_coverage": 0,
+  "filtered_junk": 0,
+  "filtered": [],
+  "waived": 0,
+  "error_mutants": 0,
+  "threshold": 0.8,
+  "status": "pass",
+  "error": null,
+  "survivors": [],
+  "warnings": [],
+  "raw": [
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "ConditionalExpression",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"true\"]",
+      "description": "ConditionalExpression: replaced with true",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 1,
+      "method": "",
+      "mutator": "BlockStatement",
+      "mutation_key": "[{\"end\":{\"column\":2,\"line\":4},\"start\":{\"column\":49,\"line\":1}},\"{}\"]",
+      "description": "BlockStatement: replaced with {}",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "ConditionalExpression",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"false\"]",
+      "description": "ConditionalExpression: replaced with false",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "EqualityOperator",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"count > 10\"]",
+      "description": "EqualityOperator: replaced with count > 10",
+      "status": "KILLED"
+    },
+    {
+      "file": "pricing.ts",
+      "line": 2,
+      "method": "",
+      "mutator": "EqualityOperator",
+      "mutation_key": "[{\"end\":{\"column\":18,\"line\":2},\"start\":{\"column\":7,\"line\":2}},\"count < 10\"]",
+      "description": "EqualityOperator: replaced with count < 10",
+      "status": "KILLED"
+    }
+  ]
+}
