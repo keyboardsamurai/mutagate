@@ -2,7 +2,8 @@
 // Harness profiles (ADR-0022): `pick` names the profile of a call; `base` is Claude-shaped, the others change only what differs. `write` encodes a
 // handleHook intent as {code, stdout, stderr}, no side effects. Loaded by context(). Not hashed into fingerprint: it shapes output and delivery, not results.
 const os = require('node:os'), path = require('node:path');
-module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, detached, spawn, updateState, reportKey }) => {
+module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, reportKey }) => {
+  let own;
   const none = { code: 0, stdout: '', stderr: '' }, json = o => ({ code: 0, stdout: JSON.stringify(o) + '\n', stderr: '' });
   // The Copilot root agent shell: a session command, COPILOT_AGENT_SESSION_ID and no hook session id, whatever its CLAUDE_* env (ADR-0020).
   const shell = (args, p, env) => !p.cwd && SESSION_CMDS.includes(args._?.[0]) && !(env.MUTAGATE_HOOK_SESSION || env.CODEX_THREAD_ID || env.CLAUDE_CODE_SESSION_ID) && !!env.COPILOT_AGENT_SESSION_ID;
@@ -14,8 +15,13 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     return HARNESSES.includes(named) ? named : 'unknown';
   };
   const base = {
-    inert: false, quiet: false, waiver: 'deny', // inert: no recording, traced `inherited`; quiet: no stderr note on corrupt state
-    admit: (c, p, event) => Number(process.versions.node.split('.')[0]) < 22 ? // an intent that ends the call early, else undefined
+    inert: false, quiet: false, waiver: 'deny', // inert: unrecorded, traced `inherited`; quiet: no stderr
+    bashWait: false, label: '', // bashWait: initial_wait hint; label: rerun notice name
+    events: ['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted'],
+    read: p => ({ p, record: true }), // null: inert
+    place: (args, p) => ({ top: false, id: () => p.agent_id || p.session_id }), // top: Git top of cwd; id(data): session id
+    tags: () => ({}), // extra trace fields
+    admit: (c, p, event) => Number(process.versions.node.split('.')[0]) < 22 ? // an intent that ends the call early, else undefined; {error}: traced only
       event === 'SessionStart' ? { notice: `mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.` } : {} : undefined,
     ready: () => '', // SessionStart: a notice when no state can be kept
     deliveries: async () => [], // reports a PostToolUse delivers
@@ -37,20 +43,12 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     // Claude asks the human; its async hook wakes the agent: exit 2, survivors on stderr.
     claude: { ...base, waiver: 'ask', write(i, event) { return i.survivors && i.wake ? { code: 2, stdout: '', stderr: i.survivors + '\n' } : base.write.call(this, i, event); } },
     codex: base, opencode: agent, pi: agent,
-    unknown: { ...base, rerun(c, keys) { for (const key of new Set(keys)) schedule(c, key, c.spawn); } }, // no async hook: a worker per target; c.spawn: test seam
+    unknown: { ...base, label: '<harness>', rerun(c, keys) { for (const key of new Set(keys)) schedule(c, key, c.spawn); } }, // no async hook: a worker per target; c.spawn: test seam
     // Inert; one SessionStart notice while no native Copilot hook file exists and, without copilotCloud, no cloud marker is set (ADR-0015, ADR-0021).
     inherited: { ...base, harness: 'copilot', inert: true, write: i => i.notice ? json({ additionalContext: i.notice }) : none,
       admit: (c, p, event) => event === 'SessionStart' && ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')]
         .some(d => exists(path.join(d, 'hooks/mutagate.json'))) && (c.config.copilotCloud || !copilot().cloud()) ?
         { notice: `mutagate inactive under Copilot: this repo has only the Claude Code install; run \`${cliName(c)} install --agent copilot\`.` } : {} },
-    // Native Copilot hook calls (copilot.cjs).
-    copilot: { ...base, quiet: true,
-      admit: (c, p, event) => base.admit(c, p, event) ?? (event === 'SubagentStart' ? (copilot().link(c.data, p), {}) : undefined), // ADR-0020
-      ready: c => copilot().probe(path.join(c.data, 'state')), // ADR-0021
-      deliveries: (c, p) => copilot().drain(c, p), // the outbox (ADR-0019)
-      rerun(c, keys, raw, seen) { if (!seen) detached(c.spawn || spawn, ['hook', 'PostToolUse', '--mutate', '--harness', 'copilot'], {}, JSON.stringify(raw)); }, // c.spawn: test seam
-      survivor: async (c, key, r, text) => { await updateState(c, s => copilot().queue(s, key, text, r.started_at)); return null; },
-      stop: (c, p) => copilot().agentStop(c, p), // ADR-0018
-      write: i => copilot().write(i) }
+    get copilot() { return own ??= copilot().profile(base); } // copilot.cjs, lazy
   } };
 };
