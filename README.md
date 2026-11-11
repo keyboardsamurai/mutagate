@@ -244,7 +244,7 @@ Put shared settings in `.mutagate/config.json` and commit it:
 |---|---|---|
 | `mode` | `"gate"` | `"advise"` reports scores but never blocks. |
 | `threshold` | `0.8` | Minimum score per target, from 0 to 1. |
-| `maxRounds` | `2` | Blocks for a score below the threshold per target before mutagate warns and lets the agent finish. The one-time pending and failing-tests blocks do not count. |
+| `maxRounds` | `2` | Blocks for a score below the threshold per target before mutagate warns and lets the agent finish. The one-time pending and failing-tests blocks do not count. With `0`, a low score never blocks; `mode: "advise"` turns every block off. |
 | `maxSurvivors` | `10` | Survivor lines per report. Reports also stop at 1,800 characters. |
 | `countNoCoverage` | `true` | Counts mutants on lines no registered test runs. With `false`, the score covers only lines the tests reach, so it measures how well the tests check what they run. Uncovered mutants are still listed. |
 | `runBudgetSec` | `300` | Time limit for one mutation run. Use `600` for C# cold builds. |
