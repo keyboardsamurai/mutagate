@@ -6,10 +6,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Fixed
 
-- `run --sync`, `check` and `status` in the Copilot root agent shell now count as Copilot calls, so their pending message asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
-- A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a queued report, so the Claude Code async hook woke the agent again with the same report.
+- `run`, `check`, `status` and `waive` in the Copilot root agent shell now count as Copilot calls (the `harness` field of `trace.jsonl` rows), so the pending message of `run --sync` and `check` asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
+- A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a report in the outbox, so the Claude Code async hook woke the agent again with the same report.
 - A pass that a waiver gives (no new run) now clears the delivered report when `check`, `run --sync` or a gate sees it, so the same regression is delivered again after the waiver is removed.
-- Copilot: a queued report whose run a waiver has since turned into a pass is no longer sent at the next delivery point. A report that `check` or `run --sync` prints removes only the outbox entry of the run it shows, so a newer queued report stays.
+- Copilot: an outbox entry whose run a waiver has since turned into a pass is no longer sent at the next delivery point. A report that `check` or `run --sync` prints, or that an `agentStop` blocks with, removes only the outbox entry of the run it shows, so the entry of a newer run stays.
 
 ## [0.9.2] - 2026-11-10
 
