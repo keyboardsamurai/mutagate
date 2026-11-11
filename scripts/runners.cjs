@@ -301,8 +301,12 @@ async function goRunner(c, t, dir, opts) {
       // gomutants 0.6 and 0.7 keys are package-relative, despite module projectRoot.
       return { runner, raw: parseMutationTestingElements({ ...json(path.join(dir, 'mutation.json')), projectRoot: pkgDir }, c.repo).filter(m => m.file === t.file) };
     }
-    await command(exe, ['unleash', `--config=${cfg}`, `--output=${path.join(dir, 'gremlins.json')}`, '--output-statuses=lctkv', workers, ...tags,
-      ...siblings.map(s => `--exclude-files=${s}`), ...entries.filter(f => fs.statSync(path.join(pkgDir, f)).isDirectory()).map(f => `--exclude-files=^${escape(f)}/`)], { ...opts, cwd: pkgDir });
+    // gremlins gives each mutant the time of its coverage run x the coefficient (default 3), and a timeout counts as killed. A coverage run from the Go test cache takes ~80 ms, so every mutant timed out: -count=1 makes that run real.
+    // ponytail: coefficient 10 leaves room for the compile of the mutant. Ceiling: a package that compiles 10x longer than its tests link and run; use goRunner=gomutants there.
+    const env = opts.env || process.env;
+    await command(exe, ['unleash', `--config=${cfg}`, `--output=${path.join(dir, 'gremlins.json')}`, '--output-statuses=lctkv', '--timeout-coefficient=10', workers, ...tags,
+      ...siblings.map(s => `--exclude-files=${s}`), ...entries.filter(f => fs.statSync(path.join(pkgDir, f)).isDirectory()).map(f => `--exclude-files=^${escape(f)}/`)],
+      { ...opts, cwd: pkgDir, env: { ...env, GOFLAGS: `${env.GOFLAGS || ''} -count=1`.trim() } });
     return { runner, raw: parseGremlins(json(path.join(dir, 'gremlins.json')), slash(path.relative(c.repo, pkgDir))).filter(m => m.file === t.file) };
   } catch (e) { throw Object.assign(e, { runner }); }
 }

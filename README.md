@@ -327,7 +327,7 @@ All languages: your build files and mutation-tool configs are never changed, and
 - With `goRunner: "auto"`, mutagate uses gomutants (cached or on PATH), installs it if missing, and falls back to gremlins.
 - gomutants 0.7.2 builds with Go 1.26.10 or later. With an earlier Go, `go install` downloads that Go version (`GOTOOLCHAIN=auto`, the default).
 - gomutants mutates only the target file and skips the other `Test…` functions in the package. `Example` and `Fuzz` functions in other files of the package may still run.
-- gremlins mutates one file but runs the package's tests. With gremlins 0.6.0 the directory name must match the package name, or build failures count as killed mutants.
+- gremlins mutates one file but runs the package's tests. With gremlins 0.6.0 the directory name must match the package name, or build failures count as killed mutants. gremlins sets the timeout of a mutant from its coverage run (mutagate runs that uncached, coefficient 10); in a package that compiles much longer than its tests run, mutants can still time out and count as killed.
 - Never mutated: `*.pb.go`, `*_gen.go`, `zz_generated*.go`, `mock_*.go`, `*_mock.go`.
 - Build outputs at the module root (`bin/`, `*.out`, `*.test`, `*.exe`, executables without an extension) never make results stale.
 - Options: `goRunner`, `goTags` (also `MUTAGATE_GO_RUNNER` and `--go-tags`).
