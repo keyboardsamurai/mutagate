@@ -79,7 +79,7 @@ test('size limits and Kotlin labeled-corpus precision',()=>{
  for(const pattern of ['data-class','default-argument','when-mapping','coroutine','inline','lateinit','source-logic'])assert.ok(corpus.some(x=>x.pattern===pattern),pattern);
  assert.ok(flagged.filter(x=>x.label==='junk').length/flagged.length>=.95);
  assert.ok(real.filter(classify).length/real.length<=.02);
- const raw=m.parsePitXML(fs.readFileSync(path.join(root,'test/corpus/kotlin-unfiltered.xml'),'utf8'));
+ const raw=m.runners().parsePitXML(fs.readFileSync(path.join(root,'test/corpus/kotlin-unfiltered.xml'),'utf8'));
  assert.deepEqual(corpus.map(({label,pattern,rationale,...x})=>x),raw);
  for(const method of ['equals','hashCode','toString'])assert.ok(real.some(x=>x.class==='acme.OverrideProfile'&&x.method===method&&!classify(x)));
 

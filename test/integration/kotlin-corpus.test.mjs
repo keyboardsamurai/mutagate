@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { parsePitXML } from '../../scripts/mutagate.mjs';
+import { runners } from '../../scripts/mutagate.mjs';
+const { parsePitXML } = runners();
 const selected = process.env.MUTAGATE_FIXTURES;
 test('Kotlin adversarial corpus reproduces actual PIT mutants', {
   skip: Boolean(selected && !selected.split(',').includes('kotlin-gradle')), timeout: 240000

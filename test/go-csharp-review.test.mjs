@@ -56,7 +56,7 @@ test('Go build and test outputs are not fingerprint inputs', t => {
 
 test('ignored MTE mutants do not count as infrastructure errors or alter scores', t => {
   const { c, put } = fixture(t); put('Foo.cs', 'class Foo {}');
-  const raw = m.parseMutationTestingElements({ files: { 'Foo.cs': { mutants: ['Killed', 'Ignored', 'CompileError'].map((status, i) => ({ status, mutatorName: 'String mutation', location: { start: { line: i + 1, column: 1 } } })) } } }, c.repo);
+  const raw = m.runners().parseMutationTestingElements({ files: { 'Foo.cs': { mutants: ['Killed', 'Ignored', 'CompileError'].map((status, i) => ({ status, mutatorName: 'String mutation', location: { start: { line: i + 1, column: 1 } } })) } } }, c.repo);
   const result = m.normalize(raw, c, { file: 'Foo.cs', target: 'Foo.cs', language: 'csharp' });
   assert.equal(result.error_mutants, 1); assert.equal(result.score, 1); assert.equal(result.killed, 1);
 });

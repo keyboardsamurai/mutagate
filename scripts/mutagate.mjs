@@ -316,40 +316,6 @@ export async function register(c, test, explicit) {
   });
   return r;
 }
-const xmlText = (s) => s.replace(/&(?:lt|gt|amp|quot|apos);/g, x => ({ '&lt;': '<', '&gt;': '>', '&amp;': '&', '&quot;': '"', '&apos;': "'" } [x])).replace(
-  /&#(x[\da-f]+|\d+);/gi, (_, x) => String.fromCodePoint(x[0] === 'x' ? parseInt(x.slice(1), 16) : Number(x)));
-export function parsePitXML(text) {
-  if (!text.includes('<mutations')) throw Error('invalid PIT XML report');
-  return [...text.matchAll( /<mutation\s+([^>]+)>([\s\S]*?)<\/mutation>/g)].map(m => {
-    const field = n => xmlText(m[2].match(new RegExp('<' + n + '>([\\s\\S]*?)</' + n + '>'))?.[
-      1
-    ] || ''), status = m[1].match(/status=['"]([^'"]+)/)?.[1];
-    return { // PIT 1.25+ EQUIVALENT: like Stryker Ignored
-      file: field('sourceFile'), class: field('mutatedClass'), method: field('mutatedMethod'), line: Number(field('lineNumber')),
-      mutator: field('mutator'), description: field('description'),
-      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'),
-      ...status === 'EQUIVALENT' ? { status: 'NON_VIABLE', ignored: true } : { status }
-    };
-  });
-}
-export function parseMutationTestingElements(report, repo) {
-  if (!report.files) throw Error('invalid mutation-testing-elements report');
-  const real = p => { try { return fs.realpathSync(p); } catch { return p; } };
-  const rel = f => slash(path.isAbsolute(f) ? path.relative(repo, real(f)) : report.projectRoot ? path.relative(repo, real(path.resolve(report.projectRoot, f))) : f);
-  return Object.entries(report.files).flatMap(([file, f]) =>
-    f.mutants.map(m => ({
-      file: rel(file),
-      line: m.location.start.line,
-      method: '',
-      mutator: m.mutatorName, ...(m.status === 'Ignored' ? { ignored: true } : {}),
-      mutation_key: JSON.stringify([m.location, m.replacement]),
-      description: `${m.mutatorName}: replaced with ${m.replacement ?? '(removed)'}`,
-      status: ({
-        Killed: 'KILLED', Survived: 'SURVIVED', Timeout: 'TIMED_OUT', NoCoverage: 'NO_COVERAGE', CompileError: 'NON_VIABLE', RuntimeError: 'RUN_ERROR',
-        Ignored: 'NON_VIABLE', Pending: 'PENDING'
-      })[m.status] || 'PENDING'
-    })));
-}
 export function junkRule(m, rules, source = '') {
   const { dataClassRule, continuationRule } = runtimeRequire('./kotlin-source.cjs');
   const generated = dataClassRule(m, source) || continuationRule(m, source);
@@ -485,7 +451,7 @@ export function report(r, cfg = DEFAULTS) {
 }
 // Runners live in runners.cjs, loaded on first use.
 let loaded, copilotLoaded, harnessLoaded;
-export const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
+export const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey });
 export const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, deliver, gate, detached, spawn }); // the copilot profile (ADR-0022)
 export const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, deliver }); // pick and the profiles (ADR-0022)
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
