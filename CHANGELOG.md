@@ -6,6 +6,7 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ### Fixed
 
+- C#: a run with a .NET SDK outside the default location (Homebrew) no longer fails with `dotnet-stryker failed (131): .NET location: Not found`. When `DOTNET_ROOT` is not set, mutagate takes it from `dotnet --list-runtimes`.
 - `run`, `check`, `status` and `waive` in the Copilot root agent shell now count as Copilot calls (the `harness` field of `trace.jsonl` rows), so the pending message of `run --sync` and `check` asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
 - A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a report in the outbox, so the Claude Code async hook woke the agent again with the same report.
 - A pass that a waiver gives (no new run) now clears the delivered report when `check`, `run --sync` or a gate sees it, so the same regression is delivered again after the waiver is removed.

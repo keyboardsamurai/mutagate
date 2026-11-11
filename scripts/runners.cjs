@@ -346,6 +346,8 @@ function parseMutationTestingElements(report, repo) {
       })[m.status] || 'PENDING'
     })));
 }
+// The dotnet-stryker launcher finds no runtime in a non-default .NET install (Homebrew) without DOTNET_ROOT; `dotnet --list-runtimes` names it.
+const dotnetRoot = out => out.match(/^Microsoft\.NETCore\.App \S+ \[(.+)[\\/]shared[\\/]Microsoft\.NETCore\.App\]/m)?.[1];
 async function dotnetRunner(c, t, dir, opts) {
   const net = require('./dotnet.cjs'), test = net.projectDir(c.repo, t.tests[0]), target = net.projectDir(c.repo, t.file), filter = net.testFilter(c.repo, t.tests);
   const exe = await tool(c, 'dotnet-stryker', toolInstall(c, 'dotnet-stryker'), opts), out = path.join(dir, 'out'), cfg = path.join(dir, 'stryker-config.json');
@@ -359,9 +361,10 @@ async function dotnetRunner(c, t, dir, opts) {
   try {
     for (const p of net.projectLocks(c.repo, [test, target])) { releases.push(await waitLock(path.join(c.data, 'locks', 'dotnet-' + hash(p) + '.lock'), opts, 'for another Stryker.NET run on ' + p)); }
     root = net.scratch(c, t, require('./inputs.cjs').inputFiles);
-    await command(exe, ['--config-file', cfg, '--output', out, '--skip-version-check'], { ...opts, cwd: path.join(root, path.relative(c.repo, test.dir)), env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: '1', DOTNET_NOLOGO: '1' } });
+    const home = process.env.DOTNET_ROOT || dotnetRoot((await command('dotnet', ['--list-runtimes'], opts).catch(() => ({ output: '' }))).output);
+    await command(exe, ['--config-file', cfg, '--output', out, '--skip-version-check'], { ...opts, cwd: path.join(root, path.relative(c.repo, test.dir)), env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: '1', DOTNET_NOLOGO: '1', ...(home ? { DOTNET_ROOT: home } : {}) } });
   } finally { releases.forEach(r => r()); }
   return { raw: parseMutationTestingElements(json(path.join(out, 'reports', 'mutation-report.json')), root).filter(m => m.file === t.file) };
 }
-return { command, jars, launcherJar, javaExe, pitTargets, pitRaw, pit, stryker, python, TOOLS, toolInstall, tool, selectGo, goRunner, parseGremlins, parsePitXML, parseMutationTestingElements, dotnetRunner };
+return { command, jars, launcherJar, javaExe, pitTargets, pitRaw, pit, stryker, python, TOOLS, toolInstall, tool, selectGo, goRunner, parseGremlins, parsePitXML, parseMutationTestingElements, dotnetRoot, dotnetRunner };
 };

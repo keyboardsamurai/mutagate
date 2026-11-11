@@ -100,3 +100,7 @@ test('waiting for another installer obeys the worker deadline and preserves its 
   assert.ok(fs.existsSync(path.join(c.repo, lock)));
   assert.ok(!fs.existsSync(path.join(c.repo, 'installs')));
 });
+test('dotnetRoot reads the .NET root from dotnet --list-runtimes',()=>{const {dotnetRoot}=m.runners();
+  assert.equal(dotnetRoot('Microsoft.AspNetCore.App 10.0.14 [/opt/homebrew/Cellar/dotnet/10.0.403/libexec/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 10.0.14 [/opt/homebrew/Cellar/dotnet/10.0.403/libexec/shared/Microsoft.NETCore.App]\n'),'/opt/homebrew/Cellar/dotnet/10.0.403/libexec');
+  assert.equal(dotnetRoot('Microsoft.NETCore.App 10.0.0 [C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App]\r\n'),'C:\\Program Files\\dotnet');
+  assert.equal(dotnetRoot(''),undefined);});
