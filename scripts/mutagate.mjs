@@ -787,8 +787,8 @@ export async function handleHook(c, p, event, raw = p) {
         if (budgetSec < 1) break;
         if (runtimeRequire('./errors.cjs').gateAdvice(budgetSec, c.config.runBudgetSec, t.lastRunMs)) continue;
         const r = await runTarget({ ...c, settle, deadline: end, budgetSec }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
-        const now = r && await pf.survivor(c, key, r, text); // the report to deliver now; Copilot queues it (ADR-0019)
-        if (now) { msgs.push(now); wake ||= r.status === 'below' || r.agent_caused; }
+        const send = r && await pf.survivor(c, key, r, text); // the report to deliver in this call; the Copilot profile puts it in the outbox and gives null (ADR-0019)
+        if (send) { msgs.push(send); wake ||= r.status === 'below' || r.agent_caused; }
       }
     } else pf.rerun(c, keys, raw, seen);
     if (!msgs.length) return {};

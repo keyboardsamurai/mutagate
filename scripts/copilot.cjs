@@ -32,12 +32,12 @@ module.exports = ({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, 
       for (let id = p.parentAgentId, n = 0; typeof id === 'string' && id && n < 64; n++) { try { id = fs.readFileSync(link(data, id), 'utf8'); } catch { return id; } }
       return p.sessionId;
     },
-    // The spawned handler queues the report of a run for the next delivery point (ADR-0019): one entry per target, from its newest run;
-    // run is the run's started_at. A pass (no text) empties it and clears the delivered report through deliver.
+    // The spawned handler puts the report of a run into the outbox for the next delivery point (ADR-0019): one entry per target, from its newest run;
+    // run is the run's started_at. A pass (no text) removes the entry of the target and clears the delivered report through deliver.
     queue(s, key, text, run) { if (!s.targets[key]) return; s.outbox = (s.outbox || []).filter(e => e.key !== key); if (text) s.outbox.push({ key, run, text }); else deliver(s, key, null); },
     // A delivery point (ADR-0019), a root-agent write or shell postToolUse, takes the outbox entries whose run still gives the current result
     // (a later run, a change or a pass makes an entry stale) that are not a pass now (a waiver can give one) and that are not the delivered report, and makes them the delivered report; stale entries leave too.
-    // Results are checked before the state lock (fingerprint); an entry queued since stays.
+    // Results are checked before the state lock (fingerprint); an entry added since stays.
     async drain(c, p) {
       if (c.args.mutate || p.agentId || !DRAIN.has(p.toolName)) return [];
       const { outbox = [], targets } = state(c);

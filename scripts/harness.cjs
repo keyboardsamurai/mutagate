@@ -31,19 +31,19 @@ module.exports = ({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, sch
     survivor: async (c, key, r, text) => await updateState(c, s => deliver(s, key, text)) && text || null, // a pass has no text: deliver clears the delivered report
     async stop(c) { const g = await gate(c, { hook: true }); return g.block ? { block: g.reason } : g.reason ? { warn: g.reason } : {}; },
     write(i, event) {
-      const own = x => json({ hookSpecificOutput: { hookEventName: event, ...x } }), text = i.context ?? i.survivors;
+      const specific = x => json({ hookSpecificOutput: { hookEventName: event, ...x } }), text = i.context ?? i.survivors;
       if (i.block) return { code: 2, stdout: JSON.stringify({ decision: 'block', reason: i.block }) + '\n', stderr: i.block + '\n' };
       if (i.warn) return json({ systemMessage: i.warn });
-      if (i.confirm) return own({ permissionDecision: this.waiver, permissionDecisionReason: i.confirm });
-      if (text) return own({ additionalContext: text.slice(0, 1800) });
+      if (i.confirm) return specific({ permissionDecision: this.waiver, permissionDecisionReason: i.confirm });
+      if (text) return specific({ additionalContext: text.slice(0, 1800) });
       return i.notice ? { code: 0, stdout: i.notice + '\n', stderr: '' } : none;
     }
   };
-  const agent = { ...base, write(i, event) { return i.notice ? json({ systemMessage: i.notice }) : base.write.call(this, i, event); } }; // OpenCode, Pi
+  const adapted = { ...base, write(i, event) { return i.notice ? json({ systemMessage: i.notice }) : base.write.call(this, i, event); } }; // OpenCode, Pi: the harnesses behind an adapter
   return { pick, shell, base, profiles: {
     // Claude asks the human; its async hook wakes the agent: exit 2, survivors on stderr.
     claude: { ...base, waiver: 'ask', write(i, event) { return i.survivors && i.wake ? { code: 2, stdout: '', stderr: i.survivors + '\n' } : base.write.call(this, i, event); } },
-    codex: base, opencode: agent, pi: agent,
+    codex: base, opencode: adapted, pi: adapted,
     copilotShell: { ...base, harness: 'copilot', bashWait: true }, // Copilot by name, not native: traces harness copilot, the bash wait hint
     unknown: { ...base, label: '<harness>', rerun(c, keys) { for (const key of new Set(keys)) schedule(c, key, c.spawn); } }, // no async hook: a worker per target; c.spawn: test seam
     // Inert; one SessionStart notice while no native Copilot hook file exists and, without copilotCloud, no cloud marker is set (ADR-0015, ADR-0021).
