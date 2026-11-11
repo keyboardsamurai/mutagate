@@ -332,33 +332,6 @@ export function parsePitXML(text) {
     };
   });
 }
-export function parseCSV(text) {
-  const rows = [];
-  let row = [],
-    s = '',
-    quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (ch === '"') {
-      if (quoted && text[i + 1] === '"') {
-        s += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (!quoted && (ch === ',' || ch === '\n')) {
-      row.push(s.replace(/\r$/, ''));
-      s = '';
-      if (ch === '\n') {
-        rows.push(row);
-        row = [];
-      }
-    } else s += ch;
-  }
-  if (s || row.length) {
-    row.push(s);
-    rows.push(row);
-  }
-  return rows.filter(r => r.length > 1);
-}
 export function parseMutationTestingElements(report, repo) {
   if (!report.files) throw Error('invalid mutation-testing-elements report');
   const real = p => { try { return fs.realpathSync(p); } catch { return p; } };
