@@ -43,6 +43,7 @@ npm run generate:runtime                          # regenerate scripts/mutagate-
 npm run generate:hooks                            # regenerate scripts/hooks.json
 node test/package.mjs /tmp/new-dir                # build skill package (fails at >= 350 KB)
 npm run eval -- --harness claude --lang java --scenario forced   # live agent runs (Node 22, credentials)
+node .claude/skills/verify-stop-gate/check.mjs    # TLA+ model check of the Stop gate and result freshness (Java 11+, tla2tools.jar); run it after a change to runTarget, loadResult, verdict, gate, claimBlock, register or the --mutate handler
 ```
 
 The repo has no linter or formatter. Other scripts: `test:opencode-discovery`

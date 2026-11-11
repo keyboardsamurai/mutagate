@@ -15,8 +15,11 @@ __pycache__/
 /graft/
 /.agents/
 /.codex/
-# Local agent and editor config.
-/.claude/
+# Local agent and editor config. Tracked: the Stop gate model check (a project skill).
+/.claude/*
+!/.claude/skills/
+/.claude/skills/*
+!/.claude/skills/verify-stop-gate/
 /.mcp.json
 /.ignore
 
