@@ -16,6 +16,10 @@ const read = file => { try { return fs.readFileSync(file, 'utf8'); } catch (e) {
 
 // The stat values that change when a file changes; fileDigest and the loadResult memo compare them.
 const statKey = file => { const s = fs.statSync(file, { bigint: true }); return `${s.size}:${s.mtimeNs}:${s.ctimeNs}:${s.ino}`; };
+// The stat keys of files, one string: runTarget takes it before the first and after the second fingerprint of an attempt and publishes
+// only when it is the same, so a write in between stops the publish also when it restores the bytes (an edit and its undo).
+// Ceiling: a filesystem whose timestamps are too coarse to see the edit and its undo, and a tool that restores mtime and ctime.
+const stamp = files => files.map(file => { try { return statKey(file); } catch (e) { if (unreadable.has(e.code)) return 'unreadable'; throw e; } }).join('\n');
 function fileDigest(file) {
   try {
     const key = statKey(file), previous = digestCache.get(file);
@@ -169,5 +173,6 @@ exports.files = files;
 exports.inputFiles = inputFiles;
 exports.fileDigest = fileDigest;
 exports.statKey = statKey;
+exports.stamp = stamp;
 exports.read = read;
 exports.unreadable = unreadable;

@@ -39,7 +39,7 @@ The digest of a target's registered tests, the config, the scoped project inputs
 _Avoid_: hash, cache key, checksum
 
 **Stale**:
-The state of a target whose result's fingerprint no longer matches the repo. A stale target is pending until a new run publishes.
+The state of a target whose result's fingerprint no longer matches the repo. A stale target is pending until a new run publishes. A run that saw a write to these files publishes nothing, also when the write restored the bytes.
 _Avoid_: outdated, invalidated, dirty
 
 **Edited file**:

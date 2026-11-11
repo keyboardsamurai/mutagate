@@ -249,11 +249,11 @@ export function extractPaths(p) {
     for (const m of String(input.command || '').matchAll(PATCH_HEADER)) out.push(m[2].trim());
   return [...new Set(out)];
 }
-export function fingerprint(c,t) {
-  const { inputFiles, fileDigest } = runtimeRequire('./inputs.cjs');
-  const implementation = ['mutagate.mjs', 'inputs.cjs', 'kotlin-source.cjs', 'glob.cjs', 'mutmut-bridge.cjs', 'errors.cjs', 'dotnet.cjs', 'runners.cjs'].map(f => fileDigest(path.join(HERE, f)));
-  return hash(JSON.stringify([implementation, fileDigest(path.join(ROOT, 'references/kotlin-junk.yaml')), fileDigest(path.join(ROOT, 'references/jars.json')), t.tests, t.testNames, c.config, inputFiles(c,t).map(f => [f, fileDigest(path.join(c.repo,f))])]));
-}
+const implementation = ['mutagate.mjs', 'inputs.cjs', 'kotlin-source.cjs', 'glob.cjs', 'mutmut-bridge.cjs', 'errors.cjs', 'dotnet.cjs', 'runners.cjs'].map(f => path.join(HERE, f)), references = ['kotlin-junk.yaml', 'jars.json'].map(f => path.join(ROOT, 'references', f));
+export function fingerprint(c, t, files = runtimeRequire('./inputs.cjs').inputFiles(c, t)) { const { fileDigest } = runtimeRequire('./inputs.cjs');
+  return hash(JSON.stringify([implementation.map(fileDigest), ...references.map(fileDigest), t.tests, t.testNames, c.config, files.map(f => [f, fileDigest(path.join(c.repo,f))])])); }
+// The stat keys of every file that fingerprint hashes (inputs.cjs stamp); only runTarget takes them, never a plain hook call.
+const stamp = (c, files) => runtimeRequire('./inputs.cjs').stamp([...implementation, ...references, ...files.map(f => path.join(c.repo, f))]);
 export const targetKey = t => hash([t.module, t.target].filter(Boolean).join(':'));
 const resultFile = (c, key) => path.join(c.data, 'results', c.session, key + '.json');
 const targetLock = (c, key) => path.join(c.data, 'locks', key + '.lock');
@@ -474,8 +474,8 @@ export async function runTarget(c, key, runner) {
       if (attempt && c.settle && !await c.settle()) return null;
       const t = state(c).targets[key];
       if (!t || gone(c, t)) return null;
-      const start = Date.now(),
-        fp = fingerprint(c, t),
+      const start = Date.now(), files = runtimeRequire('./inputs.cjs').inputFiles(c, t), seen = stamp(c, files), // the stat keys first, then the fingerprint
+        fp = fingerprint(c, t, files),
         dir = path.join(c.data, 'reports', crypto.randomUUID()),
         log = path.join(c.data, 'logs', key + '.log');
       mkdir(dir);
@@ -509,10 +509,10 @@ export async function runTarget(c, key, runner) {
         };
       }
       let published = false;
-      const now = fingerprint(c, t); // hash the inputs outside the state lock, which hooks wait at most 5 s for; one generation keeps its tests
+      const after = runtimeRequire('./inputs.cjs').inputFiles(c, t), now = fingerprint(c, t, after), unwritten = stamp(c, after) === seen; // the fingerprint, then the stat keys; hash outside the state lock, which hooks wait at most 5 s for
       await updateState(c, s => {
-        const latest = s.targets[key];
-        if (latest && latest.generation === t.generation && now === fp) {
+        const latest = s.targets[key]; // a write during the run stops the publish also when it restores the bytes (ADR-0023); one generation keeps its tests
+        if (latest && latest.generation === t.generation && now === fp && unwritten) {
           atomic(
             resultFile(c, key), result);
           latest.lastRunMs = Math.max(result.duration_ms, latest.lastRunMs || 0);

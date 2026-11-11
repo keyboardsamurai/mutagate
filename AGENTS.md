@@ -125,7 +125,7 @@ JDK 21 with Gradle 8.14.3, Go 1.26 with gomutants, .NET 10 with dotnet-stryker
 - `mutagate.mjs` loads its CommonJS helpers lazily through `runtimeRequire` to
   keep hook latency low. One line per helper: what it owns, its symbols, its ADR.
   `inputs.cjs`: the repo file list and project inputs for detect, resolution and
-  fingerprints (`files`, `inputFiles`, `dirEntries`, `read`, `fileDigest`;
+  fingerprints (`files`, `inputFiles`, `dirEntries`, `read`, `fileDigest`, `stamp`;
   ADR-0016). `kotlin-source.cjs`: the source-aware part of the Kotlin Tier B
   filter, rules in `references/kotlin-junk.yaml`. `glob.cjs`: globs, compiled
   once per process. `mutmut-bridge.cjs`: the mutmut config and result bridge per
