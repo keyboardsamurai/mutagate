@@ -923,16 +923,18 @@ async function doctor(c) {
 }
 // One hook call (ADR-0022): argv and the stdin text in, {code, stdout, stderr, deadline?} out; main does only the process I/O. Hooks fail open: exit 0.
 export async function runHook(argv, text, env = process.env) {
-  const args = parseArgs(argv), out = [], err = [], done = (code, x) => ({ code, stdout: out.join(''), stderr: err.join(''), ...x }), h = harness();
-  let p, c, pf = h.profiles[h.pick(args, {}, env)]; // malformed JSON: the profile of argv and env
+  const out = [], err = [], done = (code, x) => ({ code, stdout: out.join(''), stderr: err.join(''), ...x });
+  let p, c, pf;
   try {
-    p = JSON.parse(text);
-    if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error('expected object');
-  } catch { if (!pf.quiet) err.push('mutagate: malformed hook JSON\n'); return done(0); } // a native Copilot hook writes no stderr (#35 D12)
-  pf = h.profiles[h.pick(args, p, env)];
-  let event = args._[1] || p.hook_event_name;
-  if (!pf.events.includes(event)) return done(0);
-  try {
+    const args = parseArgs(argv), h = harness();
+    pf = h.profiles[h.pick(args, {}, env)]; // malformed JSON: the profile of argv and env
+    try {
+      p = JSON.parse(text);
+      if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error('expected object');
+    } catch { if (!pf.quiet) err.push('mutagate: malformed hook JSON\n'); return done(0); } // a native Copilot hook writes no stderr (#35 D12)
+    pf = h.profiles[h.pick(args, p, env)];
+    let event = args._[1] || p.hook_event_name;
+    if (!pf.events.includes(event)) return done(0);
     const raw = p, read = pf.read(p, args); // null: inert
     if (!read) return done(0);
     p = read.p;
@@ -951,6 +953,7 @@ export async function runHook(argv, text, env = process.env) {
     });
     return done(w.code, i.deadline && { deadline: true });
   } catch (e) {
+    if (!pf) return done(0); // no profile yet: it can be a native Copilot hook, which writes no stderr
     if (c) trace(c, 'hook', { error: clean(e.message), decision: 'error' });
     if (!pf.quiet) err.push('mutagate: ' + clean(e.message) + '\n');
     return done(0);
