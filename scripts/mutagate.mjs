@@ -569,14 +569,14 @@ export function schedulePrune(c, run = spawn) {
   atomic(pruned, new Date().toISOString());
   detached(run, ['prune'], { CLAUDE_PLUGIN_DATA: c.root });
 }
-// once names a one-time block flag; otherwise maxRounds applies. streak: the Copilot blocks in a row before this agentStop (ADR-0018).
+// once names a one-time block flag (no round used); else a below block, counted in t.blocks up to maxRounds. streak: Copilot blocks in a row (ADR-0018).
 async function claimBlock(c, key, once, streak) {
   if (c.config.mode !== 'gate') return false;
   return updateState(c, s => {
     const t = s.targets[key];
-    if (!t || t.blocks >= c.config.maxRounds || once && t[once]) return false;
-    t.blocks++;
+    if (!t || (once ? t[once] : t.blocks >= c.config.maxRounds)) return false;
     if (once) t[once] = true;
+    else t.blocks++;
     if (streak !== undefined) s.stopStreak = streak + 1;
     return true;
   });
@@ -623,7 +623,7 @@ export async function gate(c, { wait, hook = false, runner, budget, streak, sche
     if (needed && r) warnings.push(`mutagate: ${t.target}${needed}`);
     code = exitCode(code, v);
     if (r && (r.status !== 'unscored' || v.obligation === 'none')) reports.push(text);
-    // Block fixable test failures and pending targets once (ponytail: per target per session, never reset), below targets up to maxRounds; infrastructure errors fail open.
+    // Block fixable test failures and pending targets once each (ponytail: per target per session, never reset), below targets up to maxRounds; infrastructure errors fail open.
     const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
       sent = r && (blocked || ['below', 'error'].includes(r.status) && !blocksOnly);
     if (r) await reached(c, key, r, sent && text, !hook); // a sent key, and each key whose result check prints, loses the outbox entry of that run

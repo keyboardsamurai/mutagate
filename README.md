@@ -144,15 +144,15 @@ Pinned versions, uninstall, `--agent auto`, user-wide install and Windows: [docs
 1. **The agent writes or edits a test.** A hook sees the edit and finds the production code that test is for, by name: `PricingTest.java` → class `Pricing`, `test_pricing.py` → `pricing.py`, `pricing.test.ts` → `pricing.ts`, `pricing_test.go` → `pricing.go`, `PricingTests.cs` → `Pricing.cs`. That code is the test's **target**. If the name fits more than one file, mutagate lists the candidates and the agent picks one with `run <test> --target <target>`. The hook returns in milliseconds (p95 28 ms on macOS, 77 ms on Linux ARM64).
 2. **A background run mutates the target.** A separate process runs the language's mutation tool on the target file only, with only the registered tests. The result is stored with a fingerprint of the test, the target, the config and the build inputs. Any edit to those makes the result stale. The gate and `check` never use a stale result; they run the target again. A run still going when such an edit lands is thrown away. Other edits do not trigger runs.
 3. **The agent tries to finish.** mutagate checks every target of the session. If a score is below the threshold (0.80), it blocks and sends a short report: the score, then up to 10 survivor lines with file, line, method and what changed. Survivors on lines changed since the last commit come first, marked `(changed in this diff)`. With Claude Code, a low score can also reach the agent as soon as the background run finishes.
-4. **The agent improves the tests** and tries again. After 2 blocks per target (`maxRounds`), mutagate warns and lets the agent finish. Set a higher `maxRounds` to keep blocking until the score passes.
+4. **The agent improves the tests** and tries again. After 2 blocks for a low score per target (`maxRounds`), mutagate warns and lets the agent finish. Set a higher `maxRounds` to keep blocking until the score passes.
 
 What blocks and what does not:
 
 | Situation | What mutagate does |
 |---|---|
 | Score below the threshold | Blocks, up to `maxRounds` times per target |
-| The agent's tests fail or do not compile | Blocks once and asks for green tests (mutation testing needs them to pass first) |
-| No result yet when the gate's 120 s are up | Blocks once as "pending", then warns |
+| The agent's tests fail or do not compile | Blocks once and asks for green tests (mutation testing needs them to pass first). Uses no round of `maxRounds` |
+| No result yet when the gate's 120 s are up | Blocks once as "pending", then warns. Uses no round of `maxRounds` |
 | The tool or build fails for a reason that is not the agent's | Runs it again once, then warns. Never blocks |
 | The target has nothing to mutate | Passes |
 | `mode: "advise"` | Reports, never blocks |
@@ -244,7 +244,7 @@ Put shared settings in `.mutagate/config.json` and commit it:
 |---|---|---|
 | `mode` | `"gate"` | `"advise"` reports scores but never blocks. |
 | `threshold` | `0.8` | Minimum score per target, from 0 to 1. |
-| `maxRounds` | `2` | Blocks per target before mutagate warns and lets the agent finish. |
+| `maxRounds` | `2` | Blocks for a score below the threshold per target before mutagate warns and lets the agent finish. The one-time pending and failing-tests blocks do not count. |
 | `maxSurvivors` | `10` | Survivor lines per report. Reports also stop at 1,800 characters. |
 | `countNoCoverage` | `true` | Counts mutants on lines no registered test runs. With `false`, the score covers only lines the tests reach, so it measures how well the tests check what they run. Uncovered mutants are still listed. |
 | `runBudgetSec` | `300` | Time limit for one mutation run. Use `600` for C# cold builds. |

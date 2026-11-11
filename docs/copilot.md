@@ -26,7 +26,7 @@ Each command has `--harness copilot` and exits 0, also without the skill dir, Gi
 
 ## The gate
 
-With the `agentStop` timeout T = 600 s, the margin M is 30 s. The gate stops new work at G = min(`gateBudgetSec`, T − 2M), 120 s by default. It waits for a run in flight and runs a stale target only when its last run fits before G. A block is one `{"decision":"block","reason":…}` object, and the reason reaches the model as the next prompt. Blocks per target follow `maxRounds`, as for Claude Code.
+With the `agentStop` timeout T = 600 s, the margin M is 30 s. The gate stops new work at G = min(`gateBudgetSec`, T − 2M), 120 s by default. It waits for a run in flight and runs a stale target only when its last run fits before G. A block is one `{"decision":"block","reason":…}` object, and the reason reaches the model as the next prompt. Blocks for a low score per target follow `maxRounds`, as for Claude Code.
 
 - A target still pending at G blocks once with `results pending; run … check --wait N (set bash initial_wait >= N+30)`. The bash tool puts a command in the background after `initial_wait` (default 30 s). When no run is in flight, the gate also starts a worker, because a `-p` session can end with no more tool calls.
 - After 8 blocks in a row, Copilot ends the turn. At that point mutagate allows with `Copilot block limit (8 in a row)` and does not use a round.

@@ -574,9 +574,9 @@ async function claimBlock(c, key, once, streak) {
   if (c.config.mode !== 'gate') return false;
   return updateState(c, s => {
     const t = s.targets[key];
-    if (!t || t.blocks >= c.config.maxRounds || once && t[once]) return false;
-    t.blocks++;
+    if (!t || (once ? t[once] : t.blocks >= c.config.maxRounds)) return false;
     if (once) t[once] = true;
+    else t.blocks++;
     if (streak !== undefined) s.stopStreak = streak + 1;
     return true;
   });

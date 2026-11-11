@@ -4,6 +4,10 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Changed
+
+- The one-time pending block and the one-time block for an agent-caused error no longer use a round of `maxRounds`. A score below the threshold still blocks up to `maxRounds` times per target, so the gate can block one target up to `maxRounds` + 2 times in all; with `maxRounds: 0` these two blocks still happen once each. Before, at the default `maxRounds` 2, a pending block and a failing-tests block used both rounds, and a score below the threshold then let the agent finish with a warning.
+
 ### Fixed
 
 - C#: a run with a .NET SDK outside the default location (Homebrew) no longer fails with `dotnet-stryker failed (131): .NET location: Not found`. When `DOTNET_ROOT` is not set, mutagate takes it from `dotnet --list-runtimes`.
