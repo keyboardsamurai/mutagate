@@ -4,6 +4,8 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-11-15
+
 ### Changed
 
 - The one-time pending block and the one-time block for an agent-caused error no longer use a round of `maxRounds`. A score below the threshold still blocks up to `maxRounds` times per target, so the gate can block one target up to `maxRounds` + 2 times in all; with `maxRounds: 0` these two blocks still happen once each. Before, at the default `maxRounds` 2, a pending block and a failing-tests block used both rounds, and a score below the threshold then let the agent finish with a warning.
@@ -103,7 +105,8 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.3...HEAD
+[0.9.3]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/keyboardsamurai/mutagate/releases/tag/v0.9.0
