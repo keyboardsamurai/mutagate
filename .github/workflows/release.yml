@@ -31,6 +31,8 @@ jobs:
           fi
       - run: npm test
       - run: npm run test:installer
+      - name: Install from a package (the publish job runs this check on the skill tag)
+        run: node test/package.mjs "$RUNNER_TEMP/pkg" && MUTAGATE_INSTALL_SOURCE="$RUNNER_TEMP/pkg" npm run test:installer
       - run: npm run test:performance
   publish:
     needs: verify

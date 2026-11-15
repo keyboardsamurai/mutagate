@@ -17,6 +17,8 @@ jobs:
           node-version: '22'
       - run: npm test
       - run: npm run test:installer
+      - name: Install from a package (the check that release.yml runs on the skill tag)
+        run: node test/package.mjs "$RUNNER_TEMP/pkg" && MUTAGATE_INSTALL_SOURCE="$RUNNER_TEMP/pkg" npm run test:installer
       - run: npm install --prefix test/.cache/opencode --no-audit --no-fund opencode-ai@1.18.30
         if: runner.os == 'Linux'
       - run: npm run test:opencode-discovery

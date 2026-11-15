@@ -22,15 +22,14 @@ function fire(repo,cwd,only){let n=0;for(const [cmd,event] of commands(repo).fil
 function fireCopilot(repo,cwd){const hooks=Object.entries(JSON.parse(fs.readFileSync(path.join(repo,'.github/hooks/mutagate.json'),'utf8')).hooks);for(const [event,[h]] of hooks){
  const r=spawnSync('bash',['-c',h.bash],{cwd,env:hookEnv,encoding:'utf8',timeout:60000,input:JSON.stringify({sessionId:'installer',timestamp:Date.now(),cwd,toolName:'create',toolArgs:{path:path.join(cwd,'notes.md'),file_text:''},stop_hook_active:false})});
  assert.equal(r.status,0,`${h.bash} in ${cwd}: ${r.stderr}`);assert.equal(r.stderr,'',`${h.bash} in ${cwd}`);if(event==='sessionStart')assert.match(JSON.parse(r.stdout).additionalContext,/^mutagate \S+ active\./,h.bash);else assert.equal(r.stdout,'',h.bash);}return hooks.length;}
-// MUTAGATE_INSTALL_SOURCE (a git ref such as keyboardsamurai/mutagate#skill-v0.9.0, or a local path): install it as users do and compare every skill dir with the current packageSkill tree.
+// MUTAGATE_INSTALL_SOURCE (a git ref such as keyboardsamurai/mutagate#skill-v0.9.0, or a local path): install it as users do and compare every skill dir with the current packageSkill tree. The size limit is in packageSkill only.
 const source=process.env.MUTAGATE_INSTALL_SOURCE,files=d=>fs.readdirSync(d,{recursive:true}).map(String).filter(f=>fs.statSync(path.join(d,f)).isFile()).sort();
 if(source)try{
  const bytes=packageSkill(stage);fs.mkdirSync(project);fs.writeFileSync(path.join(project,'package.json'),'{"name":"install-test","private":true}');
  await command('npx',['--yes','skills@1.5.26','add',source,'--skill','mutagate','-a','claude-code','codex','opencode','pi','--copy','-y'],{cwd:project,timeout:180000,env});
  const dirs=files(project).filter(f=>f.endsWith(path.join('skills','mutagate','SKILL.md'))&&!f.includes('node_modules')).map(path.dirname),want=files(stage);
  assert.deepEqual(dirs,['.agents/skills/mutagate','.claude/skills/mutagate','.pi/skills/mutagate'].map(d=>d.split('/').join(path.sep)));
- for(const d of dirs){const at=path.join(project,d);assert.ok(!fs.lstatSync(at).isSymbolicLink(),d);assert.deepEqual(files(at),want,d);for(const f of want)assert.ok(fs.readFileSync(path.join(at,f)).equals(fs.readFileSync(path.join(stage,f))),`${d}/${f} differs`);
-  const size=want.reduce((n,f)=>n+fs.statSync(path.join(at,f)).size,0);assert.ok(size<300000,`${d}: ${size} bytes`);}
+ for(const d of dirs){const at=path.join(project,d);assert.ok(!fs.lstatSync(at).isSymbolicLink(),d);assert.deepEqual(files(at),want,d);for(const f of want)assert.ok(fs.readFileSync(path.join(at,f)).equals(fs.readFileSync(path.join(stage,f))),`${d}/${f} differs`);}
  console.log(JSON.stringify({passed:true,source,dirs,bytes}));
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
 else try {
