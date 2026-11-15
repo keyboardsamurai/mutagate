@@ -4,7 +4,15 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.4] - 2026-11-15
+
+### Fixed
+
+- A hook call that finds the session state locked by another mutagate process now tries again after 1 ms, then 2, 4, 8 and 16 ms, then every 25 ms. Before, it always waited 25 ms, although the lock is held for about 1 ms. Hook calls that run at the same time (parallel tool calls, a test edit next to its background handler) lost 25 ms each; on a 4-core Linux machine the p95 of a Copilot test edit went from 52 ms to 25 ms.
+
 ## [0.9.3] - 2026-11-15
+
+Tagged, not published: the release check failed on the hook latency budget (fixed in 0.9.4). 0.9.4 has these changes too.
 
 ### Changed
 
@@ -105,7 +113,8 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.3...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.4...HEAD
+[0.9.4]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
