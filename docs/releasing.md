@@ -27,11 +27,13 @@ npm run generate:hooks
 npm test
 npm run test:installer
 npm run test:performance
-node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 350 KB
+d="$(mktemp -d)/pkg" && node test/package.mjs "$d" && MUTAGATE_INSTALL_SOURCE="$d" npm run test:installer   # prints bytes, fails at >= 350 KB; then the install check of the publish job
 # 5. Commit, push, open the pull request.
 git commit -am "mutagate $V"
 git push origin HEAD
 gh pr create --base main --title "mutagate $V"
+# 5b. The hook latency budget is tight on ubuntu-latest (#55): run the performance job on the branch, and merge only when it passes.
+gh workflow run nightly.yml --ref "fix/$V"
 ```
 
 At merge:
@@ -58,7 +60,7 @@ d=$(mktemp -d) && cd "$d" && git init -q && DISABLE_TELEMETRY=1 npx --yes skills
   && .claude/skills/mutagate/scripts/mutagate --version          # prints: mutagate $V
 ```
 
-If `verify` fails, nothing is published: fix on `main` and release the next patch version. Do not reuse the tag: the "release tags" ruleset blocks deletion of `v*` tags. If `publish` fails after the branch push, re-run the failed job; the skill commit is reproducible.
+If `verify` fails, nothing is published: fix on `main` and release the next patch version. Do not reuse the tag: the "release tags" ruleset blocks deletion of `v*` tags. If `publish` fails after the branch push, re-run the failed job; the skill commit is reproducible. If the job fails again at the same step, the cause is in the tagged code: fix on `main` and release the next patch version. `skill-vX.Y.Z` then has no GitHub Release and no attestation; say so in `CHANGELOG.md` (0.9.4 is such a version).
 
 ## First public release (one-time)
 

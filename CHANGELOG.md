@@ -4,7 +4,17 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.5] - 2026-11-15
+
+The first version after 0.9.2 with a GitHub Release. It has the changes of [0.9.3 and 0.9.4](https://github.com/keyboardsamurai/mutagate/blob/main/CHANGELOG.md); the code of the package is the code of 0.9.4.
+
+### Fixed
+
+- Release: the install check of the publish job no longer has a package size limit of its own (300 KB). The limit is 350 KB, in `test/package.mjs` only. The 0.9.4 package (301,809 bytes) failed that check after its skill tag was pushed.
+
 ## [0.9.4] - 2026-11-15
+
+Published as `skill-v0.9.4`, with no GitHub Release and no attestation: the install check of the publish job failed on a stale package size limit (fixed in 0.9.5).
 
 ### Fixed
 
@@ -113,7 +123,8 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.4...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.5...HEAD
+[0.9.5]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.4...v0.9.5
 [0.9.4]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.3...v0.9.4
 [0.9.3]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
