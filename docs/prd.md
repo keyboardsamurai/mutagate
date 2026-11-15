@@ -417,7 +417,7 @@ Every runner implements: `detect(repo) -> bool`, `prepare(repo) -> env`, `run(ta
 |---|---|---|
 | FR-5.1 | The gate evaluates every target in `state.targets` that has at least one test file written or edited in this session. Targets touched only on the production side without a test write are not gated (they are invalidated, and a later test write picks them up). | P0 |
 | FR-5.2 | Per target decision: `pass` (fresh result, score at or above threshold, or all survivors waived) allows. `below` blocks with the report. `stale` or `unscored` with no run in flight: run synchronously if remaining `gateBudgetSec` (default 120) allows, else block once with "results pending, run `mutagate check --wait 120`", then on the next gate allow with a system warning. In flight: wait up to `gateWaitSec` (default 60) polling the lock, then decide. `error` allows with a system warning naming the error. | P0 |
-| FR-5.3 | Round cap: each target may block at most `maxRounds` (default 2) times per session. On the cap, allow and emit `systemMessage`. `stop_hook_active: true` alone does not force allow, the count does. Under Copilot, allow-time messages are `{"type":"progress"}` lines that the model does not see, and the gate also allows after 8 blocks in a row (ADR-0018). | P0 |
+| FR-5.3 | Round cap: each target may block at most `maxRounds` (default 2) times per session for a score below the threshold; the one-time pending and agent-caused error blocks use no round (ADR-0002, ADR-0004). On the cap, allow and emit `systemMessage`. `stop_hook_active: true` alone does not force allow, the count does. Under Copilot, allow-time messages are `{"type":"progress"}` lines that the model does not see, and the gate also allows after 8 blocks in a row (ADR-0018). | P0 |
 | FR-5.4 | `SubagentStop` uses the subagent's own session scope when the payload carries `agent_id`, otherwise the parent. | P1 |
 | FR-5.5 | `TaskCompleted` (Claude only) applies the same decision as Stop. | P1 |
 | FR-5.6 | `mode: advise` turns every block into `additionalContext` or `systemMessage` and never blocks. Under Copilot `agentStop` it is a progress line that the model does not see (ADR-0018). | P0 |
@@ -552,7 +552,7 @@ Pi has no permission system, so waiver protection is a hard block in `tool_call`
 | ID | Requirement |
 |---|---|
 | NFR-1 | Runtime: Node 22 LTS or later. Also runs under Bun (OpenCode) for the adapter path. No `package.json` dependencies. No build step. No Python for the core. |
-| NFR-2 | Size: `mutagate.mjs` under 1,400 lines. Adapters under 60 lines each. Whole skill folder under 300 KB excluding `test/`. |
+| NFR-2 | Size: `mutagate.mjs` under 1,400 lines. Adapters under 60 lines each. Whole skill folder under 350 KB excluding `test/`. The limit was 300 KB until 2026-11-10, when the harness profiles (ADR-0022) brought the package to that limit. |
 | NFR-3 | Portability: macOS, Linux, Windows (Git Bash and PowerShell shims). CI runs Ubuntu and macOS, Windows smoke only. |
 | NFR-4 | Performance: sync hook paths under 80 ms p95. Scoped pitest on the Java fixture under 90 s cold, under 30 s warm (history) on a GitHub-hosted 4-core runner. Report generation under 50 ms. |
 | NFR-5 | Security: the CLI never executes strings taken from tool payloads. File paths from payloads are resolved and must stay inside the repo root or they are ignored. Jar downloads are pinned by SHA-256 and fetched only from `https://repo1.maven.org/maven2`. No other network access. `MUTAGATE_OFFLINE=1` disables downloads. Hook stdout never includes secrets or environment dumps. |
@@ -710,16 +710,30 @@ Harness and tool versions are read from `test/harness-versions.json` and install
 
 ## 12. Acceptance criteria (release gate for v1.0)
 
+This section is the only definition of "ready for 1.0". The GitHub milestone `1.0` tracks the open work, and `docs/releasing.md` has the procedure. 1.0 goes out in two steps: `1.0.0-rc.1` when criteria 1 to 12 hold, then `1.0.0` when criteria 13 to 15 also hold.
+
+For the release candidate:
+
 1. All P0 requirements implemented with tests.
-2. L1 to L5 green on Ubuntu and macOS, Windows smoke green.
-3. L4: `java-gradle`, `java-maven`, `java-gradle-multimodule`, `kotlin-gradle`, `kotlin-java-mixed` produce scores within `expected.json` on every run for five consecutive nightly runs.
+2. L1, L2, L3 and L5 green on Ubuntu and macOS. Windows is a smoke run: L1 to L3 and the `java-gradle` fixture are green. Windows stays experimental in 1.0.
+3. L4: every runner fixture scores within its `expected.json` on the release commit and on the five CI runs of `main` before it.
 4. Junk filter precision at least 0.95 and real-mutant drop at most 2 percent on the labeled corpus.
-5. L6 passes assertions 1 to 4 and 6 to 7 on all four harnesses in at least three of the last four nightly runs.
-6. NFR-4 budgets met on the nightly performance job.
-7. `doctor` passes on a fresh machine for each harness following only the README.
-8. `npx skills add <repo>` installs the skill into all four harnesses and the SKILL.md passes the agentskills.io validator.
-9. Adapters under 60 lines, `mutagate.mjs` under 1,400 lines, no dependencies.
-10. README documents: supported versions, the Kotlin inline-function gap, Codex trust step, OpenCode and Pi soft-gate semantics, and how to file a junk-filter report.
+5. L6 (ADR-0011): each ✅ pair of the README matrix has a passing `natural` record and a passing `forced` record. Each record is made with a mutagate version of the minor line of the release (1.0) and with the pinned harness version.
+6. L7: `npm run test:drift` passes on the payloads that the L6 sweep recorded.
+7. L8: the nightly performance job meets the NFR-4 budgets on the seven nights before the tag.
+8. On a fresh machine, for each of the five harnesses: a user who follows only the README quick start gets the first block in 5 minutes or less (C#: 10 minutes), and `doctor` passes.
+9. `npx skills add <repo>` installs the skill into all five harnesses and the SKILL.md passes the agentskills.io validator.
+10. Adapters under 60 lines, `mutagate.mjs` under 1,400 lines, no dependencies.
+11. README documents: supported versions, the Kotlin inline-function gap, Codex trust step, OpenCode and Pi soft-gate semantics, how to file a junk-filter report, and the stable surface (criterion 12).
+12. Two decisions are recorded as ADRs and implemented. The stable surface: what changes only in a major version (config keys and defaults, commands, exit codes, result format). The score scope: the whole target or the changed lines. The score scope decision uses figures from real open-source repos, published in `docs/validation.md`.
+
+For 1.0.0 (soak):
+
+13. `1.0.0-rc.1` has been public for 30 days or more, and no P0 issue was open in the last 30 days. A P0 issue is a wrong gate verdict with no way out (a pass for a target below the threshold, or a block that the agent cannot clear and that `maxRounds` does not end), a hook that breaks the harness session, or a loss of user files.
+14. 50 or more installs outside the maintainer (skills.sh count).
+15. No `false-block` issue is open, and `false-block` issues are under 25% of the issues from outside users.
+
+Not required for 1.0: Windows beyond the smoke run, licensed Kotlin Tier A validation, the VS Code Copilot harness, Copilot sandbox sessions, the Claude Code plugin.
 
 ---
 

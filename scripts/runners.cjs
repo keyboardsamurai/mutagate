@@ -6,7 +6,7 @@ const ROOT = path.dirname(__dirname), read = p => fs.readFileSync(p, 'utf8'), ex
 // Runner process groups die with mutagate: on exit, and on SIGINT/SIGTERM/SIGHUP (exit 128+signo). Handlers install on the first spawn.
 const trees = new Set(), killTree = pid => { try { if (process.platform !== 'win32') process.kill(-pid, 'SIGKILL'); else spawnSync('taskkill', ['/pid', String(pid), '/T', '/F']); } catch {} };
 let reaper = () => { reaper = () => {}; process.on('exit', () => trees.forEach(killTree)); for (const s of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(s, () => process.exit(128 + os.constants.signals[s])); };
-module.exports = ({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements }) => {
+module.exports = ({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey }) => {
 // Waits for a lock until the run deadline; mutagate.mjs reads "budget exceeded" as a clipped run.
 const waitLock = async (p, opts, what) => { const release = await lock(p, Math.max(0, opts.deadline - Date.now())); if (!release) throw Error('budget exceeded waiting ' + what); return release; };
 async function command(exe, args, opts = {}) {
@@ -301,8 +301,12 @@ async function goRunner(c, t, dir, opts) {
       // gomutants 0.6 and 0.7 keys are package-relative, despite module projectRoot.
       return { runner, raw: parseMutationTestingElements({ ...json(path.join(dir, 'mutation.json')), projectRoot: pkgDir }, c.repo).filter(m => m.file === t.file) };
     }
-    await command(exe, ['unleash', `--config=${cfg}`, `--output=${path.join(dir, 'gremlins.json')}`, '--output-statuses=lctkv', workers, ...tags,
-      ...siblings.map(s => `--exclude-files=${s}`), ...entries.filter(f => fs.statSync(path.join(pkgDir, f)).isDirectory()).map(f => `--exclude-files=^${escape(f)}/`)], { ...opts, cwd: pkgDir });
+    // gremlins gives each mutant the time of its coverage run x the coefficient (default 3), and a timeout counts as killed. A coverage run from the Go test cache takes ~80 ms, so every mutant timed out: -count=1 makes that run real.
+    // ponytail: coefficient 10 leaves room for the compile of the mutant. Ceiling: a package that compiles 10x longer than its tests link and run; use goRunner=gomutants there.
+    const env = opts.env || process.env;
+    await command(exe, ['unleash', `--config=${cfg}`, `--output=${path.join(dir, 'gremlins.json')}`, '--output-statuses=lctkv', '--timeout-coefficient=10', workers, ...tags,
+      ...siblings.map(s => `--exclude-files=${s}`), ...entries.filter(f => fs.statSync(path.join(pkgDir, f)).isDirectory()).map(f => `--exclude-files=^${escape(f)}/`)],
+      { ...opts, cwd: pkgDir, env: { ...env, GOFLAGS: `${env.GOFLAGS || ''} -count=1`.trim() } });
     return { runner, raw: parseGremlins(json(path.join(dir, 'gremlins.json')), slash(path.relative(c.repo, pkgDir))).filter(m => m.file === t.file) };
   } catch (e) { throw Object.assign(e, { runner }); }
 }
@@ -312,6 +316,42 @@ function parseGremlins(report, base) {
   return report.files.flatMap(f => f.mutations.map(m => ({ file: slash(path.join(base, f.file_name)), line: m.line, method: '', mutator: m.type,
     mutation_key: JSON.stringify([m.line, m.column, m.type]), description: `${m.type} at column ${m.column}`, status: statuses[m.status] || 'PENDING' })));
 }
+const xmlText = (s) => s.replace(/&(?:lt|gt|amp|quot|apos);/g, x => ({ '&lt;': '<', '&gt;': '>', '&amp;': '&', '&quot;': '"', '&apos;': "'" } [x])).replace(
+  /&#(x[\da-f]+|\d+);/gi, (_, x) => String.fromCodePoint(x[0] === 'x' ? parseInt(x.slice(1), 16) : Number(x)));
+function parsePitXML(text) {
+  if (!text.includes('<mutations')) throw Error('invalid PIT XML report');
+  return [...text.matchAll( /<mutation\s+([^>]+)>([\s\S]*?)<\/mutation>/g)].map(m => {
+    const field = n => xmlText(m[2].match(new RegExp('<' + n + '>([\\s\\S]*?)</' + n + '>'))?.[
+      1
+    ] || ''), status = m[1].match(/status=['"]([^'"]+)/)?.[1];
+    return { // PIT 1.25+ EQUIVALENT: like Stryker Ignored
+      file: field('sourceFile'), class: field('mutatedClass'), method: field('mutatedMethod'), line: Number(field('lineNumber')),
+      mutator: field('mutator'), description: field('description'),
+      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'),
+      ...status === 'EQUIVALENT' ? { status: 'NON_VIABLE', ignored: true } : { status }
+    };
+  });
+}
+function parseMutationTestingElements(report, repo) {
+  if (!report.files) throw Error('invalid mutation-testing-elements report');
+  const real = p => { try { return fs.realpathSync(p); } catch { return p; } };
+  const rel = f => slash(path.isAbsolute(f) ? path.relative(repo, real(f)) : report.projectRoot ? path.relative(repo, real(path.resolve(report.projectRoot, f))) : f);
+  return Object.entries(report.files).flatMap(([file, f]) =>
+    f.mutants.map(m => ({
+      file: rel(file),
+      line: m.location.start.line,
+      method: '',
+      mutator: m.mutatorName, ...(m.status === 'Ignored' ? { ignored: true } : {}),
+      mutation_key: JSON.stringify([m.location, m.replacement]),
+      description: `${m.mutatorName}: replaced with ${m.replacement ?? '(removed)'}`,
+      status: ({
+        Killed: 'KILLED', Survived: 'SURVIVED', Timeout: 'TIMED_OUT', NoCoverage: 'NO_COVERAGE', CompileError: 'NON_VIABLE', RuntimeError: 'RUN_ERROR',
+        Ignored: 'NON_VIABLE', Pending: 'PENDING'
+      })[m.status] || 'PENDING'
+    })));
+}
+// The dotnet-stryker launcher finds no runtime in a non-default .NET install (Homebrew) without DOTNET_ROOT; `dotnet --list-runtimes` names it.
+const dotnetRoot = out => out.match(/^Microsoft\.NETCore\.App \S+ \[(.+)[\\/]shared[\\/]Microsoft\.NETCore\.App\]/m)?.[1];
 async function dotnetRunner(c, t, dir, opts) {
   const net = require('./dotnet.cjs'), test = net.projectDir(c.repo, t.tests[0]), target = net.projectDir(c.repo, t.file), filter = net.testFilter(c.repo, t.tests);
   const exe = await tool(c, 'dotnet-stryker', toolInstall(c, 'dotnet-stryker'), opts), out = path.join(dir, 'out'), cfg = path.join(dir, 'stryker-config.json');
@@ -325,9 +365,10 @@ async function dotnetRunner(c, t, dir, opts) {
   try {
     for (const p of net.projectLocks(c.repo, [test, target])) { releases.push(await waitLock(path.join(c.data, 'locks', 'dotnet-' + hash(p) + '.lock'), opts, 'for another Stryker.NET run on ' + p)); }
     root = net.scratch(c, t, require('./inputs.cjs').inputFiles);
-    await command(exe, ['--config-file', cfg, '--output', out, '--skip-version-check'], { ...opts, cwd: path.join(root, path.relative(c.repo, test.dir)), env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: '1', DOTNET_NOLOGO: '1' } });
+    const home = process.env.DOTNET_ROOT || dotnetRoot((await command('dotnet', ['--list-runtimes'], opts).catch(() => ({ output: '' }))).output);
+    await command(exe, ['--config-file', cfg, '--output', out, '--skip-version-check'], { ...opts, cwd: path.join(root, path.relative(c.repo, test.dir)), env: { ...process.env, DOTNET_CLI_TELEMETRY_OPTOUT: '1', DOTNET_NOLOGO: '1', ...(home ? { DOTNET_ROOT: home } : {}) } });
   } finally { releases.forEach(r => r()); }
   return { raw: parseMutationTestingElements(json(path.join(out, 'reports', 'mutation-report.json')), root).filter(m => m.file === t.file) };
 }
-return { command, jars, launcherJar, javaExe, pitTargets, pitRaw, pit, stryker, python, TOOLS, toolInstall, tool, selectGo, goRunner, parseGremlins, dotnetRunner };
+return { command, jars, launcherJar, javaExe, pitTargets, pitRaw, pit, stryker, python, TOOLS, toolInstall, tool, selectGo, goRunner, parseGremlins, parsePitXML, parseMutationTestingElements, dotnetRoot, dotnetRunner };
 };

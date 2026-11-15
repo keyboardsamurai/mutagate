@@ -27,7 +27,7 @@ npm run generate:hooks
 npm test
 npm run test:installer
 npm run test:performance
-node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 300 KB
+node test/package.mjs "$(mktemp -d)/pkg"          # prints bytes; fails at >= 350 KB
 # 5. Commit, push, open the pull request.
 git commit -am "mutagate $V"
 git push origin HEAD
@@ -195,16 +195,18 @@ No Show HN for 0.9.0; it waits for 1.0.
 
 ## 1.0 gate
 
-Release 1.0 only when all of these hold:
+The criteria are in [docs/prd.md §12](prd.md#12-acceptance-criteria-release-gate-for-v10), and only there. The open work is the GitHub milestone `1.0`; the release steps are in [#60](https://github.com/keyboardsamurai/mutagate/issues/60). 1.0 goes out in two steps:
 
-- 30 days without a P0 issue.
-- 50 or more installs outside the maintainer (skills.sh count).
-- False-block issues are under 25% of all issues.
+1. `1.0.0-rc.1` when the release candidate criteria hold. It is a prerelease, announced on the soft-launch channels above.
+2. `1.0.0` when the soak criteria hold (30 days, installs, false-block share). A fix during the soak gives `rc.2`. The 30 days start again only when the fix is for a P0 issue.
+
+The Show HN goes out with `1.0.0`. If the installs are under 50 at 30 days after `rc.1`, it goes out on the release candidate instead, and the count is checked again 30 days later.
 
 The Claude Code plugin is not on the 1.0 path.
 
 ## Before 1.0
 
-- **SSH tag signing.** `git config gpg.format ssh && git config user.signingkey ~/.ssh/id_ed25519.pub`, add the key as a signing key on GitHub, then tag with `git tag -s`. Update this doc.
-- **`.cjs`-only package.** Ship `mutagate-hook.cjs` once, hash it in `fingerprint`, and drop `mutagate.mjs` from the package.
-- **Evidence enforcement.** `test/eval.test.mjs` fails a release version whose ✅ cells have a stale package digest or harness pin. Run the full sweep first: `npm run eval -- --repeat 2`.
+- **SSH tag signing** ([#60](https://github.com/keyboardsamurai/mutagate/issues/60)). `git config gpg.format ssh && git config user.signingkey ~/.ssh/id_ed25519.pub`, add the key as a signing key on GitHub, then tag with `git tag -s`. Update this doc.
+- **`.cjs`-only package** ([#58](https://github.com/keyboardsamurai/mutagate/issues/58)). Ship `mutagate-hook.cjs` once, hash it in `fingerprint`, and drop `mutagate.mjs` from the package.
+- **Evidence enforcement** ([#59](https://github.com/keyboardsamurai/mutagate/issues/59)). `test/eval.test.mjs` fails a release version whose ✅ cells have a record from another minor line of mutagate or from another harness version than the pin. The record keeps the package digest for audit; the digest is not checked, because each README or runner fix would then cost a full sweep. Run the full sweep on the release candidate, after all other 1.0 work: `npm run eval -- --repeat 2`.
+- **Release candidate tags** ([#60](https://github.com/keyboardsamurai/mutagate/issues/60)). `release.yml` marks only `0.*` as prerelease. A tag with a suffix (`v1.0.0-rc.1`) must be a prerelease too.

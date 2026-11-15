@@ -4,6 +4,22 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+## [0.9.3] - 2026-11-15
+
+### Changed
+
+- The one-time pending block and the one-time block for an agent-caused error no longer use a round of `maxRounds`. A score below the threshold still blocks up to `maxRounds` times per target, so the gate can block one target up to `maxRounds` + 2 times in all; with `maxRounds: 0` these two blocks still happen once each. Before, at the default `maxRounds` 2, a pending block and a failing-tests block used both rounds, and a score below the threshold then let the agent finish with a warning.
+
+### Fixed
+
+- A run publishes no result when an input file of its target (a file of the fingerprint) was written during the run, also when the write restored the bytes (an edit and its undo). The target stays pending and runs again. Before, such a run could publish the result of the other file contents as current, and the gate could let the agent stop on a weak test with no message. Existing cached results run again once after the upgrade.
+- Go with gremlins: a run on file contents that it ran before no longer counts every mutant as killed. gremlins gives each mutant the time of its coverage run times a coefficient; a coverage run from the Go test cache was so short that every mutant timed out, and a mutant that times out counts as killed, so a weak test passed. mutagate now runs gremlins with `-count=1` in `GOFLAGS` and `--timeout-coefficient=10`. gomutants was not affected.
+- C#: a run with a .NET SDK outside the default location (Homebrew) no longer fails with `dotnet-stryker failed (131): .NET location: Not found`. When `DOTNET_ROOT` is not set, mutagate takes it from `dotnet --list-runtimes`.
+- `run`, `check`, `status` and `waive` in the Copilot root agent shell now count as Copilot calls (the `harness` field of `trace.jsonl` rows), so the pending message of `run --sync` and `check` asks the agent to set bash `initial_wait` above `check --wait N`, as the `agentStop` gate does. Before, they counted as Claude calls (through the `CLAUDE_*` env of that shell) or as calls of an unknown harness.
+- A below or error report that `run --sync` printed is now the delivered report in every harness, as with `check`. Before, only in Copilot with a report in the outbox, so the Claude Code async hook woke the agent again with the same report.
+- A pass that a waiver gives (no new run) now clears the delivered report when `check`, `run --sync` or a gate sees it, so the same regression is delivered again after the waiver is removed.
+- Copilot: an outbox entry whose run a waiver has since turned into a pass is no longer sent at the next delivery point. A report that `check` or `run --sync` prints, or that an `agentStop` blocks with, removes only the outbox entry of the run it shows, so the entry of a newer run stays.
+
 ## [0.9.2] - 2026-11-10
 
 ### Added
@@ -89,7 +105,8 @@ First public release (beta).
 - Tool binaries from `go install` and NuGet are not hash-pinned by mutagate.
 - Five matrix cells passed one of two runs (see the README).
 
-[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...HEAD
+[Unreleased]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.3...HEAD
+[0.9.3]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/keyboardsamurai/mutagate/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/keyboardsamurai/mutagate/releases/tag/v0.9.0

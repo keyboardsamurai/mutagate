@@ -202,7 +202,7 @@ has no evidence record behind it.
     alias repointed at the new runner, so that there is one way to run live
     checks.
 46. As a mutagate maintainer, I want the eval directory excluded from the
-    packaged skill, so that the 300 KB package budget is unaffected.
+    packaged skill, so that the 350 KB package budget is unaffected.
 47. As a mutagate maintainer, I want the suite to add no npm dependencies, so
     that the repo's zero-dependency rule holds.
 48. As a mutagate maintainer, I want the deviations from the PRD's nightly-CI

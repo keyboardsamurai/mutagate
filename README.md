@@ -12,7 +12,7 @@ A passing test proves little. A test with no assertions passes too. mutagate fin
 
 This runs in the background each time the agent writes a test. When the agent tries to finish, mutagate checks the scores. If the tests catch fewer than 80% of the bugs, it stops the agent from ending its turn and gives it the list of bugs that got through. The agent then writes better tests. You do nothing.
 
-Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.2): config keys and report text can change before 1.0.
+Works with Claude Code, Codex CLI, OpenCode, Pi and GitHub Copilot CLI, for Java, Kotlin, Python, TypeScript/JavaScript, Go and C#, on macOS and Linux (Windows is experimental). MIT license. This is a beta (0.9.3): config keys and report text can change before 1.0.
 
 ## Why you want this
 
@@ -92,7 +92,7 @@ npx skills add keyboardsamurai/mutagate#skill -a claude-code --copy
 1. The first line copies the skill into `.claude/skills/mutagate`. `npx skills` sends its own install telemetry; set `DISABLE_TELEMETRY=1` to turn it off.
 2. `install` adds the mutagate hooks to `.claude/settings.json`. It keeps your other hooks.
 3. `doctor` checks config, toolchain, mutation tool and adapter, then runs one real mutation. The first time, it downloads the mutation tool where needed and does a cold build, so expect a few minutes (C# takes longer, see [Runners](#runners)). A full pass ends with `All checks passed. Restart your agent so it loads the hooks.`
-4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.2 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
+4. Restart Claude Code from the repo's top-level directory. The session starts with a line like `mutagate 0.9.3 active. runner=pitest (gradle, java). threshold 0.80. mode gate.`
 5. Ask it to write a test for one production file. If the test is weak, it gets blocked with the survivors.
 
 To see scores without ever blocking the agent, set `"mode": "advise"` in `.mutagate/config.json` (or `MUTAGATE_MODE=advise`).
@@ -142,17 +142,17 @@ Pinned versions, uninstall, `--agent auto`, user-wide install and Windows: [docs
 ## How it works
 
 1. **The agent writes or edits a test.** A hook sees the edit and finds the production code that test is for, by name: `PricingTest.java` → class `Pricing`, `test_pricing.py` → `pricing.py`, `pricing.test.ts` → `pricing.ts`, `pricing_test.go` → `pricing.go`, `PricingTests.cs` → `Pricing.cs`. That code is the test's **target**. If the name fits more than one file, mutagate lists the candidates and the agent picks one with `run <test> --target <target>`. The hook returns in milliseconds (p95 28 ms on macOS, 77 ms on Linux ARM64).
-2. **A background run mutates the target.** A separate process runs the language's mutation tool on the target file only, with only the registered tests. The result is stored with a fingerprint of the test, the target, the config and the build inputs. Any edit to those makes the result stale. The gate and `check` never use a stale result; they run the target again. A run still going when such an edit lands is thrown away. Other edits do not trigger runs.
+2. **A background run mutates the target.** A separate process runs the language's mutation tool on the target file only, with only the registered tests. The result is stored with a fingerprint of the test, the target, the config and the build inputs. Any edit to those makes the result stale. The gate and `check` never use a stale result; they run the target again. A run still going when such an edit lands is thrown away, also when the edit is undone before the run ends. Other edits do not trigger runs.
 3. **The agent tries to finish.** mutagate checks every target of the session. If a score is below the threshold (0.80), it blocks and sends a short report: the score, then up to 10 survivor lines with file, line, method and what changed. Survivors on lines changed since the last commit come first, marked `(changed in this diff)`. With Claude Code, a low score can also reach the agent as soon as the background run finishes.
-4. **The agent improves the tests** and tries again. After 2 blocks per target (`maxRounds`), mutagate warns and lets the agent finish. Set a higher `maxRounds` to keep blocking until the score passes.
+4. **The agent improves the tests** and tries again. After 2 blocks for a low score per target (`maxRounds`), mutagate warns and lets the agent finish. Set a higher `maxRounds` to keep blocking until the score passes.
 
 What blocks and what does not:
 
 | Situation | What mutagate does |
 |---|---|
 | Score below the threshold | Blocks, up to `maxRounds` times per target |
-| The agent's tests fail or do not compile | Blocks once and asks for green tests (mutation testing needs them to pass first) |
-| No result yet when the gate's 120 s are up | Blocks once as "pending", then warns |
+| The agent's tests fail or do not compile | Blocks once and asks for green tests (mutation testing needs them to pass first). Uses no round of `maxRounds` |
+| No result yet when the gate's 120 s are up | Blocks once as "pending", then warns. Uses no round of `maxRounds` |
 | The tool or build fails for a reason that is not the agent's | Runs it again once, then warns. Never blocks |
 | The target has nothing to mutate | Passes |
 | `mode: "advise"` | Reports, never blocks |
@@ -244,7 +244,7 @@ Put shared settings in `.mutagate/config.json` and commit it:
 |---|---|---|
 | `mode` | `"gate"` | `"advise"` reports scores but never blocks. |
 | `threshold` | `0.8` | Minimum score per target, from 0 to 1. |
-| `maxRounds` | `2` | Blocks per target before mutagate warns and lets the agent finish. |
+| `maxRounds` | `2` | Blocks for a score below the threshold per target before mutagate warns and lets the agent finish. The one-time pending and failing-tests blocks do not count. With `0`, a low score never blocks; `mode: "advise"` turns every block off. |
 | `maxSurvivors` | `10` | Survivor lines per report. Reports also stop at 1,800 characters. |
 | `countNoCoverage` | `true` | Counts mutants on lines no registered test runs. With `false`, the score covers only lines the tests reach, so it measures how well the tests check what they run. Uncovered mutants are still listed. |
 | `runBudgetSec` | `300` | Time limit for one mutation run. Use `600` for C# cold builds. |
@@ -327,7 +327,7 @@ All languages: your build files and mutation-tool configs are never changed, and
 - With `goRunner: "auto"`, mutagate uses gomutants (cached or on PATH), installs it if missing, and falls back to gremlins.
 - gomutants 0.7.2 builds with Go 1.26.10 or later. With an earlier Go, `go install` downloads that Go version (`GOTOOLCHAIN=auto`, the default).
 - gomutants mutates only the target file and skips the other `Test…` functions in the package. `Example` and `Fuzz` functions in other files of the package may still run.
-- gremlins mutates one file but runs the package's tests. With gremlins 0.6.0 the directory name must match the package name, or build failures count as killed mutants.
+- gremlins mutates one file but runs the package's tests. With gremlins 0.6.0 the directory name must match the package name, or build failures count as killed mutants. gremlins sets the timeout of a mutant from its coverage run (mutagate runs that uncached, coefficient 10); in a package that compiles much longer than its tests run, mutants can still time out and count as killed.
 - Never mutated: `*.pb.go`, `*_gen.go`, `zz_generated*.go`, `mock_*.go`, `*_mock.go`.
 - Build outputs at the module root (`bin/`, `*.out`, `*.test`, `*.exe`, executables without an extension) never make results stale.
 - Options: `goRunner`, `goTags` (also `MUTAGATE_GO_RUNNER` and `--go-tags`).

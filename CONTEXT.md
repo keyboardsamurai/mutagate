@@ -39,7 +39,7 @@ The digest of a target's registered tests, the config, the scoped project inputs
 _Avoid_: hash, cache key, checksum
 
 **Stale**:
-The state of a target whose result's fingerprint no longer matches the repo. A stale target is pending until a new run publishes.
+The state of a target whose result's fingerprint no longer matches the repo. A stale target is pending until a new run publishes. A run that saw a write to these files publishes nothing, also when the write restored the bytes.
 _Avoid_: outdated, invalidated, dirty
 
 **Edited file**:
@@ -73,7 +73,7 @@ The detached process that runs one target under its lock and publishes the resul
 _Avoid_: background job, runner process, daemon
 
 **Abandoned lock**:
-A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight.
+A lock whose holder is dead or has not renewed it for 60 s. One waiter takes it over; a target whose lock is abandoned is not in flight (ADR-0023).
 _Avoid_: stale lock, expired lock
 
 **Data dir**:
@@ -81,7 +81,7 @@ The directory under the cache root that holds the session state, results, logs a
 _Avoid_: repo cache, state dir
 
 **Cache prune**:
-The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist.
+The daily cleanup that SessionStart starts in the background. It deletes old report dirs, the state and results of idle sessions, and the data dirs of repo paths that no longer exist (ADR-0024).
 _Avoid_: garbage collection, cache eviction
 
 **Scoped copy** (Python):
@@ -144,6 +144,10 @@ _Avoid_: conversation, thread, run (for this)
 The agent CLI that hosts mutagate: Claude Code, Codex CLI, OpenCode, Pi or GitHub Copilot (through a native install).
 _Avoid_: agent, host tool, IDE
 
+**Harness profile**:
+The rules of one harness for a mutagate call: how its payload maps to the internal shape, how the session and repo are found, and how output and exit code go back. Each call uses exactly one; an inherited hook call has its own.
+_Avoid_: harness adapter (an adapter is the OpenCode or Pi translator), harness driver, harness mode
+
 **Inherited hook call**:
 A hook call from GitHub Copilot, which also runs the Claude hooks in `.claude/settings.json`. mutagate keeps it inert: no state, no run, no gate (ADR-0015).
 _Avoid_: foreign hook, Copilot hook
@@ -157,12 +161,16 @@ The detached `hook PostToolUse --mutate --harness copilot` process that a native
 _Avoid_: async hook, worker (for this)
 
 **Outbox**:
-The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), and an entry already reported, leave it without delivery (ADR-0019).
+The list in the Copilot session state of reports from spawned handlers that wait for a delivery point: one entry for each target, from its newest run. An entry whose run no longer gives the current result of the target (stale), an entry whose result is now a pass, and an entry that is already the delivered report, leave it without delivery. A report that a gate block, `check` or `run --sync` gives removes only the entry of its run (ADR-0019).
 _Avoid_: queue, inbox, pending reports
 
 **Delivery point**:
-A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not yet reported as `additionalContext` (ADR-0019).
+A Copilot `postToolUse` call of the root agent for a write or shell tool: `create`, `edit`, `str_replace_editor`, `apply_patch`, `bash`, `powershell` or `read_bash`. It sends the fresh outbox entries that are not a pass now and not the delivered report as `additionalContext` (ADR-0019).
 _Avoid_: drain hook, flush point
+
+**Delivered report**:
+The last report of a target that got to the agent: a hook gave it, a gate blocked with it, or `check` or `run --sync` printed it. mutagate does not give the same report for that target again. A pass clears it, so a later regression goes out again (ADR-0019).
+_Avoid_: ledger, reported, shown
 
 **Portable install**:
 A project install whose hook commands find the skill through the Git top level and whose adapters find the runtime relative to the adapter file, so the committed config works on each clone (ADR-0013).

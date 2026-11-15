@@ -12,7 +12,7 @@ const { createRequire } = require('node:module');
 const runtimeRequire = createRequire(__filename);
 const HERE = path.dirname(__filename),
   ROOT = path.dirname(HERE);
-const VERSION = '0.9.2';
+const VERSION = '0.9.3';
 const DEFAULTS = {
   schema: 1, mode: 'gate', threshold: .8, maxSurvivors: 10, maxRounds: 2, runBudgetSec: 300, gateBudgetSec: 120, gateWaitSec: 60,
   countNoCoverage: true, gateSecondaries: false, languages: ['java', 'kotlin', 'python', 'typescript', 'go', 'csharp'], testGlobs: [], mainRoots: [],
@@ -89,33 +89,30 @@ function configFor(repo, root, args = {}, env = process.env) {
 }
 const HARNESSES = ['claude', 'codex', 'opencode', 'pi', 'copilot']; // installable harnesses: context() keeps them, doctor and the no-harness hint list them
 const SESSION_CMDS = ['run', 'check', 'status', 'waive']; // CLI commands on the session state
-function context(args = {}, payload = {}) {
+function context(args = {}, payload = {}, env = process.env) { // env: for pick only (runHook)
   const real = p => fs.realpathSync(path.resolve(p));
   let repo;
 
   try { repo = real(args.repo || payload.cwd || process.cwd()); } catch (e) { if (args.repo || !payload.cwd || e.code !== 'ENOENT') throw e; repo = real(process.env.CLAUDE_PROJECT_DIR || process.cwd()); }
 
-
-  const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID,
-    top = !args.repo && (payload.cwd ? args.harness === 'copilot' : SESSION_CMDS.includes(args._?.[0]) && !envId && e.COPILOT_AGENT_SESSION_ID) && copilot().top(repo);
+  const e = process.env, envId = e.MUTAGATE_HOOK_SESSION || e.CODEX_THREAD_ID || e.CLAUDE_CODE_SESSION_ID, h = harness(),
+    name = h.pick(args, payload, env), profile = h.profiles[name], // the harness profile (harness.cjs, ADR-0022)
+    place = profile.place(args, payload, h.shell(args, payload, e)), top = place.top && copilot().top(repo); // shell: process env, whatever its CLAUDE_*
   if (top) repo = top; else if (!args.repo && payload.cwd && process.env.CLAUDE_PROJECT_DIR) try { const p = fs.realpathSync(process.env.CLAUDE_PROJECT_DIR); if (safePath(p, repo)) repo = p; } catch {}
   const root = cacheRoot(), data = path.join(root, 'repos', hash(repo));
 
 
-  const agentId = (args.harness === 'copilot' ? copilot().session(data, payload) : payload.agent_id || payload.session_id) || envId ||
+  const agentId = place.id(data) || envId ||
     e.COPILOT_AGENT_SESSION_ID, sid = String(agentId || e.MUTAGATE_SESSION || `ppid-${process.ppid}-${Math.floor(Date.now()/43200000)}`);
   const session = hash(sid);
   const { config, errors } = configFor(repo, root, args);
-
-  const inherited = !args.harness && payload.timestamp !== undefined, named = args.harness || process.env.MUTAGATE_HARNESS || payload.harness || (process.env.CODEX_HOME || payload.turn_id ? 'codex' : process.env.CLAUDE_PLUGIN_ROOT ||
-    process.env.CLAUDE_PROJECT_DIR ? 'claude' : 'unknown');
-  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: inherited ? 'copilot' : HARNESSES.includes(named) ? named : 'unknown', inherited, args,
+  return { repo, root, data, session, sid, agentSession: !!agentId || !!e.COPILOT_CLI, config, errors, harness: profile.harness || name, profile, args,
     stateFile: path.join(data, 'state', session + '.json') };
 }
 const blankState = () => ({ schema: 1, targets: {}, choices: {}, warnings: [], events: [], notified: [] });
 let noted; // one note per corrupt state file
 function state(c) {
-  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile && c.args?.harness !== 'copilot') { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
+  return cacheJson(c.stateFile, blankState(), () => { if (noted !== c.stateFile && !c.profile?.quiet) { noted = c.stateFile; process.stderr.write(`mutagate: session state ${c.stateFile} is not valid JSON; it starts blank, so earlier test registrations are lost\n`); } });
 }
 const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
 
@@ -252,11 +249,11 @@ function extractPaths(p) {
     for (const m of String(input.command || '').matchAll(PATCH_HEADER)) out.push(m[2].trim());
   return [...new Set(out)];
 }
-function fingerprint(c,t) {
-  const { inputFiles, fileDigest } = runtimeRequire('./inputs.cjs');
-  const implementation = ['mutagate.mjs', 'inputs.cjs', 'kotlin-source.cjs', 'glob.cjs', 'mutmut-bridge.cjs', 'errors.cjs', 'dotnet.cjs', 'runners.cjs'].map(f => fileDigest(path.join(HERE, f)));
-  return hash(JSON.stringify([implementation, fileDigest(path.join(ROOT, 'references/kotlin-junk.yaml')), fileDigest(path.join(ROOT, 'references/jars.json')), t.tests, t.testNames, c.config, inputFiles(c,t).map(f => [f, fileDigest(path.join(c.repo,f))])]));
-}
+const implementation = ['mutagate.mjs', 'inputs.cjs', 'kotlin-source.cjs', 'glob.cjs', 'mutmut-bridge.cjs', 'errors.cjs', 'dotnet.cjs', 'runners.cjs'].map(f => path.join(HERE, f)), references = ['kotlin-junk.yaml', 'jars.json'].map(f => path.join(ROOT, 'references', f));
+function fingerprint(c, t, files = runtimeRequire('./inputs.cjs').inputFiles(c, t)) { const { fileDigest } = runtimeRequire('./inputs.cjs');
+  return hash(JSON.stringify([implementation.map(fileDigest), ...references.map(fileDigest), t.tests, t.testNames, c.config, files.map(f => [f, fileDigest(path.join(c.repo,f))])])); }
+
+const stamp = (c, files) => runtimeRequire('./inputs.cjs').stamp([...implementation, ...references, ...files.map(f => path.join(c.repo, f))]);
 const targetKey = t => hash([t.module, t.target].filter(Boolean).join(':'));
 const resultFile = (c, key) => path.join(c.data, 'results', c.session, key + '.json');
 const targetLock = (c, key) => path.join(c.data, 'locks', key + '.lock');
@@ -318,67 +315,6 @@ async function register(c, test, explicit) {
     }
   });
   return r;
-}
-const xmlText = (s) => s.replace(/&(?:lt|gt|amp|quot|apos);/g, x => ({ '&lt;': '<', '&gt;': '>', '&amp;': '&', '&quot;': '"', '&apos;': "'" } [x])).replace(
-  /&#(x[\da-f]+|\d+);/gi, (_, x) => String.fromCodePoint(x[0] === 'x' ? parseInt(x.slice(1), 16) : Number(x)));
-function parsePitXML(text) {
-  if (!text.includes('<mutations')) throw Error('invalid PIT XML report');
-  return [...text.matchAll( /<mutation\s+([^>]+)>([\s\S]*?)<\/mutation>/g)].map(m => {
-    const field = n => xmlText(m[2].match(new RegExp('<' + n + '>([\\s\\S]*?)</' + n + '>'))?.[
-      1
-    ] || ''), status = m[1].match(/status=['"]([^'"]+)/)?.[1];
-    return { // PIT 1.25+ EQUIVALENT: like Stryker Ignored
-      file: field('sourceFile'), class: field('mutatedClass'), method: field('mutatedMethod'), line: Number(field('lineNumber')),
-      mutator: field('mutator'), description: field('description'),
-      mutation_key: (m[2].match(/<indexes>([\s\S]*?)<\/indexes>/)?.[1] || '') + field( 'description'),
-      ...status === 'EQUIVALENT' ? { status: 'NON_VIABLE', ignored: true } : { status }
-    };
-  });
-}
-function parseCSV(text) {
-  const rows = [];
-  let row = [],
-    s = '',
-    quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (ch === '"') {
-      if (quoted && text[i + 1] === '"') {
-        s += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (!quoted && (ch === ',' || ch === '\n')) {
-      row.push(s.replace(/\r$/, ''));
-      s = '';
-      if (ch === '\n') {
-        rows.push(row);
-        row = [];
-      }
-    } else s += ch;
-  }
-  if (s || row.length) {
-    row.push(s);
-    rows.push(row);
-  }
-  return rows.filter(r => r.length > 1);
-}
-function parseMutationTestingElements(report, repo) {
-  if (!report.files) throw Error('invalid mutation-testing-elements report');
-  const real = p => { try { return fs.realpathSync(p); } catch { return p; } };
-  const rel = f => slash(path.isAbsolute(f) ? path.relative(repo, real(f)) : report.projectRoot ? path.relative(repo, real(path.resolve(report.projectRoot, f))) : f);
-  return Object.entries(report.files).flatMap(([file, f]) =>
-    f.mutants.map(m => ({
-      file: rel(file),
-      line: m.location.start.line,
-      method: '',
-      mutator: m.mutatorName, ...(m.status === 'Ignored' ? { ignored: true } : {}),
-      mutation_key: JSON.stringify([m.location, m.replacement]),
-      description: `${m.mutatorName}: replaced with ${m.replacement ?? '(removed)'}`,
-      status: ({
-        Killed: 'KILLED', Survived: 'SURVIVED', Timeout: 'TIMED_OUT', NoCoverage: 'NO_COVERAGE', CompileError: 'NON_VIABLE', RuntimeError: 'RUN_ERROR',
-        Ignored: 'NON_VIABLE', Pending: 'PENDING'
-      })[m.status] || 'PENDING'
-    })));
 }
 function junkRule(m, rules, source = '') {
   const { dataClassRule, continuationRule } = runtimeRequire('./kotlin-source.cjs');
@@ -514,13 +450,18 @@ function report(r, cfg = DEFAULTS) {
   return [heading(shown), ...lines, ...(r.warnings || [])].join('\n').slice(0, 1800 - footer.length) + footer;
 }
 
-let loaded, copilotLoaded;
-const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey, parsePitXML, parseMutationTestingElements });
-const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, reportKey, gate }); // --harness copilot hook calls, session commands in the Copilot root agent shell, and the inherited SessionStart notice check
+let loaded, copilotLoaded, harnessLoaded;
+const runners = () => loaded ??= runtimeRequire('./runners.cjs')({ lock, atomic, json, cacheJson, hash, pkg, moduleRoot, fingerprint, targetKey });
+const copilot = () => copilotLoaded ??= runtimeRequire('./copilot.cjs')({ atomic, hash, PATCH_HEADER, state, updateState, loadResult, deliver, gate, detached, spawn }); // the copilot profile (ADR-0022)
+const harness = () => harnessLoaded ??= runtimeRequire('./harness.cjs')({ HARNESSES, SESSION_CMDS, exists, cliName, copilot, gate, schedule, updateState, deliver }); // pick and the profiles (ADR-0022)
 const DOTNET_TEST = { sdk: '17.14.1', xunit: '2.9.3', runner: '3.1.5' };
 const readOrEmpty = p => runtimeRequire('./inputs.cjs').read(p); // '' for a file mutagate cannot read
 
-const shown = (c, key, text) => (text || state(c).outbox?.some(e => e.key === key)) && updateState(c, s => { if (s.targets[key]) { if (text) s.targets[key].reported = reportKey(text); s.outbox &&= s.outbox.filter(e => e.key !== key); } });
+const deliver = (s, key, text) => { const t = s.targets[key], k = text ? reportKey(text) : null; if (!t || t.reported === k) return false; t.reported = k; return !!k; };
+
+
+const reached = (c, key, r, text, printed) => { const s0 = state(c), pass = r.status === 'pass', mine = e => e.key === key && e.run === r.started_at, drop = (text || printed) && s0.outbox?.some(mine);
+  return (text || drop || pass && s0.targets[key]?.reported) && updateState(c, s => { if (!s.targets[key]) return; if (text || pass) deliver(s, key, text); if (drop) s.outbox &&= s.outbox.filter(e => !mine(e)); }); };
 async function runTarget(c, key, runner) {
   const release = await lock(targetLock(c, key), Math.max(1, (c.budgetSec ?? c.config.runBudgetSec) * 1000));
   if (!release) return null;
@@ -533,8 +474,8 @@ async function runTarget(c, key, runner) {
       if (attempt && c.settle && !await c.settle()) return null;
       const t = state(c).targets[key];
       if (!t || gone(c, t)) return null;
-      const start = Date.now(),
-        fp = fingerprint(c, t),
+      const start = Date.now(), files = runtimeRequire('./inputs.cjs').inputFiles(c, t), seen = stamp(c, files), // the stat keys first, then the fingerprint
+        fp = fingerprint(c, t, files),
         dir = path.join(c.data, 'reports', crypto.randomUUID()),
         log = path.join(c.data, 'logs', key + '.log');
       mkdir(dir);
@@ -568,17 +509,17 @@ async function runTarget(c, key, runner) {
         };
       }
       let published = false;
-      const now = fingerprint(c, t); // hash the inputs outside the state lock, which hooks wait at most 5 s for; one generation keeps its tests
+      const after = runtimeRequire('./inputs.cjs').inputFiles(c, t), now = fingerprint(c, t, after), unwritten = stamp(c, after) === seen; // the fingerprint, then the stat keys; hash outside the state lock, which hooks wait at most 5 s for
       await updateState(c, s => {
-        const latest = s.targets[key];
-        if (latest && latest.generation === t.generation && now === fp) {
+        const latest = s.targets[key]; // a write during the run stops the publish also when it restores the bytes (ADR-0023); one generation keeps its tests
+        if (latest && latest.generation === t.generation && now === fp && unwritten) {
           atomic(
             resultFile(c, key), result);
           latest.lastRunMs = Math.max(result.duration_ms, latest.lastRunMs || 0);
           latest.fingerprint = fp;
           latest.resultGeneration = t.generation;
           latest.rerun_requested = false;
-          if (result.status === 'pass') latest.reported = null; // a later regression goes out again (ADR-0019)
+          if (result.status === 'pass') deliver(s, key, null); // a later regression goes out again (ADR-0019)
           published = true;
         }
       });
@@ -614,7 +555,7 @@ function verdict(c, key, t, r = loadResult(c, key, t)) {
 const exitCode = (code, v) => v.kind === 'below' ? 1 : code || v.code;
 
 const pendingText = (c, t, needed, s = `mutagate: ${t.target} results pending${needed || `; run ${cliName(c)} check --wait ${c.config.gateBudgetSec}`}`) =>
-  c.harness === 'copilot' ? s.replace(/check --wait (\d+)/, (w, n) => `${w} (set bash initial_wait >= ${+n + 30})`) : s;
+  c.profile?.bashWait ? s.replace(/check --wait (\d+)/, (w, n) => `${w} (set bash initial_wait >= ${+n + 30})`) : s;
 
 
 const detached = (run, args, env, input) => { const ch = run(process.execPath, [path.join(HERE, 'mutagate.mjs'), ...args], { detached: true, stdio: input ? ['pipe', 'ignore', 'ignore'] : 'ignore', windowsHide: true, env: { ...process.env, ...env } }).on('error', () => {}); ch.stdin?.on('error', () => {}).end(input); ch.unref(); }; // a failed spawn emits 'error' later; hooks fail open
@@ -633,16 +574,17 @@ async function claimBlock(c, key, once, streak) {
   if (c.config.mode !== 'gate') return false;
   return updateState(c, s => {
     const t = s.targets[key];
-    if (!t || t.blocks >= c.config.maxRounds || once && t[once]) return false;
-    t.blocks++;
+    if (!t || (once ? t[once] : t.blocks >= c.config.maxRounds)) return false;
     if (once) t[once] = true;
+    else t.blocks++;
     if (streak !== undefined) s.stopStreak = streak + 1;
     return true;
   });
 }
 const reportKey = s => hash(s.replace(/\x1b\[[0-9;]*m/g, '').replace(/\d{4}-\d\d-\d\dT[\d:.]+Z|\bpid \d+|\d+ ms\b|log: \S+/g, ''));
 
-async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
+
+async function gate(c, { wait, hook = false, runner, budget, streak, schedulePending, blocksOnly } = {}) {
   const start = Date.now(), limited = streak >= 8,
     end = start + (budget ?? Math.max(c.config.gateBudgetSec, hook ? 0 : wait || 0)) * 1000,
     reports = [],
@@ -676,15 +618,15 @@ async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
       if (!v.result) { needed = advice(0); break; }
     }
     if (!t) continue;
-    if (hook && c.harness === 'copilot' && v.kind === 'pending' && !v.running) schedule(c, key, c.spawn); // the session can end with no later tool call (ADR-0018); c.spawn: test seam
+    if (schedulePending && v.kind === 'pending' && !v.running) schedule(c, key, c.spawn); // the session can end with no later tool call; c.spawn: test seam
     const r = v.result, text = r ? report(r, r.status === 'unscored' ? DEFAULTS : c.config) : pendingText(c, t, needed);
     if (needed && r) warnings.push(`mutagate: ${t.target}${needed}`);
     code = exitCode(code, v);
     if (r && (r.status !== 'unscored' || v.obligation === 'none')) reports.push(text);
 
     const blocked = hook && v.obligation === 'block' && !limited && await claimBlock(c, key, v.once, streak),
-      sent = r && (blocked || ['below', 'error'].includes(r.status) && !(hook && c.harness === 'copilot')); // ADR-0019: a Copilot agentStop shows the model only a block
-    if (sent || r && !hook) await shown(c, key, sent && text); // a sent key, and each key whose result check prints, leaves the Copilot outbox
+      sent = r && (blocked || ['below', 'error'].includes(r.status) && !blocksOnly);
+    if (r) await reached(c, key, r, sent && text, !hook); // a sent key, and each key whose result check prints, loses the outbox entry of that run
     if (blocked) blocks.push(text);
     else if (v.obligation !== 'none' && (hook || v.kind !== 'below')) warnings.push(limited && v.obligation === 'block' ? `mutagate: Copilot block limit (8 in a row) reached for ${t.target}` : v.kind === 'below' && c.config.mode !== 'advise' ?
       `mutagate: round cap reached for ${t.target}, score ${r.score.toFixed(2)} below ${c.config.threshold.toFixed(2)}` : text);
@@ -696,41 +638,35 @@ async function gate(c, { wait, hook = false, runner, budget, streak } = {}) {
   };
 }
 
+
 async function handleHook(c, p, event, raw = p) {
-  if (c.inherited) return event === 'SessionStart' && // inert until a native Copilot install; no notice to the cloud agent (ADR-0021)
-    ![path.join(c.repo, '.github'), process.env.COPILOT_HOME || path.join(os.homedir(), '.copilot')].some(d => exists(path.join(d, 'hooks/mutagate.json'))) && (c.config.copilotCloud || !copilot().cloud()) ?
-    { code: 0, out: { additionalContext: `mutagate inactive under Copilot: this repo has only the Claude Code install; run \`${cliName(c)} install --agent copilot\`.` } } : { code: 0 };
-  const cp = c.args.harness === 'copilot' && copilot(), // native Copilot output (#35 D12): top-level fields, exit 0, no plain text or stderr
-    contextOutput = text => ({ code: 0, out: cp ? { additionalContext: text.slice(0, 1800) } : { hookSpecificOutput: { hookEventName: event, additionalContext: text.slice(0, 1800) } } }),
-    notice = text => cp ? contextOutput(text) : [ 'opencode', 'pi' ].includes(c.harness) ? { code: 0, out: { systemMessage: text } } : { code: 0, text };
-  if (Number(process.versions.node.split('.')[0]) < 22) return event === 'SessionStart' ? notice(`mutagate inactive: hooks run Node ${process.versions.node}; need 22+. Set MUTAGATE_NODE or rerun install.`) : { code: 0 };
-  if (event === 'SubagentStart') { copilot().link(c.data, p); return { code: 0 }; } // Copilot only (main): the subagent chain (ADR-0020)
+  const pf = c.profile, admitted = pf.admit(c, p, event); // inherited calls stay inert (ADR-0015); Node < 22; the Copilot sessionId and subagent chain
+  if (admitted) return admitted;
   if (event === 'PreToolUse') {
     const waiver = extractPaths(p).some(f => safePath(c.repo, f) === path.join(c.repo, '.mutagate/waivers.json'));
     if (!waiver ||
-      c.config.allowAgentWaivers) return { code: 0 };
+      c.config.allowAgentWaivers) return {};
     const proposed = clean(p.tool_input?.content || p.tool_input?.new_string || p.tool_input?.command || p.tool_input?.newText || 'waiver edit').slice(0, 1000);
-    const decision = { permissionDecision: c.harness === 'claude' ? 'ask' : 'deny', permissionDecisionReason: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.` };
-    return { code: 0, out: cp ? decision : { hookSpecificOutput: { hookEventName: event, ...decision } } };
+    return { confirm: `Waivers require human approval. Proposed: ${proposed}. Edit .mutagate/waivers.json manually.` };
   }
   if (event === 'SessionStart') {
     try { if (exists(c.data)) markRepo(c); schedulePrune(c); } catch {} // cache housekeeping never costs the banner; register marks new data dirs
-    const off = cp && cp.probe(path.join(c.data, 'state')); // ADR-0021
-    if (off) return notice(off);
+    const off = pf.ready(c);
+    if (off) return { notice: off };
     const diagnostics=c.errors.length?await updateState(c,s=>{if(s.configWarned)return [];s.configWarned=true;return c.errors;}):[];
     const d = detect(c);
-    const rerunText = rerunNotice(c, c.args.installed ?? p.installed, c.harness === 'unknown' ? '<harness>' : c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
+    const rerunText = rerunNotice(c, c.args.installed ?? p.installed, pf.label || c.harness), banner = // install stamp: --installed in the hook command, installed in the adapter payload
       `mutagate ${VERSION} active. runner=${d.runner||'unavailable'} (${d.buildTool||'none'}, ${d.language||'unknown'}). threshold ${c.config.threshold.toFixed(2)}. mode ${c.config.mode}.${diagnostics.length?' '+diagnostics.join('; '):''}${rerunText ? ` ${rerunText}.` : ''}`;
-    return notice(banner);
+    return { notice: banner };
   }
   if (event === 'PostToolUse') {
-    if (p.tool_response?.success === false || p.tool_response?.isError) return { code: 0 };
-    const msgs = cp ? await cp.drain(c, p) : []; // a Copilot delivery point (ADR-0019)
+    if (p.tool_response?.success === false || p.tool_response?.isError) return {};
+    const msgs = await pf.deliveries(c, p);
     const paths = extractPaths(p).map(f => safePath(c.repo, f)).filter(Boolean).map(f => slash(path.relative(c.repo, f)));
-    if (!paths.length) return msgs.length ? contextOutput(joinReports(msgs, 1800)) : { code: 0 };
+    if (!paths.length) return msgs.length ? { context: joinReports(msgs, 1800) } : {};
     const src = c.args.mutate ? [] : paths.filter(f => !isTest(f, c.config) && /\.(java|kt|py|tsx?|jsx?|go|cs)$/.test(f) && !GENERATED.test(f) && !CONFIG.test(f) && c.config.languages.includes(language(f)));
     if (src.length) await updateState(c, s => { s.edited = [...new Set([...(s.edited || []), ...src])].slice(-200); });
-    if (!Object.keys(state(c).targets).length && !paths.some(f => isTest(f, c.config))) return { code: 0 };
+    if (!Object.keys(state(c).targets).length && !paths.some(f => isTest(f, c.config))) return {};
     const token = p.tool_use_id || hash(JSON.stringify([paths, p.tool_input]));
     let seen = false;
     await updateState(c, s => {
@@ -781,7 +717,7 @@ async function handleHook(c, p, event, raw = p) {
           await sleep(due);
         }
       };
-      if (!await settle()) return { code: 0 };
+      if (!await settle()) return {};
       for (const [key, t] of Object.entries(state(c).targets)) {
         if (gone(c, t) || t.secondary && !c.config.gateSecondaries && !keys.includes(key) || verdict(c, key, t).kind !== 'pending') continue;
         if (!await settle()) break;
@@ -790,28 +726,16 @@ async function handleHook(c, p, event, raw = p) {
         if (budgetSec < 1) break;
         if (runtimeRequire('./errors.cjs').gateAdvice(budgetSec, c.config.runBudgetSec, t.lastRunMs)) continue;
         const r = await runTarget({ ...c, settle, deadline: end, budgetSec }, key, c.runner), text = r && r.status !== 'pass' ? report(r, c.config) : null; // c.runner: test seam, as gate's runner
-        if (cp) { if (r) await updateState(c, s => cp.queue(s, key, text, r.started_at)); continue; } // Copilot: the next delivery point sends it and sets reported (ADR-0019)
-
-        if (r && await updateState(c, s => { const t = s.targets[key], next = text && reportKey(text); if (!t || t.reported === next) return false; t.reported = next; return true; }) && text) {
-          msgs.push(text);
-          wake ||= r.status === 'below' || r.agent_caused; }
+        const send = r && await pf.survivor(c, key, r, text); // the report to deliver in this call; the Copilot profile puts it in the outbox and gives null (ADR-0019)
+        if (send) { msgs.push(send); wake ||= r.status === 'below' || r.agent_caused; }
       }
-    } else if (cp) { if (!seen) detached(c.spawn || spawn, ['hook', 'PostToolUse', '--mutate', '--harness', 'copilot'], {}, JSON.stringify(raw)); } // no async hooks: a spawned handler (ADR-0019); c.spawn: test seam
-    else if (c.harness === 'unknown')
-      for (const key of [...new Set(keys)]) schedule(c, key);
-    if (!msgs.length) return { code: 0 };
+    } else pf.rerun(c, keys, raw, seen);
+    if (!msgs.length) return {};
     const text = joinReports(msgs, 1800);
-    if (c.harness === 'claude' && c.args.mutate && wake) return { code: 2, err: text };
-    return contextOutput(text);
+    return c.args.mutate ? { survivors: text, wake } : { context: text };
   }
-  if (['Stop', 'SubagentStop', 'TaskCompleted'].includes(event)) {
-    if (cp) return cp.agentStop(c, p); // ADR-0018
-    const g = await gate(c, { hook: true });
-    return g.block ? {
-      code: 2, out: { decision: 'block', reason: g.reason }, err: g.reason
-    } : g.reason ? { code: 0, out: { systemMessage: g.reason } } : { code: 0 };
-  }
-  return { code: 0 };
+  if (['Stop', 'SubagentStop', 'TaskCompleted'].includes(event)) return pf.stop(c, p);
+  return {};
 }
 function detect(c) {
   const all = files(c.repo, c.config),
@@ -936,6 +860,44 @@ async function doctor(c) {
   }
   return { version: VERSION, checks: checks.map(({ hint, ...check }) => check.pass ? check : { ...check, hint }), versions };
 }
+
+async function runHook(argv, text, env = process.env) {
+  const out = [], err = [], done = (code, x) => ({ code, stdout: out.join(''), stderr: err.join(''), ...x });
+  let p, c, pf;
+  try {
+    const args = parseArgs(argv), h = harness();
+    pf = h.profiles[h.pick(args, {}, env)]; // malformed JSON: the profile of argv and env
+    try {
+      p = JSON.parse(text);
+      if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error('expected object');
+    } catch { if (!pf.quiet) err.push('mutagate: malformed hook JSON\n'); return done(0); } // a native Copilot hook writes no stderr (#35 D12)
+    pf = h.profiles[h.pick(args, p, env)];
+    let event = args._[1] || p.hook_event_name;
+    if (!pf.events.includes(event)) return done(0);
+    const raw = p, read = pf.read(p, args); // null: inert
+    if (!read) return done(0);
+    p = read.p;
+    c = context(args, p, env);
+    event = args._[1] || p.hook_event_name;
+    const start = Date.now();
+    if (read.cloud && !c.config.copilotCloud) return done(0); // the cloud agent is inert unless the repo opts in (ADR-0021)
+    if (!c.profile.inert && read.record && (args.record || env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
+      `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
+    const i = await handleHook(c, p, event, raw), w = c.profile.write(i, event);
+    if (i.error) { trace(c, event, { session: null, decision: 'error', error: i.error }); return done(0); } // refused by admit
+    out.push(w.stdout); err.push(w.stderr);
+    trace(c, event, {
+      tool: p.tool_name, file: extractPaths(p), decision: c.profile.inert ? 'inherited' : i.deadline ? 'deadline' : i.block || w.code === 2 ? 'block' : 'allow', exit: w.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(w.stdout || w.stderr),
+      ...c.profile.tags(c, p) // a Copilot subagent call names its agent
+    });
+    return done(w.code, i.deadline && { deadline: true });
+  } catch (e) {
+    if (!pf) return done(0); // no profile yet: it can be a native Copilot hook, which writes no stderr
+    if (c) trace(c, 'hook', { error: clean(e.message), decision: 'error' });
+    if (!pf.quiet) err.push('mutagate: ' + clean(e.message) + '\n');
+    return done(0);
+  }
+}
 async function main(argv = process.argv.slice(2)) {
   const args = parseArgs(argv),
     cmd = args._[0] || 'help',
@@ -943,43 +905,20 @@ async function main(argv = process.argv.slice(2)) {
     usage = 'mutagate: ' + (all.split(', ').find(u => u.split(' ')[0].split('|').includes(cmd)) || all + '. All commands accept --repo.');
   if (args.help || args._.includes('-h')) { console.log(usage); return 0; }
   if (args.version || cmd === 'version') { console.log('mutagate ' + VERSION); return 0; }
-  let p = {},
-    c;
   if (cmd === 'hook') {
-    try {
-      p = JSON.parse(fs.readFileSync(0, 'utf8'));
-      if (!p || typeof p !== 'object' || Array.isArray(p)) throw Error(
-        'expected object');
-    } catch { if (args.harness !== 'copilot') console.error('mutagate: malformed hook JSON'); return 0; } // a native Copilot hook writes no stderr (#35 D12)
+    let text = '';
+    try { text = fs.readFileSync(0, 'utf8'); } catch {} // unreadable stdin reads as malformed JSON
+    const r = await runHook(argv, text);
+    if (r.stdout) process.stdout.write(r.stdout);
+    if (r.stderr) process.stderr.write(r.stderr);
+    if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
+    return r.code;
   }
-  if (cmd === 'hook' && !['SessionStart', 'PreToolUse', 'PostToolUse', 'Stop', 'SubagentStop', 'TaskCompleted', ...(args.harness === 'copilot' ? ['SubagentStart'] : [])].includes(args._[1] || p.hook_event_name))
-    return 0;
+  let c;
   try {
     if (cmd === 'prune') { await runtimeRequire('./prune.cjs')(cacheRoot(), { lock, abandoned }); return 0; } // internal, started by schedulePrune
-
-    const cp = cmd === 'hook' && args.harness === 'copilot' && copilot(), origin = cp && cp.origin(p, args), raw = p;
-    if (origin === 'local') return 0;
-    if (cp) p = cp.normalize(p);
-    c = context(args, p);
+    c = context(args);
     if (SESSION_CMDS.includes(cmd)) trace(c, cmd, { decision: 'cli' }); // traced for the eval checker
-    if (cmd === 'hook') {
-      const event = args._[1] || p.hook_event_name,
-        start = Date.now();
-      if (origin === 'cloud' && !c.config.copilotCloud) return 0; // the cloud agent is inert unless the repo opts in (ADR-0021)
-      if (!c.inherited && origin !== 'spawned' && (args.record || process.env.MUTAGATE_RECORD === '1')) atomic(path.join(c.root, 'recorded', c.harness,
-        `${clean(event).replace(/[^\w-]/g,'_')}-${crypto.randomUUID()}.json`), raw);
-      if (cp && !p.session_id) { trace(c, event, { session: null, decision: 'error', error: 'Copilot hook payload without sessionId' }); return 0; } // never a ppid- session (ADR-0020)
-      const r = await handleHook(c, p, event, raw);
-      if (r.out) console.log(JSON.stringify(r.out));
-      if (r.text) console.log(r.text);
-      if (r.err) console.error(r.err);
-      trace(c, event, {
-        tool: p.tool_name, file: extractPaths(p), decision: c.inherited ? 'inherited' : r.deadline ? 'deadline' : r.block || r.code === 2 ? 'block' : 'allow', exit: r.code, duration_ms: Date.now() - start, error: null, mutate: !!c.args.mutate, delivered: !!(r.out || r.text || r.err),
-        ...(cp && p.agentId && { agent: p.agentId, ...(c.sid === p.agentId && { chain: 'unresolved' }) }) // a Copilot subagent call (its agentStop never gates), unresolved: outside its root session
-      });
-      if (r.deadline) process.stdout.write('', () => process.exit(r.code)); // the Copilot watchdog (ADR-0018): the gate is still running; exit after the output
-      return r.code;
-    }
     if (cmd === 'worker') {
       c.config = state(c).config || c.config;
       await sleep(3000);
@@ -1014,7 +953,7 @@ async function main(argv = process.argv.slice(2)) {
       const results = [];
       for (const t of r.targets) {
         const key = targetKey(t), v = verdict(c, key, t, await runTarget(c, key));
-        if (v.result && state(c).outbox?.some(e => e.key === key)) await shown(c, key, ['below', 'error'].includes(v.result.status) && report(v.result, c.config)); // printed below, like check
+        if (v.result) await reached(c, key, v.result, ['below', 'error'].includes(v.result.status) && report(v.result, c.config), true); // printed below, like check
         results.push(v.result || { target: t.target, status: 'pending', message: pendingText(c, t) }); // not a Result
         if (!t.secondary || c.config.gateSecondaries) code = exitCode(code, v);
       }
@@ -1073,9 +1012,9 @@ async function main(argv = process.argv.slice(2)) {
     console.log(usage);
     return cmd === 'help' ? 0 : 2;
   } catch (e) { // Usage errors (e.usage) exit 2 and are not traced as errors.
-    if (c && (cmd === 'hook' || !e.usage)) trace(c, cmd, { error: clean(e.message), decision: 'error' });
-    if (cmd !== 'hook' || args.harness !== 'copilot') console.error('mutagate: ' + clean(e.message));
-    return cmd === 'hook' ? 0 : e.usage ? 2 : 3;
+    if (c && !e.usage) trace(c, cmd, { error: clean(e.message), decision: 'error' });
+    console.error('mutagate: ' + clean(e.message));
+    return e.usage ? 2 : 3;
   }
 }
 if (process.argv[1] && fs.realpathSync(process.argv[1]) === __filename) main().then(code => { process.exitCode = code; });

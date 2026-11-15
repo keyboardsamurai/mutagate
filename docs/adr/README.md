@@ -21,6 +21,9 @@
 - [ADR-0019](0019-copilot-outbox-delivery.md) Copilot outbox delivery - accepted 2026-11-09
 - [ADR-0020](0020-copilot-payloads-and-sessions.md) Copilot payloads and sessions - accepted 2026-11-09
 - [ADR-0021](0021-copilot-boundaries.md) Copilot support boundaries - accepted 2026-11-09
+- [ADR-0022](0022-harness-profiles.md) Harness profiles - accepted 2026-11-10
+- [ADR-0023](0023-cache-locks-and-torn-reads.md) Cache locks and torn reads - accepted 2026-11-10
+- [ADR-0024](0024-cache-prune.md) Cache prune - accepted 2026-11-10
 
 ## Withdrawn
 
