@@ -710,16 +710,30 @@ Harness and tool versions are read from `test/harness-versions.json` and install
 
 ## 12. Acceptance criteria (release gate for v1.0)
 
+This section is the only definition of "ready for 1.0". The GitHub milestone `1.0` tracks the open work, and `docs/releasing.md` has the procedure. 1.0 goes out in two steps: `1.0.0-rc.1` when criteria 1 to 12 hold, then `1.0.0` when criteria 13 to 15 also hold.
+
+For the release candidate:
+
 1. All P0 requirements implemented with tests.
-2. L1 to L5 green on Ubuntu and macOS, Windows smoke green.
-3. L4: `java-gradle`, `java-maven`, `java-gradle-multimodule`, `kotlin-gradle`, `kotlin-java-mixed` produce scores within `expected.json` on every run for five consecutive nightly runs.
+2. L1, L2, L3 and L5 green on Ubuntu and macOS. Windows is a smoke run: L1 to L3 and the `java-gradle` fixture are green. Windows stays experimental in 1.0.
+3. L4: every runner fixture scores within its `expected.json` on the release commit and on the five CI runs of `main` before it.
 4. Junk filter precision at least 0.95 and real-mutant drop at most 2 percent on the labeled corpus.
-5. L6 passes assertions 1 to 4 and 6 to 7 on all four harnesses in at least three of the last four nightly runs.
-6. NFR-4 budgets met on the nightly performance job.
-7. `doctor` passes on a fresh machine for each harness following only the README.
-8. `npx skills add <repo>` installs the skill into all four harnesses and the SKILL.md passes the agentskills.io validator.
-9. Adapters under 60 lines, `mutagate.mjs` under 1,400 lines, no dependencies.
-10. README documents: supported versions, the Kotlin inline-function gap, Codex trust step, OpenCode and Pi soft-gate semantics, and how to file a junk-filter report.
+5. L6 (ADR-0011): each ✅ pair of the README matrix has a passing `natural` record and a passing `forced` record. Each record is made with a mutagate version of the minor line of the release (1.0) and with the pinned harness version.
+6. L7: `npm run test:drift` passes on the payloads that the L6 sweep recorded.
+7. L8: the nightly performance job meets the NFR-4 budgets on the seven nights before the tag.
+8. On a fresh machine, for each of the five harnesses: a user who follows only the README quick start gets the first block in 5 minutes or less (C#: 10 minutes), and `doctor` passes.
+9. `npx skills add <repo>` installs the skill into all five harnesses and the SKILL.md passes the agentskills.io validator.
+10. Adapters under 60 lines, `mutagate.mjs` under 1,400 lines, no dependencies.
+11. README documents: supported versions, the Kotlin inline-function gap, Codex trust step, OpenCode and Pi soft-gate semantics, how to file a junk-filter report, and the stable surface (criterion 12).
+12. Two decisions are recorded as ADRs and implemented. The stable surface: what changes only in a major version (config keys and defaults, commands, exit codes, result format). The score scope: the whole target or the changed lines. The score scope decision uses figures from real open-source repos, published in `docs/validation.md`.
+
+For 1.0.0 (soak):
+
+13. `1.0.0-rc.1` has been public for 30 days or more, and no P0 issue was open in the last 30 days. A P0 issue is a wrong gate verdict with no way out (a pass for a target below the threshold, or a block that the agent cannot clear and that `maxRounds` does not end), a hook that breaks the harness session, or a loss of user files.
+14. 50 or more installs outside the maintainer (skills.sh count).
+15. No `false-block` issue is open, and `false-block` issues are under 25% of the issues from outside users.
+
+Not required for 1.0: Windows beyond the smoke run, licensed Kotlin Tier A validation, the VS Code Copilot harness, Copilot sandbox sessions, the Claude Code plugin.
 
 ---
 
