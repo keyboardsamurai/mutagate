@@ -121,7 +121,7 @@ const abandoned = (p, o = owner(p), st = fs.statSync(p, { throwIfNoEntry: false 
 async function lock(p, budget = 5000) {
   mkdir(path.dirname(p));
   const end = Date.now() + budget, token = crypto.randomUUID();
-  let seen = {};
+  let seen = {}, wait = 1; // retry after 1, 2, 4, ... 25 ms: the state lock is held for about 1 ms, a target lock for a whole run
   while (true) {
     try {
       const fd = fs.openSync(p, 'wx', 0o600);
@@ -140,7 +140,8 @@ async function lock(p, budget = 5000) {
       if (unbreak) { try { const n = owner(p); if (n.token === o.token && abandoned(p, n)) fs.rmSync(p, { force: true }); } finally { unbreak(); } continue; }
       if (
         Date.now() >= end) return null;
-      await sleep(25);
+      await sleep(wait);
+      wait = Math.min(25, wait * 2);
     }
   }
 }

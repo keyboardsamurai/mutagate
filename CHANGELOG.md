@@ -4,7 +4,13 @@ All notable changes are listed here. The format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Fixed
+
+- A hook call that finds the session state locked by another mutagate process now tries again after 1 ms, then 2, 4, 8 and 16 ms, then every 25 ms. Before, it always waited 25 ms, although the lock is held for about 1 ms. Hook calls that run at the same time (parallel tool calls, a test edit next to its background handler) lost 25 ms each; on a 4-core Linux machine the p95 of a Copilot test edit went from 52 ms to 25 ms.
+
 ## [0.9.3] - 2026-11-15
+
+Tagged, not published: the release check failed on the hook latency budget (the fix is the entry above). The next release has these changes too.
 
 ### Changed
 
