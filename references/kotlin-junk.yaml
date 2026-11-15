@@ -1,0 +1,11 @@
+[
+  {"id":"when-mapping","match":{"class":"\\$WhenMappings(?:$|\\$)"},"reason":"Compiler enum switch mapping."},
+  {"id":"default-mask","match":{"method":"\\$default$"},"reason":"Default argument dispatch bitmask."},
+  {"id":"coroutine-label","match":{"method":"invokeSuspend","description":"(?:label|COROUTINE_SUSPENDED|throwOnFailure)"},"reason":"Coroutine dispatch bookkeeping, not arbitrary suspend bodies."},
+  {"id":"continuation-label","match":{"class":"ContinuationImpl","description":"(?:label|COROUTINE_SUSPENDED)"},"reason":"Continuation dispatch bookkeeping."},
+  {"id":"default-impl-intrinsic","match":{"class":"\\$DefaultImpls$","description":"kotlin[./]jvm[./]internal[./]Intrinsics"},"reason":"Compiler null check in an interface bridge."},
+  {"id":"lateinit","match":{"description":"throwUninitializedPropertyAccessException","mutator":"VoidMethodCall|VOID_METHOD_CALLS"},"reason":"Compiler lateinit guard."},
+  {"id":"intrinsics","match":{"description":"kotlin[./]jvm[./]internal[./]Intrinsics","mutator":"VoidMethodCall|VOID_METHOD_CALLS"},"reason":"Compiler intrinsic call."},
+  {"id":"empty-accessor","match":{"method":"^(?:getEMPTY|access\\$getINSTANCE\\$cp)$","class":"^kotlin\\."},"reason":"Kotlin runtime synthetic singleton accessor."},
+  {"id":"lambda-bridge","match":{"class":"\\$(?:lambda|1)(?:$|\\$)","method":"^invoke$","mutator":"VoidMethodCall|VOID_METHOD_CALLS","description":"kotlin[./]jvm[./]internal[./]Intrinsics"},"reason":"Synthetic lambda bridge intrinsic only."}
+]
